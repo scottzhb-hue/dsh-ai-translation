@@ -59,6 +59,7 @@
   - 服务端 `lib/term-capture.js`：`termCaptureState` / `addSelectedTerm` / `setTermCaptureDefault`；`tidyTerm` 压空白、截 200 字；默认库优先级＝记住的默认库 → 挂载面板默认库 → 首个挂载库；`settings.termCapture = { defaultGlossaryId, hintSeen }` 随设置持久化。
   - 客户端：原文框 `window.getSelection()`、译文框 `selectionStart/End` 分别取词；右键菜单「定义为术语…」或 `Ctrl/Cmd+Alt+T`；`TermModal` 支持多库下拉、「以后默认写入这个术语库」、备注；首次使用有提示。
 - **验证**：`cait_term_test.mjs`（645→646 条、同词更新不重复、`EMPTY_TERM`、默认库落盘后重启仍生效）。
+- **界面细节（2026-11-23）**：右键菜单原本用内联 `background:#ffffff` + 主题文字色，在深色工作台里成了"白底浅灰字"，几乎看不清。改为 CSS 类 `.cait-termmenu`（`styles.js` 与 `client.js` 各一份）：背景 `--dsw-alias-bg-layer-2`、文字 `--dsw-alias-label-primary`、悬停品牌色、禁用态降级，亮/暗主题都自适应；菜单位置按视口夹取（`clampMenu`）避免出界；点击别处、滚动或 `Esc` 自动关闭；提示行缺一侧时用 `…` 占位（原文 `… → 译文`）。
 
 ### 05 未确认译文自动暂存
 

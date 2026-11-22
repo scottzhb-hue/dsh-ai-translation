@@ -133,6 +133,29 @@ function EditorPane({
     setTermMenu(null)
     onDefineTerm(termPick)
   }
+  const clampMenu = (value, limit, size) =>
+    Math.max(8, Math.min(value, Math.max(8, limit - size)))
+  const menuLeft = termMenu
+    ? clampMenu(termMenu.x, typeof window === "undefined" ? 1280 : window.innerWidth, 236)
+    : 0
+  const menuTop = termMenu
+    ? clampMenu(termMenu.y, typeof window === "undefined" ? 800 : window.innerHeight, 96)
+    : 0
+  useEffect(() => {
+    if (!termMenu) return undefined
+    const closeMenu = () => setTermMenu(null)
+    const onMenuKey = (event) => {
+      if (event.key === "Escape") closeMenu()
+    }
+    window.addEventListener("mousedown", closeMenu)
+    window.addEventListener("scroll", closeMenu, true)
+    window.addEventListener("keydown", onMenuKey)
+    return () => {
+      window.removeEventListener("mousedown", closeMenu)
+      window.removeEventListener("scroll", closeMenu, true)
+      window.removeEventListener("keydown", onMenuKey)
+    }
+  }, [termMenu])
 
   return h(
     'div',
@@ -504,17 +527,12 @@ function EditorPane({
           "div",
           {
             className: "cait-termmenu",
+            onMouseDown: (event) => event.stopPropagation(),
             style: {
               position: "fixed",
-              left: termMenu.x,
-              top: termMenu.y,
-              zIndex: 40,
-              background: "#ffffff",
-              border: "1px solid #d8dee9",
-              borderRadius: 8,
-              padding: "8px 10px",
-              boxShadow: "0 10px 30px rgba(0,0,0,0.18)",
-              minWidth: 200,
+              left: menuLeft,
+              top: menuTop,
+              zIndex: 60,
             },
           },
           h(
@@ -530,7 +548,7 @@ function EditorPane({
             "div",
             { className: "cait-hint" },
             termPick.source || termPick.target
-              ? termPick.source + " → " + termPick.target
+              ? (termPick.source || "…") + " → " + (termPick.target || "…")
               : t("term.menuHint"),
           ),
         )

@@ -2617,6 +2617,11 @@ var CSS = `
 .cait-score-label{font-size:9.5px;color:var(--dsw-alias-label-secondary)}
 .cait-minibtn{margin-left:auto;height:23px;padding:0 7px;border:1px solid var(--dsw-alias-border-l1);border-radius:5px;background:transparent;color:var(--dsw-alias-label-secondary);font-size:10px;font-weight:600}
 .cait-minibtn:hover{background:color-mix(in srgb,var(--dsw-alias-brand-primary) 8%,transparent);border-color:color-mix(in srgb,var(--dsw-alias-brand-primary) 30%,var(--dsw-alias-border-l1));color:var(--dsw-alias-brand-primary)}
+.cait-termmenu{position:fixed;z-index:60;min-width:200px;max-width:320px;padding:6px;border:1px solid var(--dsw-alias-border-l1);border-radius:8px;background:var(--dsw-alias-bg-layer-2);box-shadow:0 16px 38px color-mix(in srgb,var(--dsw-alias-label-primary) 26%,transparent);color:var(--dsw-alias-label-primary)}
+.cait-termmenu button{display:block;width:100%;height:auto;margin:0;padding:7px 9px;border:0;border-radius:6px;background:transparent;color:var(--dsw-alias-label-primary);font-size:12px;font-weight:600;text-align:left;cursor:pointer}
+.cait-termmenu button:hover:not(:disabled){background:color-mix(in srgb,var(--dsw-alias-brand-primary) 16%,transparent);color:var(--dsw-alias-brand-primary)}
+.cait-termmenu button:disabled{color:var(--dsw-alias-label-secondary);opacity:.8;cursor:default}
+.cait-termmenu .cait-hint{margin:5px 0 1px;padding:0 9px;text-align:left;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .cait-card-source{margin:0 0 5px;font-size:11px;line-height:1.45;color:var(--dsw-alias-label-secondary);overflow-wrap:anywhere}
 .cait-card-context{margin:0 0 5px;font-size:9.5px;line-height:1.5;color:var(--dsw-alias-label-secondary);opacity:.75;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .cait-card-target{margin:0;font-size:12.5px;line-height:1.5;font-weight:500;overflow-wrap:anywhere}
@@ -4354,6 +4359,24 @@ function EditorPane({
     setTermMenu(null);
     onDefineTerm(termPick);
   };
+  const clampMenu = (value, limit, size) => Math.max(8, Math.min(value, Math.max(8, limit - size)));
+  const menuLeft = termMenu ? clampMenu(termMenu.x, typeof window === "undefined" ? 1280 : window.innerWidth, 236) : 0;
+  const menuTop = termMenu ? clampMenu(termMenu.y, typeof window === "undefined" ? 800 : window.innerHeight, 96) : 0;
+  useEffect(() => {
+    if (!termMenu) return undefined;
+    const closeMenu = () => setTermMenu(null);
+    const onMenuKey = (event) => {
+      if (event.key === "Escape") closeMenu();
+    };
+    window.addEventListener("mousedown", closeMenu);
+    window.addEventListener("scroll", closeMenu, true);
+    window.addEventListener("keydown", onMenuKey);
+    return () => {
+      window.removeEventListener("mousedown", closeMenu);
+      window.removeEventListener("scroll", closeMenu, true);
+      window.removeEventListener("keydown", onMenuKey);
+    };
+  }, [termMenu]);
   return h(
     "div",
     { className: "cait-editor-col" },
@@ -4705,17 +4728,12 @@ function EditorPane({
       "div",
       {
         className: "cait-termmenu",
+        onMouseDown: (event) => event.stopPropagation(),
         style: {
           position: "fixed",
-          left: termMenu.x,
-          top: termMenu.y,
-          zIndex: 40,
-          background: "#ffffff",
-          border: "1px solid #d8dee9",
-          borderRadius: 8,
-          padding: "8px 10px",
-          boxShadow: "0 10px 30px rgba(0,0,0,0.18)",
-          minWidth: 200
+          left: menuLeft,
+          top: menuTop,
+          zIndex: 60
         }
       },
       h(
@@ -4730,7 +4748,7 @@ function EditorPane({
       h(
         "div",
         { className: "cait-hint" },
-        termPick.source || termPick.target ? termPick.source + " → " + termPick.target : t("term.menuHint")
+        termPick.source || termPick.target ? (termPick.source || "…") + " → " + (termPick.target || "…") : t("term.menuHint")
       )
     ) : null,
     h(
