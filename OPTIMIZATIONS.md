@@ -26,6 +26,7 @@
 | 06 | 路由健壮性：跳过 modlens 识图包装路由 + 真实错误透出 + 下拉标注 | 已上线 | `lib/mt.js`、`lib/routes.js`、`lib/mt-translate.js`、`lib/review.js`、`lib/ai-chat.js` | `client/components/dialogs.js`、`client/components/panels.js`、`client/locales.js`、`client.js` | `.bak-wrapper-20261122-1945` |
 | 07 | **Token 消耗统计与预估费用（优化04）** | 已上线 | `lib/usage.js`、`lib/pricing.js`、`lib/mt.js`、`lib/api.js`、`index.js` | `client/components/usage.js`、`client/components/shell.js`、`client/components/workbench.js`、`client/workbench/controller.js`、`client/locales.js`、`client.js` | `cait-usage-backup-20261122-225245`（工作区） |
 | 08 | AI 对话消息形状防御 + 「整理为项目说明」 | 已上线 | `lib/ai-chat.js` | `client/components/dialogs.js`、`client/components/workbench.js`、`client/workbench/controller.js`、`client/locales.js`、`client.js` | `.bak-summarize-20261122-2215` |
+| 09 | 界面名称统一：写死的 `CAIT` → 「AI辅助翻译」（入口 / 品牌 / 提示语） | 已上线 | —（纯前端） | `client/components/shell.js`、`client/locales.js`、`client.js`、`locale/{zh,en,ja}.json` | `.bak-title-*`、`.bak-subtitle-*`（已清理） |
 
 ## 明细
 
@@ -104,6 +105,17 @@
   - `mtRuntime.stream` 非函数时给 `AI_ROUTE_UNAVAILABLE`（提示重启 DSH）。
   - 「整理为项目说明」：`mode: 'brief'` 且 `message` 为空、已有历史时，用 `BRIEF_ONLY_PROMPT` 补齐最后一条 user 内容，且**不把这条伪输入写进对话记录**；客户端对话框底部新增按钮。
 - **验证**：行为用例 4 组（整理/空消息/普通对话/防御断言）；客户端 5 文件编译 + 24 项锚点断言。
+
+### 09 界面名称统一（CAIT → AI辅助翻译）
+
+- **动机**：上游把产品名 `CAIT` 写死在品牌栏 `<strong>` 和一批提示语里；本分支改名为 `dsh-ai-translation` 后，侧边栏入口、面板标题与提示语仍显示 `CAIT`，与实际插件名不一致。用户要求统一显示「AI辅助翻译」。
+- **实现**：
+  - `client/locales.js` + `client.js` 三语表：`app.title` → `AI辅助翻译` / `AI Translation` / `AI翻訳`；`app.subtitle` 去掉 `CAT` 前缀 → `翻译工作台` / `translation workbench` / `翻訳ワークベンチ`。
+  - `client/components/shell.js`（及 bundle 内同处）：品牌栏 `h('strong', null, 'CAIT')` → `h('strong', null, t('app.title'))`，从此跟随语言表，不再硬编码。
+  - 提示语按语言替换 24 处（`doc.cleanHint`、`workbench.loadFailed`、空状态引导、`modal.settings.uiHint`、`modal.settings.routeHint`、`align.hint`、`usage.hint`、`error.NETWORK` 等），文案里不再出现 `CAIT`。
+  - `locale/{zh,en,ja}.json` 的 `meta.title` 同步为 `AI辅助翻译 (dsh-ai-translation)` 等；三份 README 的开头说明与对应标题改为 `AI辅助翻译` / `AI Translation` / `AI翻訳`，并在「来源与致谢」补一条「界面名称」说明（`CAIT` 仅作上游项目名）。
+- **验证**：`client.js`、`client/locales.js`、`client/components/shell.js` 全部通过 `vm.SourceTextModule`；`client/locales.js` 内 `CAIT` 出现 0 次；`h('strong', null, 'CAIT')` 在源码与 bundle 中均为 0 处；强刷后侧边栏显示「AI辅助翻译」，面板标题同名、副标题「翻译工作台」。
+- **不做**：`lib/tools.js` 里 21 个 Agent 工具的英文描述、README 的溯源段落仍保留 `CAIT`（分别属于工具契约与上游署名，改动会污染 diff 或削弱署名）。
 
 ## 维护与发布须知
 

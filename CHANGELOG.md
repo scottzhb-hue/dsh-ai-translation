@@ -14,8 +14,9 @@ All notable changes to CAIT are documented here. The project follows
 - 以 `dsh-ai-translation` 名义发布：这是 CAIT（`dsh-cait@1.1.8`，作者 Jovi Lecca，
   Apache-2.0）的修改版。包名、Cordis 模块 id 与客户端模块 id 同步改为
   `dsh-ai-translation`；数据目录仍是 `~/.dsh/cait`，已有项目、翻译记忆与术语库可直接沿用。
-- 侧边栏入口与面板品牌文字不再写死 `CAIT`：入口标签改为「AI辅助翻译」（英 `AI Translation`、
-  日 `AI翻訳`），面板标题改用同一文案，副标题简化为「翻译工作台」。
+- 界面名称统一为「AI辅助翻译」（英 `AI Translation`、日 `AI翻訳`）：侧边栏入口、面板标题、
+  副标题与 24 处提示语不再出现写死的 `CAIT`，品牌栏改为跟随语言表；插件元数据
+  `locale/*.json` 的 `meta.title` 同步更新。`CAIT` 仅作为上游项目名保留在溯源与署名中。
 - 术语右键菜单改用 DSH 主题令牌（修复深色主题下白底浅灰字的对比度问题），位置按视口夹取，
   支持点击别处、滚动与 `Esc` 关闭。
 - 相对上游的其它改动（DOCX 同段合并/拆分、AI 助手与项目说明、选中即建术语、未确认译文暂存、

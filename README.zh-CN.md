@@ -21,10 +21,10 @@
   <img alt="无需 API Key" src="https://img.shields.io/badge/API%20key-not%20required-6b7280.svg" />
 </p>
 
-CAIT 为 DSH Web UI 和 DSH 桌面端增加一个 CAT 翻译工作台。它从左侧栏入口打开，
+**AI辅助翻译**（侧边栏入口与面板标题都用这个名字；上游项目名为 CAIT）为 DSH Web UI 和 DSH 桌面端增加一个 CAT 翻译工作台。它从左侧栏入口打开，
 工作台与二十一个 Agent 工具共用一个数据存储，覆盖从导入源文件到导出译文的完整流程。
 
-> **已在 DSH `0.2.2-rc.1` 中验证。** CAIT 使用 DSH 自己的模型路由和凭据，
+> **已在 DSH `0.2.2-rc.1` 中验证。** AI辅助翻译使用 DSH 自己的模型路由和凭据，
 > 不会要求用户填写 API Key。内部回退提供方仍叫 `mock`，界面显示为
 > **术语替换（离线）**。
 
@@ -34,11 +34,12 @@ CAIT 为 DSH Web UI 和 DSH 桌面端增加一个 CAT 翻译工作台。它从�
 
 - **上游项目**：CAIT（`dsh-cait`），作者 **Jovi Lecca**，仓库 <https://github.com/JoviLecca/dsh-CAIT>，Apache-2.0 许可。
 - **本分支**：`dsh-ai-translation`，基于上游 `1.1.8`，按本地使用需求增加了若干能力（DOCX 同段合并/拆分、AI 助手与项目说明对话框、选中即建术语、未确认译文暂存、识图包装路由健壮性、Token 用量与费用统计），逐条记录在 [OPTIMIZATIONS.md](OPTIMIZATIONS.md)。
+- **界面名称**：本分支在 DSH 里显示为「AI辅助翻译」（英 `AI Translation`、日 `AI翻訳`），侧边栏入口、工作台标题与界面提示语统一用这个名字；`CAIT` / `dsh-cait` 只作为上游项目名出现。
 - **许可与署名**：仍为 Apache-2.0。[LICENSE](LICENSE) 原文保留，[NOTICE](NOTICE) 保留上游声明并补充本分支信息；任何再分发都必须保留这两份文件。
 - **致谢**：本代码库的绝大部分来自上游——CAT 工作台、翻译记忆、术语库、多格式导入导出与 21 个 Agent 工具均为 Jovi Lecca 的设计与实现。感谢原作者把这样一个完整的工作台开源出来。
 
 
-## 为什么选择 CAIT
+## 为什么选择 AI辅助翻译
 
 | | |
 |---|---|

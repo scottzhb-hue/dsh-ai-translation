@@ -21,12 +21,12 @@
   <img alt="No API key required" src="https://img.shields.io/badge/API%20key-not%20required-6b7280.svg" />
 </p>
 
-CAIT adds a CAT workbench to the DSH Web UI and Desktop. It opens from a
+**AI Translation** (the sidebar entry and the workbench header use this name; the upstream project is called CAIT) adds a CAT workbench to the DSH Web UI and Desktop. It opens from a
 left-sidebar entry, keeps one shared store behind the workbench and twenty agent
 tools, and covers the practical path from importing a source file to exporting a
 translated document.
 
-> **Tested with DSH `0.2.2-rc.1`.** CAIT uses DSH's own model routes and
+> **Tested with DSH `0.2.2-rc.1`.** AI Translation uses DSH's own model routes and
 > credentials; it never asks for an API key. The internal fallback provider is
 > still called `mock`, but the UI labels it **Glossary substitution (offline)**.
 
@@ -36,11 +36,12 @@ This repository is a **modified fork of CAIT**, not an original project:
 
 - **Upstream**: CAIT (`dsh-cait`) by **Jovi Lecca** — <https://github.com/JoviLecca/dsh-CAIT>, Apache-2.0.
 - **This fork**: `dsh-ai-translation`, based on upstream `1.1.8`, with local enhancements documented in [OPTIMIZATIONS.md](OPTIMIZATIONS.md) (segment merge/split across DOCX paragraphs, AI assistant and project-brief dialog, select-to-create-term, unconfirmed draft recovery, route robustness against vision wrapper providers, token/cost accounting).
+- **Naming**: this fork shows up in DSH as **AI Translation** (Chinese 「AI辅助翻译」, Japanese 「AI翻訳」) — sidebar entry, workbench header and in-app hints all use that name; `CAIT` / `dsh-cait` appear only as the upstream project name.
 - **License and attribution**: still Apache-2.0. [LICENSE](LICENSE) is kept verbatim; [NOTICE](NOTICE) keeps the upstream notice and adds this fork's information. Any redistribution must keep both files.
 - **Thanks**: the vast majority of this code base is upstream work — the CAT workbench, translation memory, glossary, multi-format import/export and the 21 agent tools are all Jovi Lecca's design and implementation.
 
 
-## Why CAIT
+## Why AI Translation
 
 | | |
 |---|---|
