@@ -1,0 +1,134 @@
+# dsh-cait 本地优化清单
+
+本文件登记我在本机对 **dsh-cait 1.1.8**（上游 npm 最新版）所做的全部本地优化，
+用于：① 本对话后续继续迭代时作为基线参考；② 将来把优化版发布到 GitHub 时作为变更来源。
+
+- 基线：`dsh-cait@1.1.8`，安装位置 `C:\Users\zhang\.dsh\profiles\desktop\node_modules\dsh-cait\`
+- 运行环境：DSH Desktop `0.2.2-rc.5`，profile `desktop`，数据目录 `C:\Users\zhang\.dsh\cait\`
+- 启用方式：改服务端 `lib/` 需**重启 DSH**；改客户端 `client.js`（打包产物）需 **Ctrl+Shift+R 强刷**
+- 最后更新：2026-11-23
+
+> ⚠️ 本目录位于 profile 的 `node_modules` 下。在 profile 里执行 `pnpm install`（或重装插件）会覆盖这里的一切改动。
+> 发布前请把 `lib/`、`client/`、`client.js`、`index.js` 以及本文件同步进你的仓库。
+
+## 总表
+
+| 编号 | 主题 | 状态 | 服务端文件 | 客户端文件 | 备份后缀 |
+|---|---|---|---|---|---|
+| 01 | 句段合并放行（同段落 + Shift 跨段落）+ 中英拼接 + 缩写识别 | 已上线 | `lib/segment-edit.js`、`lib/export-document.js`、`lib/segmenter.js` | `client/components/editor.js`、`client/workbench/controller.js`、`client/locales.js`、`client.js` | `.bak-merge-20261122083805`、`.bak-20261122-merge2` |
+| 02 | DOCX 同段落拆分（导出 `<w:br/>`） | 已上线 | `lib/segment-edit.js`、`lib/export-document.js` | `client/locales.js`、`client.js` | `.bak-split-202611221720` |
+| 03 | AI 对话框（新建后 brief / 预翻译前 / 顶部常驻指令条） | 已上线 | `lib/ai-chat.js`、`lib/store-mixins.js`、`lib/api.js`、`lib/persistence.js` | `client/components/dialogs.js`、`client/components/workbench.js`、`client/workbench/controller.js`、`client/locales.js`、`client.js` | `.bak-20261122-ai` |
+| 04 | 选中即建术语（右键 / Ctrl+Alt+T、默认库 + 首次提示） | 已上线 | `lib/term-capture.js`、`lib/settings.js`、`lib/persistence.js`、`lib/store-mixins.js`、`lib/api.js` | `client/components/editor.js`、`client/components/dialogs.js`、`client/components/workbench.js`、`client/workbench/controller.js`、`client/locales.js`、`client.js` | `.bak-term-20261122-1905` |
+| 05 | 未确认译文自动暂存（`drafts/<docId>.json`） | 已上线 | `lib/draft-recovery.js`、`lib/store-mixins.js`、`lib/api.js` | `client/workbench/controller.js`、`client/locales.js`、`client.js` | `.bak-recovery-20261122-2005` |
+| 06 | 路由健壮性：跳过 modlens 识图包装路由 + 真实错误透出 + 下拉标注 | 已上线 | `lib/mt.js`、`lib/routes.js`、`lib/mt-translate.js`、`lib/review.js`、`lib/ai-chat.js` | `client/components/dialogs.js`、`client/components/panels.js`、`client/locales.js`、`client.js` | `.bak-wrapper-20261122-1945` |
+| 07 | **Token 消耗统计与预估费用（优化04）** | 已上线 | `lib/usage.js`、`lib/pricing.js`、`lib/mt.js`、`lib/api.js`、`index.js` | `client/components/usage.js`、`client/components/shell.js`、`client/components/workbench.js`、`client/workbench/controller.js`、`client/locales.js`、`client.js` | `cait-usage-backup-20261122-225245`（工作区） |
+| 08 | AI 对话消息形状防御 + 「整理为项目说明」 | 已上线 | `lib/ai-chat.js` | `client/components/dialogs.js`、`client/components/workbench.js`、`client/workbench/controller.js`、`client/locales.js`、`client.js` | `.bak-summarize-20261122-2215` |
+
+## 明细
+
+### 01 句段合并放行
+
+- **动机**：DOCX 文档里任何合并都报「当前格式不支持合并或拆分句段」；而译者最需要合并的正是被缩写点号误切的句段。
+- **实现**：
+  - `lib/segment-edit.js`：新增 `paragraphUnit(segment)`（`docx:<part>:<ordinal>` / `pptx:<slide>:<ordinal>` / `paragraph:<n>`）；`mergeSegments({ documentId, index, count, force })` 同段落合并对所有格式开放，跨段落需 `force`（客户端按住 Shift 传入），否则 `MERGE_PARAGRAPH_MISMATCH`；跨单元合并记录 `meta.mergedConsumed`。
+  - `joinFragments(parts)`：CJK 相邻不插空格、拉丁之间插空格（原来固定 `.join(' ')`，中文会被插空格）。
+  - `lib/export-document.js`：导出时按 `mergedConsumed` 把被吞段落置空，避免同段重复输出。
+  - `lib/segmenter.js`：`ABBREVIATIONS` 集合 + 单字母首字母规则，避免 `Aug.` / `St.` / `Hilaire.` 被切开。
+- **验证**：`Aug. St. Hilaire.` 三段合一；无 `force` 跨段报 `MERGE_PARAGRAPH_MISMATCH`、带 `force` 成功；导出段落总数不变；`zh+zh` 拼接无空格。
+
+### 02 DOCX 同段落拆分
+
+- **动机**：一句原文里含两句译文时，需要拆成两个句段，但仍写回同一个 `<w:p>`。
+- **实现**：`SPLIT_FORMATS = {txt, md, markdown, docx}` + `splittableDocument()`；拆分出的两半继承同一 `meta.docxPart/docxParagraph` 并记 `meta.splitFrom`；`lib/export-document.js` 的 `combine()` 在同段落多句段时用 `\n` 连接，交由 `docx.js` 的 `patchParagraph` 转成 `<w:br/>`。
+- **验证**：拆一段 502→503、段落数 95 不变、`<w:br/>` 405→406；同段连拆两次 → 407；再合并回去 → 405。
+- **限制**：pptx/xlsx 仍不可拆（无"两句段共用一单元"锚点）。
+
+### 03 AI 对话框
+
+- **动机**：新建项目时用自然语言写项目说明/指令/规则；预翻译前先对齐要求；翻译过程中随时追问。
+- **实现**：
+  - 服务端 `lib/ai-chat.js`：`aiChatState` / `aiChat({ documentId, message, mode })` / `clearAiChat`；系统提示包含文档上下文（名称、语向、句段数、格式、前 3 段原文、进度）与 `briefPromptBlock`；`mode: 'brief'` 时解析 `{"reply","brief"}` 并回填 `doc.brief`。
+  - 对话存 `doc.aiChat`（上限 30 条），随文档持久化（`lib/persistence.js` 白名单恢复）。
+  - 客户端：`AiChatModal`（消息气泡、Ctrl/Cmd+Enter 发送、brief 预览 + 「写入项目说明」、清空）；新建/导入后自动弹 brief 模式；「预翻译」先弹对话框（可一键"直接开始预翻译"）；工作台顶部常驻指令条回车即问。
+- **验证**：`cait_ai_server_test.mjs`、`cait_ai_mixins_test.mjs`、`cait_ai_verify2.mjs`（均已清理）。
+
+### 04 选中即建术语
+
+- **动机**：翻译中发现好译法，希望能直接"选中原文 + 选中译文 → 一键入库"。
+- **实现**：
+  - 服务端 `lib/term-capture.js`：`termCaptureState` / `addSelectedTerm` / `setTermCaptureDefault`；`tidyTerm` 压空白、截 200 字；默认库优先级＝记住的默认库 → 挂载面板默认库 → 首个挂载库；`settings.termCapture = { defaultGlossaryId, hintSeen }` 随设置持久化。
+  - 客户端：原文框 `window.getSelection()`、译文框 `selectionStart/End` 分别取词；右键菜单「定义为术语…」或 `Ctrl/Cmd+Alt+T`；`TermModal` 支持多库下拉、「以后默认写入这个术语库」、备注；首次使用有提示。
+- **验证**：`cait_term_test.mjs`（645→646 条、同词更新不重复、`EMPTY_TERM`、默认库落盘后重启仍生效）。
+
+### 05 未确认译文自动暂存
+
+- **动机**：已敲进译文框但还没确认/导航的文字，重启或误操作会丢。
+- **实现**：`lib/draft-recovery.js` 写入 `<dataDir>/drafts/<sanitized docId>.json`（v1，按 `segment.uid` 索引，原子写、最多 50 条、单条 20000 字）；客户端 1.2s 防抖调用 `saveDraftRecovery`，`adoptState` 时若快照与已保存译文不同则恢复并提示「已恢复未确认的草稿」；保存/确认后调 `clearDraftRecovery`。
+- **验证**：`cait_draft_verify.mjs`（28 项断言）；快照永不覆盖已保存/已确认译文。
+
+### 06 路由健壮性（modlens 识图包装路由）
+
+- **动机**：项目 MT 路由指向 `modlens-deepseek-account-vision`（识图包装）时，预翻译/单译/AI 建议全部失败，且 UI 只显示「操作失败，请稍后重试。」。
+- **实现**：
+  - `lib/mt.js`：`isVisionWrapper(id, name)` 识别 `modlens-*` / `deepseek-modlens` / 名称含 `(modlens vision)`；provider 加 `wrapper` 标记；排序「configured 优先、其次非包装」。
+  - `lib/routes.js`：`pickRoute()` 在选中包装路由时自动降到第一个非包装且有模型的 provider，并返回 `note` 说明。
+  - 错误透出：`MT_ROUTE_ERROR` / `REVIEW_ROUTE_ERROR` / `AI_ROUTE_ERROR` 带上 `provider / model` 与底层 `error.message`（不加字典键，避免又被压成通用文案）。
+  - 客户端：设置下拉给包装路由加标注「识图包装，文本翻译不可用」；右侧面板当前路由是包装时同样标注。
+- **验证**：`cait_route_test.mjs` 6 组用例；用户实测换成 `DeepSeek Account` 后单句翻译成功。
+
+### 07 Token 消耗统计与预估费用（优化04）
+
+- **动机**：CAIT 直接调用宿主 `llm` 服务，这些调用不进 DSH 会话日志，看不到花了多少 token / 多少钱。
+- **服务端**：
+  - `lib/usage.js`：`CaitUsage` 账本，落盘 `<dataDir>/usage.json`（**v2**，新增费用字段）；`record({ purpose, provider, model, usage })` 做累计；维度 `total` / `byDay` / `byPurpose`（`mt` / `mtBatch` / `chat` / `review`）/ `byRoute`；`recent` 保留最近 40 次；`byDay` 保留 120 天；写盘 400 ms 防抖 + 临时文件 rename，失败静默（不影响翻译）；`snapshot()` 供 RPC 读。
+  - `lib/pricing.js`：计价唯一来源。口径＝DeepSeek 官方价（`PRICING_UPDATED_AT = '2026-09-22'`），元/美元双币种，按 `deepseek-flash` / `deepseek-v4-pro` 分档，峰时/谷时两档（谷时 5 折）；峰时＝北京时间 09:00–12:00、14:00–18:00 的工作日（**不含法定节假日例外**）；`classifyModel()` 认不出的模型宁可显示「—」也不套用其它档位；费用按 `cacheReadTokens` 走缓存命中价、其余 input 走未命中价、output 走输出价，保留 8 位小数避免小额被抹平。
+  - `lib/mt.js`：`withUsage(chunks, request, ledger)` 包住宿主流，从 `chunk.usage` 或 `finish.usage` 记账，`options.usage` 传入账本；`llm.stream` 不报 usage 时记不到（不伪造）。
+  - `lib/api.js`：`createHandlers(store, usage)` 增加只读 `usage: () => usage.snapshot()`；`registerCatApi(ctx, store, usage)`。
+  - `index.js`：`new CaitUsage({ dataDir })` → 传入 `createMtRuntime(ctx, { usage })` 与 `registerCatApi`；卸载时 `usage.dispose()` 落盘。
+  - 迁移：v1 账本升级时把 `costFrom` 钉在升级时刻，不回头用新价目重算历史。
+- **客户端**：`client/components/usage.js` 的 `UsageBadge`（顶栏「用量」徽标，tooltip 显示今日/累计 token 与请求数）+ `UsageModal`（今日/累计 token、今日/累计预估费用、当前峰谷、价目版本、按用途/按路由表格、最近 40 次调用、刷新）；`shell.js` 顶栏挂徽标、`workbench.js` 分派 `modal.type === 'usage'`、`controller.js` 的 `refreshUsage()` 在空闲时刷新（失败不影响工作台）；`locale` 的 `usage.*` 三语键。
+- **验证**：`test_cait_usage.mjs`、`test_cait_pricing.mjs`（工作区，均已随会话结束清理；重跑可用 `<dataDir>/usage.json` 手工核对）。
+- **已知口径**：只统计 CAIT 自己的调用（翻译/批量/对话/审校）；宿主其它会话的消耗不在此账本内；金额是估算，不替代账单。
+- **已修（2026-11-23）**：账本在 v2 下首次创建时 `costFrom` 曾停在 `0`，导致弹窗「费用自 … 起统计」时间为空；现在 `CaitUsage.record()` 会在 `costFrom` 为空时把它设为本次调用时间（新账本与历史遗留的 0 都覆盖）。
+
+### 08 AI 对话消息形状防御 + 整理为项目说明
+
+- **动机**：DSH 的请求投影会读 `message.source.replayState`，assistant 消息缺 `source` 时多轮对话直接崩（`Cannot read properties of undefined (reading 'replayState')`）。
+- **实现**：
+  - `toModelMessage(entry, route)`：assistant 一律带 `source: { kind:'model', provider, model }`（旧记录缺 provider/model 时回落当前路由）。
+  - `assertModelMessages(messages, route)`：发送前校验 role / `content[0].text` / assistant 的 `source`，不合规抛 `AI_MESSAGE_INVALID` 并写明原因与当前路由。
+  - `mtRuntime.stream` 非函数时给 `AI_ROUTE_UNAVAILABLE`（提示重启 DSH）。
+  - 「整理为项目说明」：`mode: 'brief'` 且 `message` 为空、已有历史时，用 `BRIEF_ONLY_PROMPT` 补齐最后一条 user 内容，且**不把这条伪输入写进对话记录**；客户端对话框底部新增按钮。
+- **验证**：行为用例 4 组（整理/空消息/普通对话/防御断言）；客户端 5 文件编译 + 24 项锚点断言。
+
+## 维护与发布须知
+
+1. **为什么手改 `client.js`**：本机 profile 里没有可用的 esbuild（`node_modules\@esbuild` 是空目录，DSH 安装包内也没有），`scripts/build-client.mjs` 跑不起来；插件的 `exports["./client"]` 指向打包产物 `client.js`，所以每次改客户端都要**源码 `client/*.js` 与 `client.js` 同步改**（bundle 是全双引号 + 分号风格）。
+   插件的 `devDependencies` 里有 `esbuild ^0.28.2`：若在插件目录装好开发依赖（`npm install --include=dev`），可用 `npm run build:client` 从 `client/` 重新生成 `client.js`。本地每轮补丁都保持源码与产物一致，理论上重新构建可复现；首次重建后**务必与现有 `client.js` 做一次差异比对**再替换。
+2. **npm 打包白名单**：`package.json` 的 `files` 已加入 `OPTIMIZATIONS.md`；若再新增文档（如 `docs/`），记得同步该数组，否则 `npm pack` 不会带上。
+2. **备份命名**：每轮改动前把要改的文件复制成 `<原文件名>.bak-<主题>-<时间戳>`（如 `client.js.bak-term-20261122-1905`）；07 的备份放在工作区 `cait-usage-backup-20261122-225245/`。
+3. **回滚**：用对应 `.bak-*` 覆盖回去即可；改过服务端要重启 DSH，改过 `client.js` 要强刷。
+4. **写权限**：`node_modules\dsh-cait` 在 workspace 外，写文件必须显式申请更宽的文件权限（否则报 `EPERM` / `file access denied under workspace-write mode`）。
+5. **PowerShell 坑**：`Get-Content -Raw` 默认按 ANSI 读，含中文的文件会被写坏；读用 `-Encoding UTF8`，写用 node 脚本或编辑工具。
+6. **发布前检查**：把 `lib/`、`client/`、`client.js`、`index.js`、`OPTIMIZATIONS.md` 一并同步；`README*.md` 与 `CHANGELOG.md` 建议追加"本地优化"章节；不要把 `*.bak-*`、`cait-*.mjs` 测试脚本、`node_modules/` 提交进仓库。
+7. **推荐工作流（避免改动静默丢失）**：
+   - 在仓库副本 `D:\Documents\deepseek-harness\default-workspace\dsh-cait-optimized\` 里改代码；
+   - 把改动文件拷回 `C:\Users\zhang\.dsh\profiles\desktop\node_modules\dsh-cait\`（服务端 `lib/`、`index.js` 拷回后重启 DSH；客户端 `client/`、`client.js` 拷回后 Ctrl+Shift+R 强刷）；
+   - 验证通过后，再把仓库副本里的同一批文件提交（`git add` / `git commit`）；
+   - 只有文案改动时，记得 `client/locales.js` 与 `client.js` 两张表都要改。
+   - 原因：`node_modules` 是 pnpm 的领地，`pnpm install` / 重装插件会把本地改动覆盖掉，而仓库副本不会。
+8. **版本号约定**：仓库副本 `package.json` 为 `1.1.8-opt.1`（本地 profile 中运行的那份保持 `1.1.8`，避免插件管理器把它当成"待更新/可覆盖"的旧版本）。每次发布递增：`-opt.2`、`-opt.3`…… 若上游发新版，则以新版号为基线重新叠加本地优化。
+
+## 已知上游缺陷（建议 upstream issue）
+
+- 导入文档时把「显示名称」当文件名，扩展名丢失 → 非纯文本格式一律报「文件内容为空」（1.1.8 仍存在）。
+- 术语库只认普通 CSV，不支持 SDL MultiTerm / Trados 导出的 `>>L<<` 表头格式；语言列非法时整次导入失败。
+- 句段合并/拆分被格式白名单挡住，DOCX 无法操作（本清单 01/02 已本地修复）。
+- `lib/persist` 与设置字段是白名单式，新增字段容易漏（03/04 均已补 `persistence.js`）。
+
+## 后续候选
+
+- CAIT 用量账本与 DSH 会话用量打通（目前只看得到 CAIT 自己的调用）。
+- 用量数据支持导出 CSV / 按月汇总图。
+- pptx / xlsx 的拆分支持（需要"同单元多句段"的稳定锚点）。
+- 把手工补丁流程改成可复现脚本（含 esbuild 构建链），便于发布与回滚。
