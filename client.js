@@ -2890,7 +2890,7 @@ async function rpc(method, params = {}) {
       body: JSON.stringify({ method, params })
     });
   } catch (error) {
-    throw new RpcError(`无法连接 CAIT 服务：${error?.message ?? error}`, "NETWORK");
+    throw new RpcError(`无法连接 AI辅助翻译服务：${error?.message ?? error}`, "NETWORK");
   }
   let payload;
   try {
@@ -2899,7 +2899,7 @@ async function rpc(method, params = {}) {
     payload = null;
   }
   if (!response.ok || !payload?.ok) {
-    const message = payload?.error?.message || `CAIT 服务返回 HTTP ${response.status}`;
+    const message = payload?.error?.message || `AI辅助翻译服务返回 HTTP ${response.status}`;
     throw new RpcError(message, payload?.error?.code || "HTTP", { status: response.status });
   }
   return payload.data;
@@ -3899,7 +3899,7 @@ function EmptyState({ t, settings, busy, onCreate, onDemo }) {
     h(
       "div",
       { className: "cait-empty-inner" },
-      h("span", { className: "cait-kicker" }, "CAIT · CAT WORKBENCH"),
+      h("span", { className: "cait-kicker" }, `${t("app.title")} · CAT WORKBENCH`),
       h("h1", null, t("empty.title")),
       h("p", { className: "cait-lede" }, t("empty.desc")),
       h(

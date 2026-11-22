@@ -30,7 +30,7 @@ async function rpc(method, params = {}) {
       body: JSON.stringify({ method, params }),
     })
   } catch (error) {
-    throw new RpcError(`无法连接 CAIT 服务：${error?.message ?? error}`, 'NETWORK')
+    throw new RpcError(`无法连接 AI辅助翻译服务：${error?.message ?? error}`, 'NETWORK')
   }
 
   let payload
@@ -41,7 +41,7 @@ async function rpc(method, params = {}) {
   }
 
   if (!response.ok || !payload?.ok) {
-    const message = payload?.error?.message || `CAIT 服务返回 HTTP ${response.status}`
+    const message = payload?.error?.message || `AI辅助翻译服务返回 HTTP ${response.status}`
     throw new RpcError(message, payload?.error?.code || 'HTTP', { status: response.status })
   }
   return payload.data

@@ -113,6 +113,7 @@
   - `client/locales.js` + `client.js` 三语表：`app.title` → `AI辅助翻译` / `AI Translation` / `AI翻訳`；`app.subtitle` 去掉 `CAT` 前缀 → `翻译工作台` / `translation workbench` / `翻訳ワークベンチ`。
   - `client/components/shell.js`（及 bundle 内同处）：品牌栏 `h('strong', null, 'CAIT')` → `h('strong', null, t('app.title'))`，从此跟随语言表，不再硬编码。
   - 提示语按语言替换 24 处（`doc.cleanHint`、`workbench.loadFailed`、空状态引导、`modal.settings.uiHint`、`modal.settings.routeHint`、`align.hint`、`usage.hint`、`error.NETWORK` 等），文案里不再出现 `CAIT`。
+  - 第二轮补干净三处仍会露出的位置：空状态标语 `CAIT · CAT WORKBENCH` → 改为跟随 `app.title` 的 `` `${t('app.title')} · CAT WORKBENCH` ``；`client/rpc.js` 的两条网络错误文案（"无法连接 CAIT 服务"、"CAIT 服务返回 HTTP …"）；以及服务端 `lib/api.js`（未授权/未知方法/内部错误三条）、`lib/libraries.js`（"请先在 CAIT 的库面板挂载它"，3 处）、`lib/demo.js`（演示文档名）。
   - `locale/{zh,en,ja}.json` 的 `meta.title` 同步为 `AI辅助翻译 (dsh-ai-translation)` 等；三份 README 的开头说明与对应标题改为 `AI辅助翻译` / `AI Translation` / `AI翻訳`，并在「来源与致谢」补一条「界面名称」说明（`CAIT` 仅作上游项目名）。
 - **验证**：`client.js`、`client/locales.js`、`client/components/shell.js` 全部通过 `vm.SourceTextModule`；`client/locales.js` 内 `CAIT` 出现 0 次；`h('strong', null, 'CAIT')` 在源码与 bundle 中均为 0 处；强刷后侧边栏显示「AI辅助翻译」，面板标题同名、副标题「翻译工作台」。
 - **不做**：`lib/tools.js` 里 21 个 Agent 工具的英文描述、README 的溯源段落仍保留 `CAIT`（分别属于工具契约与上游署名，改动会污染 diff 或削弱署名）。

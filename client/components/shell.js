@@ -381,7 +381,7 @@ function EmptyState({ t, settings, busy, onCreate, onDemo }) {
     h(
       'div',
       { className: 'cait-empty-inner' },
-      h('span', { className: 'cait-kicker' }, 'CAIT · CAT WORKBENCH'),
+      h('span', { className: 'cait-kicker' }, `${t('app.title')} · CAT WORKBENCH`),
       h('h1', null, t('empty.title')),
       h('p', { className: 'cait-lede' }, t('empty.desc')),
       h(
