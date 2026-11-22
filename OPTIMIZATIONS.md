@@ -110,18 +110,20 @@
 1. **为什么手改 `client.js`**：本机 profile 里没有可用的 esbuild（`node_modules\@esbuild` 是空目录，DSH 安装包内也没有），`scripts/build-client.mjs` 跑不起来；插件的 `exports["./client"]` 指向打包产物 `client.js`，所以每次改客户端都要**源码 `client/*.js` 与 `client.js` 同步改**（bundle 是全双引号 + 分号风格）。
    插件的 `devDependencies` 里有 `esbuild ^0.28.2`：若在插件目录装好开发依赖（`npm install --include=dev`），可用 `npm run build:client` 从 `client/` 重新生成 `client.js`。本地每轮补丁都保持源码与产物一致，理论上重新构建可复现；首次重建后**务必与现有 `client.js` 做一次差异比对**再替换。
 2. **npm 打包白名单**：`package.json` 的 `files` 已加入 `OPTIMIZATIONS.md`；若再新增文档（如 `docs/`），记得同步该数组，否则 `npm pack` 不会带上。
-2. **备份命名**：每轮改动前把要改的文件复制成 `<原文件名>.bak-<主题>-<时间戳>`（如 `client.js.bak-term-20261122-1905`）；07 的备份放在工作区 `cait-usage-backup-20261122-225245/`。
-3. **回滚**：用对应 `.bak-*` 覆盖回去即可；改过服务端要重启 DSH，改过 `client.js` 要强刷。
-4. **写权限**：`node_modules\dsh-cait` 在 workspace 外，写文件必须显式申请更宽的文件权限（否则报 `EPERM` / `file access denied under workspace-write mode`）。
-5. **PowerShell 坑**：`Get-Content -Raw` 默认按 ANSI 读，含中文的文件会被写坏；读用 `-Encoding UTF8`，写用 node 脚本或编辑工具。
-6. **发布前检查**：把 `lib/`、`client/`、`client.js`、`index.js`、`OPTIMIZATIONS.md` 一并同步；`README*.md` 与 `CHANGELOG.md` 建议追加"本地优化"章节；不要把 `*.bak-*`、`cait-*.mjs` 测试脚本、`node_modules/` 提交进仓库。
-7. **推荐工作流（避免改动静默丢失）**：
+3. **备份命名**：每轮改动前把要改的文件复制成 `<原文件名>.bak-<主题>-<时间戳>`（如 `client.js.bak-term-20261122-1905`）；07 的备份放在工作区 `cait-usage-backup-20261122-225245/`。
+4. **回滚**：用对应 `.bak-*` 覆盖回去即可；改过服务端要重启 DSH，改过 `client.js` 要强刷。
+5. **写权限**：`node_modules\dsh-cait` 在 workspace 外，写文件必须显式申请更宽的文件权限（否则报 `EPERM` / `file access denied under workspace-write mode`）。
+6. **PowerShell 坑**：`Get-Content -Raw` 默认按 ANSI 读，含中文的文件会被写坏；读用 `-Encoding UTF8`，写用 node 脚本或编辑工具。
+7. **发布前检查**：把 `lib/`、`client/`、`client.js`、`index.js`、`OPTIMIZATIONS.md` 一并同步；`README*.md` 与 `CHANGELOG.md` 建议追加"本地优化"章节；不要把 `*.bak-*`、`cait-*.mjs` 测试脚本、`node_modules/` 提交进仓库。
+8. **推荐工作流（避免改动静默丢失）**：
    - 在仓库副本 `D:\Documents\deepseek-harness\default-workspace\dsh-cait-optimized\` 里改代码；
    - 把改动文件拷回 `C:\Users\zhang\.dsh\profiles\desktop\node_modules\dsh-cait\`（服务端 `lib/`、`index.js` 拷回后重启 DSH；客户端 `client/`、`client.js` 拷回后 Ctrl+Shift+R 强刷）；
    - 验证通过后，再把仓库副本里的同一批文件提交（`git add` / `git commit`）；
    - 只有文案改动时，记得 `client/locales.js` 与 `client.js` 两张表都要改。
+9. **发布门禁**：`npm run check:publish`（`scripts/check-publish.mjs`，`prepublishOnly` 会自动调用）校验包身份（name/version/license/author/contributors）、`files` 白名单与实际文件、`LICENSE` 与 `NOTICE` 的上游署名、三语 locale 键一致性与全部 `.js` 模块的 ESM 语法。上游的 `npm run check` 依赖 `eslint`/`prettier`/`esbuild` 与 `_dev/`，在发布树里无法运行，因此不作为发布门禁。
+
    - 原因：`node_modules` 是 pnpm 的领地，`pnpm install` / 重装插件会把本地改动覆盖掉，而仓库副本不会。
-8. **版本号约定**：仓库副本 `package.json` 为 `1.1.8-opt.1`（本地 profile 中运行的那份保持 `1.1.8`，避免插件管理器把它当成"待更新/可覆盖"的旧版本）。每次发布递增：`-opt.2`、`-opt.3`…… 若上游发新版，则以新版号为基线重新叠加本地优化。
+10. **版本号约定**：仓库副本 `package.json` 为 `1.1.8-opt.1`（本地 profile 中运行的那份保持 `1.1.8`，避免插件管理器把它当成"待更新/可覆盖"的旧版本）。每次发布递增：`-opt.2`、`-opt.3`…… 若上游发新版，则以新版号为基线重新叠加本地优化。
 
 ## 已知上游缺陷（建议 upstream issue）
 

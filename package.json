@@ -54,7 +54,8 @@
     "lint": "eslint lib index.js scripts _dev client",
     "test": "node scripts/run-tests.mjs",
     "test:one": "node scripts/run-tests.mjs",
-    "prepublishOnly": "npm run build:client && npm run check"
+    "check:publish": "node --experimental-vm-modules scripts/check-publish.mjs",
+    "prepublishOnly": "npm run check:publish"
   },
   "exports": {
     ".": "./index.js",
