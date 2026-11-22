@@ -14,7 +14,7 @@
 </p>
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/dsh-cait"><img alt="npm 版本" src="https://img.shields.io/npm/v/dsh-cait.svg" /></a>
+  <a href="https://www.npmjs.com/package/dsh-ai-translation"><img alt="npm 版本" src="https://img.shields.io/npm/v/dsh-ai-translation.svg" /></a>
   <img alt="DSH 0.2.x" src="https://img.shields.io/badge/DSH-0.2.x-4d6bfe.svg" />
   <img alt="51 套测试" src="https://img.shields.io/badge/tests-51%20suites-brightgreen.svg" />
   <img alt="无需 API Key" src="https://img.shields.io/badge/API%20key-not%20required-6b7280.svg" />
@@ -26,6 +26,16 @@ CAIT 为 DSH Web UI 和 DSH 桌面端增加一个 CAT 翻译工作台。它从�
 > **已在 DSH `0.2.2-rc.1` 中验证。** CAIT 使用 DSH 自己的模型路由和凭据，
 > 不会要求用户填写 API Key。内部回退提供方仍叫 `mock`，界面显示为
 > **术语替换（离线）**。
+
+## 来源与致谢
+
+本仓库是 **CAIT 的修改版（fork）**，不是原创项目：
+
+- **上游项目**：CAIT（`dsh-cait`），作者 **Jovi Lecca**，仓库 <https://github.com/JoviLecca/dsh-CAIT>，Apache-2.0 许可。
+- **本分支**：`dsh-ai-translation`，基于上游 `1.1.8`，按本地使用需求增加了若干能力（DOCX 同段合并/拆分、AI 助手与项目说明对话框、选中即建术语、未确认译文暂存、识图包装路由健壮性、Token 用量与费用统计），逐条记录在 [OPTIMIZATIONS.md](OPTIMIZATIONS.md)。
+- **许可与署名**：仍为 Apache-2.0。[LICENSE](LICENSE) 原文保留，[NOTICE](NOTICE) 保留上游声明并补充本分支信息；任何再分发都必须保留这两份文件。
+- **致谢**：本代码库的绝大部分来自上游——CAT 工作台、翻译记忆、术语库、多格式导入导出与 21 个 Agent 工具均为 Jovi Lecca 的设计与实现。感谢原作者把这样一个完整的工作台开源出来。
+
 
 ## 为什么选择 CAIT
 
@@ -251,7 +261,7 @@ CAIT 没有图片 OCR 阶段。
 
 ## 安装
 
-CAIT 以 DSH bundle 的形式安装；发布的 npm 包名为 `dsh-cait`，插件本身在左侧栏显示为
+CAIT 以 DSH bundle 的形式安装；发布的 npm 包名为 `dsh-ai-translation`，插件本身在左侧栏显示为
 **CAIT**。`desktop` 配置档由应用的 plugin manager 管理，请通过它安装，不要手写配置档的
 `package.json`。
 
@@ -260,16 +270,16 @@ CAIT 以 DSH bundle 的形式安装；发布的 npm 包名为 `dsh-cait`，插�
 在 DSH 桌面端（或任何带有 `plugin_manager` 工具的配置档）中：
 
 ```text
-plugin_manager install_bundle target: dsh-cait
+plugin_manager install_bundle target: dsh-ai-translation
 ```
 
-需要固定版本时写 `dsh-cait@1.1.7`，需要最新版时写 `dsh-cait@latest`。管理器会解析 registry
+需要固定版本时写 `dsh-ai-translation@1.0.1`，需要最新版时写 `dsh-ai-translation@latest`。管理器会解析 registry
 上的包、应用 bundle patch 并激活插件，不需要手工在配置档里加行。
 
 使用 CLI 管理的配置档：
 
 ```sh
-dsh plugin --profile web add dsh-cait
+dsh plugin --profile web add dsh-ai-translation
 ```
 
 将 `web` 替换为你的配置档名称。如果 Host 需要重启，请重启 `dsh web`。
@@ -279,13 +289,13 @@ dsh plugin --profile web add dsh-cait
 GitHub：
 
 ```text
-plugin_manager install_bundle target: github:JoviLecca/dsh-CAIT
+plugin_manager install_bundle target: github:scottzhb-hue/dsh-ai-translation
 ```
 
 本地目录：
 
 ```text
-plugin_manager install_bundle target: /absolute/path/to/dsh-CAIT
+plugin_manager install_bundle target: /absolute/path/to/dsh-ai-translation
 ```
 
 然后重新加载 DSH。左侧栏会出现 **CAIT** 入口。
@@ -293,8 +303,8 @@ plugin_manager install_bundle target: /absolute/path/to/dsh-CAIT
 ### 从源码安装
 
 ```sh
-git clone <this-repository> dsh-CAIT
-cd dsh-CAIT
+git clone <this-repository> dsh-ai-translation
+cd dsh-ai-translation
 npm run build:client
 ```
 
@@ -304,11 +314,11 @@ npm run build:client
 # _dev/cait.patch.yml
 - insert:
     - id: cait-dev
-      name: 'C:\absolute\path\to\dsh-CAIT'
+      name: 'C:\absolute\path\to\dsh-ai-translation'
 ```
 
 ```powershell
-dsh web --patch C:\absolute\path\to\dsh-CAIT\_dev\cait.patch.yml
+dsh web --patch C:\absolute\path\to\dsh-ai-translation\_dev\cait.patch.yml
 ```
 
 `--patch` 是启动器选项；放在应用名（`web`）之后、应用自身参数之前。
@@ -321,8 +331,8 @@ dsh web --patch C:\absolute\path\to\dsh-CAIT\_dev\cait.patch.yml
 | `dataDir` | `""` | `store.json` 和 `sources/` 的目录。为空时使用 `$DSH_HOME/cait`。支持绝对路径、相对路径和 `~/...`。 |
 
 ```yaml
-- id: dsh-cait
-  name: dsh-cait
+- id: dsh-ai-translation
+  name: dsh-ai-translation
   config:
     dataDir: 'D:\CAT\cait-data'
 ```

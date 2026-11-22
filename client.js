@@ -1,6 +1,6 @@
 // 由 scripts/build-client.mjs 从 client/ 构建生成，请勿手工修改。
 window.__ModuleLoader__.load({
-  id: 'dsh-cait',
+  id: 'dsh-ai-translation',
   factory(require) {
     const module = { exports: {} }
     const exports = module.exports
@@ -10801,11 +10801,11 @@ var entry = {
     let stopLocale = null;
     try {
       if (ctx.locale?.register) {
-        ctx.locale.register("dsh-cait", "zh", ZH);
-        ctx.locale.register("dsh-cait", "en", EN);
-        ctx.locale.register("dsh-cait", "ja", JA);
+        ctx.locale.register("dsh-ai-translation", "zh", ZH);
+        ctx.locale.register("dsh-ai-translation", "en", EN);
+        ctx.locale.register("dsh-ai-translation", "ja", JA);
       }
-      if (ctx.locale?.bind) dshTranslate = ctx.locale.bind("dsh-cait");
+      if (ctx.locale?.bind) dshTranslate = ctx.locale.bind("dsh-ai-translation");
       if (ctx.locale?.subscribe) {
         stopLocale = ctx.locale.subscribe(() => {
           readActiveLocale();
@@ -10813,7 +10813,7 @@ var entry = {
         });
       }
     } catch (error) {
-      console.warn("[dsh-cait] locale registration failed", error);
+      console.warn("[dsh-ai-translation] locale registration failed", error);
     }
     if (stopLocale) ctx.effect(() => stopLocale);
     let preference = "auto";
@@ -10844,7 +10844,7 @@ var entry = {
       () => ctx.slots.register(
         {
           name: "sidebar.panellist",
-          id: "dsh-cait",
+          id: "dsh-ai-translation",
           order: 25,
           label: () => i18n.t("app.title")
         },
@@ -10856,7 +10856,7 @@ var entry = {
       () => ctx.slots.register(
         {
           name: "main",
-          key: "dsh-cait"
+          key: "dsh-ai-translation"
         },
         () => h(Workbench, { i18n, translate })
       )

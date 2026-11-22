@@ -15,7 +15,7 @@
 
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/dsh-cait"><img alt="npm バージョン" src="https://img.shields.io/npm/v/dsh-cait.svg" /></a>
+  <a href="https://www.npmjs.com/package/dsh-ai-translation"><img alt="npm バージョン" src="https://img.shields.io/npm/v/dsh-ai-translation.svg" /></a>
   <img alt="DSH 0.2.x" src="https://img.shields.io/badge/DSH-0.2.x-4d6bfe.svg" />
   <img alt="テスト 51 スイート" src="https://img.shields.io/badge/tests-51%20suites-brightgreen.svg" />
   <img alt="API キー不要" src="https://img.shields.io/badge/API%20key-not%20required-6b7280.svg" />
@@ -28,6 +28,16 @@ CAIT は DSH Web UI と DSH デスクトップに CAT ワークベンチを追�
 > **DSH `0.2.2-rc.1` で動作確認済み。** CAIT は DSH 自身のモデルルートと認証情報を
 > 使うため、API キーを要求しません。内部のフォールバックプロバイダは今も `mock` と
 > いう名前ですが、UI では **用語置換（オフライン）** と表示されます。
+
+## 由来と謝辞
+
+本リポジトリは **CAIT の改変版（フォーク）** であり、オリジナルではありません:
+
+- **上流**: CAIT（`dsh-cait`）、作者 **Jovi Lecca** — <https://github.com/JoviLecca/dsh-CAIT>、Apache-2.0。
+- **本フォーク**: `dsh-ai-translation`。上流 `1.1.8` を基に、ローカル用途の拡張（DOCX 同一段落内の結合・分割、AI アシスタントとプロジェクト説明ダイアログ、選択範囲からの用語登録、未確定訳文の自動退避、視覚ラッパー経路への耐性、トークン使用量と費用の集計）を加えたものです。詳細は [OPTIMIZATIONS.md](OPTIMIZATIONS.md) を参照してください。
+- **ライセンスと表示**: Apache-2.0 のままです。[LICENSE](LICENSE) は原文を保持し、[NOTICE](NOTICE) は上流の表示を残したうえで本フォークの情報を追記しています。再配布時は両ファイルを保持してください。
+- **謝辞**: 本コードベースの大部分は上流の成果です。CAT ワークベンチ、翻訳メモリ、用語集、多形式の入出力、21 のエージェントツールはすべて Jovi Lecca による設計と実装です。
+
 
 ## CAIT を選ぶ理由
 
@@ -267,7 +277,7 @@ OCR が必要です。CAIT に画像 OCR ステージはありません。
 
 ## インストール
 
-CAIT は DSH の bundle としてインストールします。公開パッケージ名は `dsh-cait` で、
+CAIT は DSH の bundle としてインストールします。公開パッケージ名は `dsh-ai-translation` で、
 プラグイン自体は左サイドバーに **CAIT** として表示されます。`desktop` プロファイルは
 アプリのプラグインマネージャが管理するため、プロファイルの `package.json` を手で編集せず
 そちらを使ってください。
@@ -277,16 +287,16 @@ CAIT は DSH の bundle としてインストールします。公開パッケ�
 DSH デスクトップ（または `plugin_manager` ツールがある任意のプロファイル）で:
 
 ```text
-plugin_manager install_bundle target: dsh-cait
+plugin_manager install_bundle target: dsh-ai-translation
 ```
 
-バージョンを固定するときは `dsh-cait@1.1.7`、最新版は `dsh-cait@latest` を指定します。
+バージョンを固定するときは `dsh-ai-translation@1.0.1`、最新版は `dsh-ai-translation@latest` を指定します。
 マネージャが registry のパッケージを解決し、bundle patch を適用してプラグインを有効化します。
 
 CLI 管理のプロファイル:
 
 ```sh
-dsh plugin --profile web add dsh-cait
+dsh plugin --profile web add dsh-ai-translation
 ```
 
 `web` はご自身のプロファイル名に置き換えてください。必要なら `dsh web` を再起動します。
@@ -296,13 +306,13 @@ dsh plugin --profile web add dsh-cait
 GitHub:
 
 ```text
-plugin_manager install_bundle target: github:JoviLecca/dsh-CAIT
+plugin_manager install_bundle target: github:scottzhb-hue/dsh-ai-translation
 ```
 
 ローカルのチェックアウト:
 
 ```text
-plugin_manager install_bundle target: /absolute/path/to/dsh-CAIT
+plugin_manager install_bundle target: /absolute/path/to/dsh-ai-translation
 ```
 
 その後 DSH をリロードすると、左サイドバーに **CAIT** のエントリが現れます。
@@ -310,8 +320,8 @@ plugin_manager install_bundle target: /absolute/path/to/dsh-CAIT
 ### ソースから
 
 ```sh
-git clone <this-repository> dsh-CAIT
-cd dsh-CAIT
+git clone <this-repository> dsh-ai-translation
+cd dsh-ai-translation
 npm run build:client
 ```
 
@@ -321,11 +331,11 @@ npm run build:client
 # _dev/cait.patch.yml
 - insert:
     - id: cait-dev
-      name: 'C:\absolute\path\to\dsh-CAIT'
+      name: 'C:\absolute\path\to\dsh-ai-translation'
 ```
 
 ```powershell
-dsh web --patch C:\absolute\path\to\dsh-CAIT\_dev\cait.patch.yml
+dsh web --patch C:\absolute\path\to\dsh-ai-translation\_dev\cait.patch.yml
 ```
 
 `--patch` はランチャーのオプションです。アプリ名（`web`）の後、アプリの引数の前に
@@ -339,8 +349,8 @@ dsh web --patch C:\absolute\path\to\dsh-CAIT\_dev\cait.patch.yml
 | `dataDir` | `""` | `store.json` と `sources/` を置くディレクトリ。空なら `$DSH_HOME/cait`。絶対パス、相対パス、`~/...` を受け付けます。 |
 
 ```yaml
-- id: dsh-cait
-  name: dsh-cait
+- id: dsh-ai-translation
+  name: dsh-ai-translation
   config:
     dataDir: 'D:\CAT\cait-data'
 ```

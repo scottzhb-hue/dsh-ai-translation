@@ -12,3 +12,14 @@ any redistribution of the work or a derivative work must retain this notice.
 Third-party components are not bundled with this work. DSH itself, the DSH
 runtime, and any installed DSH plugins remain under their own licenses; CAIT
 loads them from the host environment and does not redistribute them.
+
+------------------------------------------------------------------------
+This distribution is a modified fork of the work described above:
+
+  dsh-ai-translation (fork of CAIT / dsh-cait 1.1.8)
+  Copyright 2026 scottzhb-hue <scottzhb@gmail.com>
+  https://github.com/scottzhb-hue/dsh-ai-translation
+
+Modifications are limited to the local enhancements documented in
+OPTIMIZATIONS.md. The original copyright and attribution notice above is
+retained unchanged, as required by section 4 of the Apache License, Version 2.0.

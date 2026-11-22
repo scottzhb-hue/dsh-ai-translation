@@ -85,11 +85,11 @@ const entry = {
     let stopLocale = null
     try {
       if (ctx.locale?.register) {
-        ctx.locale.register('dsh-cait', 'zh', ZH)
-        ctx.locale.register('dsh-cait', 'en', EN)
-        ctx.locale.register('dsh-cait', 'ja', JA)
+        ctx.locale.register('dsh-ai-translation', 'zh', ZH)
+        ctx.locale.register('dsh-ai-translation', 'en', EN)
+        ctx.locale.register('dsh-ai-translation', 'ja', JA)
       }
-      if (ctx.locale?.bind) dshTranslate = ctx.locale.bind('dsh-cait')
+      if (ctx.locale?.bind) dshTranslate = ctx.locale.bind('dsh-ai-translation')
       if (ctx.locale?.subscribe) {
         stopLocale = ctx.locale.subscribe(() => {
           readActiveLocale()
@@ -97,7 +97,7 @@ const entry = {
         })
       }
     } catch (error) {
-      console.warn('[dsh-cait] locale registration failed', error)
+      console.warn('[dsh-ai-translation] locale registration failed', error)
     }
     if (stopLocale) ctx.effect(() => stopLocale)
 
@@ -134,7 +134,7 @@ const entry = {
       ctx.slots.register(
         {
           name: 'sidebar.panellist',
-          id: 'dsh-cait',
+          id: 'dsh-ai-translation',
           order: 25,
           label: () => i18n.t('app.title'),
         },
@@ -146,7 +146,7 @@ const entry = {
       ctx.slots.register(
         {
           name: 'main',
-          key: 'dsh-cait',
+          key: 'dsh-ai-translation',
         },
         () => h(Workbench, { i18n, translate }),
       ),

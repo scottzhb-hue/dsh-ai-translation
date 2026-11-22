@@ -37,7 +37,7 @@ export function readAuthoredClient({ includeLocales = false } = {}) {
 // 外框保持 DSH 侧契约不变：factory 收到 require，返回 entry 的默认导出。
 const HEADER = `// 由 scripts/build-client.mjs 从 client/ 构建生成，请勿手工修改。
 window.__ModuleLoader__.load({
-  id: 'dsh-cait',
+  id: 'dsh-ai-translation',
   factory(require) {
     const module = { exports: {} }
     const exports = module.exports

@@ -14,7 +14,7 @@
 
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/dsh-cait"><img alt="npm version" src="https://img.shields.io/npm/v/dsh-cait.svg" /></a>
+  <a href="https://www.npmjs.com/package/dsh-ai-translation"><img alt="npm version" src="https://img.shields.io/npm/v/dsh-ai-translation.svg" /></a>
   <img alt="DSH 0.2.x" src="https://img.shields.io/badge/DSH-0.2.x-4d6bfe.svg" />
   <img alt="Tests: 51 suites" src="https://img.shields.io/badge/tests-51%20suites-brightgreen.svg" />
   <img alt="No API key required" src="https://img.shields.io/badge/API%20key-not%20required-6b7280.svg" />
@@ -28,6 +28,16 @@ translated document.
 > **Tested with DSH `0.2.2-rc.1`.** CAIT uses DSH's own model routes and
 > credentials; it never asks for an API key. The internal fallback provider is
 > still called `mock`, but the UI labels it **Glossary substitution (offline)**.
+
+## Provenance and credits
+
+This repository is a **modified fork of CAIT**, not an original project:
+
+- **Upstream**: CAIT (`dsh-cait`) by **Jovi Lecca** — <https://github.com/JoviLecca/dsh-CAIT>, Apache-2.0.
+- **This fork**: `dsh-ai-translation`, based on upstream `1.1.8`, with local enhancements documented in [OPTIMIZATIONS.md](OPTIMIZATIONS.md) (segment merge/split across DOCX paragraphs, AI assistant and project-brief dialog, select-to-create-term, unconfirmed draft recovery, route robustness against vision wrapper providers, token/cost accounting).
+- **License and attribution**: still Apache-2.0. [LICENSE](LICENSE) is kept verbatim; [NOTICE](NOTICE) keeps the upstream notice and adds this fork's information. Any redistribution must keep both files.
+- **Thanks**: the vast majority of this code base is upstream work — the CAT workbench, translation memory, glossary, multi-format import/export and the 21 agent tools are all Jovi Lecca's design and implementation.
+
 
 ## Why CAIT
 
@@ -333,7 +343,7 @@ conversion; CAIT has no image OCR stage.
 
 ## Install
 
-CAIT installs as a DSH bundle; the published package name is `dsh-cait` and the
+CAIT installs as a DSH bundle; the published package name is `dsh-ai-translation` and the
 plugin itself shows up as **CAIT** in the left sidebar. The in-app plugin
 manager owns the `desktop` profile, so use it rather than editing the profile's
 `package.json`.
@@ -343,17 +353,17 @@ manager owns the `desktop` profile, so use it rather than editing the profile's
 In DSH Desktop (or any profile with the `plugin_manager` tool):
 
 ```text
-plugin_manager install_bundle target: dsh-cait
+plugin_manager install_bundle target: dsh-ai-translation
 ```
 
-Pin a release with `dsh-cait@1.1.7`, or ask for the newest one with
-`dsh-cait@latest`. The manager resolves the registry package, applies the bundle
+Pin a release with `dsh-ai-translation@1.0.1`, or ask for the newest one with
+`dsh-ai-translation@latest`. The manager resolves the registry package, applies the bundle
 patch, and activates the plugin — no hand-written profile rows.
 
 With a CLI-managed profile:
 
 ```sh
-dsh plugin --profile web add dsh-cait
+dsh plugin --profile web add dsh-ai-translation
 ```
 
 Replace `web` with your profile name, and restart `dsh web` if your host
@@ -364,13 +374,13 @@ requires it.
 GitHub:
 
 ```text
-plugin_manager install_bundle target: github:JoviLecca/dsh-CAIT
+plugin_manager install_bundle target: github:scottzhb-hue/dsh-ai-translation
 ```
 
 Local checkout:
 
 ```text
-plugin_manager install_bundle target: /absolute/path/to/dsh-CAIT
+plugin_manager install_bundle target: /absolute/path/to/dsh-ai-translation
 ```
 
 Then reload DSH. The **CAIT** entry appears in the left sidebar.
@@ -378,8 +388,8 @@ Then reload DSH. The **CAIT** entry appears in the left sidebar.
 ### From source
 
 ```sh
-git clone <this-repository> dsh-CAIT
-cd dsh-CAIT
+git clone <this-repository> dsh-ai-translation
+cd dsh-ai-translation
 npm run build:client
 ```
 
@@ -389,11 +399,11 @@ For a local `--patch` overlay, add a row pointing at this directory:
 # _dev/cait.patch.yml
 - insert:
     - id: cait-dev
-      name: 'C:\absolute\path\to\dsh-CAIT'
+      name: 'C:\absolute\path\to\dsh-ai-translation'
 ```
 
 ```powershell
-dsh web --patch C:\absolute\path\to\dsh-CAIT\_dev\cait.patch.yml
+dsh web --patch C:\absolute\path\to\dsh-ai-translation\_dev\cait.patch.yml
 ```
 
 `--patch` is a launcher option; place it after the app name (`web`) and before
@@ -407,8 +417,8 @@ not both.
 | `dataDir` | `""` | Directory for `store.json` and `sources/`. Empty means `$DSH_HOME/cait`. Absolute, relative, and `~/...` paths are accepted. |
 
 ```yaml
-- id: dsh-cait
-  name: dsh-cait
+- id: dsh-ai-translation
+  name: dsh-ai-translation
   config:
     dataDir: 'D:\CAT\cait-data'
 ```

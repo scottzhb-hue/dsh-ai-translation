@@ -1,23 +1,24 @@
 {
-  "name": "dsh-cait",
-  "version": "1.1.8-opt.1",
+  "name": "dsh-ai-translation",
+  "version": "1.0.1",
   "license": "Apache-2.0",
   "author": {
-    "name": "Jovi Lecca",
-    "url": "https://github.com/JoviLecca"
+    "name": "scottzhb-hue",
+    "email": "scottzhb@gmail.com",
+    "url": "https://github.com/scottzhb-hue"
   },
   "publishConfig": {
     "access": "public"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/JoviLecca/dsh-CAIT.git"
+    "url": "git+https://github.com/scottzhb-hue/dsh-ai-translation.git"
   },
-  "homepage": "https://github.com/JoviLecca/dsh-CAIT#readme",
+  "homepage": "https://github.com/scottzhb-hue/dsh-ai-translation#readme",
   "bugs": {
-    "url": "https://github.com/JoviLecca/dsh-CAIT/issues"
+    "url": "https://github.com/scottzhb-hue/dsh-ai-translation/issues"
   },
-  "description": "CAIT — a CAT workbench for DeepSeek Harness with translation memory, glossary, document tabs, MT routes, and Office/EPUB/subtitle/localization formats.",
+  "description": "AI-assisted translation workbench for DeepSeek Harness — a fork of CAIT with local enhancements (segment merge/split, AI chat, term capture, draft recovery, route robustness, usage stats).",
   "type": "module",
   "keywords": [
     "dsh-plugin",
@@ -30,7 +31,9 @@
     "docx",
     "xlsx",
     "pptx",
-    "xliff"
+    "xliff",
+    "cait",
+    "fork"
   ],
   "engines": {
     "dsh": ">=0.2.2-rc.1"
@@ -102,5 +105,11 @@
         "@deepseek-ai/dsh-client-ui-conversation"
       ]
     }
-  }
+  },
+  "contributors": [
+    {
+      "name": "Jovi Lecca",
+      "url": "https://github.com/JoviLecca"
+    }
+  ]
 }

@@ -4,6 +4,21 @@ All notable changes to CAIT are documented here. The project follows
 [Semantic Versioning](https://semver.org/) and the format is based on
 [Keep a Changelog](https://keepachangelog.com/).
 
+> 以下 `1.1.8` 及更早的条目属于上游 CAIT（作者 Jovi Lecca，Apache-2.0），
+> 保留原文以便溯源。本分支 `dsh-ai-translation` 从 `1.0.1` 起独立编号。
+
+## [1.0.1] - 2026-11-23
+
+### Changed
+
+- 以 `dsh-ai-translation` 名义发布：这是 CAIT（`dsh-cait@1.1.8`，作者 Jovi Lecca，
+  Apache-2.0）的修改版。包名、Cordis 模块 id 与客户端模块 id 同步改为
+  `dsh-ai-translation`；数据目录仍是 `~/.dsh/cait`，已有项目、翻译记忆与术语库可直接沿用。
+- 术语右键菜单改用 DSH 主题令牌（修复深色主题下白底浅灰字的对比度问题），位置按视口夹取，
+  支持点击别处、滚动与 `Esc` 关闭。
+- 相对上游的其它改动（DOCX 同段合并/拆分、AI 助手与项目说明、选中即建术语、未确认译文暂存、
+  识图包装路由健壮性、Token 用量与费用统计）见 [OPTIMIZATIONS.md](OPTIMIZATIONS.md)。
+
 ## [1.1.8] - 2026-11-10
 
 ### Added
