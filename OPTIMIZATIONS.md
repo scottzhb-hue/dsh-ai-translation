@@ -24,7 +24,7 @@
 | 04 | 选中即建术语（右键 / Ctrl+Alt+T、默认库 + 首次提示） | 已上线 | `lib/term-capture.js`、`lib/settings.js`、`lib/persistence.js`、`lib/store-mixins.js`、`lib/api.js` | `client/components/editor.js`、`client/components/dialogs.js`、`client/components/workbench.js`、`client/workbench/controller.js`、`client/locales.js`、`client.js` | `.bak-term-20261122-1905` |
 | 05 | 未确认译文自动暂存（`drafts/<docId>.json`） | 已上线 | `lib/draft-recovery.js`、`lib/store-mixins.js`、`lib/api.js` | `client/workbench/controller.js`、`client/locales.js`、`client.js` | `.bak-recovery-20261122-2005` |
 | 06 | 路由健壮性：跳过 modlens 识图包装路由 + 真实错误透出 + 下拉标注 | 已上线 | `lib/mt.js`、`lib/routes.js`、`lib/mt-translate.js`、`lib/review.js`、`lib/ai-chat.js` | `client/components/dialogs.js`、`client/components/panels.js`、`client/locales.js`、`client.js` | `.bak-wrapper-20261122-1945` |
-| 07 | **Token 消耗统计与预估费用（优化04）** | 已上线 | `lib/usage.js`、`lib/pricing.js`、`lib/mt.js`、`lib/api.js`、`index.js` | `client/components/usage.js`、`client/components/shell.js`、`client/components/workbench.js`、`client/workbench/controller.js`、`client/locales.js`、`client.js` | `cait-usage-backup-20261122-225245`（工作区） |
+| 07 | **Token 消耗统计与预估费用** | 已上线 | `lib/usage.js`、`lib/pricing.js`、`lib/mt.js`、`lib/api.js`、`index.js` | `client/components/usage.js`、`client/components/shell.js`、`client/components/workbench.js`、`client/workbench/controller.js`、`client/locales.js`、`client.js` | `cait-usage-backup-20261122-225245`（工作区） |
 | 08 | AI 对话消息形状防御 + 「整理为项目说明」 | 已上线 | `lib/ai-chat.js` | `client/components/dialogs.js`、`client/components/workbench.js`、`client/workbench/controller.js`、`client/locales.js`、`client.js` | `.bak-summarize-20261122-2215` |
 | 09 | 界面名称统一：写死的 `CAIT` → 「AI辅助翻译」（入口 / 品牌 / 提示语） | 已上线 | —（纯前端） | `client/components/shell.js`、`client/locales.js`、`client.js`、`locale/{zh,en,ja}.json` | `.bak-title-*`、`.bak-subtitle-*`（已清理） |
 
@@ -81,7 +81,7 @@
   - 客户端：设置下拉给包装路由加标注「识图包装，文本翻译不可用」；右侧面板当前路由是包装时同样标注。
 - **验证**：`cait_route_test.mjs` 6 组用例；用户实测换成 `DeepSeek Account` 后单句翻译成功。
 
-### 07 Token 消耗统计与预估费用（优化04）
+### 07 Token 消耗统计与预估费用
 
 - **动机**：CAIT 直接调用宿主 `llm` 服务，这些调用不进 DSH 会话日志，看不到花了多少 token / 多少钱。
 - **服务端**：
