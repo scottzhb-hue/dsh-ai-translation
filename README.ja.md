@@ -1,12 +1,13 @@
 <p align="center">
-  <img src="icon.svg" width="76" alt="CAIT アイコン" />
+  <img src="icon.svg" width="76" alt="dsh-ai-translation アイコン" />
 </p>
 
-<h1 align="center">CAIT</h1>
+<h1 align="center">dsh-ai-translation</h1>
 
 <p align="center">
   <strong>DeepSeek Harness の中で使うコンピュータ支援翻訳。</strong><br/>
-  翻訳メモリ · 用語集 · セグメントエディタ · MT 支援 · 文書タブ · Office / 字幕 / ローカリゼーション形式
+  翻訳メモリ · 用語集 · セグメントエディタ · MT 支援 · 文書タブ · Office / 字幕 / ローカリゼーション形式<br/>
+  <sub><a href="https://github.com/JoviLecca/dsh-CAIT">CAIT</a>（作者 Jovi Lecca）のフォークです。詳細は<a href="#由来と謝辞">由来と謝辞</a>。</sub>
 </p>
 
 <p align="center">

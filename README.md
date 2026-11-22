@@ -1,12 +1,13 @@
 <p align="center">
-  <img src="icon.svg" width="76" alt="CAIT icon" />
+  <img src="icon.svg" width="76" alt="dsh-ai-translation icon" />
 </p>
 
-<h1 align="center">CAIT</h1>
+<h1 align="center">dsh-ai-translation</h1>
 
 <p align="center">
   <strong>Computer-aided translation, inside DeepSeek Harness.</strong><br/>
-  Translation memory · glossary · segment editor · MT assistance · document tabs · Office / subtitle / localization formats
+  Translation memory · glossary · segment editor · MT assistance · document tabs · Office / subtitle / localization formats<br/>
+  <sub>A fork of <a href="https://github.com/JoviLecca/dsh-CAIT">CAIT</a> by Jovi Lecca — see <a href="#provenance-and-credits">Provenance and credits</a>.</sub>
 </p>
 <p align="center">
   <a href="README.zh-CN.md">简体中文</a> · <a href="README.ja.md">日本語</a> · <a href="README.md">English</a>

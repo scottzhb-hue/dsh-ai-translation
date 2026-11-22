@@ -1,12 +1,13 @@
 <p align="center">
-  <img src="icon.svg" width="76" alt="CAIT 图标" />
+  <img src="icon.svg" width="76" alt="dsh-ai-translation 图标" />
 </p>
 
-<h1 align="center">CAIT</h1>
+<h1 align="center">dsh-ai-translation</h1>
 
 <p align="center">
   <strong>在 DeepSeek Harness 中完成计算机辅助翻译。</strong><br/>
-  翻译记忆 · 术语库 · 句段编辑器 · 机器翻译辅助 · 文档标签页 · Office / 字幕 / 本地化格式
+  翻译记忆 · 术语库 · 句段编辑器 · 机器翻译辅助 · 文档标签页 · Office / 字幕 / 本地化格式<br/>
+  <sub>基于 <a href="https://github.com/JoviLecca/dsh-CAIT">CAIT</a>（作者 Jovi Lecca）的分支，详见 <a href="#来源与致谢">来源与致谢</a>。</sub>
 </p>
 
 <p align="center">
