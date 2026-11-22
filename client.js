@@ -198,8 +198,8 @@ function fuzzyPercent(value) {
 
 // client/locales.js
 var ZH = {
-  "app.title": "CAIT",
-  "app.subtitle": "CAT 翻译工作台",
+  "app.title": "AI辅助翻译",
+  "app.subtitle": "翻译工作台",
   "nav.new": "新建",
   "nav.import": "导入",
   "nav.export": "导出",
@@ -604,8 +604,8 @@ var ZH = {
   "usage.tooltip": "今日 {today} tokens · 累计 {total} tokens · {count} 次请求"
 };
 var EN = {
-  "app.title": "CAIT",
-  "app.subtitle": "CAT workbench",
+  "app.title": "AI Translation",
+  "app.subtitle": "translation workbench",
   "nav.new": "New",
   "nav.import": "Import",
   "nav.export": "Export",
@@ -1010,8 +1010,8 @@ var EN = {
   "usage.tooltip": "Today {today} tokens · {total} tokens total · {count} requests"
 };
 var JA = {
-  "app.title": "CAIT",
-  "app.subtitle": "CAT 翻訳ワークベンチ",
+  "app.title": "AI翻訳",
+  "app.subtitle": "翻訳ワークベンチ",
   "nav.new": "新規",
   "nav.import": "インポート",
   "nav.export": "エクスポート",
@@ -3757,7 +3757,7 @@ function Topbar({
       h(
         "span",
         { className: "cait-brand-text" },
-        h("strong", null, "CAIT"),
+        h("strong", null, t("app.title")),
         h("span", null, t("app.subtitle"))
       )
     ),

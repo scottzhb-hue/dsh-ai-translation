@@ -220,7 +220,7 @@ function Topbar({
       h(
         'span',
         { className: 'cait-brand-text' },
-        h('strong', null, 'CAIT'),
+        h('strong', null, t('app.title')),
         h('span', null, t('app.subtitle')),
       ),
     ),

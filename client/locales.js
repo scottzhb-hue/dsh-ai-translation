@@ -1,6 +1,6 @@
 const ZH = {
-  'app.title': 'CAIT',
-  'app.subtitle': 'CAT 翻译工作台',
+  'app.title': 'AI辅助翻译',
+  'app.subtitle': '翻译工作台',
   'nav.new': '新建',
   'nav.import': '导入',
   'nav.export': '导出',
@@ -415,8 +415,8 @@ const ZH = {
 }
 
 const EN = {
-  'app.title': 'CAIT',
-  'app.subtitle': 'CAT workbench',
+  'app.title': 'AI Translation',
+  'app.subtitle': 'translation workbench',
   'nav.new': 'New',
   'nav.import': 'Import',
   'nav.export': 'Export',
@@ -856,8 +856,8 @@ const EN = {
 }
 
 const JA = {
-  'app.title': 'CAIT',
-  'app.subtitle': 'CAT 翻訳ワークベンチ',
+  'app.title': 'AI翻訳',
+  'app.subtitle': '翻訳ワークベンチ',
   'nav.new': '新規',
   'nav.import': 'インポート',
   'nav.export': 'エクスポート',
