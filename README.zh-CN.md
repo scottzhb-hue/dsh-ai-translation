@@ -266,6 +266,8 @@ CAIT 以 DSH bundle 的形式安装；发布的 npm 包名为 `dsh-ai-translatio
 **CAIT**。`desktop` 配置档由应用的 plugin manager 管理，请通过它安装，不要手写配置档的
 `package.json`。
 
+> `plugin_manager …` 是 DSH 的**工具调用**（在对话里让代理执行，或在应用的插件管理器界面里填同样的 spec），不是 PowerShell / shell 命令。
+
 ### 从 npm 安装
 
 在 DSH 桌面端（或任何带有 `plugin_manager` 工具的配置档）中：

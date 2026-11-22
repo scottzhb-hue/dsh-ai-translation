@@ -349,6 +349,8 @@ plugin itself shows up as **CAIT** in the left sidebar. The in-app plugin
 manager owns the `desktop` profile, so use it rather than editing the profile's
 `package.json`.
 
+> `plugin_manager …` is a **DSH tool call** — ask the agent to run it, or paste the same spec into the in-app plugin manager. It is not a shell command.
+
 ### From npm
 
 In DSH Desktop (or any profile with the `plugin_manager` tool):
