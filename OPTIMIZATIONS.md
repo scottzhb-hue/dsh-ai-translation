@@ -28,6 +28,7 @@
 | 08 | AI 对话消息形状防御 + 「整理为项目说明」 | 已上线 | `lib/ai-chat.js` | `client/components/dialogs.js`、`client/components/workbench.js`、`client/workbench/controller.js`、`client/locales.js`、`client.js` | `.bak-summarize-20261122-2215` |
 | 09 | 界面名称统一：写死的 `CAIT` → 「AI辅助翻译」（入口 / 品牌 / 提示语） | 已上线 | —（纯前端） | `client/components/shell.js`、`client/locales.js`、`client.js`、`locale/{zh,en,ja}.json` | `.bak-title-*`、`.bak-subtitle-*`（已清理） |
 | 10 | 插件图标重制：折角文档 + 两行文字 + 品牌色四角星（与上游 CAIT 的双气泡区分） | 已上线 | —（纯前端） | `icon.svg`、`client/components/base.js`、`client.js` | 无（改动前内容见本文件 09/10 说明） |
+| 11 | 旧版 Office 导入：`.doc` / `.xls` / `.ppt` 先经本机 Office 转 OOXML 再导入 | 已上线 | `lib/legacy-office.js`（新增）、`lib/file-ops.js`、`lib/import-file.js` | `client/components/forms.js`、`client/components/pages.js`、`client/locales.js`、`client.js` | 无（新模块，无覆盖式改动） |
 
 ## 明细
 
@@ -130,6 +131,19 @@
 - **注意**：用 sharp 预览时**先替换 `var(--dsw-alias-brand-primary, currentColor)` 再替换 `currentColor`**，否则 fallback 会被提前换掉、星形渲染成灰色（预览假象，不是文件问题）。
 - **生效方式**：`client.js` / `base.js` 改动 → `Ctrl+Shift+R` 强刷；`icon.svg` 属包内文件，插件管理器若缓存图标，需重装或重启 DSH 才会刷新。
 
+### 11 旧版 Office 导入（.doc / .xls / .ppt）
+
+- **动机**：上游的 `SUPPORTED_IMPORT_EXTENSIONS` 不含 2007 之前的二进制 Office 格式；这些扩展名会掉到纯文本读取分支，于是用户看到的是「文件内容为空。」——对 `.doc` 完全是误导。
+- **实现**：
+  - 新增 `lib/legacy-office.js`：`LEGACY_OFFICE_TARGETS`（doc→docx / xls→xlsx / ppt→pptx）、`extensionOfFileName`、`isLegacyOfficeExtension`、`stripLegacyExtension`、`convertLegacyOffice({ base64, fileName, extension })`。
+  - 转换在**子进程**里做：把上传的 base64 写到系统临时目录，写一份 ASCII 的 PowerShell 脚本，用 `powershell.exe -NoProfile -NonInteractive -ExecutionPolicy Bypass -File` 驱动 Word / Excel / PowerPoint 的 COM 接口另存为 OOXML（Word `SaveAs2(16)`、Excel `SaveAs(51)`、PowerPoint `SaveAs(24)`），90 秒超时，读回结果后清理临时目录。
+  - `lib/file-ops.js` 的 `importFile` 改为 async：命中旧扩展名时先转换，再用转换后的 base64 与 `.docx` 文件名走原来的同步解析；文档标题沿用用户输入并去掉旧扩展名。
+  - `lib/import-file.js` 的 `SUPPORTED_IMPORT_EXTENSIONS` 补上 `doc` / `xls` / `ppt`（标注为「转换后可读」）。
+  - 客户端：`forms.js` 与 `pages.js` 的 `accept` 列表加入 `.doc,.xls,.ppt`；`client/locales.js` 与 `client.js` 三语格式提示补 `DOC · XLS · PPT`（中文另加「旧版 Office 需本机安装 Office」/ 日文「旧形式は Office が必要」）。
+- **失败语义**：转换不可用（没装 Office、PowerShell 不可用、超时、产出为空）时抛 `LEGACY_OFFICE_UNAVAILABLE`（HTTP 422），文案明确写出「请确认本机已安装 Microsoft Office（Word / Excel / PowerPoint），或把文件另存为 .docx 后重新导入」。该错误码不带 `_FAILED` / `_UNSUPPORTED` 等家族后缀，因此客户端会原样显示服务端消息，不会被压成「操作失败，请稍后重试。」。
+- **验证**：`lib/legacy-office.js` / `lib/file-ops.js` / `lib/import-file.js` 均可 import；用 Word COM 现场生成 `.doc`（25,088 字节，magic `d0cf11e0`）→ 转换 6.7 秒产出 `PK` 开头 docx（14,173 字节）→ `store.importFile` 得到 format=docx、2 个句段、标题保留中文且不含 `.doc`；把 `PATH` 指到无效目录后同一调用抛出 `LEGACY_OFFICE_UNAVAILABLE`（消息含安装提示）；客户端 6 个文件 `vm.SourceTextModule` 编译通过、bundle 与源码的 accept/提示语逐项一致。
+- **代价与边界**：需要 Windows + 已安装 Microsoft Office（WPS 未验证）；每个文件约 5–10 秒；导入期间 Office 会以后台进程启动（COM 退出时自动关闭）；转换结果只保留内容（样式、批注等由 Office 自己决定保留程度）；导出仍只有现代格式。
+
 ## 维护与发布须知
 
 1. **为什么手改 `client.js`**：本机 profile 里没有可用的 esbuild（`node_modules\@esbuild` 是空目录，DSH 安装包内也没有），`scripts/build-client.mjs` 跑不起来；插件的 `exports["./client"]` 指向打包产物 `client.js`，所以每次改客户端都要**源码 `client/*.js` 与 `client.js` 同步改**（bundle 是全双引号 + 分号风格）。
@@ -162,5 +176,5 @@
 - CAIT 用量账本与 DSH 会话用量打通（目前只看得到 CAIT 自己的调用）。
 - 用量数据支持导出 CSV / 按月汇总图。
 - pptx / xlsx 的拆分支持（需要"同单元多句段"的稳定锚点）。
-- 旧版 Office（`.doc` / `.xls` / `.ppt`）导入：可在 Windows 上用本机 Office COM 先转成 OOXML 再导入（未装 Office 时回落到清晰报错），方案待定。
+
 - 把手工补丁流程改成可复现脚本（含 esbuild 构建链），便于发布与回滚。

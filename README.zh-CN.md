@@ -47,7 +47,7 @@
 | **可解释的翻译记忆** | 支持多个 TM 库、仅检索已挂载库、上下文 101%、精确/近似精确/高/中/低模糊等级，确认句段时自动写回。 |
 | **术语感知编辑** | 支持多个术语库、按源语言过滤、行内高亮、点击插入术语，以及按术语设置是否区分大小写。 |
 | **完整文档流程** | 文档标签页、关闭/重新打开、最近文档清理、重复导入复用、逐文档进度。 |
-| **真实格式覆盖** | TXT、Markdown、DOCX、EPUB、TMX、CSV、SRT/VTT、PO、XLIFF 1.2/2.0/SDLXLIFF、HTML、JSON、XLSX、PPTX、RTF。 |
+| **真实格式覆盖** | TXT、Markdown、DOCX、EPUB、TMX、CSV、SRT/VTT、PO、XLIFF 1.2/2.0/SDLXLIFF、HTML、JSON、XLSX、PPTX、RTF。旧版 `.doc` / `.xls` / `.ppt` 会先借运行 DSH 那台机器上安装的 Microsoft Office 转成 OOXML 再导入。 |
 | **面向 Agent** | 二十一个工具共享当前文档和存储，Agent 可以与用户同时翻译。 |
 
 ## 快速开始

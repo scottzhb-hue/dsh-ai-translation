@@ -171,7 +171,7 @@ function AlignPage({ t, data, notify, report, onConfirm }) {
       h('input', {
         ref,
         type: 'file',
-        accept: '.txt,.md,.docx,.epub,.html,.htm,.xlsx,.pptx,.csv,.srt,.vtt,.po,.json,.rtf,.xliff',
+        accept: '.txt,.md,.docx,.epub,.html,.htm,.xlsx,.pptx,.doc,.xls,.ppt,.csv,.srt,.vtt,.po,.json,.rtf,.xliff',
         style: { display: 'none' },
         onChange: (event) => {
           const chosen = event.target.files && event.target.files[0]

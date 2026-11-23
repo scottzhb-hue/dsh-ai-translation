@@ -101,7 +101,7 @@ const ZH = {
   'empty.demoHint': '没有素材？',
   'empty.drop': '拖入文件，或点击选择',
   'empty.formats':
-    '支持 TXT · Markdown · DOCX · EPUB · TMX · CSV · SRT · VTT · PO · XLIFF · HTML · JSON · RTF · XLSX · PPTX',
+    '支持 TXT · Markdown · DOCX · EPUB · TMX · CSV · SRT · VTT · PO · XLIFF · HTML · JSON · RTF · XLSX · PPTX · DOC · XLS · PPT（旧版 Office 需本机安装 Office）',
   'empty.features.tm': '翻译记忆',
   'empty.features.tmDesc': '精确 + 模糊匹配',
   'empty.features.glossary': '术语库',
@@ -116,7 +116,7 @@ const ZH = {
   'modal.new.create': '创建文档',
   'modal.new.importing': '正在导入…',
   'modal.new.dropHint':
-    'TXT · Markdown · DOCX · EPUB · TMX · CSV · SRT · VTT · PO · XLIFF · HTML · JSON · RTF · XLSX · PPTX',
+    'TXT · Markdown · DOCX · EPUB · TMX · CSV · SRT · VTT · PO · XLIFF · HTML · JSON · RTF · XLSX · PPTX · DOC · XLS · PPT',
   'modal.new.csvSource': 'CSV 源文列',
   'modal.new.csvTarget': 'CSV 译文列',
   'modal.new.csvColumnPlaceholder': '列名或列号，例如 Source / 2',
@@ -523,7 +523,7 @@ const EN = {
   'empty.demoHint': 'No material?',
   'empty.drop': 'Drop a file, or click to choose',
   'empty.formats':
-    'TXT · Markdown · DOCX · EPUB · TMX · CSV · SRT · VTT · PO · XLIFF · HTML · JSON · RTF · XLSX · PPTX',
+    'TXT · Markdown · DOCX · EPUB · TMX · CSV · SRT · VTT · PO · XLIFF · HTML · JSON · RTF · XLSX · PPTX · DOC · XLS · PPT',
   'empty.features.tm': 'Translation memory',
   'empty.features.tmDesc': 'Exact + fuzzy matching',
   'empty.features.glossary': 'Glossary',
@@ -538,7 +538,7 @@ const EN = {
   'modal.new.create': 'Create document',
   'modal.new.importing': 'Importing…',
   'modal.new.dropHint':
-    'TXT · Markdown · DOCX · EPUB · TMX · CSV · SRT · VTT · PO · XLIFF · HTML · JSON · RTF · XLSX · PPTX',
+    'TXT · Markdown · DOCX · EPUB · TMX · CSV · SRT · VTT · PO · XLIFF · HTML · JSON · RTF · XLSX · PPTX · DOC · XLS · PPT',
   'modal.new.csvSource': 'CSV source column',
   'modal.new.csvTarget': 'CSV target column',
   'modal.new.csvColumnPlaceholder': 'Column name or number, e.g. Source / 2',
@@ -962,7 +962,7 @@ const JA = {
   'empty.demoHint': '素材がありませんか？',
   'empty.drop': 'ファイルをドロップ、またはクリックして選択',
   'empty.formats':
-    'TXT · Markdown · DOCX · EPUB · TMX · CSV · SRT · VTT · PO · XLIFF · HTML · JSON · RTF · XLSX · PPTX に対応',
+    'TXT · Markdown · DOCX · EPUB · TMX · CSV · SRT · VTT · PO · XLIFF · HTML · JSON · RTF · XLSX · PPTX · DOC · XLS · PPT に対応（旧形式は Office が必要）',
   'empty.features.tm': '翻訳メモリ',
   'empty.features.tmDesc': '完全一致＋あいまい一致',
   'empty.features.glossary': '用語集',
@@ -977,7 +977,7 @@ const JA = {
   'modal.new.create': '文書を作成',
   'modal.new.importing': 'インポート中…',
   'modal.new.dropHint':
-    'TXT · Markdown · DOCX · EPUB · TMX · CSV · SRT · VTT · PO · XLIFF · HTML · JSON · RTF · XLSX · PPTX',
+    'TXT · Markdown · DOCX · EPUB · TMX · CSV · SRT · VTT · PO · XLIFF · HTML · JSON · RTF · XLSX · PPTX · DOC · XLS · PPT',
   'modal.new.csvSource': 'CSV 原文列',
   'modal.new.csvTarget': 'CSV 訳文列',
   'modal.new.csvColumnPlaceholder': '列名または列番号（例：Source / 2）',

@@ -7,6 +7,12 @@ All notable changes to CAIT are documented here. The project follows
 > 以下 `1.1.8` 及更早的条目属于上游 CAIT（作者 Jovi Lecca，Apache-2.0），
 > 保留原文以便溯源。本分支 `dsh-ai-translation` 从 `1.0.1` 起独立编号。
 
+## [Unreleased]
+
+### Added
+
+- Import legacy binary Office documents (`.doc`, `.xls`, `.ppt`) by converting them to OOXML with the Microsoft Office installed on the DSH host; failures now explain how to proceed instead of reporting an empty file. See OPTIMIZATIONS.md 11.
+- Plugin icon: folded document with two text lines and a brand-coloured sparkle, replacing the upstream chat-bubble mark (OPTIMIZATIONS.md 10).
 ## [1.0.1] - 2026-11-23
 
 ### Changed
