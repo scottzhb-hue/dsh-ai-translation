@@ -27,6 +27,7 @@
 | 07 | **Token 消耗统计与预估费用** | 已上线 | `lib/usage.js`、`lib/pricing.js`、`lib/mt.js`、`lib/api.js`、`index.js` | `client/components/usage.js`、`client/components/shell.js`、`client/components/workbench.js`、`client/workbench/controller.js`、`client/locales.js`、`client.js` | `cait-usage-backup-20261122-225245`（工作区） |
 | 08 | AI 对话消息形状防御 + 「整理为项目说明」 | 已上线 | `lib/ai-chat.js` | `client/components/dialogs.js`、`client/components/workbench.js`、`client/workbench/controller.js`、`client/locales.js`、`client.js` | `.bak-summarize-20261122-2215` |
 | 09 | 界面名称统一：写死的 `CAIT` → 「AI辅助翻译」（入口 / 品牌 / 提示语） | 已上线 | —（纯前端） | `client/components/shell.js`、`client/locales.js`、`client.js`、`locale/{zh,en,ja}.json` | `.bak-title-*`、`.bak-subtitle-*`（已清理） |
+| 10 | 插件图标重制：折角文档 + 两行文字 + 品牌色四角星（与上游 CAIT 的双气泡区分） | 已上线 | —（纯前端） | `icon.svg`、`client/components/base.js`、`client.js` | 无（改动前内容见本文件 09/10 说明） |
 
 ## 明细
 
@@ -118,6 +119,17 @@
 - **验证**：`client.js`、`client/locales.js`、`client/components/shell.js` 全部通过 `vm.SourceTextModule`；`client/locales.js` 内 `CAIT` 出现 0 次；`h('strong', null, 'CAIT')` 在源码与 bundle 中均为 0 处；强刷后侧边栏显示「AI辅助翻译」，面板标题同名、副标题「翻译工作台」。
 - **不做**：`lib/tools.js` 里 21 个 Agent 工具的英文描述、README 的溯源段落仍保留 `CAIT`（分别属于工具契约与上游署名，改动会污染 diff 或削弱署名）。
 
+### 10 插件图标重制（与上游 CAIT 区分）
+
+- **动机**：上游图标是「双气泡 + 大写 A + 网络线」，本分支已改名 AI辅助翻译，继续沿用会让人误以为是同一个插件；同时希望图标能体现本分支的核心场景（文档翻译）与 AI 增强。
+- **实现**：
+  - 图形：**折角文档**（右上折角，读作「文档 / 稿件」）＋ 文档内两行文字（第二行 60% 透明度，读作「原文 / 译文」）＋ 右下 **品牌色四角星**（AI 增强）。全部在 32×32 视口内，页面用 2.1 描边，18px 仍可辨识。
+  - 落地三处，必须同步：`icon.svg`（插件包图标，`role=img` 且 `title` / `aria-label` 为「AI辅助翻译 (dsh-ai-translation)」）；`client/components/base.js` 的 `CaitMark({ size = 16 })`（侧边栏与面板顶部都用它，`CaitSidebarIcon` 只是包了一层 span）；打包产物 `client.js` 内同一组件（双引号 + 分号风格）。
+  - 颜色全部走主题变量：页面 `var(--dsw-alias-bg-base, #ffffff)`、星形 `var(--dsw-alias-brand-primary, currentColor)`、描边 `currentColor` —— 深/浅色主题与侧边栏选中态自动适配，不需要额外 CSS。
+- **验证**：`vm.SourceTextModule` 编译通过（`client.js` / `base.js` / `shell.js`）；13 项锚点断言确认新路径各 1 处、旧气泡 / A 字形 / 网络线 0 处；用 sharp 把 `icon.svg` 渲染到 18/32/64（深/浅两色）目视确认可辨识度。
+- **注意**：用 sharp 预览时**先替换 `var(--dsw-alias-brand-primary, currentColor)` 再替换 `currentColor`**，否则 fallback 会被提前换掉、星形渲染成灰色（预览假象，不是文件问题）。
+- **生效方式**：`client.js` / `base.js` 改动 → `Ctrl+Shift+R` 强刷；`icon.svg` 属包内文件，插件管理器若缓存图标，需重装或重启 DSH 才会刷新。
+
 ## 维护与发布须知
 
 1. **为什么手改 `client.js`**：本机 profile 里没有可用的 esbuild（`node_modules\@esbuild` 是空目录，DSH 安装包内也没有），`scripts/build-client.mjs` 跑不起来；插件的 `exports["./client"]` 指向打包产物 `client.js`，所以每次改客户端都要**源码 `client/*.js` 与 `client.js` 同步改**（bundle 是全双引号 + 分号风格）。
@@ -150,4 +162,5 @@
 - CAIT 用量账本与 DSH 会话用量打通（目前只看得到 CAIT 自己的调用）。
 - 用量数据支持导出 CSV / 按月汇总图。
 - pptx / xlsx 的拆分支持（需要"同单元多句段"的稳定锚点）。
+- 旧版 Office（`.doc` / `.xls` / `.ppt`）导入：可在 Windows 上用本机 Office COM 先转成 OOXML 再导入（未装 Office 时回落到清晰报错），方案待定。
 - 把手工补丁流程改成可复现脚本（含 esbuild 构建链），便于发布与回滚。
