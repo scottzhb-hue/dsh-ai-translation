@@ -1,0 +1,43 @@
+name: publish-github-packages
+
+on:
+  push:
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Run npm publish --dry-run instead of publishing'
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          registry-url: https://npm.pkg.github.com
+          scope: '@scottzhb-hue'
+
+      - name: Verify the artefact (no dependencies required)
+        run: node --experimental-vm-modules scripts/check-publish.mjs
+
+      - name: Publish to GitHub Packages
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [ "${{ inputs.dry_run }}" = "true" ]; then
+            npm publish --dry-run
+          else
+            npm publish
+          fi
+
+      - name: Summary
+        run: node -e "const p=require('./package.json');console.log('published '+p.name+'@'+p.version)"

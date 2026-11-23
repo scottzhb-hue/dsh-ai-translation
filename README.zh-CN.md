@@ -33,7 +33,7 @@
 本仓库是 **CAIT 的修改版（fork）**，不是原创项目：
 
 - **上游项目**：CAIT（`dsh-cait`），作者 **Jovi Lecca**，仓库 <https://github.com/JoviLecca/dsh-CAIT>，Apache-2.0 许可。
-- **本分支**：`dsh-ai-translation`，基于上游 `1.1.8`，按本地使用需求增加了若干能力（DOCX 同段合并/拆分、AI 助手与项目说明对话框、选中即建术语、未确认译文暂存、识图包装路由健壮性、Token 用量与费用统计），逐条记录在 [OPTIMIZATIONS.md](OPTIMIZATIONS.md)。
+- **本分支**：`@scottzhb-hue/dsh-ai-translation`，基于上游 `1.1.8`，按本地使用需求增加了若干能力（DOCX 同段合并/拆分、AI 助手与项目说明对话框、选中即建术语、未确认译文暂存、识图包装路由健壮性、Token 用量与费用统计），逐条记录在 [OPTIMIZATIONS.md](OPTIMIZATIONS.md)。
 - **界面名称**：本分支在 DSH 里显示为「AI辅助翻译」（英 `AI Translation`、日 `AI翻訳`），侧边栏入口、工作台标题与界面提示语统一用这个名字；`CAIT` / `dsh-cait` 只作为上游项目名出现。
 - **许可与署名**：仍为 Apache-2.0。[LICENSE](LICENSE) 原文保留，[NOTICE](NOTICE) 保留上游声明并补充本分支信息；任何再分发都必须保留这两份文件。
 - **致谢**：本代码库的绝大部分来自上游——CAT 工作台、翻译记忆、术语库、多格式导入导出与 21 个 Agent 工具均为 Jovi Lecca 的设计与实现。感谢原作者把这样一个完整的工作台开源出来。
@@ -52,7 +52,7 @@
 
 ## 快速开始
 
-1. 安装 CAIT，然后从左侧栏的 **CAIT** 入口打开。
+1. 安装后从左侧栏的 **AI辅助翻译** 入口打开。
 2. 选择 **新开页面**，拖入源文件或粘贴文本。
 3. 设置源语言和目标语言。
 4. 翻译当前句段；右侧面板会显示 TM 匹配、术语命中和 MT 建议。
@@ -263,8 +263,8 @@ CAIT 没有图片 OCR 阶段。
 
 ## 安装
 
-CAIT 以 DSH bundle 的形式安装；发布的 npm 包名为 `dsh-ai-translation`，插件本身在左侧栏显示为
-**CAIT**。`desktop` 配置档由应用的 plugin manager 管理，请通过它安装，不要手写配置档的
+CAIT 以 DSH bundle 的形式安装；发布的 npm 包名为 `@scottzhb-hue/dsh-ai-translation`，插件本身在左侧栏显示为
+**AI辅助翻译**。`desktop` 配置档由应用的 plugin manager 管理，请通过它安装，不要手写配置档的
 `package.json`。
 
 > `plugin_manager …` 是 DSH 的**工具调用**（在对话里让代理执行，或在应用的插件管理器界面里填同样的 spec），不是 PowerShell / shell 命令。
@@ -273,17 +273,19 @@ CAIT 以 DSH bundle 的形式安装；发布的 npm 包名为 `dsh-ai-translatio
 
 在 DSH 桌面端（或任何带有 `plugin_manager` 工具的配置档）中：
 
+GitHub Packages 需要在 `.npmrc` 里配置 `@scottzhb-hue:registry=https://npm.pkg.github.com`，并配一个具备 `read:packages` 权限的令牌；从本仓库直装（下面的 `github:` 方式）不需要 registry 鉴权。
+
 ```text
-plugin_manager install_bundle target: dsh-ai-translation
+plugin_manager install_bundle target: @scottzhb-hue/dsh-ai-translation
 ```
 
-需要固定版本时写 `dsh-ai-translation@1.0.1`，需要最新版时写 `dsh-ai-translation@latest`。管理器会解析 registry
+需要固定版本时写 `@scottzhb-hue/dsh-ai-translation@1.0.1`，需要最新版时写 `@scottzhb-hue/dsh-ai-translation@latest`。管理器会解析 registry
 上的包、应用 bundle patch 并激活插件，不需要手工在配置档里加行。
 
 使用 CLI 管理的配置档：
 
 ```sh
-dsh plugin --profile web add dsh-ai-translation
+dsh plugin --profile web add @scottzhb-hue/dsh-ai-translation
 ```
 
 将 `web` 替换为你的配置档名称。如果 Host 需要重启，请重启 `dsh web`。
@@ -302,7 +304,7 @@ plugin_manager install_bundle target: github:scottzhb-hue/dsh-ai-translation
 plugin_manager install_bundle target: /absolute/path/to/dsh-ai-translation
 ```
 
-然后重新加载 DSH。左侧栏会出现 **CAIT** 入口。
+然后重新加载 DSH。左侧栏会出现 **AI辅助翻译** 入口。
 
 ### 从源码安装
 
@@ -336,7 +338,7 @@ dsh web --patch C:\absolute\path\to\dsh-ai-translation\_dev\cait.patch.yml
 
 ```yaml
 - id: dsh-ai-translation
-  name: dsh-ai-translation
+  name: "@scottzhb-hue/dsh-ai-translation"
   config:
     dataDir: 'D:\CAT\cait-data'
 ```

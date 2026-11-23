@@ -35,7 +35,7 @@
 本リポジトリは **CAIT の改変版（フォーク）** であり、オリジナルではありません:
 
 - **上流**: CAIT（`dsh-cait`）、作者 **Jovi Lecca** — <https://github.com/JoviLecca/dsh-CAIT>、Apache-2.0。
-- **本フォーク**: `dsh-ai-translation`。上流 `1.1.8` を基に、ローカル用途の拡張（DOCX 同一段落内の結合・分割、AI アシスタントとプロジェクト説明ダイアログ、選択範囲からの用語登録、未確定訳文の自動退避、視覚ラッパー経路への耐性、トークン使用量と費用の集計）を加えたものです。詳細は [OPTIMIZATIONS.md](OPTIMIZATIONS.md) を参照してください。
+- **本フォーク**: `@scottzhb-hue/dsh-ai-translation`。上流 `1.1.8` を基に、ローカル用途の拡張（DOCX 同一段落内の結合・分割、AI アシスタントとプロジェクト説明ダイアログ、選択範囲からの用語登録、未確定訳文の自動退避、視覚ラッパー経路への耐性、トークン使用量と費用の集計）を加えたものです。詳細は [OPTIMIZATIONS.md](OPTIMIZATIONS.md) を参照してください。
 - **表示名**：本フォークは DSH 上で **AI翻訳**（中国語「AI辅助翻译」、英語 `AI Translation`）として表示されます。サイドバーの入口・ワークベンチ上部・画面内のヒントはすべてこの名前を使い、`CAIT` / `dsh-cait` は上流プロジェクト名としてのみ登場します。
 - **ライセンスと表示**: Apache-2.0 のままです。[LICENSE](LICENSE) は原文を保持し、[NOTICE](NOTICE) は上流の表示を残したうえで本フォークの情報を追記しています。再配布時は両ファイルを保持してください。
 - **謝辞**: 本コードベースの大部分は上流の成果です。CAT ワークベンチ、翻訳メモリ、用語集、多形式の入出力、21 のエージェントツールはすべて Jovi Lecca による設計と実装です。
@@ -54,7 +54,7 @@
 
 ## クイックスタート
 
-1. CAIT をインストールし、左サイドバーの **CAIT** 行から開きます。
+1. インストール後、左サイドバーの **AI辅助翻译** 行から開きます。
 2. **新規ページ** を選び、ソースファイルをドロップするかテキストを貼り付けます。
 3. ソース言語とターゲット言語を設定します。
 4. 現在のセグメントを翻訳します。右パネルに TM の一致、用語のヒット、MT の候補が
@@ -279,8 +279,8 @@ OCR が必要です。CAIT に画像 OCR ステージはありません。
 
 ## インストール
 
-CAIT は DSH の bundle としてインストールします。公開パッケージ名は `dsh-ai-translation` で、
-プラグイン自体は左サイドバーに **CAIT** として表示されます。`desktop` プロファイルは
+CAIT は DSH の bundle としてインストールします。公開パッケージ名は `@scottzhb-hue/dsh-ai-translation` で、
+プラグイン自体は左サイドバーに **AI辅助翻译** として表示されます。`desktop` プロファイルは
 アプリのプラグインマネージャが管理するため、プロファイルの `package.json` を手で編集せず
 そちらを使ってください。
 
@@ -290,17 +290,19 @@ CAIT は DSH の bundle としてインストールします。公開パッケ�
 
 DSH デスクトップ（または `plugin_manager` ツールがある任意のプロファイル）で:
 
+GitHub Packages を使うには `.npmrc` に `@scottzhb-hue:registry=https://npm.pkg.github.com` と `read:packages` 権限のトークンが必要です。このリポジトリから直接インストールする場合（下の `github:`）は registry 認証は不要です。
+
 ```text
-plugin_manager install_bundle target: dsh-ai-translation
+plugin_manager install_bundle target: @scottzhb-hue/dsh-ai-translation
 ```
 
-バージョンを固定するときは `dsh-ai-translation@1.0.1`、最新版は `dsh-ai-translation@latest` を指定します。
+バージョンを固定するときは `@scottzhb-hue/dsh-ai-translation@1.0.1`、最新版は `@scottzhb-hue/dsh-ai-translation@latest` を指定します。
 マネージャが registry のパッケージを解決し、bundle patch を適用してプラグインを有効化します。
 
 CLI 管理のプロファイル:
 
 ```sh
-dsh plugin --profile web add dsh-ai-translation
+dsh plugin --profile web add @scottzhb-hue/dsh-ai-translation
 ```
 
 `web` はご自身のプロファイル名に置き換えてください。必要なら `dsh web` を再起動します。
@@ -319,7 +321,7 @@ plugin_manager install_bundle target: github:scottzhb-hue/dsh-ai-translation
 plugin_manager install_bundle target: /absolute/path/to/dsh-ai-translation
 ```
 
-その後 DSH をリロードすると、左サイドバーに **CAIT** のエントリが現れます。
+その後 DSH をリロードすると、左サイドバーに **AI辅助翻译** のエントリが現れます。
 
 ### ソースから
 
@@ -354,7 +356,7 @@ dsh web --patch C:\absolute\path\to\dsh-ai-translation\_dev\cait.patch.yml
 
 ```yaml
 - id: dsh-ai-translation
-  name: dsh-ai-translation
+  name: "@scottzhb-hue/dsh-ai-translation"
   config:
     dataDir: 'D:\CAT\cait-data'
 ```

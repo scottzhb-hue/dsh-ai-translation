@@ -8,7 +8,7 @@ import { createMtRuntime } from './lib/mt.js'
 import { CaitUsage } from './lib/usage.js'
 import { applyPendingMerge } from './lib/pending-merge.js'
 
-export const name = 'dsh-ai-translation'
+export const name = '@scottzhb-hue/dsh-ai-translation'
 
 // Cordis has no optional injection: every entry in this array is a required
 // service. CAIT targets the Web/Desktop composition, where all three exist.

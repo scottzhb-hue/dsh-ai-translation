@@ -42,8 +42,11 @@ function walk(dir, out = []) {
 // 1. identity ---------------------------------------------------------------
 console.log('package identity');
 const pkg = JSON.parse(read('package.json'));
-if (pkg.name === 'dsh-ai-translation') ok(`name ${pkg.name}`);
-else fail(`name must be dsh-ai-translation, found ${pkg.name}`);
+const EXPECTED_NAME = '@scottzhb-hue/dsh-ai-translation';
+if (pkg.name === EXPECTED_NAME) ok(`name ${pkg.name}`);
+else fail(`name must be ${EXPECTED_NAME}, found ${pkg.name}`);
+if (pkg.publishConfig?.registry === 'https://npm.pkg.github.com') ok('publishes to GitHub Packages');
+else fail(`publishConfig.registry must be https://npm.pkg.github.com, found ${pkg.publishConfig?.registry || 'unset'}`);
 if (/^\d+\.\d+\.\d+(?:-[0-9A-Za-z.-]+)?$/.test(pkg.version)) ok(`version ${pkg.version}`);
 else fail(`version ${pkg.version} is not semver`);
 if (pkg.license === 'Apache-2.0') ok('license Apache-2.0');
@@ -67,10 +70,10 @@ if (pkg.exports?.['./client'] === './client.js') ok('exports["./client"] -> ./cl
 else fail('exports["./client"] must point at ./client.js');
 try {
   const patch = read(patchPath || 'cordis.patch.yml');
-  if (/id:\s*dsh-ai-translation/.test(patch) && /name:\s*dsh-ai-translation/.test(patch)) {
-    ok('cordis patch uses the fork id/name');
+  if (/id:\s*dsh-ai-translation/.test(patch) && /name:\s*["']?@scottzhb-hue\/dsh-ai-translation/.test(patch)) {
+    ok('cordis patch uses the fork id and the scoped module name');
   } else {
-    fail('cordis patch must declare id/name dsh-ai-translation');
+    fail('cordis patch must declare id dsh-ai-translation and name @scottzhb-hue/dsh-ai-translation');
   }
 } catch {
   fail('cordis.patch.yml unreadable');

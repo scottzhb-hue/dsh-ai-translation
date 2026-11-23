@@ -15,7 +15,7 @@
 
 
 <p align="center">
-  <a href="https://www.npmjs.com/package/dsh-ai-translation"><img alt="npm version" src="https://img.shields.io/npm/v/dsh-ai-translation.svg" /></a>
+  <a href="https://github.com/scottzhb-hue/dsh-ai-translation/releases"><img alt="release" src="https://img.shields.io/github/v/tag/scottzhb-hue/dsh-ai-translation.svg" /></a>
   <img alt="DSH 0.2.x" src="https://img.shields.io/badge/DSH-0.2.x-4d6bfe.svg" />
   <img alt="Tests: 51 suites" src="https://img.shields.io/badge/tests-51%20suites-brightgreen.svg" />
   <img alt="No API key required" src="https://img.shields.io/badge/API%20key-not%20required-6b7280.svg" />
@@ -35,7 +35,7 @@ translated document.
 This repository is a **modified fork of CAIT**, not an original project:
 
 - **Upstream**: CAIT (`dsh-cait`) by **Jovi Lecca** — <https://github.com/JoviLecca/dsh-CAIT>, Apache-2.0.
-- **This fork**: `dsh-ai-translation`, based on upstream `1.1.8`, with local enhancements documented in [OPTIMIZATIONS.md](OPTIMIZATIONS.md) (segment merge/split across DOCX paragraphs, AI assistant and project-brief dialog, select-to-create-term, unconfirmed draft recovery, route robustness against vision wrapper providers, token/cost accounting).
+- **This fork**: `@scottzhb-hue/dsh-ai-translation`, based on upstream `1.1.8`, with local enhancements documented in [OPTIMIZATIONS.md](OPTIMIZATIONS.md) (segment merge/split across DOCX paragraphs, AI assistant and project-brief dialog, select-to-create-term, unconfirmed draft recovery, route robustness against vision wrapper providers, token/cost accounting).
 - **Naming**: this fork shows up in DSH as **AI Translation** (Chinese 「AI辅助翻译」, Japanese 「AI翻訳」) — sidebar entry, workbench header and in-app hints all use that name; `CAIT` / `dsh-cait` appear only as the upstream project name.
 - **License and attribution**: still Apache-2.0. [LICENSE](LICENSE) is kept verbatim; [NOTICE](NOTICE) keeps the upstream notice and adds this fork's information. Any redistribution must keep both files.
 - **Thanks**: the vast majority of this code base is upstream work — the CAT workbench, translation memory, glossary, multi-format import/export and the 21 agent tools are all Jovi Lecca's design and implementation.
@@ -54,7 +54,7 @@ This repository is a **modified fork of CAIT**, not an original project:
 
 ## Quick start
 
-1. Install CAIT and open it from the **CAIT** row in the left sidebar.
+1. Install it and open it from the **AI辅助翻译** row in the left sidebar.
 2. Choose **New page**, then drop a source file or paste text.
 3. Set the source and target languages.
 4. Translate the current segment; the right panel shows TM matches, glossary hits,
@@ -345,8 +345,8 @@ conversion; CAIT has no image OCR stage.
 
 ## Install
 
-CAIT installs as a DSH bundle; the published package name is `dsh-ai-translation` and the
-plugin itself shows up as **CAIT** in the left sidebar. The in-app plugin
+CAIT installs as a DSH bundle; the published package name is `@scottzhb-hue/dsh-ai-translation` and the
+plugin itself shows up as **AI辅助翻译** in the left sidebar. The in-app plugin
 manager owns the `desktop` profile, so use it rather than editing the profile's
 `package.json`.
 
@@ -356,18 +356,20 @@ manager owns the `desktop` profile, so use it rather than editing the profile's
 
 In DSH Desktop (or any profile with the `plugin_manager` tool):
 
+GitHub Packages needs `@scottzhb-hue:registry=https://npm.pkg.github.com` in `.npmrc` plus a token that can `read:packages`; installing straight from this repository (the `github:` spec below) needs no registry auth.
+
 ```text
-plugin_manager install_bundle target: dsh-ai-translation
+plugin_manager install_bundle target: @scottzhb-hue/dsh-ai-translation
 ```
 
-Pin a release with `dsh-ai-translation@1.0.1`, or ask for the newest one with
-`dsh-ai-translation@latest`. The manager resolves the registry package, applies the bundle
+Pin a release with `@scottzhb-hue/dsh-ai-translation@1.0.1`, or ask for the newest one with
+`@scottzhb-hue/dsh-ai-translation@latest`. The manager resolves the registry package, applies the bundle
 patch, and activates the plugin — no hand-written profile rows.
 
 With a CLI-managed profile:
 
 ```sh
-dsh plugin --profile web add dsh-ai-translation
+dsh plugin --profile web add @scottzhb-hue/dsh-ai-translation
 ```
 
 Replace `web` with your profile name, and restart `dsh web` if your host
@@ -387,7 +389,7 @@ Local checkout:
 plugin_manager install_bundle target: /absolute/path/to/dsh-ai-translation
 ```
 
-Then reload DSH. The **CAIT** entry appears in the left sidebar.
+Then reload DSH. The **AI辅助翻译** entry appears in the left sidebar.
 
 ### From source
 
@@ -422,7 +424,7 @@ not both.
 
 ```yaml
 - id: dsh-ai-translation
-  name: dsh-ai-translation
+  name: "@scottzhb-hue/dsh-ai-translation"
   config:
     dataDir: 'D:\CAT\cait-data'
 ```
