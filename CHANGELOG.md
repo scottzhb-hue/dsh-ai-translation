@@ -7,6 +7,16 @@ All notable changes to CAIT are documented here. The project follows
 > 以下 `1.1.8` 及更早的条目属于上游 CAIT（作者 Jovi Lecca，Apache-2.0），
 > 保留原文以便溯源。本分支 `dsh-ai-translation` 从 `1.0.1` 起独立编号。
 
+## [1.0.3] - 2026-11-23
+
+### Security
+
+- 旧版 Office 转换（`.doc` / `.xls` / `.ppt`）在打开文档前设置 `AutomationSecurity = msoAutomationSecurityForceDisable`，不可信文件里的宏不会在导入时以用户权限执行。
+
+### Changed
+
+- `OPTIMIZATIONS.md` 不再包含本机绝对路径与 Windows 账户名，改用 `%USERPROFILE%` / `<workspace>` 占位。
+
 ## [1.0.2] - 2026-11-23
 
 ### Added
