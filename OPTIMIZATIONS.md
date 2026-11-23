@@ -6,13 +6,13 @@
 本文件登记我在本机对 **dsh-cait 1.1.8**（上游 npm 最新版）所做的全部本地优化，
 用于：① 本对话后续继续迭代时作为基线参考；② 将来把优化版发布到 GitHub 时作为变更来源。
 
-- 基线：`dsh-cait@1.1.8`，安装位置 `C:\Users\zhang\.dsh\profiles\desktop\node_modules\dsh-cait\`
+- 基线：`dsh-cait@1.1.8`，安装位置 `C:\Users\zhang\.dsh\profiles\desktop\node_modules\@scottzhb-hue\dsh-ai-translation\`（以 `file:` 本地 tgz 安装）
 - 运行环境：DSH Desktop `0.2.2-rc.5`，profile `desktop`，数据目录 `C:\Users\zhang\.dsh\cait\`
 - 启用方式：改服务端 `lib/` 需**重启 DSH**；改客户端 `client.js`（打包产物）需 **Ctrl+Shift+R 强刷**
 - 最后更新：2026-11-23
 
-> ⚠️ 本目录位于 profile 的 `node_modules` 下。在 profile 里执行 `pnpm install`（或重装插件）会覆盖这里的一切改动。
-> 发布前请把 `lib/`、`client/`、`client.js`、`index.js` 以及本文件同步进你的仓库。
+> ⚠️ 已装副本（profile 的 `node_modules`）是 **DSH 启动时按 lockfile 重装的产物**：直接改那里的文件，下次启动会被 `file:` tgz 里的内容覆盖还原。
+> 改代码请只走「仓库副本 → `npm pack` → `_packages\` 新 tgz → `remove_bundle` + `install_bundle`」，详见「维护与发布须知」第 8 条。
 
 ## 总表
 
@@ -151,18 +151,20 @@
 2. **npm 打包白名单**：`package.json` 的 `files` 已加入 `OPTIMIZATIONS.md`；若再新增文档（如 `docs/`），记得同步该数组，否则 `npm pack` 不会带上。
 3. **备份命名**：每轮改动前把要改的文件复制成 `<原文件名>.bak-<主题>-<时间戳>`（如 `client.js.bak-term-20261122-1905`）；07 的备份放在工作区 `cait-usage-backup-20261122-225245/`。
 4. **回滚**：用对应 `.bak-*` 覆盖回去即可；改过服务端要重启 DSH，改过 `client.js` 要强刷。
-5. **写权限**：`node_modules\dsh-cait` 在 workspace 外，写文件必须显式申请更宽的文件权限（否则报 `EPERM` / `file access denied under workspace-write mode`）。
+5. **写权限**：仓库副本在工作区内，可直接改；已装副本在 `C:\Users\zhang\.dsh\profiles\...` 下，写它必须显式申请更宽的文件权限（否则报 `EPERM` / `file access denied under workspace-write mode`）。但正常流程不需要改已装副本（见第 8 条）。
 6. **PowerShell 坑**：`Get-Content -Raw` 默认按 ANSI 读，含中文的文件会被写坏；读用 `-Encoding UTF8`，写用 node 脚本或编辑工具。
 7. **发布前检查**：把 `lib/`、`client/`、`client.js`、`index.js`、`OPTIMIZATIONS.md` 一并同步；`README*.md` 与 `CHANGELOG.md` 建议追加"本地优化"章节；不要把 `*.bak-*`、`cait-*.mjs` 测试脚本、`node_modules/` 提交进仓库。
-8. **推荐工作流（避免改动静默丢失）**：
-   - 在仓库副本 `D:\Documents\deepseek-harness\default-workspace\dsh-cait-optimized\` 里改代码；
-   - 把改动文件拷回 `C:\Users\zhang\.dsh\profiles\desktop\node_modules\dsh-cait\`（服务端 `lib/`、`index.js` 拷回后重启 DSH；客户端 `client/`、`client.js` 拷回后 Ctrl+Shift+R 强刷）；
-   - 验证通过后，再把仓库副本里的同一批文件提交（`git add` / `git commit`）；
-   - 只有文案改动时，记得 `client/locales.js` 与 `client.js` 两张表都要改。
+8. **推荐工作流（唯一流程，避免改动被还原）**：
+   - 只在仓库副本 `D:\Documents\deepseek-harness\default-workspace\dsh-cait-optimized\` 里改代码（服务端 `lib/`、客户端 `client/*.js` 与打包产物 `client.js` 同步改）；
+   - `npm pack --cache <工作区临时缓存>` 生成 `scottzhb-hue-dsh-ai-translation-<version>.tgz`，挪到 `D:\Documents\deepseek-harness\default-workspace\_packages\`（该目录不要删，profile 的 `file:` 依赖指向它）；
+   - `plugin_manager remove_bundle target: @scottzhb-hue/dsh-ai-translation`，再 `install_bundle target: <新 tgz 绝对路径>`；
+   - 重启 DSH（服务端 `lib/`）+ `Ctrl+Shift+R` 强刷（客户端），验证通过后提交仓库并推送；
+   - 原因：DSH 启动时会按 lockfile 重装 `file:` 依赖，直接改 `node_modules` 里的文件会在下次启动被 tgz 内容静默覆盖（2026-11-23 就是这样把新图标还原成旧图标的）。
+   - 例外：只想临时验证、且不重启时可以改已装副本；一旦重启即失效，务必回到上面的流程。
 9. **发布门禁**：`npm run check:publish`（`scripts/check-publish.mjs`，`prepublishOnly` 会自动调用）校验包身份（name/version/license/author/contributors）、`files` 白名单与实际文件、`LICENSE` 与 `NOTICE` 的上游署名、三语 locale 键一致性与全部 `.js` 模块的 ESM 语法。上游的 `npm run check` 依赖 `eslint`/`prettier`/`esbuild` 与 `_dev/`，在发布树里无法运行，因此不作为发布门禁。
 
-   - 原因：`node_modules` 是 pnpm 的领地，`pnpm install` / 重装插件会把本地改动覆盖掉，而仓库副本不会。
-10. **版本号约定**：仓库副本 `package.json` 为 `1.1.8-opt.1`（本地 profile 中运行的那份保持 `1.1.8`，避免插件管理器把它当成"待更新/可覆盖"的旧版本）。每次发布递增：`-opt.2`、`-opt.3`…… 若上游发新版，则以新版号为基线重新叠加本地优化。
+10. **版本号约定**：包名 `@scottzhb-hue/dsh-ai-translation`，当前 `1.0.2`（已发布到 GitHub Packages）。改动累积后递增 patch（`1.0.3`、`1.0.4`…），新增功能递增 minor；同步更新 `CHANGELOG.md` 并打 `v<version>` 标签触发发布流水线。
+
 
 ## 已知上游缺陷（建议 upstream issue）
 
