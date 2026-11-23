@@ -282,6 +282,23 @@ plugin_manager install_bundle target: @scottzhb-hue/dsh-ai-translation
 需要固定版本时写 `@scottzhb-hue/dsh-ai-translation@1.0.1`，需要最新版时写 `@scottzhb-hue/dsh-ai-translation@latest`。管理器会解析 registry
 上的包、应用 bundle patch 并激活插件，不需要手工在配置档里加行。
 
+一次性配置 registry（PowerShell），跑完上面的命令才可用：
+
+```powershell
+# 把 GitHub Packages 登记到用户级 .npmrc（令牌需要 read:packages 权限）
+$secure = Read-Host "GitHub token (read:packages)" -AsSecureString
+$token  = [Runtime.InteropServices.Marshal]::PtrToStringBSTR(
+            [Runtime.InteropServices.Marshal]::SecureStringToBSTR($secure))
+$npmrc  = Join-Path $env:USERPROFILE ".npmrc"
+Add-Content -LiteralPath $npmrc -Value "@scottzhb-hue:registry=https://npm.pkg.github.com"
+Add-Content -LiteralPath $npmrc -Value "//npm.pkg.github.com/:_authToken=$token"
+
+npm.cmd view "@scottzhb-hue/dsh-ai-translation" version --registry=https://npm.pkg.github.com
+```
+
+`npm view` 能打印出版本后，回到 DSH 执行上面那条 `plugin_manager install_bundle …`。令牌等同于密码：
+只放在 `.npmrc` 里，并设置过期时间。
+
 使用 CLI 管理的配置档：
 
 ```sh

@@ -366,6 +366,23 @@ Pin a release with `@scottzhb-hue/dsh-ai-translation@1.0.1`, or ask for the newe
 `@scottzhb-hue/dsh-ai-translation@latest`. The manager resolves the registry package, applies the bundle
 patch, and activates the plugin — no hand-written profile rows.
 
+One-time registry setup (PowerShell) — run it once, then the command above works:
+
+```powershell
+# Register GitHub Packages in the user-level .npmrc (token needs read:packages)
+$secure = Read-Host "GitHub token (read:packages)" -AsSecureString
+$token  = [Runtime.InteropServices.Marshal]::PtrToStringBSTR(
+            [Runtime.InteropServices.Marshal]::SecureStringToBSTR($secure))
+$npmrc  = Join-Path $env:USERPROFILE ".npmrc"
+Add-Content -LiteralPath $npmrc -Value "@scottzhb-hue:registry=https://npm.pkg.github.com"
+Add-Content -LiteralPath $npmrc -Value "//npm.pkg.github.com/:_authToken=$token"
+
+npm.cmd view "@scottzhb-hue/dsh-ai-translation" version --registry=https://npm.pkg.github.com
+```
+
+Once `npm view` prints a version, go back to DSH and run the `plugin_manager install_bundle …` call. Treat
+the token like a password: keep it in `.npmrc` only and give it an expiry date.
+
 With a CLI-managed profile:
 
 ```sh

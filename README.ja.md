@@ -299,6 +299,23 @@ plugin_manager install_bundle target: @scottzhb-hue/dsh-ai-translation
 バージョンを固定するときは `@scottzhb-hue/dsh-ai-translation@1.0.1`、最新版は `@scottzhb-hue/dsh-ai-translation@latest` を指定します。
 マネージャが registry のパッケージを解決し、bundle patch を適用してプラグインを有効化します。
 
+registry の初回設定（PowerShell）。これを一度実行すると上のコマンドが使えます:
+
+```powershell
+# ユーザー単位の .npmrc に GitHub Packages を登録（トークンには read:packages が必要）
+$secure = Read-Host "GitHub token (read:packages)" -AsSecureString
+$token  = [Runtime.InteropServices.Marshal]::PtrToStringBSTR(
+            [Runtime.InteropServices.Marshal]::SecureStringToBSTR($secure))
+$npmrc  = Join-Path $env:USERPROFILE ".npmrc"
+Add-Content -LiteralPath $npmrc -Value "@scottzhb-hue:registry=https://npm.pkg.github.com"
+Add-Content -LiteralPath $npmrc -Value "//npm.pkg.github.com/:_authToken=$token"
+
+npm.cmd view "@scottzhb-hue/dsh-ai-translation" version --registry=https://npm.pkg.github.com
+```
+
+`npm view` がバージョンを表示したら、DSH に戻って上記の `plugin_manager install_bundle …` を実行します。
+トークンはパスワードと同じ扱いにし、`.npmrc` だけに置いて有効期限を設定してください。
+
 CLI 管理のプロファイル:
 
 ```sh
