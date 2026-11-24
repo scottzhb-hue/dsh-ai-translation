@@ -1699,20 +1699,20 @@ export function useWorkbenchController({ i18n, translate }) {
     }
   }
 
-  const deleteLibrary = ({ kind, id, name }) => {
-    const entries = kind === 'tm' ? t('libraries.deleteTmWarn') : t('libraries.deleteGlossaryWarn')
-    setModal({
-      type: 'confirm',
-      title: t('modal.confirm.title'),
-      message: `${t('libraries.delete')} “${name}”？${entries}`,
-      confirmLabel: t('libraries.delete'),
-      action: async () => {
-        const result = await rpc('deleteLibrary', { kind, id })
-        replaceRemoteState(result.state)
-        setTmResults(null)
-        notify(t('libraries.deleted'))
-      },
-    })
+  // The library page already asks for confirmation, so this only runs the
+  // deletion: opening a second confirm here swallowed the answer and left the
+  // library in place.
+  const deleteLibrary = async ({ kind, id } = {}) => {
+    try {
+      const result = await rpc('deleteLibrary', { kind, id })
+      replaceRemoteState(result.state)
+      setTmResults(null)
+      notify(t('libraries.deleted'))
+      return true
+    } catch (error) {
+      report(error)
+      return false
+    }
   }
 
   const exportAs = async (format) => {

@@ -10012,20 +10012,17 @@ function useWorkbenchController({ i18n, translate }) {
       setBusy("");
     }
   };
-  const deleteLibrary = ({ kind, id, name }) => {
-    const entries = kind === "tm" ? t("libraries.deleteTmWarn") : t("libraries.deleteGlossaryWarn");
-    setModal({
-      type: "confirm",
-      title: t("modal.confirm.title"),
-      message: `${t("libraries.delete")} “${name}”？${entries}`,
-      confirmLabel: t("libraries.delete"),
-      action: async () => {
-        const result = await rpc("deleteLibrary", { kind, id });
-        replaceRemoteState(result.state);
-        setTmResults(null);
-        notify(t("libraries.deleted"));
-      }
-    });
+  const deleteLibrary = async ({ kind, id } = {}) => {
+    try {
+      const result = await rpc("deleteLibrary", { kind, id });
+      replaceRemoteState(result.state);
+      setTmResults(null);
+      notify(t("libraries.deleted"));
+      return true;
+    } catch (error) {
+      report(error);
+      return false;
+    }
   };
   const exportAs = async (format) => {
     if (!doc) return;

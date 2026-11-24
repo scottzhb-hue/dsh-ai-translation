@@ -7,6 +7,14 @@ All notable changes to CAIT are documented here. The project follows
 > 以下 `1.1.8` 及更早的条目属于上游 CAIT（作者 Jovi Lecca，Apache-2.0），
 > 保留原文以便溯源。本分支 `dsh-ai-translation` 从 `1.0.1` 起独立编号。
 
+## [1.0.9] - 2026-11-24
+
+### Fixed
+
+- Deleting a library from the Library tab now actually removes it: the page
+  already asked for confirmation, and the controller opened a second confirm
+  dialog whose answer was thrown away, so nothing happened.
+
 ## [1.0.8] - 2026-11-24
 
 ### Changed

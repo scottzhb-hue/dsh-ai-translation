@@ -362,7 +362,7 @@ GitHub Packages needs `@scottzhb-hue:registry=https://npm.pkg.github.com` in `.n
 plugin_manager install_bundle target: @scottzhb-hue/dsh-ai-translation
 ```
 
-Pin a release with `@scottzhb-hue/dsh-ai-translation@1.0.8`, or ask for the newest one with
+Pin a release with `@scottzhb-hue/dsh-ai-translation@1.0.9`, or ask for the newest one with
 `@scottzhb-hue/dsh-ai-translation@latest`. The manager resolves the registry package, applies the bundle
 patch, and activates the plugin — no hand-written profile rows.
 
