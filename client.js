@@ -519,6 +519,7 @@ var ZH = {
   "library.entrySaved": "已保存",
   "library.entryDeleted": "已删除",
   "library.exported": "已导出",
+  "library.exportTarget": "导出库",
   "library.exportFormat": "导出格式",
   "library.caseSensitiveHint": "区分大小写时只匹配完全一致的写法。",
   "library.noDocHint": "不用打开文档也能管理库。",
@@ -925,6 +926,7 @@ var EN = {
   "library.entrySaved": "Saved",
   "library.entryDeleted": "Deleted",
   "library.exported": "Exported",
+  "library.exportTarget": "Export library",
   "library.exportFormat": "Format",
   "library.caseSensitiveHint": "Case-sensitive terms match only the exact spelling.",
   "library.noDocHint": "Manage libraries without opening a document.",
@@ -1331,6 +1333,7 @@ var JA = {
   "library.entrySaved": "保存しました",
   "library.entryDeleted": "削除しました",
   "library.exported": "エクスポートしました",
+  "library.exportTarget": "エクスポート対象",
   "library.exportFormat": "形式",
   "library.caseSensitiveHint": "大文字小文字を区別すると、完全に同じ表記だけが一致します。",
   "library.noDocHint": "文書を開かなくてもライブラリを管理できます。",
@@ -6009,6 +6012,7 @@ function LibraryPage({
   const [newLibraryName, setNewLibraryName] = useState("");
   const [adding, setAdding] = useState(false);
   const [exportFormat, setExportFormat] = useState("tbx");
+  const [exportLibraryId, setExportLibraryId] = useState("");
   const [terms, setTerms] = useState(null);
   const fileRef = useRef(null);
   const importMode = useRef("");
@@ -6018,6 +6022,9 @@ function LibraryPage({
   const scopeKey = scopeIds.join(",");
   const defaultWriteId = kind === "tm" ? data?.mounts?.defaultTmId : data?.mounts?.defaultGlossaryId;
   const targetLibraryId = libraries.some((library) => library[idKey] === defaultWriteId) ? defaultWriteId : libraries[0]?.[idKey] || "";
+  // Export can target any library; fall back to the default write library.
+  const exportTargetId = libraries.some((library) => library[idKey] === exportLibraryId) ? exportLibraryId : targetLibraryId;
+
   const changeWriteLibrary = async (value) => {
     if (!value || value === targetLibraryId) return;
     if (kind === "tm") {
@@ -6261,10 +6268,10 @@ function LibraryPage({
     }
   };
   const exportLibrary = async () => {
-    if (!targetLibraryId) return;
+    if (!exportTargetId) return;
     setWorking("export");
     try {
-      const result = kind === "tm" ? await rpc("exportTM", { tmId: targetLibraryId, format: "tmx" }) : await rpc("exportGlossary", { glossaryId: targetLibraryId, format: exportFormat });
+      const result = kind === "tm" ? await rpc("exportTM", { tmId: exportTargetId, format: "tmx" }) : await rpc("exportGlossary", { glossaryId: exportTargetId, format: exportFormat });
       downloadFile(result.filename, result.content, result.mime);
       notify(t("library.exported"));
     } catch (error) {
@@ -6608,12 +6615,26 @@ function LibraryPage({
             h("span", { className: "cait-btn-label" }, t("library.import"))
           ),
           h(
+            "select",
+            {
+              className: "cait-liblang",
+              value: exportTargetId,
+              onChange: (event) => setExportLibraryId(event.target.value),
+              title: t("library.exportTarget"),
+              "aria-label": t("library.exportTarget"),
+              disabled: Boolean(busy) || libraries.length === 0
+            },
+            libraries.map((library) =>
+              h("option", { key: library[idKey], value: library[idKey] }, library[labelKey])
+            )
+          ),
+          h(
             "button",
             {
               type: "button",
               className: "cait-btn",
               onClick: exportLibrary,
-              disabled: Boolean(busy) || working === "export" || !targetLibraryId,
+              disabled: Boolean(busy) || working === "export" || !exportTargetId,
               title: t("library.export")
             },
             h(Icon, { name: "upload", size: 13 }),
@@ -9768,7 +9789,7 @@ function useWorkbenchController({ i18n, translate }) {
     setBusy("glossary-export");
     try {
       const result = await rpc("exportGlossary", {
-        glossaryId: data?.mounts?.defaultGlossaryId,
+        documentId: doc?.id,
         format
       });
       downloadFile(result.filename, result.content, result.mime);

@@ -422,6 +422,7 @@ function LibraryPage({
   const [newLibraryName, setNewLibraryName] = useState('')
   const [adding, setAdding] = useState(false)
   const [exportFormat, setExportFormat] = useState('tbx')
+  const [exportLibraryId, setExportLibraryId] = useState('')
   const [terms, setTerms] = useState(null)
   const fileRef = useRef(null)
   const importMode = useRef('')
@@ -434,6 +435,11 @@ function LibraryPage({
   const targetLibraryId = libraries.some((library) => library[idKey] === defaultWriteId)
     ? defaultWriteId
     : libraries[0]?.[idKey] || ''
+
+  // Export can target any library; fall back to the default write library.
+  const exportTargetId = libraries.some((library) => library[idKey] === exportLibraryId)
+    ? exportLibraryId
+    : targetLibraryId
 
   const changeWriteLibrary = async (value) => {
     if (!value || value === targetLibraryId) return
@@ -727,13 +733,13 @@ function LibraryPage({
   }
 
   const exportLibrary = async () => {
-    if (!targetLibraryId) return
+    if (!exportTargetId) return
     setWorking('export')
     try {
       const result =
         kind === 'tm'
-          ? await rpc('exportTM', { tmId: targetLibraryId, format: 'tmx' })
-          : await rpc('exportGlossary', { glossaryId: targetLibraryId, format: exportFormat })
+          ? await rpc('exportTM', { tmId: exportTargetId, format: 'tmx' })
+          : await rpc('exportGlossary', { glossaryId: exportTargetId, format: exportFormat })
       downloadFile(result.filename, result.content, result.mime)
       notify(t('library.exported'))
     } catch (error) {
@@ -1097,12 +1103,26 @@ function LibraryPage({
             h('span', { className: 'cait-btn-label' }, t('library.import')),
           ),
           h(
+            'select',
+            {
+              className: 'cait-liblang',
+              value: exportTargetId,
+              onChange: (event) => setExportLibraryId(event.target.value),
+              title: t('library.exportTarget'),
+              'aria-label': t('library.exportTarget'),
+              disabled: Boolean(busy) || libraries.length === 0,
+            },
+            libraries.map((library) =>
+              h('option', { key: library[idKey], value: library[idKey] }, library[labelKey]),
+            ),
+          ),
+          h(
             'button',
             {
               type: 'button',
               className: 'cait-btn',
               onClick: exportLibrary,
-              disabled: Boolean(busy) || working === 'export' || !targetLibraryId,
+              disabled: Boolean(busy) || working === 'export' || !exportTargetId,
               title: t('library.export'),
             },
             h(Icon, { name: 'upload', size: 13 }),

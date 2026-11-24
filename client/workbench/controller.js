@@ -1540,7 +1540,7 @@ export function useWorkbenchController({ i18n, translate }) {
     setBusy('glossary-export')
     try {
       const result = await rpc('exportGlossary', {
-        glossaryId: data?.mounts?.defaultGlossaryId,
+        documentId: doc?.id,
         format,
       })
       downloadFile(result.filename, result.content, result.mime)
