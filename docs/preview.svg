@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="300" viewBox="0 0 640 300" fill="none" role="img">
+  <rect x="56" y="56" width="168" height="168" rx="18" stroke="#8b9bb4" stroke-width="4"/>
+  <path d="M88 96h104M88 124h78M88 152h92" stroke="#8b9bb4" stroke-width="7" stroke-linecap="round"/>
+  <path d="M88 180h58" stroke="#8b9bb4" stroke-width="7" stroke-linecap="round" opacity="0.45"/>
+  <path d="M242 124h94" stroke="#4f8ef7" stroke-width="6" stroke-linecap="round"/>
+  <path d="M328 110l16 14-16 14" stroke="#4f8ef7" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M336 160h-94" stroke="#4f8ef7" stroke-width="6" stroke-linecap="round" opacity="0.5"/>
+  <path d="M250 146l-16 14 16 14" stroke="#4f8ef7" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" opacity="0.5"/>
+  <rect x="360" y="56" width="168" height="168" rx="18" stroke="#8b9bb4" stroke-width="4"/>
+  <path d="M392 96h104M392 124h92M392 152h68" stroke="#8b9bb4" stroke-width="7" stroke-linecap="round"/>
+  <path d="M392 180h84" stroke="#4f8ef7" stroke-width="7" stroke-linecap="round"/>
+  <path d="M574 56c4 22 18 32 40 36-22 4-36 14-40 36-4-22-18-32-40-36 22-4 36-14 40-36Z" fill="#4f8ef7"/>
+  <rect x="60" y="246" width="72" height="22" rx="11" stroke="#4f8ef7" stroke-width="3"/>
+  <rect x="146" y="246" width="86" height="22" rx="11" stroke="#4f8ef7" stroke-width="3" opacity="0.55"/>
+</svg>

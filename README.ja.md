@@ -22,6 +22,10 @@
   <img alt="API キー不要" src="https://img.shields.io/badge/API%20key-not%20required-6b7280.svg" />
 </p>
 
+<p align="center">
+  <img src="docs/preview.svg" width="640" alt="AI翻訳ワークベンチ：左に英語の原文、右に中国語の訳文、中央に双方向リンクと AI 候補・用語ヒット" />
+</p>
+
 **AI翻訳**（サイドバーの入口とワークベンチ上部の表示名。上流プロジェクト名は CAIT）は DSH Web UI と DSH デスクトップに CAT ワークベンチを追加します。左サイドバーの
 エントリから開き、ワークベンチと 21 のエージェントツールが 1 つのストアを共有するため、
 ソースファイルのインポートから訳文のエクスポートまでを一通りこなせます。
@@ -296,7 +300,7 @@ GitHub Packages を使うには `.npmrc` に `@scottzhb-hue:registry=https://npm
 plugin_manager install_bundle target: @scottzhb-hue/dsh-ai-translation
 ```
 
-バージョンを固定するときは `@scottzhb-hue/dsh-ai-translation@1.0.4`、最新版は `@scottzhb-hue/dsh-ai-translation@latest` を指定します。
+バージョンを固定するときは `@scottzhb-hue/dsh-ai-translation@1.0.5`、最新版は `@scottzhb-hue/dsh-ai-translation@latest` を指定します。
 マネージャが registry のパッケージを解決し、bundle patch を適用してプラグインを有効化します。
 
 registry の初回設定（PowerShell）。これを一度実行すると上のコマンドが使えます:

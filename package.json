@@ -1,6 +1,6 @@
 {
   "name": "@scottzhb-hue/dsh-ai-translation",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "license": "Apache-2.0",
   "author": {
     "name": "scottzhb-hue",
@@ -73,6 +73,7 @@
     "lib",
     "cordis.patch.yml",
     "locale",
+    "docs",
     "icon.svg",
     "README.md",
     "README.zh-CN.md",

@@ -1,6 +1,7 @@
 {
   "meta": {
     "title": "AI翻訳 (@scottzhb-hue/dsh-ai-translation)",
-    "description": "DSH に組み込まれた CAT（翻訳支援）ワークベンチ：翻訳メモリ、用語集、セグメント編集、AI 翻訳候補、TXT/Markdown/DOCX/TMX のインポートとエクスポート。"
+    "description": "DSH に組み込まれた本格的な CAT ワークベンチ。原文と訳文を並べ、翻訳メモリと用語集がリアルタイムにヒット、AI が訳文候補を提示、DOCX/PPTX/XLSX/EPUB/SDLXLIFF をレイアウトを保ったまま入出力できます。CAIT を基に、セグメントの結合・分割、選択範囲からの用語登録、下書きの自動退避、AI アシスタント、視覚ラッパーを避ける経路、使用量の集計、旧形式 Office の取り込みを追加しました。上流 CAIT の作者 Jovi Lecca に感謝します（Apache-2.0）。",
+    "detail": "docs/DETAIL.ja.md"
   }
 }

@@ -7,6 +7,17 @@ All notable changes to CAIT are documented here. The project follows
 > 以下 `1.1.8` 及更早的条目属于上游 CAIT（作者 Jovi Lecca，Apache-2.0），
 > 保留原文以便溯源。本分支 `dsh-ai-translation` 从 `1.0.1` 起独立编号。
 
+## [1.0.5] - 2026-11-24
+
+### Added
+
+- 插件详情页提供本地化说明文档：`docs/DETAIL.zh.md`（中文）、`docs/DETAIL.md`（English）、`docs/DETAIL.ja.md`（日本語），通过 `locale/<lang>.json` 的 `meta.detail` 声明，详情页正文不再回退到英文 README。
+- 特性插图 `docs/preview.svg`（640×300，无文字，明暗主题均可读），展示在 README 首页（详情页正文不插图，保持简洁）。
+
+### Changed
+
+- 插件说明（`locale/*/json` 的 `meta.description`）重写并压缩：突出相对上游 CAIT 的优势与已实现优化，并加一句向上游作者 Jovi Lecca（Apache-2.0）致谢。
+
 ## [1.0.4] - 2026-11-24
 
 > 开发期的 `1.0.5` – `1.0.9` 是本机内部迭代，从未发布，已并入本版本。

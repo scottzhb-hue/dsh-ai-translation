@@ -1,7 +1,7 @@
 # dsh-ai-translation 本地优化清单
 
 
-> 发布名：`@scottzhb-hue/dsh-ai-translation@1.0.4`（fork 自 CAIT `dsh-cait@1.1.8`，上游作者 Jovi Lecca，Apache-2.0）。
+> 发布名：`@scottzhb-hue/dsh-ai-translation@1.0.5`（fork 自 CAIT `dsh-cait@1.1.8`，上游作者 Jovi Lecca，Apache-2.0）。
 > 上游仓库：<https://github.com/JoviLecca/dsh-CAIT>；本分支仓库：<https://github.com/scottzhb-hue/dsh-ai-translation>。
 本文件登记我在本机对 **dsh-cait 1.1.8**（上游 npm 最新版）所做的全部本地优化，
 用于：① 本对话后续继续迭代时作为基线参考；② 将来把优化版发布到 GitHub 时作为变更来源。
@@ -30,6 +30,7 @@
 | 10 | 插件图标重制：折角文档 + 两行文字 + 品牌色四角星（与上游 CAIT 的双气泡区分） | 已上线 | —（纯前端） | `icon.svg`、`client/components/base.js`、`client.js` | 无（改动前内容见本文件 09/10 说明） |
 | 11 | 旧版 Office 导入：`.doc` / `.xls` / `.ppt` 先经本机 Office 转 OOXML 再导入 | 已上线 | `lib/legacy-office.js`（新增）、`lib/file-ops.js`、`lib/import-file.js` | `client/components/forms.js`、`client/components/pages.js`、`client/locales.js`、`client.js` | 无（新模块，无覆盖式改动） |
 | 12 | 术语库导入/导出入口（术语面板 + 库页，选择器弹窗） | 已上线 | `lib/library-view.js`（`exportGlossary` + `defaultGlossaryFor`） | `client/components/panels.js`、`client/components/pages.js`、`client/components/workbench.js`、`client/workbench/controller.js`、`client/styles.js`、`client.js` | 无（仅新增入口与目标库解析，复用既有 RPC） |
+| 13 | 插件详情页本地化（docs/DETAIL*.md + meta.detail + 特性插图） | 已上线 | — | locale/{zh,en,ja}.json、docs/DETAIL.zh.md、docs/DETAIL.md、docs/DETAIL.ja.md、docs/preview.svg、package.json | 无（新增文件） |
 
 ## 明细
 
@@ -157,6 +158,16 @@
 - **验证**：文档摘要含 `tmIds: tm_default` / `glossaryIds: glossary_default,gl_2c2c00e8`；`defaultGlossaryFor('doc_3c172d94')` → `glossary_default`；`exportGlossary({documentId})` 导出 `cait-glossary-物种起源1-20261124.csv`（25,622 字节），显式 `glossaryId` 可导出任意挂载库，XLSX 仍报 `INVALID_EXPORT_FORMAT`；6 个源码文件与 `client.js` 均通过 `vm.SourceTextModule`，弹窗/按钮/文案锚点计数全部符合预期。
 - **边界**：面板导出的是「该文档实际使用的术语库」，库页可任选；导出内容仍是整库快照，不区分当前句段的临时命中；不支持的格式由服务端拒绝并显示原因。
 
+### 13 插件详情页本地化
+
+- **动机**：DSH 插件详情页的正文在没有本地化文档时回退到英文 `README.md`，中文用户点进「AI辅助翻译」看到整页英文；标题下的说明也没有体现本地增强。
+- **实现**：
+  - 三份本地化说明文档：`docs/DETAIL.zh.md`（中文，主要能力 / 相对上游 CAIT 的本地增强 / 数据与隐私）、`docs/DETAIL.md`（English）、`docs/DETAIL.ja.md`（日本語）。
+  - `locale/{zh,en,ja}.json` 的 `meta.detail` 分别指向上述文件（`zh` → `docs/DETAIL.zh.md` 等），并重写 `meta.description` 以突出优势与已实现优化。
+  - 特性插图 `docs/preview.svg`（640×300，纯矢量、无文字、无脚本、无远程资源，描边 `#8b9bb4` + 品牌蓝 `#4f8ef7`，明暗主题都可读）：放在三份 README 的首屏（`<img src="docs/preview.svg" width="640">`），详情页正文不插图，保持文字简洁。
+  - `package.json` 的 `files` 增加 `"docs"`，否则 `npm pack` 不会带上这些文件。
+- **验证**：用 `@deepseek-ai/dsh-plugin-detail` 的 `localFiles` + `languageChain` + `readPackageDocument` 直读已装副本 —— `zh`/`zh-CN` → `docs/DETAIL.zh.md`（`origin=locale`）、`en` → `docs/DETAIL.md`、`ja` → `docs/DETAIL.ja.md`；`detailImage("docs/DETAIL.zh.md", "preview.svg")` → `{path:"docs/preview.svg", mediaType:"image/svg+xml"}`；`npm pack` 后 tarball 115 个文件（新增 4 个 docs 文件）。
+- **边界**：`meta.detail` 只影响详情页正文，标题与说明仍来自 `meta.title` / `meta.description`（说明里含一句向上游 CAIT 作者 Jovi Lecca 的致谢）；文档里不要写安装步骤（安装入口在页面上）；插图只放 README，避免详情页图片与文字争夺注意力。
 ## 维护与发布须知
 
 1. **为什么手改 `client.js`**：本机 profile 里没有可用的 esbuild（`node_modules\@esbuild` 是空目录，DSH 安装包内也没有），`scripts/build-client.mjs` 跑不起来；插件的 `exports["./client"]` 指向打包产物 `client.js`，所以每次改客户端都要**源码 `client/*.js` 与 `client.js` 同步改**（bundle 是全双引号 + 分号风格）。

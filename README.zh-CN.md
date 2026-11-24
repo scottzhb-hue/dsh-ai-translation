@@ -21,6 +21,10 @@
   <img alt="无需 API Key" src="https://img.shields.io/badge/API%20key-not%20required-6b7280.svg" />
 </p>
 
+<p align="center">
+  <img src="docs/preview.svg" width="640" alt="AI辅助翻译工作台：左侧英文原文与右侧中文译文，中间是双向对照与 AI 建议标记" />
+</p>
+
 **AI辅助翻译**（侧边栏入口与面板标题都用这个名字；上游项目名为 CAIT）为 DSH Web UI 和 DSH 桌面端增加一个 CAT 翻译工作台。它从左侧栏入口打开，
 工作台与二十一个 Agent 工具共用一个数据存储，覆盖从导入源文件到导出译文的完整流程。
 
@@ -279,7 +283,7 @@ GitHub Packages 需要在 `.npmrc` 里配置 `@scottzhb-hue:registry=https://npm
 plugin_manager install_bundle target: @scottzhb-hue/dsh-ai-translation
 ```
 
-需要固定版本时写 `@scottzhb-hue/dsh-ai-translation@1.0.4`，需要最新版时写 `@scottzhb-hue/dsh-ai-translation@latest`。管理器会解析 registry
+需要固定版本时写 `@scottzhb-hue/dsh-ai-translation@1.0.5`，需要最新版时写 `@scottzhb-hue/dsh-ai-translation@latest`。管理器会解析 registry
 上的包、应用 bundle patch 并激活插件，不需要手工在配置档里加行。
 
 一次性配置 registry（PowerShell），跑完上面的命令才可用：

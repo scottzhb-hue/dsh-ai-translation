@@ -21,6 +21,10 @@
   <img alt="No API key required" src="https://img.shields.io/badge/API%20key-not%20required-6b7280.svg" />
 </p>
 
+<p align="center">
+  <img src="docs/preview.svg" width="640" alt="AI Translation workbench: English source on the left, Chinese target on the right, with bidirectional linking, AI suggestions and term hits in between" />
+</p>
+
 **AI Translation** (the sidebar entry and the workbench header use this name; the upstream project is called CAIT) adds a CAT workbench to the DSH Web UI and Desktop. It opens from a
 left-sidebar entry, keeps one shared store behind the workbench and twenty agent
 tools, and covers the practical path from importing a source file to exporting a
@@ -362,7 +366,7 @@ GitHub Packages needs `@scottzhb-hue:registry=https://npm.pkg.github.com` in `.n
 plugin_manager install_bundle target: @scottzhb-hue/dsh-ai-translation
 ```
 
-Pin a release with `@scottzhb-hue/dsh-ai-translation@1.0.4`, or ask for the newest one with
+Pin a release with `@scottzhb-hue/dsh-ai-translation@1.0.5`, or ask for the newest one with
 `@scottzhb-hue/dsh-ai-translation@latest`. The manager resolves the registry package, applies the bundle
 patch, and activates the plugin — no hand-written profile rows.
 
