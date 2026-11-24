@@ -819,6 +819,102 @@ function TermModal({ t, doc, state, busy, initial, onSave, onClose }) {
   );
 }
 
+function LibraryIoModal({
+  t,
+  busy,
+  mode,
+  kind,
+  libraries,
+  initialLibraryId,
+  initialFormat,
+  formats,
+  onCancel,
+  onConfirm,
+}) {
+  const isImport = mode === 'import'
+  const [libraryId, setLibraryId] = useState(initialLibraryId || libraries[0]?.id || '')
+  const [format, setFormat] = useState(initialFormat)
+  const [file, setFile] = useState(null)
+  const fileRef = useRef(null)
+  const confirmDisabled = Boolean(busy) || !libraryId || (isImport && !file)
+  return h(
+    Modal,
+    { title: t(isImport ? 'library.import' : 'library.export'), onClose: onCancel },
+    h('p', { className: 'cait-mt-hint' }, t(isImport ? 'library.ioHintImport' : 'library.ioHintExport')),
+    h(
+      'label',
+      { className: 'cait-field' },
+      h('span', null, t('library.ioLibrary')),
+      h(
+        'select',
+        {
+          className: 'cait-input',
+          value: libraryId,
+          onChange: (event) => setLibraryId(event.target.value),
+          disabled: Boolean(busy),
+        },
+        libraries.map((library) => h('option', { key: library.id, value: library.id }, library.name)),
+      ),
+    ),
+    isImport
+      ? h(
+          'div',
+          { className: 'cait-field' },
+          h('span', null, t('library.ioFile')),
+          h('input', {
+            ref: fileRef,
+            type: 'file',
+            accept: kind === 'tm' ? '.tmx' : '.tbx,.csv,.tsv,.txt,.json',
+            style: { display: 'none' },
+            onChange: (event) => {
+              setFile(event.target.files?.[0] || null)
+              event.target.value = ''
+            },
+          }),
+          h(
+            'div',
+            { className: 'cait-formrow' },
+            h(
+              'button',
+              { className: 'cait-btn', onClick: () => fileRef.current?.click(), disabled: Boolean(busy) },
+              h(Icon, { name: 'folder', size: 12 }),
+              t('library.ioChooseFile'),
+            ),
+            h('span', { className: 'cait-hint' }, file ? file.name : t('library.ioNoFile')),
+          ),
+        )
+      : h(
+          'label',
+          { className: 'cait-field' },
+          h('span', null, t('library.ioFormat')),
+          h(
+            'select',
+            {
+              className: 'cait-input',
+              value: format,
+              onChange: (event) => setFormat(event.target.value),
+              disabled: Boolean(busy),
+            },
+            formats.map((item) => h('option', { key: item, value: item }, item.toUpperCase())),
+          ),
+        ),
+    h(
+      'div',
+      { className: 'cait-modal-actions' },
+      h('button', { className: 'cait-btn', onClick: onCancel, disabled: Boolean(busy) }, t('panel.cancel')),
+      h(
+        'button',
+        {
+          className: 'cait-btn cait-btn-primary',
+          onClick: () => onConfirm(isImport ? { libraryId, file } : { libraryId, format }),
+          disabled: confirmDisabled,
+        },
+        busy ? h(Spinner) : t(isImport ? 'library.import' : 'library.export'),
+      ),
+    ),
+  )
+}
+
 function BriefModal({ t, doc, busy, onClose, onSave }) {
   const initial = doc.brief || {}
   const [form, setForm] = useState({
@@ -1535,6 +1631,7 @@ export {
   SettingsModal,
   ConfirmModal,
   BriefModal,
+  LibraryIoModal,
   AiChatModal,
   TermModal,
   NoteModal,

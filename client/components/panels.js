@@ -22,6 +22,7 @@ function CatPanel({
   onApplyTerm,
   onImportGlossary,
   onExportGlossary,
+  onOpenIo,
   onClearGlossary,
   mt,
   mtError,
@@ -313,31 +314,17 @@ function CatPanel({
                 'button',
                 {
                   className: 'cait-btn',
-                  onClick: () => glossaryInput.current?.click(),
+                  onClick: () => onOpenIo?.('import'),
                   disabled: Boolean(busy),
                 },
                 h(Icon, { name: 'download', size: 12 }),
                 t('panel.importCsv'),
               ),
               h(
-                'select',
-                {
-                  className: 'cait-exportfmt',
-                  value: exportFormat,
-                  onChange: (event) => setExportFormat(event.target.value),
-                  title: t('library.exportFormat'),
-                  'aria-label': t('library.exportFormat'),
-                  disabled: Boolean(busy),
-                },
-                ['tbx', 'csv', 'json'].map((format) =>
-                  h('option', { key: format, value: format }, format.toUpperCase()),
-                ),
-              ),
-              h(
                 'button',
                 {
                   className: 'cait-btn',
-                  onClick: () => onExportGlossary?.(exportFormat),
+                  onClick: () => onOpenIo?.('export'),
                   disabled: Boolean(busy) || data.glossary.length === 0,
                   title: t('library.export'),
                 },

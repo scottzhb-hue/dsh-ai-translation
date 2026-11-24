@@ -1,7 +1,7 @@
 # dsh-ai-translation 本地优化清单
 
 
-> 发布名：`@scottzhb-hue/dsh-ai-translation@1.0.5`（fork 自 CAIT `dsh-cait@1.1.8`，上游作者 Jovi Lecca，Apache-2.0）。
+> 发布名：`@scottzhb-hue/dsh-ai-translation@1.0.6`（fork 自 CAIT `dsh-cait@1.1.8`，上游作者 Jovi Lecca，Apache-2.0）。
 > 上游仓库：<https://github.com/JoviLecca/dsh-CAIT>；本分支仓库：<https://github.com/scottzhb-hue/dsh-ai-translation>。
 本文件登记我在本机对 **dsh-cait 1.1.8**（上游 npm 最新版）所做的全部本地优化，
 用于：① 本对话后续继续迭代时作为基线参考；② 将来把优化版发布到 GitHub 时作为变更来源。
@@ -29,7 +29,7 @@
 | 09 | 界面名称统一：写死的 `CAIT` → 「AI辅助翻译」（入口 / 品牌 / 提示语） | 已上线 | —（纯前端） | `client/components/shell.js`、`client/locales.js`、`client.js`、`locale/{zh,en,ja}.json` | `.bak-title-*`、`.bak-subtitle-*`（已清理） |
 | 10 | 插件图标重制：折角文档 + 两行文字 + 品牌色四角星（与上游 CAIT 的双气泡区分） | 已上线 | —（纯前端） | `icon.svg`、`client/components/base.js`、`client.js` | 无（改动前内容见本文件 09/10 说明） |
 | 11 | 旧版 Office 导入：`.doc` / `.xls` / `.ppt` 先经本机 Office 转 OOXML 再导入 | 已上线 | `lib/legacy-office.js`（新增）、`lib/file-ops.js`、`lib/import-file.js` | `client/components/forms.js`、`client/components/pages.js`、`client/locales.js`、`client.js` | 无（新模块，无覆盖式改动） |
-| 12 | 术语库导出入口（术语面板 + 库页按钮文案/格式/目标库选择） | 已上线 | `lib/library-view.js`（`exportGlossary` + `defaultGlossaryFor`） | `client/components/panels.js`、`client/components/pages.js`、`client/components/workbench.js`、`client/workbench/controller.js`、`client/styles.js`、`client.js` | 无（仅新增入口与目标库解析，复用既有 RPC） |
+| 12 | 术语库导入/导出入口（术语面板 + 库页，选择器弹窗） | 已上线 | `lib/library-view.js`（`exportGlossary` + `defaultGlossaryFor`） | `client/components/panels.js`、`client/components/pages.js`、`client/components/workbench.js`、`client/workbench/controller.js`、`client/styles.js`、`client.js` | 无（仅新增入口与目标库解析，复用既有 RPC） |
 
 ## 明细
 
@@ -150,10 +150,11 @@
 
 - **动机**：`exportGlossary` 早已支持 TBX / CSV / JSON，但入口只藏在「库」页，而且按钮文字只写格式名（`TBX` / `CSV` / `JSON`），译者反馈「找不到术语库导出」。
 - **实现**：
-  - 工作台右侧「术语」面板的底部工具栏新增格式下拉（TBX / CSV / JSON）与「导出」按钮，复用 `exportGlossary`；控制器只发 `documentId`，由服务端 `defaultGlossaryFor(documentId)` 决定导出哪个库：文档挂载的默认写入库优先，未挂载时用该文档的首个挂载库。
-  - 「库」页的导出按钮文案由格式代号改为「导出」/「Export」/「エクスポート」，旁边保留格式下拉，并新增**目标库下拉**（可导出任意库，不再局限于当前写入库）；按钮禁用条件跟随所选目标库。
-  - 新增 CSS `.cait-exportfmt`（面板内的紧凑格式选择器）。
-- **验证**：服务端实测 651 条术语库导出 — TBX 153,690 字节、CSV 30,305 字节、JSON 118,778 字节，XLSX 明确报 `INVALID_EXPORT_FORMAT`；1.0.5 追加实测 `defaultGlossaryFor('doc_3c172d94')` → `glossary_default`（该文档挂载 `glossary_default, gl_2c2c00e8`），`exportGlossary({ documentId })` 导出的文件名即 `cait-glossary-物种起源1-20261124.csv`，显式 `glossaryId` 仍可指定任意挂载库；6 个客户端文件 `vm.SourceTextModule` 编译通过，bundle 与源码的按钮/下拉/文案逐项一致。
+  - 工作台右侧「术语」面板与「库」页都不再常驻格式/库下拉，只保留「导入」「导出」两个按钮；点击后弹出选择器弹窗（`LibraryIoModal`）：选目标库，导出时再选格式（TBX/CSV/JSON，TM 固定 TMX），导入时选文件。
+  - 目标库候选按项目解析（`document-view.js` 的文档摘要新增 `tmIds`/`glossaryIds`）：默认 = 文档挂载的默认写入库，未挂载时用文档首个挂载库；候选只列该文档挂载的库。
+  - 控制器新增 `libraryIoOptions(kind)`、`exportLibraryTo({kind,libraryId,format})`、`importLibraryTo({kind,libraryId,file})`，导入/导出统一走这两个方法（下载、提示、`replaceRemoteState` 都在这里）。
+  - 服务端 `exportGlossary({documentId})` 仍支持不传 `glossaryId` 时按文档回落（`defaultGlossaryFor`）。
+- **验证**：文档摘要含 `tmIds: tm_default` / `glossaryIds: glossary_default,gl_2c2c00e8`；`defaultGlossaryFor('doc_3c172d94')` → `glossary_default`；`exportGlossary({documentId})` 导出 `cait-glossary-物种起源1-20261124.csv`（25,622 字节），显式 `glossaryId` 可导出任意挂载库，XLSX 仍报 `INVALID_EXPORT_FORMAT`；6 个源码文件与 `client.js` 均通过 `vm.SourceTextModule`，弹窗/按钮/文案锚点计数全部符合预期。
 - **边界**：面板导出的是「该文档实际使用的术语库」，库页可任选；导出内容仍是整库快照，不区分当前句段的临时命中；不支持的格式由服务端拒绝并显示原因。
 
 ## 维护与发布须知

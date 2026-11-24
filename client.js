@@ -521,6 +521,13 @@ var ZH = {
   "library.exported": "已导出",
   "library.exportTarget": "导出库",
   "library.exportFormat": "导出格式",
+  "library.ioHintImport": "选择要导入的文件与目标库。",
+  "library.ioHintExport": "选择导出格式与目标库。",
+  "library.ioLibrary": "目标库",
+  "library.ioFormat": "格式",
+  "library.ioFile": "文件",
+  "library.ioChooseFile": "选择文件…",
+  "library.ioNoFile": "尚未选择文件",
   "library.caseSensitiveHint": "区分大小写时只匹配完全一致的写法。",
   "library.noDocHint": "不用打开文档也能管理库。",
   "rail.pageInfo": "第 {start}–{end} 条 / 共 {total} 条",
@@ -928,6 +935,13 @@ var EN = {
   "library.exported": "Exported",
   "library.exportTarget": "Export library",
   "library.exportFormat": "Format",
+  "library.ioHintImport": "Pick a file and a target library.",
+  "library.ioHintExport": "Choose the format and target library.",
+  "library.ioLibrary": "Target library",
+  "library.ioFormat": "Format",
+  "library.ioFile": "File",
+  "library.ioChooseFile": "Choose file…",
+  "library.ioNoFile": "No file selected",
   "library.caseSensitiveHint": "Case-sensitive terms match only the exact spelling.",
   "library.noDocHint": "Manage libraries without opening a document.",
   "rail.pageInfo": "{start}–{end} of {total}",
@@ -1335,6 +1349,13 @@ var JA = {
   "library.exported": "エクスポートしました",
   "library.exportTarget": "エクスポート対象",
   "library.exportFormat": "形式",
+  "library.ioHintImport": "ファイルと対象ライブラリを選択してください。",
+  "library.ioHintExport": "形式と対象ライブラリを選択してください。",
+  "library.ioLibrary": "対象ライブラリ",
+  "library.ioFormat": "形式",
+  "library.ioFile": "ファイル",
+  "library.ioChooseFile": "ファイルを選択…",
+  "library.ioNoFile": "ファイル未選択",
   "library.caseSensitiveHint": "大文字小文字を区別すると、完全に同じ表記だけが一致します。",
   "library.noDocHint": "文書を開かなくてもライブラリを管理できます。",
   "rail.pageInfo": "{start}–{end} 件 / 全 {total} 件",
@@ -4885,6 +4906,7 @@ function CatPanel({
   onApplyTerm,
   onImportGlossary,
   onExportGlossary,
+  onOpenIo,
   onClearGlossary,
   mt,
   mtError,
@@ -5160,31 +5182,17 @@ function CatPanel({
             "button",
             {
               className: "cait-btn",
-              onClick: () => glossaryInput.current?.click(),
+              onClick: () => onOpenIo?.("import"),
               disabled: Boolean(busy)
             },
             h(Icon, { name: "download", size: 12 }),
             t("panel.importCsv")
           ),
           h(
-            "select",
-            {
-              className: "cait-exportfmt",
-              value: exportFormat,
-              onChange: (event) => setExportFormat(event.target.value),
-              title: t("library.exportFormat"),
-              "aria-label": t("library.exportFormat"),
-              disabled: Boolean(busy)
-            },
-            ["tbx", "csv", "json"].map((format) =>
-              h("option", { key: format, value: format }, format.toUpperCase())
-            )
-          ),
-          h(
             "button",
             {
               className: "cait-btn",
-              onClick: () => onExportGlossary?.(exportFormat),
+              onClick: () => onOpenIo?.("export"),
               disabled: Boolean(busy) || data.glossary.length === 0,
               title: t("library.export")
             },
@@ -6539,19 +6547,6 @@ function LibraryPage({
             h("option", { value: "" }, t("library.language")),
             allLanguages.map((code) => h("option", { key: code, value: code }, code))
           ),
-          kind === "glossary" ? h(
-            "select",
-            {
-              className: "cait-liblang",
-              value: exportFormat,
-              onChange: (event) => setExportFormat(event.target.value),
-              title: t("library.exportFormat"),
-              "aria-label": t("library.exportFormat")
-            },
-            ["tbx", "csv", "json"].map(
-              (format) => h("option", { key: format, value: format }, format.toUpperCase())
-            )
-          ) : null,
           h(
             "label",
             {
@@ -6607,7 +6602,7 @@ function LibraryPage({
             {
               type: "button",
               className: "cait-btn",
-              onClick: () => pickImport(kind),
+              onClick: () => onOpenIo?.("import", kind),
               disabled: Boolean(busy) || !targetLibraryId,
               title: t("library.import")
             },
@@ -6615,25 +6610,11 @@ function LibraryPage({
             h("span", { className: "cait-btn-label" }, t("library.import"))
           ),
           h(
-            "select",
-            {
-              className: "cait-liblang",
-              value: exportTargetId,
-              onChange: (event) => setExportLibraryId(event.target.value),
-              title: t("library.exportTarget"),
-              "aria-label": t("library.exportTarget"),
-              disabled: Boolean(busy) || libraries.length === 0
-            },
-            libraries.map((library) =>
-              h("option", { key: library[idKey], value: library[idKey] }, library[labelKey])
-            )
-          ),
-          h(
             "button",
             {
               type: "button",
               className: "cait-btn",
-              onClick: exportLibrary,
+              onClick: () => onOpenIo?.("export", kind),
               disabled: Boolean(busy) || working === "export" || !exportTargetId,
               title: t("library.export")
             },
@@ -7719,6 +7700,100 @@ function TermModal({ t, doc, state, busy, initial, onSave, onClose }) {
     )
   );
 }
+function LibraryIoModal({
+  t,
+  busy,
+  mode,
+  kind,
+  libraries,
+  initialLibraryId,
+  initialFormat,
+  formats,
+  onCancel,
+  onConfirm
+}) {
+  const isImport = mode === "import";
+  const [libraryId, setLibraryId] = useState(initialLibraryId || libraries[0]?.id || "");
+  const [format, setFormat] = useState(initialFormat);
+  const [file, setFile] = useState(null);
+  const fileRef = useRef(null);
+  const confirmDisabled = Boolean(busy) || !libraryId || isImport && !file;
+  return h(
+    Modal,
+    { title: t(isImport ? "library.import" : "library.export"), onClose: onCancel },
+    h("p", { className: "cait-mt-hint" }, t(isImport ? "library.ioHintImport" : "library.ioHintExport")),
+    h(
+      "label",
+      { className: "cait-field" },
+      h("span", null, t("library.ioLibrary")),
+      h(
+        "select",
+        {
+          className: "cait-input",
+          value: libraryId,
+          onChange: (event) => setLibraryId(event.target.value),
+          disabled: Boolean(busy)
+        },
+        libraries.map((library) => h("option", { key: library.id, value: library.id }, library.name))
+      )
+    ),
+    isImport ? h(
+      "div",
+      { className: "cait-field" },
+      h("span", null, t("library.ioFile")),
+      h("input", {
+        ref: fileRef,
+        type: "file",
+        accept: kind === "tm" ? ".tmx" : ".tbx,.csv,.tsv,.txt,.json",
+        style: { display: "none" },
+        onChange: (event) => {
+          setFile(event.target.files?.[0] || null);
+          event.target.value = "";
+        }
+      }),
+      h(
+        "div",
+        { className: "cait-formrow" },
+        h(
+          "button",
+          { className: "cait-btn", onClick: () => fileRef.current?.click(), disabled: Boolean(busy) },
+          h(Icon, { name: "folder", size: 12 }),
+          t("library.ioChooseFile")
+        ),
+        h("span", { className: "cait-hint" }, file ? file.name : t("library.ioNoFile"))
+      )
+    ) : h(
+      "label",
+      { className: "cait-field" },
+      h("span", null, t("library.ioFormat")),
+      h(
+        "select",
+        {
+          className: "cait-input",
+          value: format,
+          onChange: (event) => setFormat(event.target.value),
+          disabled: Boolean(busy)
+        },
+        formats.map((item) => h("option", { key: item, value: item }, item.toUpperCase()))
+      )
+    ),
+    h(
+      "div",
+      { className: "cait-modal-actions" },
+      h("button", { className: "cait-btn", onClick: onCancel, disabled: Boolean(busy) }, t("panel.cancel")),
+      h(
+        "button",
+        {
+          className: "cait-btn cait-btn-primary",
+          onClick: () => onConfirm(isImport ? { libraryId, file } : { libraryId, format }),
+          disabled: confirmDisabled
+        },
+        busy ? h(Spinner) : t(isImport ? "library.import" : "library.export")
+      )
+    )
+  );
+}
+
 function BriefModal({ t, doc, busy, onClose, onSave }) {
   const initial = doc.brief || {};
   const [form, setForm] = useState({
@@ -9801,6 +9876,60 @@ function useWorkbenchController({ i18n, translate }) {
     }
   };
 
+  const libraryIoOptions = (kind) => {
+    const mountedGlossary = Array.isArray(doc?.glossaryIds) && doc.glossaryIds.length ? doc.glossaryIds : data?.mounts?.glossaryIds || [];
+    const mountedTm = Array.isArray(doc?.tmIds) && doc.tmIds.length ? doc.tmIds : data?.mounts?.tmIds || [];
+    const isTm = kind === "tm";
+    const source = isTm ? data?.libraries?.tm || [] : data?.libraries?.glossary || [];
+    const libraries = source.filter((item) => isTm ? mountedTm.includes(item.tmId) : mountedGlossary.includes(item.glossaryId)).map((item) => ({ id: isTm ? item.tmId : item.glossaryId, name: item.name }));
+    const preferred = isTm ? data?.mounts?.defaultTmId : data?.mounts?.defaultGlossaryId;
+    const mountedIds = isTm ? mountedTm : mountedGlossary;
+    const libraryId = preferred && mountedIds.includes(preferred) ? preferred : mountedIds[0] || libraries[0]?.id || "";
+    return { libraries, libraryId };
+  };
+  const exportLibraryTo = async ({ kind, libraryId, format }) => {
+    setBusy("library-export");
+    try {
+      const result = kind === "tm" ? await rpc("exportTM", { tmId: libraryId, format: "tmx" }) : await rpc("exportGlossary", { glossaryId: libraryId, format });
+      downloadFile(result.filename, result.content, result.mime);
+      notify(t("library.exported"));
+      return true;
+    } catch (error) {
+      report(error);
+      return false;
+    } finally {
+      setBusy("");
+    }
+  };
+  const importLibraryTo = async ({ kind, libraryId, file }) => {
+    if (!file || !libraryId) return false;
+    setBusy("library-import");
+    try {
+      const text = await file.text();
+      if (kind === "tm") {
+        const result = await rpc("importTmx", {
+          text,
+          importAs: "tm",
+          tmId: libraryId,
+          sourceLang: settings.sourceLang,
+          targetLang: settings.targetLang
+        });
+        replaceRemoteState(result.state);
+        notify(`${t("toast.tmImported")} · +${result.added} / ~${result.updated}`);
+      } else {
+        const result = await rpc("importGlossary", { text, glossaryId: libraryId });
+        replaceRemoteState(result.state);
+        notify(`${t("toast.glossaryImported")} · +${result.added} / ~${result.updated}`);
+      }
+      return true;
+    } catch (error) {
+      report(error);
+      return false;
+    } finally {
+      setBusy("");
+    }
+  };
+
   const generateMt = async () => {
     if (!doc || !segment || mtBusy) return;
     setMtBusy(true);
@@ -10191,6 +10320,9 @@ function useWorkbenchController({ i18n, translate }) {
     importTmxFile,
     importGlossaryFile,
     exportGlossaryFile,
+    libraryIoOptions,
+    exportLibraryTo,
+    importLibraryTo,
     generateMt,
     saveSettings,
     setMounts,
@@ -10344,6 +10476,9 @@ function Workbench({ i18n, translate }) {
     importTmxFile,
     importGlossaryFile,
     exportGlossaryFile,
+    libraryIoOptions,
+    exportLibraryTo,
+    importLibraryTo,
     generateMt,
     saveSettings,
     setMounts,
@@ -10368,6 +10503,8 @@ function Workbench({ i18n, translate }) {
     saveTerm
   } = useWorkbenchController({ i18n, translate });
   const [aiQuick, setAiQuick] = useState("");
+  const [libraryIo, setLibraryIo] = useState(null);
+  const ioOptions = libraryIo ? libraryIoOptions(libraryIo.kind) : { libraries: [], libraryId: "" };
   if (loading) {
     return h(
       "div",
@@ -10535,7 +10672,8 @@ function Workbench({ i18n, translate }) {
       onCreateLibrary: createLibrary,
       onRenameLibrary: renameLibrary,
       onDeleteLibrary: deleteLibrary,
-      onSetMounts: setMounts
+      onSetMounts: setMounts,
+      onOpenIo: (mode, kind) => setLibraryIo({ mode, kind })
     }) : null,
     view === "align" ? h(AlignPage, {
       t,
@@ -10662,7 +10800,7 @@ function Workbench({ i18n, translate }) {
           onApplyTerm: applyTerm,
           onDefineTerm: openTermDialog,
           onImportGlossary: importGlossaryFile,
-          onExportGlossary: exportGlossaryFile,
+          onOpenIo: (mode) => setLibraryIo({ mode, kind: "glossary" }),
           onClearGlossary: clearGlossary,
           mt,
           mtError,
@@ -10754,6 +10892,25 @@ function Workbench({ i18n, translate }) {
       busy,
       onClose: () => setModal(null),
       onSave: saveResources
+    }) : null,
+    libraryIo ? h(LibraryIoModal, {
+      t,
+      busy: Boolean(busy),
+      mode: libraryIo.mode,
+      kind: libraryIo.kind,
+      libraries: ioOptions.libraries,
+      initialLibraryId: ioOptions.libraryId,
+      initialFormat: libraryIo.kind === "tm" ? "tmx" : "tbx",
+      formats: libraryIo.kind === "tm" ? ["tmx"] : ["tbx", "csv", "json"],
+      onCancel: () => setLibraryIo(null),
+      onConfirm: async (payload) => {
+        setLibraryIo(null);
+        if (libraryIo.mode === "import") {
+          await importLibraryTo({ kind: libraryIo.kind, libraryId: payload.libraryId, file: payload.file });
+        } else {
+          await exportLibraryTo({ kind: libraryIo.kind, libraryId: payload.libraryId, format: payload.format });
+        }
+      }
     }) : null,
     modal?.type === "analysis" ? h(AnalysisModal, {
       t,

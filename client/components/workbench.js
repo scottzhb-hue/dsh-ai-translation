@@ -12,6 +12,7 @@ import {
   SettingsModal,
   ConfirmModal,
   BriefModal,
+  LibraryIoModal,
   AiChatModal,
   TermModal,
   NoteModal,
@@ -149,6 +150,9 @@ function Workbench({ i18n, translate }) {
     importTmxFile,
     importGlossaryFile,
     exportGlossaryFile,
+    libraryIoOptions,
+    exportLibraryTo,
+    importLibraryTo,
     generateMt,
     saveSettings,
     setMounts,
@@ -173,6 +177,8 @@ function Workbench({ i18n, translate }) {
     saveTerm,
   } = useWorkbenchController({ i18n, translate })
   const [aiQuick, setAiQuick] = useState('')
+  const [libraryIo, setLibraryIo] = useState(null)
+  const ioOptions = libraryIo ? libraryIoOptions(libraryIo.kind) : { libraries: [], libraryId: '' }
 
   if (loading) {
     return h(
@@ -347,6 +353,7 @@ function Workbench({ i18n, translate }) {
           onRenameLibrary: renameLibrary,
           onDeleteLibrary: deleteLibrary,
           onSetMounts: setMounts,
+          onOpenIo: (mode, kind) => setLibraryIo({ mode, kind }),
         })
       : null,
     view === 'align'
@@ -485,7 +492,7 @@ function Workbench({ i18n, translate }) {
                   onApplyTerm: applyTerm,
                   onDefineTerm: openTermDialog,
                   onImportGlossary: importGlossaryFile,
-                  onExportGlossary: exportGlossaryFile,
+                  onOpenIo: (mode) => setLibraryIo({ mode, kind: 'glossary' }),
                   onClearGlossary: clearGlossary,
                   mt,
                   mtError,
@@ -590,6 +597,27 @@ function Workbench({ i18n, translate }) {
           busy,
           onClose: () => setModal(null),
           onSave: saveResources,
+        })
+      : null,
+    libraryIo
+      ? h(LibraryIoModal, {
+          t,
+          busy: Boolean(busy),
+          mode: libraryIo.mode,
+          kind: libraryIo.kind,
+          libraries: ioOptions.libraries,
+          initialLibraryId: ioOptions.libraryId,
+          initialFormat: libraryIo.kind === 'tm' ? 'tmx' : 'tbx',
+          formats: libraryIo.kind === 'tm' ? ['tmx'] : ['tbx', 'csv', 'json'],
+          onCancel: () => setLibraryIo(null),
+          onConfirm: async (payload) => {
+            setLibraryIo(null)
+            if (libraryIo.mode === 'import') {
+              await importLibraryTo({ kind: libraryIo.kind, libraryId: payload.libraryId, file: payload.file })
+            } else {
+              await exportLibraryTo({ kind: libraryIo.kind, libraryId: payload.libraryId, format: payload.format })
+            }
+          },
         })
       : null,
     modal?.type === 'analysis'

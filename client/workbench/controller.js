@@ -1552,6 +1552,70 @@ export function useWorkbenchController({ i18n, translate }) {
     }
   }
 
+  const libraryIoOptions = (kind) => {
+    const mountedGlossary = Array.isArray(doc?.glossaryIds) && doc.glossaryIds.length
+      ? doc.glossaryIds
+      : (data?.mounts?.glossaryIds || [])
+    const mountedTm = Array.isArray(doc?.tmIds) && doc.tmIds.length
+      ? doc.tmIds
+      : (data?.mounts?.tmIds || [])
+    const isTm = kind === 'tm'
+    const source = isTm ? (data?.libraries?.tm || []) : (data?.libraries?.glossary || [])
+    const libraries = source
+      .filter((item) => (isTm ? mountedTm.includes(item.tmId) : mountedGlossary.includes(item.glossaryId)))
+      .map((item) => ({ id: isTm ? item.tmId : item.glossaryId, name: item.name }))
+    const preferred = isTm ? data?.mounts?.defaultTmId : data?.mounts?.defaultGlossaryId
+    const mountedIds = isTm ? mountedTm : mountedGlossary
+    const libraryId = preferred && mountedIds.includes(preferred) ? preferred : mountedIds[0] || libraries[0]?.id || ''
+    return { libraries, libraryId }
+  }
+
+  const exportLibraryTo = async ({ kind, libraryId, format }) => {
+    setBusy('library-export')
+    try {
+      const result = kind === 'tm'
+        ? await rpc('exportTM', { tmId: libraryId, format: 'tmx' })
+        : await rpc('exportGlossary', { glossaryId: libraryId, format })
+      downloadFile(result.filename, result.content, result.mime)
+      notify(t('library.exported'))
+      return true
+    } catch (error) {
+      report(error)
+      return false
+    } finally {
+      setBusy('')
+    }
+  }
+
+  const importLibraryTo = async ({ kind, libraryId, file }) => {
+    if (!file || !libraryId) return false
+    setBusy('library-import')
+    try {
+      const text = await file.text()
+      if (kind === 'tm') {
+        const result = await rpc('importTmx', {
+          text,
+          importAs: 'tm',
+          tmId: libraryId,
+          sourceLang: settings.sourceLang,
+          targetLang: settings.targetLang,
+        })
+        replaceRemoteState(result.state)
+        notify(`${t('toast.tmImported')} · +${result.added} / ~${result.updated}`)
+      } else {
+        const result = await rpc('importGlossary', { text, glossaryId: libraryId })
+        replaceRemoteState(result.state)
+        notify(`${t('toast.glossaryImported')} · +${result.added} / ~${result.updated}`)
+      }
+      return true
+    } catch (error) {
+      report(error)
+      return false
+    } finally {
+      setBusy('')
+    }
+  }
+
   const generateMt = async () => {
     if (!doc || !segment || mtBusy) return
     setMtBusy(true)
@@ -1972,6 +2036,9 @@ export function useWorkbenchController({ i18n, translate }) {
     importTmxFile,
     importGlossaryFile,
     exportGlossaryFile,
+    libraryIoOptions,
+    exportLibraryTo,
+    importLibraryTo,
     generateMt,
     saveSettings,
     setMounts,

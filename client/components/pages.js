@@ -403,6 +403,7 @@ function LibraryPage({
   onRenameLibrary,
   onDeleteLibrary,
   onSetMounts,
+  onOpenIo,
 }) {
   const storage = typeof localStorage !== 'undefined' ? localStorage : null
   const [kind, setKind] = useState(seed?.kind === 'glossary' ? 'glossary' : 'tm')
@@ -1023,21 +1024,6 @@ function LibraryPage({
             h('option', { value: '' }, t('library.language')),
             allLanguages.map((code) => h('option', { key: code, value: code }, code)),
           ),
-          kind === 'glossary'
-            ? h(
-                'select',
-                {
-                  className: 'cait-liblang',
-                  value: exportFormat,
-                  onChange: (event) => setExportFormat(event.target.value),
-                  title: t('library.exportFormat'),
-                  'aria-label': t('library.exportFormat'),
-                },
-                ['tbx', 'csv', 'json'].map((format) =>
-                  h('option', { key: format, value: format }, format.toUpperCase()),
-                ),
-              )
-            : null,
           h(
             'label',
             {
@@ -1095,7 +1081,7 @@ function LibraryPage({
             {
               type: 'button',
               className: 'cait-btn',
-              onClick: () => pickImport(kind),
+              onClick: () => onOpenIo?.('import', kind),
               disabled: Boolean(busy) || !targetLibraryId,
               title: t('library.import'),
             },
@@ -1103,25 +1089,11 @@ function LibraryPage({
             h('span', { className: 'cait-btn-label' }, t('library.import')),
           ),
           h(
-            'select',
-            {
-              className: 'cait-liblang',
-              value: exportTargetId,
-              onChange: (event) => setExportLibraryId(event.target.value),
-              title: t('library.exportTarget'),
-              'aria-label': t('library.exportTarget'),
-              disabled: Boolean(busy) || libraries.length === 0,
-            },
-            libraries.map((library) =>
-              h('option', { key: library[idKey], value: library[idKey] }, library[labelKey]),
-            ),
-          ),
-          h(
             'button',
             {
               type: 'button',
               className: 'cait-btn',
-              onClick: exportLibrary,
+              onClick: () => onOpenIo?.('export', kind),
               disabled: Boolean(busy) || working === 'export' || !exportTargetId,
               title: t('library.export'),
             },

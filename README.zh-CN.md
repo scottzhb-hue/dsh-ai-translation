@@ -279,7 +279,7 @@ GitHub Packages 需要在 `.npmrc` 里配置 `@scottzhb-hue:registry=https://npm
 plugin_manager install_bundle target: @scottzhb-hue/dsh-ai-translation
 ```
 
-需要固定版本时写 `@scottzhb-hue/dsh-ai-translation@1.0.5`，需要最新版时写 `@scottzhb-hue/dsh-ai-translation@latest`。管理器会解析 registry
+需要固定版本时写 `@scottzhb-hue/dsh-ai-translation@1.0.6`，需要最新版时写 `@scottzhb-hue/dsh-ai-translation@latest`。管理器会解析 registry
 上的包、应用 bundle patch 并激活插件，不需要手工在配置档里加行。
 
 一次性配置 registry（PowerShell），跑完上面的命令才可用：

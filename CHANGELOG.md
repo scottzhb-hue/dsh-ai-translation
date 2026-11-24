@@ -7,6 +7,13 @@ All notable changes to CAIT are documented here. The project follows
 > 以下 `1.1.8` 及更早的条目属于上游 CAIT（作者 Jovi Lecca，Apache-2.0），
 > 保留原文以便溯源。本分支 `dsh-ai-translation` 从 `1.0.1` 起独立编号。
 
+## [1.0.6] - 2026-11-24
+
+### Changed
+
+- 库页与工作台术语面板不再常驻格式/库下拉：点「导入」或「导出」时弹出选择器（目标库 + 格式，导入时选文件），面板保持整洁。
+- 选择器默认目标库按项目解析：文档挂载的默认库优先，未挂载默认库时用文档的首个挂载库。
+
 ## [1.0.5] - 2026-11-24
 
 ### Changed
