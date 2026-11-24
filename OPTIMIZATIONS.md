@@ -1,7 +1,7 @@
 # dsh-ai-translation 本地优化清单
 
 
-> 发布名：`@scottzhb-hue/dsh-ai-translation@1.0.6`（fork 自 CAIT `dsh-cait@1.1.8`，上游作者 Jovi Lecca，Apache-2.0）。
+> 发布名：`@scottzhb-hue/dsh-ai-translation@1.0.7`（fork 自 CAIT `dsh-cait@1.1.8`，上游作者 Jovi Lecca，Apache-2.0）。
 > 上游仓库：<https://github.com/JoviLecca/dsh-CAIT>；本分支仓库：<https://github.com/scottzhb-hue/dsh-ai-translation>。
 本文件登记我在本机对 **dsh-cait 1.1.8**（上游 npm 最新版）所做的全部本地优化，
 用于：① 本对话后续继续迭代时作为基线参考；② 将来把优化版发布到 GitHub 时作为变更来源。

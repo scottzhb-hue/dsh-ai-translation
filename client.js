@@ -6000,7 +6000,8 @@ function LibraryPage({
   onCreateLibrary,
   onRenameLibrary,
   onDeleteLibrary,
-  onSetMounts
+  onSetMounts,
+  onOpenIo
 }) {
   const storage = typeof localStorage !== "undefined" ? localStorage : null;
   const [kind, setKind] = useState(seed?.kind === "glossary" ? "glossary" : "tm");

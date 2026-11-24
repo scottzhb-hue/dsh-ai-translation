@@ -7,6 +7,12 @@ All notable changes to CAIT are documented here. The project follows
 > 以下 `1.1.8` 及更早的条目属于上游 CAIT（作者 Jovi Lecca，Apache-2.0），
 > 保留原文以便溯源。本分支 `dsh-ai-translation` 从 `1.0.1` 起独立编号。
 
+## [1.0.7] - 2026-11-24
+
+### Fixed
+
+- 修复「库」页「导入 / 导出」按钮无反应：打包产物 `LibraryPage` 的形参漏了 `onOpenIo`，弹窗回调因此为 `undefined`。
+
 ## [1.0.6] - 2026-11-24
 
 ### Changed
