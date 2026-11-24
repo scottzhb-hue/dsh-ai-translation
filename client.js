@@ -2781,6 +2781,7 @@ var CSS = `
 .cait-libsearch input{min-width:0;flex:1;border:0;outline:0;background:transparent;font-size:11.5px;color:var(--dsw-alias-label-primary)}
 .cait-liblang{height:29px;padding:0 7px;border:1px solid var(--dsw-alias-border-l1);border-radius:7px;background:var(--dsw-alias-bg-layer-1);font-size:11px;flex:0 0 auto;min-width:132px;max-width:280px}
 .cait-liblang:disabled{opacity:.65}
+.cait-exportfmt{height:26px;padding:0 4px;border:1px solid var(--dsw-alias-border-l1);border-radius:6px;background:var(--dsw-alias-bg-layer-1);font-size:11px;flex:0 0 auto}
 .cait-libwrite{display:inline-flex;align-items:center;gap:5px;flex:0 0 auto;font-size:10.5px;color:var(--dsw-alias-label-secondary);white-space:nowrap}
 .cait-libwritelabel{font-size:10.5px;color:var(--dsw-alias-label-secondary)}
 .cait-libscope{display:flex;align-items:center;gap:4px;padding:0 12px 8px;flex-wrap:wrap;flex:0 0 auto}
@@ -4880,6 +4881,7 @@ function CatPanel({
   onClearTm,
   onApplyTerm,
   onImportGlossary,
+  onExportGlossary,
   onClearGlossary,
   mt,
   mtError,
@@ -4915,6 +4917,7 @@ function CatPanel({
 }) {
   const tmxInput = useRef(null);
   const glossaryInput = useRef(null);
+  const [exportFormat, setExportFormat] = useState("tbx");
   const routes = Array.isArray(mtRoutes?.providers) ? mtRoutes.providers : [];
   const currentRoute = routes.find((route) => route.id === settings.mt.provider);
   const mtProviderLabel = settings.mt.provider === "mock" ? t("mt.mock") : currentRoute?.wrapper ? `${currentRoute.name || settings.mt.provider} · ${t("modal.settings.wrapperRoute")}` : currentRoute?.name || settings.mt.provider || t("mt.mock");
@@ -5159,6 +5162,31 @@ function CatPanel({
             },
             h(Icon, { name: "download", size: 12 }),
             t("panel.importCsv")
+          ),
+          h(
+            "select",
+            {
+              className: "cait-exportfmt",
+              value: exportFormat,
+              onChange: (event) => setExportFormat(event.target.value),
+              title: t("library.exportFormat"),
+              "aria-label": t("library.exportFormat"),
+              disabled: Boolean(busy)
+            },
+            ["tbx", "csv", "json"].map((format) =>
+              h("option", { key: format, value: format }, format.toUpperCase())
+            )
+          ),
+          h(
+            "button",
+            {
+              className: "cait-btn",
+              onClick: () => onExportGlossary?.(exportFormat),
+              disabled: Boolean(busy) || data.glossary.length === 0,
+              title: t("library.export")
+            },
+            h(Icon, { name: "upload", size: 12 }),
+            t("library.export")
           ),
           h(
             "button",
@@ -6592,7 +6620,7 @@ function LibraryPage({
             h(
               "span",
               { className: "cait-btn-label" },
-              kind === "tm" ? "TMX" : exportFormat.toUpperCase()
+              t("library.export")
             )
           ),
           kind === "tm" ? h(
@@ -9736,6 +9764,22 @@ function useWorkbenchController({ i18n, translate }) {
       setBusy("");
     }
   };
+  const exportGlossaryFile = async (format = "tbx") => {
+    setBusy("glossary-export");
+    try {
+      const result = await rpc("exportGlossary", {
+        glossaryId: data?.mounts?.defaultGlossaryId,
+        format
+      });
+      downloadFile(result.filename, result.content, result.mime);
+      notify(t("library.exported"));
+    } catch (error) {
+      report(error);
+    } finally {
+      setBusy("");
+    }
+  };
+
   const generateMt = async () => {
     if (!doc || !segment || mtBusy) return;
     setMtBusy(true);
@@ -10125,6 +10169,7 @@ function useWorkbenchController({ i18n, translate }) {
     deleteTerm,
     importTmxFile,
     importGlossaryFile,
+    exportGlossaryFile,
     generateMt,
     saveSettings,
     setMounts,
@@ -10277,6 +10322,7 @@ function Workbench({ i18n, translate }) {
     deleteTerm,
     importTmxFile,
     importGlossaryFile,
+    exportGlossaryFile,
     generateMt,
     saveSettings,
     setMounts,
@@ -10595,6 +10641,7 @@ function Workbench({ i18n, translate }) {
           onApplyTerm: applyTerm,
           onDefineTerm: openTermDialog,
           onImportGlossary: importGlossaryFile,
+          onExportGlossary: exportGlossaryFile,
           onClearGlossary: clearGlossary,
           mt,
           mtError,

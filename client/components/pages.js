@@ -1109,7 +1109,7 @@ function LibraryPage({
             h(
               'span',
               { className: 'cait-btn-label' },
-              kind === 'tm' ? 'TMX' : exportFormat.toUpperCase(),
+              t('library.export'),
             ),
           ),
           kind === 'tm'

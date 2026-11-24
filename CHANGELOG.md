@@ -7,6 +7,16 @@ All notable changes to CAIT are documented here. The project follows
 > 以下 `1.1.8` 及更早的条目属于上游 CAIT（作者 Jovi Lecca，Apache-2.0），
 > 保留原文以便溯源。本分支 `dsh-ai-translation` 从 `1.0.1` 起独立编号。
 
+## [1.0.4] - 2026-11-24
+
+### Added
+
+- Glossary export is reachable from the workbench: the 术语 panel now has a format picker (TBX / CSV / JSON) and an 「导出」 button that exports the default write library.
+
+### Changed
+
+- The export button on the 库 page is labelled 「导出」/「Export」 instead of only showing the format code; the adjacent format picker still chooses TBX / CSV / JSON.
+
 ## [1.0.3] - 2026-11-23
 
 ### Security

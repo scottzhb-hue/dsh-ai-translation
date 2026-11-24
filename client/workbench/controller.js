@@ -1536,6 +1536,22 @@ export function useWorkbenchController({ i18n, translate }) {
     }
   }
 
+  const exportGlossaryFile = async (format = 'tbx') => {
+    setBusy('glossary-export')
+    try {
+      const result = await rpc('exportGlossary', {
+        glossaryId: data?.mounts?.defaultGlossaryId,
+        format,
+      })
+      downloadFile(result.filename, result.content, result.mime)
+      notify(t('library.exported'))
+    } catch (error) {
+      report(error)
+    } finally {
+      setBusy('')
+    }
+  }
+
   const generateMt = async () => {
     if (!doc || !segment || mtBusy) return
     setMtBusy(true)
@@ -1955,6 +1971,7 @@ export function useWorkbenchController({ i18n, translate }) {
     deleteTerm,
     importTmxFile,
     importGlossaryFile,
+    exportGlossaryFile,
     generateMt,
     saveSettings,
     setMounts,

@@ -296,7 +296,7 @@ GitHub Packages を使うには `.npmrc` に `@scottzhb-hue:registry=https://npm
 plugin_manager install_bundle target: @scottzhb-hue/dsh-ai-translation
 ```
 
-バージョンを固定するときは `@scottzhb-hue/dsh-ai-translation@1.0.3`、最新版は `@scottzhb-hue/dsh-ai-translation@latest` を指定します。
+バージョンを固定するときは `@scottzhb-hue/dsh-ai-translation@1.0.4`、最新版は `@scottzhb-hue/dsh-ai-translation@latest` を指定します。
 マネージャが registry のパッケージを解決し、bundle patch を適用してプラグインを有効化します。
 
 registry の初回設定（PowerShell）。これを一度実行すると上のコマンドが使えます:

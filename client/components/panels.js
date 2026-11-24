@@ -1,4 +1,4 @@
-import { h, useRef } from '../react.js'
+import { h, useRef, useState } from '../react.js'
 import { Spinner, Icon } from './base.js'
 import { TmMatchCard } from './editor.js'
 
@@ -21,6 +21,7 @@ function CatPanel({
   onClearTm,
   onApplyTerm,
   onImportGlossary,
+  onExportGlossary,
   onClearGlossary,
   mt,
   mtError,
@@ -56,6 +57,7 @@ function CatPanel({
 }) {
   const tmxInput = useRef(null)
   const glossaryInput = useRef(null)
+  const [exportFormat, setExportFormat] = useState('tbx')
   const routes = Array.isArray(mtRoutes?.providers) ? mtRoutes.providers : []
   const currentRoute = routes.find((route) => route.id === settings.mt.provider)
   const mtProviderLabel =
@@ -316,6 +318,31 @@ function CatPanel({
                 },
                 h(Icon, { name: 'download', size: 12 }),
                 t('panel.importCsv'),
+              ),
+              h(
+                'select',
+                {
+                  className: 'cait-exportfmt',
+                  value: exportFormat,
+                  onChange: (event) => setExportFormat(event.target.value),
+                  title: t('library.exportFormat'),
+                  'aria-label': t('library.exportFormat'),
+                  disabled: Boolean(busy),
+                },
+                ['tbx', 'csv', 'json'].map((format) =>
+                  h('option', { key: format, value: format }, format.toUpperCase()),
+                ),
+              ),
+              h(
+                'button',
+                {
+                  className: 'cait-btn',
+                  onClick: () => onExportGlossary?.(exportFormat),
+                  disabled: Boolean(busy) || data.glossary.length === 0,
+                  title: t('library.export'),
+                },
+                h(Icon, { name: 'upload', size: 12 }),
+                t('library.export'),
               ),
               h(
                 'button',

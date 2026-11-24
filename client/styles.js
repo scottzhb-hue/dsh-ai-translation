@@ -444,6 +444,7 @@ const CSS = `
 .cait-libsearch input{min-width:0;flex:1;border:0;outline:0;background:transparent;font-size:11.5px;color:var(--dsw-alias-label-primary)}
 .cait-liblang{height:29px;padding:0 7px;border:1px solid var(--dsw-alias-border-l1);border-radius:7px;background:var(--dsw-alias-bg-layer-1);font-size:11px;flex:0 0 auto;min-width:132px;max-width:280px}
 .cait-liblang:disabled{opacity:.65}
+.cait-exportfmt{height:26px;padding:0 4px;border:1px solid var(--dsw-alias-border-l1);border-radius:6px;background:var(--dsw-alias-bg-layer-1);font-size:11px;flex:0 0 auto}
 .cait-libwrite{display:inline-flex;align-items:center;gap:5px;flex:0 0 auto;font-size:10.5px;color:var(--dsw-alias-label-secondary);white-space:nowrap}
 .cait-libwritelabel{font-size:10.5px;color:var(--dsw-alias-label-secondary)}
 .cait-libscope{display:flex;align-items:center;gap:4px;padding:0 12px 8px;flex-wrap:wrap;flex:0 0 auto}
