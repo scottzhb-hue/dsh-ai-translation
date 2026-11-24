@@ -844,7 +844,7 @@ function LibraryIoModal({
     h(
       'label',
       { className: 'cait-field' },
-      h('span', null, t('library.ioLibrary')),
+      h('span', null, t(isImport ? 'library.ioLibrary' : 'library.ioSource')),
       h(
         'select',
         {
