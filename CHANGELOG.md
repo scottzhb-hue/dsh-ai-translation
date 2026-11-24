@@ -7,49 +7,25 @@ All notable changes to CAIT are documented here. The project follows
 > 以下 `1.1.8` 及更早的条目属于上游 CAIT（作者 Jovi Lecca，Apache-2.0），
 > 保留原文以便溯源。本分支 `dsh-ai-translation` 从 `1.0.1` 起独立编号。
 
-## [1.0.9] - 2026-11-24
-
-### Fixed
-
-- Deleting a library from the Library tab now actually removes it: the page
-  already asked for confirmation, and the controller opened a second confirm
-  dialog whose answer was thrown away, so nothing happened.
-
-## [1.0.8] - 2026-11-24
-
-### Changed
-
-- 导出弹窗的库选择器改称「来源库 / Source library / ソースライブラリ」（导出是从该库取数据）；导入弹窗仍称「目标库」。
-
-## [1.0.7] - 2026-11-24
-
-### Fixed
-
-- 修复「库」页「导入 / 导出」按钮无反应：打包产物 `LibraryPage` 的形参漏了 `onOpenIo`，弹窗回调因此为 `undefined`。
-
-## [1.0.6] - 2026-11-24
-
-### Changed
-
-- 库页与工作台术语面板不再常驻格式/库下拉：点「导入」或「导出」时弹出选择器（目标库 + 格式，导入时选文件），面板保持整洁。
-- 选择器默认目标库按项目解析：文档挂载的默认库优先，未挂载默认库时用文档的首个挂载库。
-
-## [1.0.5] - 2026-11-24
-
-### Changed
-
-- 库页导出新增目标库下拉：导出 TM 与术语库前可先选具体库，默认仍是当前写入库。
-- 术语面板的「导出」改为按项目实际使用的术语库：文档挂载的默认库优先，未挂载默认库时用文档的首个挂载库。
-
 ## [1.0.4] - 2026-11-24
+
+> 开发期的 `1.0.5` – `1.0.9` 是本机内部迭代，从未发布，已并入本版本。
 
 ### Added
 
-- Glossary export is reachable from the workbench: the 术语 panel now has a format picker (TBX / CSV / JSON) and an 「导出」 button that exports the default write library.
+- 术语库导出入口：工作台「术语」面板新增「导出」按钮，按项目实际使用的术语库导出 TBX / CSV / JSON。
 
 ### Changed
 
-- The export button on the 库 page is labelled 「导出」/「Export」 instead of only showing the format code; the adjacent format picker still chooses TBX / CSV / JSON.
+- 「库」页与「术语」面板不再常驻格式与库下拉：点「导入」或「导出」时统一弹出选择器（格式 + 库；导入时另选文件），面板保持整洁。
+- 导出弹窗里的库选择器称「来源库 / Source library / ソースライブラリ」（数据来源），导入弹窗仍称「目标库」。
+- 选择器与导出的默认库按项目解析：文档挂载的默认写入库优先，未挂载默认库时用文档的首个挂载库；「库」页仍可手动切换目标库。
+- 「库」页的导出按钮文字改为「导出 / Export」，不再只显示格式代号。
+
+### Fixed
+
+- 修复「库」页「导入 / 导出」按钮点击无反应：打包产物 `LibraryPage` 的形参漏了 `onOpenIo`，回调为 `undefined` 时被可选调用静默跳过。
+- 修复库列表的删除按钮点了没反应：页面已经确认后，控制器又弹了第二个确认框并被立即关闭，删除请求从未发出。
 
 ## [1.0.3] - 2026-11-23
 
