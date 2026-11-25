@@ -442,16 +442,22 @@ var ZH_PROJECTS = {
   "projects.completed": "已完成",
   "projects.quote": "报价",
   "projects.analysis": "匹配分析",
+  "projects.refreshAnalysis": "刷新分析",
+  "projects.analysisStale": "文档有变动，分析结果可能过期",
+  "projects.analysisNone": "打开项目后计算；点「刷新分析」可重算。",
   "projects.analysisValue": "TM 覆盖 {matched}%，新句段 {fresh} 段",
   "projects.fieldName": "项目名称",
   "projects.client": "客户",
   "projects.dueAt": "截止日期",
   "projects.overdue": "已过截止日期 {dueAt}，仍有未确认句段。",
   "projects.overdueShort": "已超期",
-  "projects.save": "保存项目",
-  "projects.saved": "项目已保存。",
-  "projects.saveBrief": "保存 brief",
-  "projects.briefSaved": "项目 brief 已保存。",
+  "projects.saveSettings": "保存设置",
+  "projects.settingsSaved": "设置已保存。",
+  "projects.unsavedHint": "有未保存的设置改动",
+  "projects.unsavedTitle": "有未保存的设置",
+  "projects.unsavedBody": "名称、brief、共享资源或交付勾选还没保存。要保存后再离开吗？",
+  "projects.unsavedSave": "保存并离开",
+  "projects.unsavedDiscard": "放弃修改",
   "projects.export": "导出项目交付包",
   "projects.exported": "项目交付包已导出：{entries} 个文件，跳过 {skipped} 项。",
   "projects.delete": "删除项目",
@@ -463,11 +469,14 @@ var ZH_PROJECTS = {
   "projects.colProject": "项目",
   "projects.colStatus": "状态",
   "projects.colProgress": "进度",
-  "projects.colSegments": "句段",
+  "projects.colSegments": "セグメント",
+  "projects.colWords": "語数",
+  "projects.colWords": "字数",
   "projects.colActions": "报告 / 移动",
   "projects.noDocs": "这个项目还没有文档。导入文档时选它，或在下面把已有文档勾进来。",
   "projects.noMatch": "没有符合条件的文档。",
   "projects.moveOut": "移到未分类",
+  "projects.openDoc": "打开",
   "projects.moveHint": "改归属",
   "projects.addDocs": "把已有文档加进这个项目",
   "projects.current": "当前",
@@ -500,7 +509,7 @@ var ZH_PROJECTS = {
   "projects.created": "项目已创建。",
   "projects.statusAll": "全部",
   "projects.statusDone": "已完成",
-  "projects.statusTranslated": "已翻译",
+  "projects.statusTranslated": "已译待确认",
   "projects.statusIncomplete": "未完成",
   "projects.statusUntranslated": "未翻译",
   "projects.search": "按文档名或项目名搜索…",
@@ -535,16 +544,22 @@ var EN_PROJECTS = {
   "projects.completed": "Done",
   "projects.quote": "Quote",
   "projects.analysis": "Match analysis",
+  "projects.refreshAnalysis": "Refresh analysis",
+  "projects.analysisStale": "Documents changed; analysis may be stale",
+  "projects.analysisNone": "Computed when the project opens; press Refresh analysis to recompute.",
   "projects.analysisValue": "TM coverage {matched}%, {fresh} new segments",
   "projects.fieldName": "Project name",
   "projects.client": "Client",
   "projects.dueAt": "Due date",
   "projects.overdue": "Past due {dueAt} with unconfirmed segments.",
   "projects.overdueShort": "overdue",
-  "projects.save": "Save project",
-  "projects.saved": "Project saved.",
-  "projects.saveBrief": "Save brief",
-  "projects.briefSaved": "Project brief saved.",
+  "projects.saveSettings": "Save settings",
+  "projects.settingsSaved": "Settings saved.",
+  "projects.unsavedHint": "Unsaved settings changes",
+  "projects.unsavedTitle": "Unsaved settings",
+  "projects.unsavedBody": "Name, brief, shared resources or delivery options are not saved yet. Save before leaving?",
+  "projects.unsavedSave": "Save and leave",
+  "projects.unsavedDiscard": "Discard changes",
   "projects.export": "Export project delivery",
   "projects.exported": "Project package exported: {entries} files, {skipped} skipped.",
   "projects.delete": "Delete project",
@@ -557,10 +572,12 @@ var EN_PROJECTS = {
   "projects.colStatus": "Status",
   "projects.colProgress": "Progress",
   "projects.colSegments": "Segments",
+  "projects.colWords": "Words",
   "projects.colActions": "Report / move",
   "projects.noDocs": "No documents yet. Pick this project when importing, or tick existing documents below.",
   "projects.noMatch": "No documents match.",
   "projects.moveOut": "Move to Unfiled",
+  "projects.openDoc": "Open",
   "projects.moveHint": "Move to",
   "projects.addDocs": "Add existing documents to this project",
   "projects.current": "current",
@@ -593,7 +610,7 @@ var EN_PROJECTS = {
   "projects.created": "Project created.",
   "projects.statusAll": "All",
   "projects.statusDone": "Done",
-  "projects.statusTranslated": "Translated",
+  "projects.statusTranslated": "Translated, unconfirmed",
   "projects.statusIncomplete": "Incomplete",
   "projects.statusUntranslated": "Untranslated",
   "projects.search": "Search by document or project name…",
@@ -628,16 +645,22 @@ var JA_PROJECTS = {
   "projects.completed": "完了",
   "projects.quote": "見積",
   "projects.analysis": "マッチ分析",
+  "projects.refreshAnalysis": "分析を更新",
+  "projects.analysisStale": "文書が変わったため分析が古い可能性があります",
+  "projects.analysisNone": "プロジェクトを開いた時に計算します。「分析を更新」で再計算できます。",
   "projects.analysisValue": "TM カバー {matched}%、新規 {fresh} セグメント",
   "projects.fieldName": "プロジェクト名",
   "projects.client": "クライアント",
   "projects.dueAt": "納期",
   "projects.overdue": "納期 {dueAt} を過ぎていますが未確認のセグメントがあります。",
   "projects.overdueShort": "期限超過",
-  "projects.save": "保存",
-  "projects.saved": "プロジェクトを保存しました。",
-  "projects.saveBrief": "ブリーフを保存",
-  "projects.briefSaved": "プロジェクトブリーフを保存しました。",
+  "projects.saveSettings": "設定を保存",
+  "projects.settingsSaved": "設定を保存しました。",
+  "projects.unsavedHint": "未保存の設定変更があります",
+  "projects.unsavedTitle": "未保存の設定",
+  "projects.unsavedBody": "名前・ブリーフ・共有リソース・納品オプションが未保存です。保存してから移動しますか？",
+  "projects.unsavedSave": "保存して移動",
+  "projects.unsavedDiscard": "変更を破棄",
   "projects.export": "プロジェクト納品を書き出す",
   "projects.exported": "納品パッケージを書き出しました：{entries} ファイル、{skipped} 件スキップ。",
   "projects.delete": "プロジェクトを削除",
@@ -654,6 +677,7 @@ var JA_PROJECTS = {
   "projects.noDocs": "文書がありません。取り込み時にこのプロジェクトを選ぶか、下の一覧から追加してください。",
   "projects.noMatch": "条件に合う文書がありません。",
   "projects.moveOut": "未分類へ移動",
+  "projects.openDoc": "開く",
   "projects.moveHint": "移動先",
   "projects.addDocs": "既存の文書をこのプロジェクトに追加",
   "projects.current": "現在",
@@ -686,7 +710,7 @@ var JA_PROJECTS = {
   "projects.created": "プロジェクトを作成しました。",
   "projects.statusAll": "すべて",
   "projects.statusDone": "完了",
-  "projects.statusTranslated": "翻訳済み",
+  "projects.statusTranslated": "翻訳済み・未確認",
   "projects.statusIncomplete": "未完了",
   "projects.statusUntranslated": "未翻訳",
   "projects.search": "文書名・プロジェクト名で検索…",
@@ -3447,6 +3471,9 @@ var CSS = `
 .cait-time-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px;max-height:150px;overflow:auto;font-size:11px;color:var(--dsw-alias-label-secondary)}
 .cait-time-list li{display:flex;align-items:center;gap:6px;justify-content:space-between}
 .cait-field textarea.cait-input{height:auto;min-height:44px;resize:vertical}
+.cait-proj-analysis{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:11px;color:var(--dsw-alias-label-secondary)}
+.cait-proj-dirty{font-size:10.5px;color:var(--dsw-alias-state-warn-primary)}
+.cait-proj-report{display:inline-flex;align-items:center;gap:4px}
 @media(max-width:1180px){.cait-main{grid-template-columns:minmax(0,1fr) 308px}.cait-body{grid-template-columns:218px minmax(0,1fr)}.cait-editor-col{padding:18px 20px 34px}.cait-actions .cait-btn-label{display:none}.cait-actions .cait-btn{padding:0 8px}.cait-libpage-body{grid-template-columns:196px minmax(0,1fr) 264px}}
 @media(max-width:940px){.cait-topbar{flex-wrap:wrap}.cait-body{grid-template-columns:190px minmax(0,1fr)}.cait-main{grid-template-columns:minmax(0,1fr)}.cait-cat{border-left:0;border-top:1px solid var(--dsw-alias-border-l1);max-height:43%;min-height:210px}.cait-features{grid-template-columns:1fr}.cait-docbar{display:flex;order:3;flex:1 1 100%;padding:7px 0 0;border-left:0;border-top:1px solid var(--dsw-alias-border-l1)}}
 @media(max-width:700px){.cait-body{grid-template-columns:minmax(0,1fr)}.cait-rail{display:none}.cait-editor-col{padding:14px}.cait-topbar{padding:9px 10px}.cait-export-grid{grid-template-columns:1fr}}
@@ -9525,8 +9552,8 @@ function statusChip(t, doc) {
   const label = doc.status?.label ?? doc.statusLabel ?? t(STATUS_LABEL[code] ?? "projects.statusUntranslated");
   return h("span", { className: `cait-proj-status is-${code}` }, label);
 }
-function ProjectList({ t, busy, state, onSelect, onCreate, onProjectReport }) {
-  const projects = state?.list?.projects ?? [];
+function ProjectList({ t, busy, state, projects: projectsProp, onSelect, onCreate, onProjectReport }) {
+  const projects = projectsProp ?? state?.list?.projects ?? [];
   const active = state?.project?.id ?? "";
   const [name, setName] = useState("");
   return h(
@@ -9605,12 +9632,17 @@ function ProjectList({ t, busy, state, onSelect, onCreate, onProjectReport }) {
 function ProjectDetail({
   t,
   busy,
+  saving,
+  dirty,
   state,
   documents,
   libraries,
+  includePrefs,
+  draft,
   docId,
+  onDraft,
+  onInclude,
   onSave,
-  onBrief,
   onToggleDoc,
   onDelete,
   onStart,
@@ -9620,10 +9652,12 @@ function ProjectDetail({
   onExport,
   onOpenDoc,
   onDocReport,
-  onProjectReport
+  onProjectReport,
+  onRefreshAnalysis
 }) {
   const project = state?.project ?? null;
   const analysis = state?.analysis ?? null;
+  const stale = Boolean(state?.analysisStale);
   const projectId = project?.id ?? "";
   const [fields, setFields] = useState({ name: "", client: "", dueAt: "", note: "" });
   const [brief, setBrief] = useState({});
@@ -9637,23 +9671,29 @@ function ProjectDetail({
     qa: true,
     analysis: true,
     notes: false,
-    readme: true
+    readme: true,
+    ...includePrefs ?? {}
   });
   const [minutes, setMinutes] = useState("30");
   const [timeNote, setTimeNote] = useState("");
   const [confirmDelete, setConfirmDelete] = useState(false);
   useEffect(() => {
-    if (!project) return;
-    setFields({
-      name: project.name ?? "",
-      client: project.client ?? "",
-      dueAt: project.dueAt ?? "",
-      note: project.note ?? ""
-    });
-    setBrief(project.brief ? { ...project.brief } : {});
-    setTmValue(librarySelectValue(project.tmIds));
-    setGlossaryValue(librarySelectValue(project.glossaryIds));
-    setDefaultTm(project.defaultWriteTmId ?? "");
+    if (!project || !projectId) return;
+    const restored = draft && draft.fields ? draft : null;
+    setFields(
+      restored ? { ...restored.fields } : {
+        name: project.name ?? "",
+        client: project.client ?? "",
+        dueAt: project.dueAt ?? "",
+        note: project.note ?? ""
+      }
+    );
+    setBrief(restored ? { ...restored.brief ?? {} } : project.brief ? { ...project.brief } : {});
+    setTmValue(restored?.tmValue ?? librarySelectValue(project.tmIds));
+    setGlossaryValue(restored?.glossaryValue ?? librarySelectValue(project.glossaryIds));
+    setDefaultTm(restored?.defaultTm ?? project.defaultWriteTmId ?? "");
+    setMinutes(restored?.minutes ?? "30");
+    setTimeNote(restored?.timeNote ?? "");
     setConfirmDelete(false);
   }, [projectId]);
   if (!project) {
@@ -9663,18 +9703,68 @@ function ProjectDetail({
   const glossaryLibraries = libraries?.glossary ?? [];
   const effectiveTm = project.resources?.effectiveTmIds ?? [];
   const inbox = Boolean(project.inbox);
-  const docs = project.documents ?? [];
-  const patch = () => ({
-    name: fields.name,
-    client: fields.client,
-    dueAt: fields.dueAt,
-    note: fields.note,
-    tmIds: librarySelectIds(tmValue),
-    glossaryIds: librarySelectIds(glossaryValue),
-    defaultWriteTmId: defaultTm || null
-  });
-  const quoteTotal = state?.analysis?.quote?.total;
-  const currency = state?.analysis?.quote?.currency ?? "";
+  const rows = Array.isArray(project.documentRows) ? project.documentRows : [];
+  const quoteTotal = analysis?.quote?.total;
+  const currency = analysis?.quote?.currency ?? "";
+  const pushDraft = (next, markDirty = true) => {
+    onDraft(
+      {
+        fields: next.fields,
+        brief: next.brief,
+        tmValue: next.tmValue,
+        glossaryValue: next.glossaryValue,
+        defaultTm: next.defaultTm,
+        minutes: next.minutes,
+        timeNote: next.timeNote,
+        settings: {
+          name: next.fields.name,
+          client: next.fields.client,
+          dueAt: next.fields.dueAt,
+          note: next.fields.note,
+          tmIds: librarySelectIds(next.tmValue),
+          glossaryIds: librarySelectIds(next.glossaryValue),
+          defaultWriteTmId: next.defaultTm || null
+        }
+      },
+      markDirty
+    );
+  };
+  const base = () => ({ fields, brief, tmValue, glossaryValue, defaultTm, minutes, timeNote });
+  const setField = (key, value) => {
+    const nextFields = { ...fields, [key]: value };
+    setFields(nextFields);
+    pushDraft({ ...base(), fields: nextFields });
+  };
+  const setBriefField = (key, value) => {
+    const next = { ...brief, [key]: value };
+    setBrief(next);
+    pushDraft({ ...base(), brief: next });
+  };
+  const chooseTm = (value) => {
+    setTmValue(value);
+    pushDraft({ ...base(), tmValue: value });
+  };
+  const chooseGlossary = (value) => {
+    setGlossaryValue(value);
+    pushDraft({ ...base(), glossaryValue: value });
+  };
+  const chooseDefaultTm = (value) => {
+    setDefaultTm(value);
+    pushDraft({ ...base(), defaultTm: value });
+  };
+  const editMinutes = (value) => {
+    setMinutes(value);
+    pushDraft({ ...base(), minutes: value }, false);
+  };
+  const editTimeNote = (value) => {
+    setTimeNote(value);
+    pushDraft({ ...base(), timeNote: value }, false);
+  };
+  const toggleInclude = (key) => {
+    const next = { ...include, [key]: !include[key] };
+    setInclude(next);
+    onInclude(next);
+  };
   return h(
     "div",
     { className: "cait-proj-detail" },
@@ -9690,11 +9780,7 @@ function ProjectDetail({
           project.name,
           inbox ? h("span", { className: "cait-proj-tag" }, t("projects.inboxTag")) : null
         ),
-        h(
-          "p",
-          { className: "cait-hint" },
-          inbox ? t("projects.inboxHint") : t("projects.detailHint")
-        )
+        h("p", { className: "cait-hint" }, inbox ? t("projects.inboxHint") : t("projects.detailHint"))
       ),
       h(
         "div",
@@ -9733,7 +9819,7 @@ function ProjectDetail({
         h("input", {
           className: "cait-input",
           value: fields.name,
-          onChange: (event) => setFields({ ...fields, name: event.target.value })
+          onChange: (event) => setField("name", event.target.value)
         })
       ),
       h(
@@ -9743,7 +9829,7 @@ function ProjectDetail({
         h("input", {
           className: "cait-input",
           value: fields.client,
-          onChange: (event) => setFields({ ...fields, client: event.target.value })
+          onChange: (event) => setField("client", event.target.value)
         })
       ),
       h(
@@ -9754,7 +9840,7 @@ function ProjectDetail({
           className: "cait-input",
           type: "date",
           value: fields.dueAt,
-          onChange: (event) => setFields({ ...fields, dueAt: event.target.value })
+          onChange: (event) => setField("dueAt", event.target.value)
         })
       )
     ),
@@ -9778,14 +9864,31 @@ function ProjectDetail({
         `${t("projects.quote")} ${currency} ${Number(quoteTotal).toFixed(2)}`
       ) : null
     ),
-    analysis ? h(
-      "p",
-      { className: "cait-hint" },
-      `${t("projects.analysis")}：${t("projects.analysisValue", {
-        matched: Math.round(analysis.totals?.matchedPercent ?? 0),
-        fresh: analysis.totals?.buckets?.new ?? 0
-      })}`
-    ) : null,
+    h(
+      "div",
+      { className: "cait-proj-analysis" },
+      analysis ? h(
+        "p",
+        { className: "cait-hint" },
+        `${t("projects.analysis")}：${t("projects.analysisValue", {
+          matched: Math.round(analysis.totals?.matchedPercent ?? 0),
+          fresh: analysis.totals?.buckets?.new ?? 0
+        })}`
+      ) : h("p", { className: "cait-hint" }, t("projects.analysisNone")),
+      stale ? h("span", { className: "cait-hint is-danger" }, t("projects.analysisStale")) : null,
+      h(
+        "button",
+        {
+          type: "button",
+          className: "cait-minibtn",
+          disabled: Boolean(busy),
+          title: t("projects.refreshAnalysis"),
+          onClick: () => onRefreshAnalysis()
+        },
+        h(Icon, { name: "refresh", size: 12 }),
+        h("span", null, t("projects.refreshAnalysis"))
+      )
+    ),
     h(
       "div",
       { className: "cait-proj-actions" },
@@ -9794,22 +9897,11 @@ function ProjectDetail({
         {
           type: "button",
           className: "cait-btn cait-btn-primary",
-          disabled: Boolean(busy),
-          onClick: () => onSave(patch())
+          disabled: Boolean(busy) || !dirty,
+          onClick: () => onSave()
         },
-        busy ? h(Spinner, { size: 13 }) : h(Icon, { name: "save", size: 13 }),
-        h("span", null, t("projects.save"))
-      ),
-      h(
-        "button",
-        {
-          type: "button",
-          className: "cait-btn",
-          disabled: Boolean(busy),
-          onClick: () => onBrief(brief)
-        },
-        h(Icon, { name: "save", size: 13 }),
-        h("span", null, t("projects.saveBrief"))
+        saving ? h(Spinner, { size: 13 }) : h(Icon, { name: "save", size: 13 }),
+        h("span", null, t("projects.saveSettings"))
       ),
       h(
         "button",
@@ -9822,6 +9914,7 @@ function ProjectDetail({
         h(Icon, { name: "download", size: 13 }),
         h("span", null, t("projects.export"))
       ),
+      dirty ? h("span", { className: "cait-proj-dirty" }, t("projects.unsavedHint")) : null,
       inbox ? null : confirmDelete ? h(
         "button",
         {
@@ -9868,15 +9961,23 @@ function ProjectDetail({
         h(
           "tbody",
           null,
-          docs.length ? docs.map(
+          rows.length ? rows.map(
             (doc) => h(
               "tr",
               { key: doc.id, className: doc.id === docId ? "is-current" : "" },
-              h("td", null, h("button", {
-                type: "button",
-                className: "cait-linkbtn",
-                onClick: () => onOpenDoc(doc.id)
-              }, doc.name)),
+              h(
+                "td",
+                null,
+                h(
+                  "button",
+                  {
+                    type: "button",
+                    className: "cait-linkbtn",
+                    onClick: () => onOpenDoc(doc.id)
+                  },
+                  doc.name
+                )
+              ),
               h("td", null, statusChip(t, doc)),
               h(
                 "td",
@@ -9901,6 +10002,16 @@ function ProjectDetail({
                     {
                       type: "button",
                       className: "cait-minibtn",
+                      title: t("projects.openDoc"),
+                      onClick: () => onOpenDoc(doc.id)
+                    },
+                    h(Icon, { name: "arrowRight", size: 12 })
+                  ),
+                  h(
+                    "button",
+                    {
+                      type: "button",
+                      className: "cait-minibtn",
                       title: t("projects.reportHtml"),
                       onClick: () => onDocReport(doc.id, "html")
                     },
@@ -9916,7 +10027,7 @@ function ProjectDetail({
                     },
                     h(Icon, { name: "download", size: 12 })
                   ),
-                  h(
+                  inbox ? null : h(
                     "button",
                     {
                       type: "button",
@@ -9929,7 +10040,11 @@ function ProjectDetail({
                 )
               )
             )
-          ) : h("tr", null, h("td", { colSpan: 6 }, h("span", { className: "cait-hint" }, t("projects.noDocs"))))
+          ) : h(
+            "tr",
+            null,
+            h("td", { colSpan: 6 }, h("span", { className: "cait-hint" }, t("projects.noDocs")))
+          )
         )
       )
     ),
@@ -9960,11 +10075,7 @@ function ProjectDetail({
       )
     ) : null,
     h("h4", { className: "cait-section-title" }, t("projects.brief")),
-    h(
-      "p",
-      { className: "cait-hint" },
-      t("projects.briefHint")
-    ),
+    h("p", { className: "cait-hint" }, t("projects.briefHint")),
     h(
       "div",
       { className: "cait-formrow" },
@@ -9977,11 +10088,11 @@ function ProjectDetail({
             className: "cait-input",
             rows: 2,
             value: brief[field] ?? "",
-            onChange: (event) => setBrief({ ...brief, [field]: event.target.value })
+            onChange: (event) => setBriefField(field, event.target.value)
           }) : h("input", {
             className: "cait-input",
             value: brief[field] ?? "",
-            onChange: (event) => setBrief({ ...brief, [field]: event.target.value })
+            onChange: (event) => setBriefField(field, event.target.value)
           })
         )
       )
@@ -9996,7 +10107,7 @@ function ProjectDetail({
         h("span", null, t("projects.tm")),
         h(
           "select",
-          { className: "cait-input", value: tmValue, onChange: (event) => setTmValue(event.target.value) },
+          { className: "cait-input", value: tmValue, onChange: (event) => chooseTm(event.target.value) },
           h("option", { value: "" }, t("projects.inherit")),
           tmLibraries.map((lib) => h("option", { key: lib.tmId, value: lib.tmId }, lib.name)),
           h("option", { value: "__none__" }, t("projects.none"))
@@ -10011,7 +10122,7 @@ function ProjectDetail({
           {
             className: "cait-input",
             value: glossaryValue,
-            onChange: (event) => setGlossaryValue(event.target.value)
+            onChange: (event) => chooseGlossary(event.target.value)
           },
           h("option", { value: "" }, t("projects.inherit")),
           glossaryLibraries.map(
@@ -10029,7 +10140,7 @@ function ProjectDetail({
           {
             className: "cait-input",
             value: effectiveTm.includes(defaultTm) ? defaultTm : "",
-            onChange: (event) => setDefaultTm(event.target.value)
+            onChange: (event) => chooseDefaultTm(event.target.value)
           },
           h("option", { value: "" }, t("projects.auto")),
           effectiveTm.map((id) => {
@@ -10050,7 +10161,7 @@ function ProjectDetail({
           h("input", {
             type: "checkbox",
             checked: include[key],
-            onChange: () => setInclude({ ...include, [key]: !include[key] })
+            onChange: () => toggleInclude(key)
           }),
           h("span", null, t(label))
         )
@@ -10091,13 +10202,13 @@ function ProjectDetail({
         className: "cait-input",
         style: { width: "80px" },
         value: minutes,
-        onChange: (event) => setMinutes(event.target.value)
+        onChange: (event) => editMinutes(event.target.value)
       }),
       h("input", {
         className: "cait-input",
         placeholder: t("projects.timeNote"),
         value: timeNote,
-        onChange: (event) => setTimeNote(event.target.value)
+        onChange: (event) => editTimeNote(event.target.value)
       }),
       h(
         "button",
@@ -10107,7 +10218,10 @@ function ProjectDetail({
           disabled: Boolean(busy),
           onClick: async () => {
             const ok = await onAddTime(Number(minutes), timeNote);
-            if (ok) setTimeNote("");
+            if (ok) {
+              setTimeNote("");
+              pushDraft({ ...base(), timeNote: "" }, false);
+            }
           }
         },
         t("projects.addTime")
@@ -10286,17 +10400,22 @@ function AllDocuments({
 function ProjectsPage({
   t,
   busy,
+  saving,
+  dirty,
   state,
   documents,
   libraries,
   projects,
+  includePrefs,
+  draft,
   docId,
   tab,
   onTab,
   onSelect,
   onCreate,
+  onDraft,
+  onInclude,
   onSave,
-  onBrief,
   onToggleDoc,
   onDelete,
   onStart,
@@ -10307,7 +10426,8 @@ function ProjectsPage({
   onOpenDoc,
   onReport,
   onDocReport,
-  onMoveDoc
+  onMoveDoc,
+  onRefreshAnalysis
 }) {
   const list = state?.list?.projects ?? projects ?? [];
   const documentsCount = (documents ?? []).length;
@@ -10360,6 +10480,7 @@ function ProjectsPage({
         t,
         busy,
         state,
+        projects: list,
         onSelect,
         onCreate,
         onProjectReport: onReport
@@ -10367,12 +10488,17 @@ function ProjectsPage({
       h(ProjectDetail, {
         t,
         busy,
+        saving,
+        dirty,
         state,
         documents,
         libraries,
+        includePrefs,
+        draft,
         docId,
+        onDraft,
+        onInclude,
         onSave,
-        onBrief,
         onToggleDoc,
         onDelete,
         onStart,
@@ -10382,7 +10508,8 @@ function ProjectsPage({
         onExport,
         onOpenDoc,
         onDocReport,
-        onProjectReport: onReport
+        onProjectReport: onReport,
+        onRefreshAnalysis
       })
     )
   );
@@ -10466,6 +10593,37 @@ function ProjectPicker({ t, busy, pick, onPick, onClose }) {
         },
         busy ? h(Spinner, { size: 13 }) : h(Icon, { name: "check", size: 13 }),
         h("span", null, t("projects.assign"))
+      )
+    )
+  );
+}
+function ProjectUnsaved({ t, onChoose }) {
+  return h(
+    Modal,
+    { title: t("projects.unsavedTitle"), onClose: () => onChoose("cancel") },
+    h("p", { className: "cait-hint" }, t("projects.unsavedBody")),
+    h(
+      "div",
+      { className: "cait-modal-actions" },
+      h(
+        "button",
+        { type: "button", className: "cait-btn", onClick: () => onChoose("cancel") },
+        t("panel.cancel")
+      ),
+      h(
+        "button",
+        { type: "button", className: "cait-btn is-danger", onClick: () => onChoose("discard") },
+        t("projects.unsavedDiscard")
+      ),
+      h(
+        "button",
+        {
+          type: "button",
+          className: "cait-btn cait-btn-primary",
+          onClick: () => onChoose("save")
+        },
+        h(Icon, { name: "save", size: 13 }),
+        h("span", null, t("projects.unsavedSave"))
       )
     )
   );
@@ -11581,38 +11739,118 @@ function useWorkbenchController({ i18n, translate }) {
   };
   const [projectsState, setProjectsState] = useState(null);
   const [projectPick, setProjectPick] = useState(null);
+  const [projectTab, setProjectTab] = useState("projects");
+  const [projectDrafts, setProjectDrafts] = useState({});
+  const [pendingNav, setPendingNav] = useState(null);
+  const [includePrefs, setIncludePrefs] = useState(() => {
+    try {
+      const raw = window.localStorage.getItem("cait.project.include");
+      const parsed = raw ? JSON.parse(raw) : null;
+      return parsed && typeof parsed === "object" ? parsed : null;
+    } catch {
+      return null;
+    }
+  });
+  const rememberInclude2 = (include) => {
+    setIncludePrefs(include);
+    try {
+      window.localStorage.setItem("cait.project.include", JSON.stringify(include));
+    } catch {
+    }
+  };
+  const currentProjectId = () => projectsState?.project?.id ?? "";
+  const projectDirty = Boolean(projectsState?.dirty);
+  const clearProjectDraft = (projectId) => {
+    if (!projectId) return;
+    setProjectDrafts((current) => {
+      if (!current[projectId]) return current;
+      const next = { ...current };
+      delete next[projectId];
+      return next;
+    });
+    setProjectsState(
+      (current) => current?.project?.id === projectId ? { ...current, dirty: false } : current
+    );
+  };
+  const updateProjectDraft = (draft2, dirty2 = true) => {
+    const projectId = currentProjectId();
+    if (!projectId) return;
+    setProjectDrafts((current) => ({ ...current, [projectId]: draft2 }));
+    if (dirty2) {
+      setProjectsState(
+        (current) => current?.project?.id === projectId ? { ...current, dirty: true } : current
+      );
+    }
+  };
+  const guardProjectNav = (nav) => {
+    if (!projectDirty) return false;
+    setPendingNav(nav);
+    return true;
+  };
+  const requestView = (next) => {
+    if (next === "projects") {
+      if (view === "projects") void refreshProjectList().catch(report);
+      else void openProjects();
+      return;
+    }
+    if (guardProjectNav({ kind: "view", view: next })) return;
+    setView(next);
+  };
+  const requestOpenDocument = async (documentId) => {
+    if (!documentId) return;
+    if (view === "projects" && guardProjectNav({ kind: "doc", documentId })) return;
+    await openDocument(documentId);
+    setView("documents");
+  };
   const flattenProjectDetail = (detail2) => ({
     ...detail2.project,
     brief: detail2.brief,
+    note: detail2.note ?? detail2.project?.note ?? "",
     resources: detail2.resources,
-    time: detail2.time
+    time: detail2.time,
+    documentRows: Array.isArray(detail2.documents) ? detail2.documents : []
   });
+  const applyDocumentSummary = (summary) => {
+    if (!summary?.id) return;
+    setData((current) => {
+      if (!current?.documents) return current;
+      const documents = current.documents.map((item) => item.id === summary.id ? summary : item);
+      return { ...current, documents };
+    });
+  };
   const refreshProjectList = async () => {
     const list = await rpc("projectsList");
     setProjectsState((current) => ({ ...current ?? {}, list }));
     return list;
   };
-  const loadProjectDetail = async (projectId) => {
+  const loadProjectDetail = async (projectId, { analyze = false, stale: stale2 = false } = {}) => {
     const [detail2, analysis2] = await Promise.all([
       rpc("projectDetail", { projectId }),
-      rpc("projectAnalysis", { projectId })
+      analyze ? rpc("projectAnalysis", { projectId }) : Promise.resolve(null)
     ]);
-    setProjectsState((current) => ({
-      ...current ?? {},
-      project: flattenProjectDetail(detail2),
-      analysis: analysis2
-    }));
+    setProjectsState((current) => {
+      const same = current?.project?.id === projectId;
+      return {
+        ...current ?? {},
+        project: flattenProjectDetail(detail2),
+        analysis: analysis2 ?? (same ? current.analysis : null),
+        analysisStale: analyze ? false : same ? Boolean(current.analysisStale) || stale2 : false
+      };
+    });
     return detail2;
   };
   const openProjects = async (projectId) => {
-    if (view !== "projects") setView("projects");
     setBusy("projects");
     try {
       const list = await rpc("projectsList");
-      setProjectsState({ list, project: null });
+      setProjectsState((current) => ({ ...current ?? {}, list }));
+      const dirtyId = projectDirty ? currentProjectId() : "";
+      const target = projectId || dirtyId || currentProjectId() || doc?.projectId;
+      if (view !== "projects") setView("projects");
+      if (dirtyId && (!projectId || projectId === dirtyId)) return;
       const fallback = list.projects.find((item) => !item.inbox) ?? list.projects[0];
-      const target = projectId || doc?.projectId || fallback?.id;
-      if (target) await loadProjectDetail(target);
+      const pick = target || fallback?.id;
+      if (pick) await loadProjectDetail(pick, { analyze: true });
     } catch (error) {
       report(error);
     } finally {
@@ -11620,21 +11858,33 @@ function useWorkbenchController({ i18n, translate }) {
     }
   };
   const selectProject = async (projectId) => {
+    if (!projectId) return;
     setBusy("projects");
     try {
-      await loadProjectDetail(projectId);
+      await loadProjectDetail(projectId, { analyze: true });
     } catch (error) {
       report(error);
     } finally {
       setBusy("");
     }
   };
+  const requestProject = (projectId) => {
+    if (!projectId || projectId === currentProjectId()) return;
+    if (guardProjectNav({ kind: "project", projectId })) return;
+    void selectProject(projectId);
+  };
+  const requestProjectTab = (next) => {
+    if (next === projectTab) return;
+    if (guardProjectNav({ kind: "tab", tab: next })) return;
+    setProjectTab(next);
+  };
   const createProjectAction = async (name) => {
     setBusy("projects");
     try {
       const result = await rpc("createProject", { name });
+      clearProjectDraft(result.project.id);
       await refreshProjectList();
-      await loadProjectDetail(result.project.id);
+      await loadProjectDetail(result.project.id, { analyze: true });
       notify(t("projects.created"));
       return result.project;
     } catch (error) {
@@ -11644,38 +11894,65 @@ function useWorkbenchController({ i18n, translate }) {
       setBusy("");
     }
   };
-  const saveProject = async (patch) => {
-    const projectId = projectsState?.project?.id;
-    if (!projectId) return;
-    setBusy("projects");
+  const saveProjectSettings = async () => {
+    const projectId = currentProjectId();
+    if (!projectId) return false;
+    const draft2 = projectDrafts[projectId];
+    setBusy("project-save");
     try {
-      const result = await rpc("updateProject", { projectId, ...patch });
+      const result = await rpc("updateProject", {
+        projectId,
+        ...draft2?.settings ?? {}
+      });
+      if (draft2?.brief) await rpc("setProjectBrief", { projectId, brief: draft2.brief });
       setProjectsState((current) => ({ ...current ?? {}, list: result.projects }));
-      await loadProjectDetail(projectId);
-      notify(t("projects.saved"));
+      clearProjectDraft(projectId);
+      await loadProjectDetail(projectId, { stale: true });
+      notify(t("projects.settingsSaved"));
+      return true;
+    } catch (error) {
+      report(error);
+      return false;
+    } finally {
+      setBusy("");
+    }
+  };
+  const refreshProjectAnalysis = async () => {
+    const projectId = currentProjectId();
+    if (!projectId) return;
+    setBusy("project-analysis");
+    try {
+      const analysis2 = await rpc("projectAnalysis", { projectId });
+      setProjectsState((current) => ({ ...current ?? {}, analysis: analysis2, analysisStale: false }));
     } catch (error) {
       report(error);
     } finally {
       setBusy("");
     }
   };
-  const saveProjectBrief = async (brief) => {
-    const projectId = projectsState?.project?.id;
-    if (!projectId) return;
-    setBusy("projects");
-    try {
-      const result = await rpc("setProjectBrief", { projectId, brief });
-      setProjectsState((current) => ({ ...current ?? {}, list: result.projects }));
-      await loadProjectDetail(projectId);
-      notify(t("projects.briefSaved"));
-    } catch (error) {
-      report(error);
-    } finally {
-      setBusy("");
+  const resolvePendingNav = async (choice) => {
+    const nav = pendingNav;
+    if (!nav) return;
+    setPendingNav(null);
+    if (choice === "cancel") return;
+    if (choice === "save") {
+      const ok = await saveProjectSettings();
+      if (!ok) return;
+    } else {
+      const projectId = currentProjectId();
+      clearProjectDraft(projectId);
+      if (projectId) await loadProjectDetail(projectId);
+    }
+    if (nav.kind === "view") setView(nav.view);
+    else if (nav.kind === "tab") setProjectTab(nav.tab);
+    else if (nav.kind === "project") await selectProject(nav.projectId);
+    else if (nav.kind === "doc") {
+      await openDocument(nav.documentId);
+      setView("documents");
     }
   };
   const toggleProjectDoc = async (documentId, checked) => {
-    const projectId = projectsState?.project?.id;
+    const projectId = currentProjectId();
     if (!projectId) return;
     setBusy("projects");
     try {
@@ -11683,9 +11960,9 @@ function useWorkbenchController({ i18n, translate }) {
         documentId,
         projectId: checked ? projectId : ""
       });
-      if (result?.state) replaceRemoteState(result.state);
-      await refreshProjectList();
-      await loadProjectDetail(projectId);
+      applyDocumentSummary(result.document);
+      setProjectsState((current) => ({ ...current ?? {}, list: result.projects }));
+      await loadProjectDetail(projectId, { stale: true });
     } catch (error) {
       report(error);
     } finally {
@@ -11696,10 +11973,10 @@ function useWorkbenchController({ i18n, translate }) {
     setBusy("projects");
     try {
       const result = await rpc("assignDocumentProject", { documentId, projectId });
-      if (result?.state) replaceRemoteState(result.state);
-      await refreshProjectList();
-      if (projectsState?.project?.id) await loadProjectDetail(projectsState.project.id);
+      applyDocumentSummary(result.document);
+      setProjectsState((current) => ({ ...current ?? {}, list: result.projects }));
       notify(t("projects.moved"));
+      if (currentProjectId()) await loadProjectDetail(currentProjectId(), { stale: true });
       return true;
     } catch (error) {
       report(error);
@@ -11709,7 +11986,7 @@ function useWorkbenchController({ i18n, translate }) {
     }
   };
   const startProjectTimerAction = async () => {
-    const projectId = projectsState?.project?.id;
+    const projectId = currentProjectId();
     if (!projectId) return;
     setBusy("projects");
     try {
@@ -11726,7 +12003,7 @@ function useWorkbenchController({ i18n, translate }) {
     }
   };
   const stopProjectTimerAction = async () => {
-    const projectId = projectsState?.project?.id;
+    const projectId = currentProjectId();
     if (!projectId) return;
     setBusy("projects");
     try {
@@ -11734,7 +12011,8 @@ function useWorkbenchController({ i18n, translate }) {
       setProjectsState((current) => ({
         ...current ?? {},
         list: result.projects,
-        project: { ...current.project, running: false, time: result.time }
+        project: { ...current.project, running: false, time: result.time },
+        analysisStale: true
       }));
     } catch (error) {
       report(error);
@@ -11743,7 +12021,7 @@ function useWorkbenchController({ i18n, translate }) {
     }
   };
   const addProjectTime = async (minutes, note) => {
-    const projectId = projectsState?.project?.id;
+    const projectId = currentProjectId();
     if (!projectId) return false;
     setBusy("projects");
     try {
@@ -11751,7 +12029,8 @@ function useWorkbenchController({ i18n, translate }) {
       setProjectsState((current) => ({
         ...current ?? {},
         list: result.projects,
-        project: { ...current.project, time: result.time }
+        project: { ...current.project, time: result.time },
+        analysisStale: true
       }));
       return true;
     } catch (error) {
@@ -11762,7 +12041,7 @@ function useWorkbenchController({ i18n, translate }) {
     }
   };
   const deleteProjectTime = async (entryId) => {
-    const projectId = projectsState?.project?.id;
+    const projectId = currentProjectId();
     if (!projectId) return;
     setBusy("projects");
     try {
@@ -11770,7 +12049,8 @@ function useWorkbenchController({ i18n, translate }) {
       setProjectsState((current) => ({
         ...current ?? {},
         list: result.projects,
-        project: { ...current.project, time: result.time }
+        project: { ...current.project, time: result.time },
+        analysisStale: true
       }));
     } catch (error) {
       report(error);
@@ -11779,9 +12059,10 @@ function useWorkbenchController({ i18n, translate }) {
     }
   };
   const exportProjectDeliveryAction = async (include) => {
-    const projectId = projectsState?.project?.id;
+    const projectId = currentProjectId();
     if (!projectId) return;
-    setBusy("projects");
+    rememberInclude2(include);
+    setBusy("project-export");
     try {
       const result = await rpc("exportProjectDelivery", { projectId, include });
       downloadFile(result.filename, decodeBase64(result.content), result.mime);
@@ -11798,9 +12079,9 @@ function useWorkbenchController({ i18n, translate }) {
     }
   };
   const downloadProjectReport = async (projectId, format = "html") => {
-    const target = projectId || projectsState?.project?.id;
+    const target = projectId || currentProjectId();
     if (!target) return;
-    setBusy("projects");
+    setBusy("project-report");
     try {
       const result = await rpc("projectReport", { projectId: target, format });
       downloadFile(result.filename, result.content, result.mime);
@@ -11824,17 +12105,17 @@ function useWorkbenchController({ i18n, translate }) {
     }
   };
   const deleteProjectAction = async () => {
-    const projectId = projectsState?.project?.id;
+    const projectId = currentProjectId();
     if (!projectId) return;
-    setBusy("projects");
+    setBusy("project-delete");
     try {
       const result = await rpc("deleteProject", { projectId, confirm: true });
-      if (result?.state) replaceRemoteState(result.state);
+      clearProjectDraft(projectId);
       notify(t("projects.deleted", { released: (result.released || []).length }));
-      const list = await rpc("projectsList");
-      setProjectsState({ list, project: null });
+      const list = result.projects ?? await rpc("projectsList");
+      setProjectsState({ list, project: null, analysis: null, analysisStale: false });
       const fallback = list.projects[0];
-      if (fallback) await loadProjectDetail(fallback.id);
+      if (fallback) await loadProjectDetail(fallback.id, { analyze: true });
     } catch (error) {
       report(error);
     } finally {
@@ -11852,27 +12133,33 @@ function useWorkbenchController({ i18n, translate }) {
   const closeProjectPicker = () => setProjectPick(null);
   const pickProject = async ({ projectId, newName }) => {
     if (!projectPick) return;
+    const pending = { ...projectPick };
+    let targetId = "";
     setBusy("projects");
     try {
-      let targetId = String(projectId ?? "");
+      targetId = String(projectId ?? "");
       if (!targetId && String(newName ?? "").trim()) {
         const created = await rpc("createProject", { name: String(newName).trim() });
         targetId = created.project.id;
       }
       const result = await rpc("assignDocumentProject", {
-        documentId: projectPick.documentId,
+        documentId: pending.documentId,
         projectId: targetId
       });
-      if (result?.state) replaceRemoteState(result.state);
-      const afterBrief = projectPick.afterBrief;
+      applyDocumentSummary(result.document);
+      setProjectsState((current) => ({ ...current ?? {}, list: result.projects }));
       setProjectPick(null);
       notify(t("projects.assigned"));
-      if (afterBrief) setModal({ type: "ai", mode: "brief" });
     } catch (error) {
       report(error);
     } finally {
       setBusy("");
     }
+    if (!pending.documentId) return;
+    if (view === "projects" && targetId) await loadProjectDetail(targetId, { stale: true });
+    await openDocument(pending.documentId);
+    setView("documents");
+    if (pending.afterBrief) setModal({ type: "ai", mode: "brief" });
   };
   const saveBrief = async (brief) => {
     if (!doc || busy) return false;
@@ -12826,11 +13113,22 @@ function useWorkbenchController({ i18n, translate }) {
     testLocalMt,
     projectsState,
     projectPick,
+    projectDrafts,
     openProjects,
     selectProject,
     createProjectAction,
-    saveProject,
-    saveProjectBrief,
+    saveProjectSettings,
+    refreshProjectAnalysis,
+    requestView,
+    requestProject,
+    requestProjectTab,
+    requestOpenDocument,
+    projectTab,
+    includePrefs,
+    rememberInclude: rememberInclude2,
+    updateProjectDraft,
+    pendingNav,
+    resolvePendingNav,
     toggleProjectDoc,
     assignDocToProject,
     refreshProjectList,
@@ -13023,8 +13321,18 @@ function Workbench({ i18n, translate }) {
     openProjects,
     selectProject,
     createProjectAction,
-    saveProject,
-    saveProjectBrief,
+    saveProjectSettings,
+    refreshProjectAnalysis,
+    requestView,
+    requestProject,
+    requestProjectTab,
+    requestOpenDocument,
+    projectTab,
+    projectDrafts,
+    includePrefs,
+    updateProjectDraft,
+    pendingNav,
+    resolvePendingNav,
     toggleProjectDoc,
     assignDocToProject,
     refreshProjectList,
@@ -13066,7 +13374,6 @@ function Workbench({ i18n, translate }) {
     saveTerm
   } = useWorkbenchController({ i18n, translate });
   const [aiQuick, setAiQuick] = useState("");
-  const [projectTab, setProjectTab] = useState("projects");
   const [libraryIo, setLibraryIo] = useState(null);
   const ioOptions = libraryIo ? libraryIoOptions(libraryIo.kind) : { libraries: [], libraryId: "" };
   if (loading) {
@@ -13191,10 +13498,10 @@ function Workbench({ i18n, translate }) {
     },
     { id: "batch", title: t("batch.open"), hint: "", docOnly: true, run: () => openBatch() },
     { id: "quote", title: t("quote.open"), hint: "", docOnly: true, run: () => openQuote() },
-    { id: "projects", title: t("projects.title"), hint: "", run: () => setView("projects") },
-    { id: "documents", title: t("cmd.documents"), hint: "", run: () => setView("documents") },
-    { id: "libraries", title: t("cmd.libraries"), hint: "", run: () => setView("libraries") },
-    { id: "align", title: t("cmd.align"), hint: "", run: () => setView("align") },
+    { id: "projects", title: t("projects.title"), hint: "", run: () => requestView("projects") },
+    { id: "documents", title: t("cmd.documents"), hint: "", run: () => requestView("documents") },
+    { id: "libraries", title: t("cmd.libraries"), hint: "", run: () => requestView("libraries") },
+    { id: "align", title: t("cmd.align"), hint: "", run: () => requestView("align") },
     {
       id: "settings",
       title: t("cmd.settings"),
@@ -13221,7 +13528,7 @@ function Workbench({ i18n, translate }) {
       onImport: () => setModal({ type: "new", defaultMode: "file" }),
       onExport: () => setModal({ type: "export" }),
       onSettings: () => setModal({ type: "settings" }),
-      onOpenDoc: openDocument,
+      onOpenDoc: requestOpenDocument,
       onCloseDoc: closeDocumentTab,
       onNewTab: () => setModal({ type: "new", defaultMode: "file" }),
       onCleanClosed: () => setModal({ type: "recent" }),
@@ -13233,23 +13540,28 @@ function Workbench({ i18n, translate }) {
       onOpenQuote: openQuote,
       onReplace: openReplace,
       view,
-      onView: setView
+      onView: requestView
     }),
     h(SaveBanner, { t, storage: data?.storage, stale, onRefresh: refreshState }),
     view === "projects" ? h(ProjectsPage, {
       t,
       busy,
+      saving: busy === "project-save",
+      dirty: Boolean(projectsState?.dirty),
       state: projectsState,
       documents: data?.documents ?? [],
       libraries: data?.libraries,
       projects: data?.projects?.projects ?? [],
+      includePrefs,
+      draft: projectsState?.project?.id ? projectDrafts?.[projectsState.project.id] : null,
       docId: doc?.id,
       tab: projectTab,
-      onTab: setProjectTab,
-      onSelect: selectProject,
+      onTab: requestProjectTab,
+      onSelect: requestProject,
       onCreate: createProjectAction,
-      onSave: saveProject,
-      onBrief: saveProjectBrief,
+      onDraft: updateProjectDraft,
+      onInclude: rememberInclude,
+      onSave: saveProjectSettings,
       onToggleDoc: toggleProjectDoc,
       onDelete: deleteProjectAction,
       onStart: startProjectTimerAction,
@@ -13257,13 +13569,11 @@ function Workbench({ i18n, translate }) {
       onAddTime: addProjectTime,
       onDeleteTime: deleteProjectTime,
       onExport: exportProjectDeliveryAction,
-      onOpenDoc: (documentId) => {
-        openDocument(documentId);
-        setView("documents");
-      },
+      onOpenDoc: requestOpenDocument,
       onReport: downloadProjectReport,
       onDocReport: downloadDocumentReport,
-      onMoveDoc: assignDocToProject
+      onMoveDoc: assignDocToProject,
+      onRefreshAnalysis: refreshProjectAnalysis
     }) : null,
     view === "libraries" ? h(LibraryPage, {
       t,
@@ -13621,6 +13931,7 @@ function Workbench({ i18n, translate }) {
       onPick: pickProject,
       onClose: closeProjectPicker
     }),
+    pendingNav ? h(ProjectUnsaved, { t, onChoose: resolvePendingNav }) : null,
     toast ? h(Toast, { toast }) : null
   );
 }

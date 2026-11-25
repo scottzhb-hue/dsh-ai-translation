@@ -1215,13 +1215,98 @@ export function useWorkbenchController({ i18n, translate }) {
   // —— 项目（project）层：多文件共享 brief 与库，按项目汇总、交付、出报告 ——
   const [projectsState, setProjectsState] = useState(null)
   const [projectPick, setProjectPick] = useState(null)
+  const [projectTab, setProjectTab] = useState('projects')
+  const [projectDrafts, setProjectDrafts] = useState({})
+  const [pendingNav, setPendingNav] = useState(null)
+  const [includePrefs, setIncludePrefs] = useState(() => {
+    try {
+      const raw = window.localStorage.getItem('cait.project.include')
+      const parsed = raw ? JSON.parse(raw) : null
+      return parsed && typeof parsed === 'object' ? parsed : null
+    } catch {
+      return null
+    }
+  })
+
+  /** 交付勾选是界面偏好，不进 store；存 localStorage，下次打开沿用。 */
+  const rememberInclude = (include) => {
+    setIncludePrefs(include)
+    try {
+      window.localStorage.setItem('cait.project.include', JSON.stringify(include))
+    } catch {
+      /* 偏好存不下不影响功能 */
+    }
+  }
+
+  const currentProjectId = () => projectsState?.project?.id ?? ''
+  const projectDirty = Boolean(projectsState?.dirty)
+
+  const clearProjectDraft = (projectId) => {
+    if (!projectId) return
+    setProjectDrafts((current) => {
+      if (!current[projectId]) return current
+      const next = { ...current }
+      delete next[projectId]
+      return next
+    })
+    setProjectsState((current) =>
+      current?.project?.id === projectId ? { ...current, dirty: false } : current,
+    )
+  }
+
+  /** 项目详情的编辑立刻进草稿，离开 / 切换项目时才有东西可恢复或提醒。 */
+  const updateProjectDraft = (draft, dirty = true) => {
+    const projectId = currentProjectId()
+    if (!projectId) return
+    setProjectDrafts((current) => ({ ...current, [projectId]: draft }))
+    if (dirty) {
+      setProjectsState((current) =>
+        current?.project?.id === projectId ? { ...current, dirty: true } : current,
+      )
+    }
+  }
+
+  const guardProjectNav = (nav) => {
+    if (!projectDirty) return false
+    setPendingNav(nav)
+    return true
+  }
+
+  const requestView = (next) => {
+    if (next === 'projects') {
+      if (view === 'projects') void refreshProjectList().catch(report)
+      else void openProjects()
+      return
+    }
+    if (guardProjectNav({ kind: 'view', view: next })) return
+    setView(next)
+  }
+
+  /** 项目详情里的文档行：点开即进编辑器，有未保存设置时先拦一下。 */
+  const requestOpenDocument = async (documentId) => {
+    if (!documentId) return
+    if (view === 'projects' && guardProjectNav({ kind: 'doc', documentId })) return
+    await openDocument(documentId)
+    setView('documents')
+  }
 
   const flattenProjectDetail = (detail) => ({
     ...detail.project,
     brief: detail.brief,
+    note: detail.note ?? detail.project?.note ?? '',
     resources: detail.resources,
     time: detail.time,
+    documentRows: Array.isArray(detail.documents) ? detail.documents : [],
   })
+
+  const applyDocumentSummary = (summary) => {
+    if (!summary?.id) return
+    setData((current) => {
+      if (!current?.documents) return current
+      const documents = current.documents.map((item) => (item.id === summary.id ? summary : item))
+      return { ...current, documents }
+    })
+  }
 
   const refreshProjectList = async () => {
     const list = await rpc('projectsList')
@@ -1229,28 +1314,36 @@ export function useWorkbenchController({ i18n, translate }) {
     return list
   }
 
-  const loadProjectDetail = async (projectId) => {
+  const loadProjectDetail = async (projectId, { analyze = false, stale = false } = {}) => {
     const [detail, analysis] = await Promise.all([
       rpc('projectDetail', { projectId }),
-      rpc('projectAnalysis', { projectId }),
+      analyze ? rpc('projectAnalysis', { projectId }) : Promise.resolve(null),
     ])
-    setProjectsState((current) => ({
-      ...(current ?? {}),
-      project: flattenProjectDetail(detail),
-      analysis,
-    }))
+    setProjectsState((current) => {
+      const same = current?.project?.id === projectId
+      return {
+        ...(current ?? {}),
+        project: flattenProjectDetail(detail),
+        analysis: analysis ?? (same ? current.analysis : null),
+        analysisStale: analyze ? false : same ? Boolean(current.analysisStale) || stale : false,
+      }
+    })
     return detail
   }
 
   const openProjects = async (projectId) => {
-    if (view !== 'projects') setView('projects')
     setBusy('projects')
     try {
       const list = await rpc('projectsList')
-      setProjectsState({ list, project: null })
+      setProjectsState((current) => ({ ...(current ?? {}), list }))
+      const dirtyId = projectDirty ? currentProjectId() : ''
+      const target = projectId || dirtyId || currentProjectId() || doc?.projectId
+      if (view !== 'projects') setView('projects')
+      // 带着未保存的草稿回到项目视图：只刷新列表，详情与草稿原样保留。
+      if (dirtyId && (!projectId || projectId === dirtyId)) return
       const fallback = list.projects.find((item) => !item.inbox) ?? list.projects[0]
-      const target = projectId || doc?.projectId || fallback?.id
-      if (target) await loadProjectDetail(target)
+      const pick = target || fallback?.id
+      if (pick) await loadProjectDetail(pick, { analyze: true })
     } catch (error) {
       report(error)
     } finally {
@@ -1259,9 +1352,10 @@ export function useWorkbenchController({ i18n, translate }) {
   }
 
   const selectProject = async (projectId) => {
+    if (!projectId) return
     setBusy('projects')
     try {
-      await loadProjectDetail(projectId)
+      await loadProjectDetail(projectId, { analyze: true })
     } catch (error) {
       report(error)
     } finally {
@@ -1269,12 +1363,25 @@ export function useWorkbenchController({ i18n, translate }) {
     }
   }
 
+  const requestProject = (projectId) => {
+    if (!projectId || projectId === currentProjectId()) return
+    if (guardProjectNav({ kind: 'project', projectId })) return
+    void selectProject(projectId)
+  }
+
+  const requestProjectTab = (next) => {
+    if (next === projectTab) return
+    if (guardProjectNav({ kind: 'tab', tab: next })) return
+    setProjectTab(next)
+  }
+
   const createProjectAction = async (name) => {
     setBusy('projects')
     try {
       const result = await rpc('createProject', { name })
+      clearProjectDraft(result.project.id)
       await refreshProjectList()
-      await loadProjectDetail(result.project.id)
+      await loadProjectDetail(result.project.id, { analyze: true })
       notify(t('projects.created'))
       return result.project
     } catch (error) {
@@ -1285,15 +1392,42 @@ export function useWorkbenchController({ i18n, translate }) {
     }
   }
 
-  const saveProject = async (patch) => {
-    const projectId = projectsState?.project?.id
-    if (!projectId) return
-    setBusy('projects')
+  /**
+   * One explicit save for the whole settings pane: name/client/due/note, brief,
+   * shared libraries and the default write library. Include checkboxes are a UI
+   * preference (localStorage) and hour inputs are operations, not settings.
+   */
+  const saveProjectSettings = async () => {
+    const projectId = currentProjectId()
+    if (!projectId) return false
+    const draft = projectDrafts[projectId]
+    setBusy('project-save')
     try {
-      const result = await rpc('updateProject', { projectId, ...patch })
+      const result = await rpc('updateProject', {
+        projectId,
+        ...(draft?.settings ?? {}),
+      })
+      if (draft?.brief) await rpc('setProjectBrief', { projectId, brief: draft.brief })
       setProjectsState((current) => ({ ...(current ?? {}), list: result.projects }))
-      await loadProjectDetail(projectId)
-      notify(t('projects.saved'))
+      clearProjectDraft(projectId)
+      await loadProjectDetail(projectId, { stale: true })
+      notify(t('projects.settingsSaved'))
+      return true
+    } catch (error) {
+      report(error)
+      return false
+    } finally {
+      setBusy('')
+    }
+  }
+
+  const refreshProjectAnalysis = async () => {
+    const projectId = currentProjectId()
+    if (!projectId) return
+    setBusy('project-analysis')
+    try {
+      const analysis = await rpc('projectAnalysis', { projectId })
+      setProjectsState((current) => ({ ...(current ?? {}), analysis, analysisStale: false }))
     } catch (error) {
       report(error)
     } finally {
@@ -1301,25 +1435,32 @@ export function useWorkbenchController({ i18n, translate }) {
     }
   }
 
-  const saveProjectBrief = async (brief) => {
-    const projectId = projectsState?.project?.id
-    if (!projectId) return
-    setBusy('projects')
-    try {
-      const result = await rpc('setProjectBrief', { projectId, brief })
-      setProjectsState((current) => ({ ...(current ?? {}), list: result.projects }))
-      await loadProjectDetail(projectId)
-      notify(t('projects.briefSaved'))
-    } catch (error) {
-      report(error)
-    } finally {
-      setBusy('')
+  /** 离开项目设置前的三选一：保存并离开 / 放弃修改 / 取消。 */
+  const resolvePendingNav = async (choice) => {
+    const nav = pendingNav
+    if (!nav) return
+    setPendingNav(null)
+    if (choice === 'cancel') return
+    if (choice === 'save') {
+      const ok = await saveProjectSettings()
+      if (!ok) return
+    } else {
+      const projectId = currentProjectId()
+      clearProjectDraft(projectId)
+      if (projectId) await loadProjectDetail(projectId)
+    }
+    if (nav.kind === 'view') setView(nav.view)
+    else if (nav.kind === 'tab') setProjectTab(nav.tab)
+    else if (nav.kind === 'project') await selectProject(nav.projectId)
+    else if (nav.kind === 'doc') {
+      await openDocument(nav.documentId)
+      setView('documents')
     }
   }
 
   /** Move one document in or out of the selected project (unchecked → 未分类). */
   const toggleProjectDoc = async (documentId, checked) => {
-    const projectId = projectsState?.project?.id
+    const projectId = currentProjectId()
     if (!projectId) return
     setBusy('projects')
     try {
@@ -1327,9 +1468,9 @@ export function useWorkbenchController({ i18n, translate }) {
         documentId,
         projectId: checked ? projectId : '',
       })
-      if (result?.state) replaceRemoteState(result.state)
-      await refreshProjectList()
-      await loadProjectDetail(projectId)
+      applyDocumentSummary(result.document)
+      setProjectsState((current) => ({ ...(current ?? {}), list: result.projects }))
+      await loadProjectDetail(projectId, { stale: true })
     } catch (error) {
       report(error)
     } finally {
@@ -1341,10 +1482,10 @@ export function useWorkbenchController({ i18n, translate }) {
     setBusy('projects')
     try {
       const result = await rpc('assignDocumentProject', { documentId, projectId })
-      if (result?.state) replaceRemoteState(result.state)
-      await refreshProjectList()
-      if (projectsState?.project?.id) await loadProjectDetail(projectsState.project.id)
+      applyDocumentSummary(result.document)
+      setProjectsState((current) => ({ ...(current ?? {}), list: result.projects }))
       notify(t('projects.moved'))
+      if (currentProjectId()) await loadProjectDetail(currentProjectId(), { stale: true })
       return true
     } catch (error) {
       report(error)
@@ -1355,7 +1496,7 @@ export function useWorkbenchController({ i18n, translate }) {
   }
 
   const startProjectTimerAction = async () => {
-    const projectId = projectsState?.project?.id
+    const projectId = currentProjectId()
     if (!projectId) return
     setBusy('projects')
     try {
@@ -1373,7 +1514,7 @@ export function useWorkbenchController({ i18n, translate }) {
   }
 
   const stopProjectTimerAction = async () => {
-    const projectId = projectsState?.project?.id
+    const projectId = currentProjectId()
     if (!projectId) return
     setBusy('projects')
     try {
@@ -1382,6 +1523,7 @@ export function useWorkbenchController({ i18n, translate }) {
         ...(current ?? {}),
         list: result.projects,
         project: { ...current.project, running: false, time: result.time },
+        analysisStale: true,
       }))
     } catch (error) {
       report(error)
@@ -1391,7 +1533,7 @@ export function useWorkbenchController({ i18n, translate }) {
   }
 
   const addProjectTime = async (minutes, note) => {
-    const projectId = projectsState?.project?.id
+    const projectId = currentProjectId()
     if (!projectId) return false
     setBusy('projects')
     try {
@@ -1400,6 +1542,7 @@ export function useWorkbenchController({ i18n, translate }) {
         ...(current ?? {}),
         list: result.projects,
         project: { ...current.project, time: result.time },
+        analysisStale: true,
       }))
       return true
     } catch (error) {
@@ -1411,7 +1554,7 @@ export function useWorkbenchController({ i18n, translate }) {
   }
 
   const deleteProjectTime = async (entryId) => {
-    const projectId = projectsState?.project?.id
+    const projectId = currentProjectId()
     if (!projectId) return
     setBusy('projects')
     try {
@@ -1420,6 +1563,7 @@ export function useWorkbenchController({ i18n, translate }) {
         ...(current ?? {}),
         list: result.projects,
         project: { ...current.project, time: result.time },
+        analysisStale: true,
       }))
     } catch (error) {
       report(error)
@@ -1429,9 +1573,10 @@ export function useWorkbenchController({ i18n, translate }) {
   }
 
   const exportProjectDeliveryAction = async (include) => {
-    const projectId = projectsState?.project?.id
+    const projectId = currentProjectId()
     if (!projectId) return
-    setBusy('projects')
+    rememberInclude(include)
+    setBusy('project-export')
     try {
       const result = await rpc('exportProjectDelivery', { projectId, include })
       downloadFile(result.filename, decodeBase64(result.content), result.mime)
@@ -1449,9 +1594,9 @@ export function useWorkbenchController({ i18n, translate }) {
   }
 
   const downloadProjectReport = async (projectId, format = 'html') => {
-    const target = projectId || projectsState?.project?.id
+    const target = projectId || currentProjectId()
     if (!target) return
-    setBusy('projects')
+    setBusy('project-report')
     try {
       const result = await rpc('projectReport', { projectId: target, format })
       downloadFile(result.filename, result.content, result.mime)
@@ -1477,17 +1622,17 @@ export function useWorkbenchController({ i18n, translate }) {
   }
 
   const deleteProjectAction = async () => {
-    const projectId = projectsState?.project?.id
+    const projectId = currentProjectId()
     if (!projectId) return
-    setBusy('projects')
+    setBusy('project-delete')
     try {
       const result = await rpc('deleteProject', { projectId, confirm: true })
-      if (result?.state) replaceRemoteState(result.state)
+      clearProjectDraft(projectId)
       notify(t('projects.deleted', { released: (result.released || []).length }))
-      const list = await rpc('projectsList')
-      setProjectsState({ list, project: null })
+      const list = result.projects ?? (await rpc('projectsList'))
+      setProjectsState({ list, project: null, analysis: null, analysisStale: false })
       const fallback = list.projects[0]
-      if (fallback) await loadProjectDetail(fallback.id)
+      if (fallback) await loadProjectDetail(fallback.id, { analyze: true })
     } catch (error) {
       report(error)
     } finally {
@@ -1512,27 +1657,33 @@ export function useWorkbenchController({ i18n, translate }) {
 
   const pickProject = async ({ projectId, newName }) => {
     if (!projectPick) return
+    const pending = { ...projectPick }
+    let targetId = ''
     setBusy('projects')
     try {
-      let targetId = String(projectId ?? '')
+      targetId = String(projectId ?? '')
       if (!targetId && String(newName ?? '').trim()) {
         const created = await rpc('createProject', { name: String(newName).trim() })
         targetId = created.project.id
       }
       const result = await rpc('assignDocumentProject', {
-        documentId: projectPick.documentId,
+        documentId: pending.documentId,
         projectId: targetId,
       })
-      if (result?.state) replaceRemoteState(result.state)
-      const afterBrief = projectPick.afterBrief
+      applyDocumentSummary(result.document)
+      setProjectsState((current) => ({ ...(current ?? {}), list: result.projects }))
       setProjectPick(null)
       notify(t('projects.assigned'))
-      if (afterBrief) setModal({ type: 'ai', mode: 'brief' })
     } catch (error) {
       report(error)
     } finally {
       setBusy('')
     }
+    if (!pending.documentId) return
+    if (view === 'projects' && targetId) await loadProjectDetail(targetId, { stale: true })
+    await openDocument(pending.documentId)
+    setView('documents')
+    if (pending.afterBrief) setModal({ type: 'ai', mode: 'brief' })
   }
 
   const saveBrief = async (brief) => {
@@ -2573,11 +2724,22 @@ export function useWorkbenchController({ i18n, translate }) {
     testLocalMt,
     projectsState,
     projectPick,
+    projectDrafts,
     openProjects,
     selectProject,
     createProjectAction,
-    saveProject,
-    saveProjectBrief,
+    saveProjectSettings,
+    refreshProjectAnalysis,
+    requestView,
+    requestProject,
+    requestProjectTab,
+    requestOpenDocument,
+    projectTab,
+    includePrefs,
+    rememberInclude,
+    updateProjectDraft,
+    pendingNav,
+    resolvePendingNav,
     toggleProjectDoc,
     assignDocToProject,
     refreshProjectList,

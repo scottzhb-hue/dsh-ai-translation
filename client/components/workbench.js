@@ -22,7 +22,7 @@ import {
   AnalysisModal,
 } from './dialogs.js'
 import { DeliveryModal, BatchModal, QuoteModal, LocalMtModal } from './workflow.js'
-import { ProjectsPage, ProjectPicker } from './projects.js'
+import { ProjectsPage, ProjectPicker, ProjectUnsaved } from './projects.js'
 import { useWorkbenchController } from '../workbench/controller.js'
 import { UsageModal } from './usage.js'
 
@@ -175,8 +175,18 @@ function Workbench({ i18n, translate }) {
     openProjects,
     selectProject,
     createProjectAction,
-    saveProject,
-    saveProjectBrief,
+    saveProjectSettings,
+    refreshProjectAnalysis,
+    requestView,
+    requestProject,
+    requestProjectTab,
+    requestOpenDocument,
+    projectTab,
+    projectDrafts,
+    includePrefs,
+    updateProjectDraft,
+    pendingNav,
+    resolvePendingNav,
     toggleProjectDoc,
     assignDocToProject,
     refreshProjectList,
@@ -218,7 +228,6 @@ function Workbench({ i18n, translate }) {
     saveTerm,
   } = useWorkbenchController({ i18n, translate })
   const [aiQuick, setAiQuick] = useState('')
-  const [projectTab, setProjectTab] = useState('projects')
   const [libraryIo, setLibraryIo] = useState(null)
   const ioOptions = libraryIo ? libraryIoOptions(libraryIo.kind) : { libraries: [], libraryId: '' }
 
@@ -346,10 +355,10 @@ function Workbench({ i18n, translate }) {
     },
     { id: 'batch', title: t('batch.open'), hint: '', docOnly: true, run: () => openBatch() },
     { id: 'quote', title: t('quote.open'), hint: '', docOnly: true, run: () => openQuote() },
-    { id: 'projects', title: t('projects.title'), hint: '', run: () => setView('projects') },
-    { id: 'documents', title: t('cmd.documents'), hint: '', run: () => setView('documents') },
-    { id: 'libraries', title: t('cmd.libraries'), hint: '', run: () => setView('libraries') },
-    { id: 'align', title: t('cmd.align'), hint: '', run: () => setView('align') },
+    { id: 'projects', title: t('projects.title'), hint: '', run: () => requestView('projects') },
+    { id: 'documents', title: t('cmd.documents'), hint: '', run: () => requestView('documents') },
+    { id: 'libraries', title: t('cmd.libraries'), hint: '', run: () => requestView('libraries') },
+    { id: 'align', title: t('cmd.align'), hint: '', run: () => requestView('align') },
     {
       id: 'settings',
       title: t('cmd.settings'),
@@ -378,7 +387,7 @@ function Workbench({ i18n, translate }) {
       onImport: () => setModal({ type: 'new', defaultMode: 'file' }),
       onExport: () => setModal({ type: 'export' }),
       onSettings: () => setModal({ type: 'settings' }),
-      onOpenDoc: openDocument,
+      onOpenDoc: requestOpenDocument,
       onCloseDoc: closeDocumentTab,
       onNewTab: () => setModal({ type: 'new', defaultMode: 'file' }),
       onCleanClosed: () => setModal({ type: 'recent' }),
@@ -390,24 +399,29 @@ function Workbench({ i18n, translate }) {
       onOpenQuote: openQuote,
       onReplace: openReplace,
       view,
-      onView: setView,
+      onView: requestView,
     }),
     h(SaveBanner, { t, storage: data?.storage, stale, onRefresh: refreshState }),
     view === 'projects'
       ? h(ProjectsPage, {
           t,
           busy,
+          saving: busy === 'project-save',
+          dirty: Boolean(projectsState?.dirty),
           state: projectsState,
           documents: data?.documents ?? [],
           libraries: data?.libraries,
           projects: data?.projects?.projects ?? [],
+          includePrefs,
+          draft: projectsState?.project?.id ? projectDrafts?.[projectsState.project.id] : null,
           docId: doc?.id,
           tab: projectTab,
-          onTab: setProjectTab,
-          onSelect: selectProject,
+          onTab: requestProjectTab,
+          onSelect: requestProject,
           onCreate: createProjectAction,
-          onSave: saveProject,
-          onBrief: saveProjectBrief,
+          onDraft: updateProjectDraft,
+          onInclude: rememberInclude,
+          onSave: saveProjectSettings,
           onToggleDoc: toggleProjectDoc,
           onDelete: deleteProjectAction,
           onStart: startProjectTimerAction,
@@ -415,13 +429,11 @@ function Workbench({ i18n, translate }) {
           onAddTime: addProjectTime,
           onDeleteTime: deleteProjectTime,
           onExport: exportProjectDeliveryAction,
-          onOpenDoc: (documentId) => {
-            openDocument(documentId)
-            setView('documents')
-          },
+          onOpenDoc: requestOpenDocument,
           onReport: downloadProjectReport,
           onDocReport: downloadDocumentReport,
           onMoveDoc: assignDocToProject,
+          onRefreshAnalysis: refreshProjectAnalysis,
         })
       : null,
     view === 'libraries'
@@ -833,6 +845,9 @@ function Workbench({ i18n, translate }) {
       onPick: pickProject,
       onClose: closeProjectPicker,
     }),
+    pendingNav
+      ? h(ProjectUnsaved, { t, onChoose: resolvePendingNav })
+      : null,
     toast ? h(Toast, { toast }) : null,
   )
 }

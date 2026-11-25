@@ -56,8 +56,8 @@ function statusChip(t, doc) {
   return h('span', { className: `cait-proj-status is-${code}` }, label)
 }
 
-function ProjectList({ t, busy, state, onSelect, onCreate, onProjectReport }) {
-  const projects = state?.list?.projects ?? []
+function ProjectList({ t, busy, state, projects: projectsProp, onSelect, onCreate, onProjectReport }) {
+  const projects = projectsProp ?? state?.list?.projects ?? []
   const active = state?.project?.id ?? ''
   const [name, setName] = useState('')
 
@@ -142,12 +142,17 @@ function ProjectList({ t, busy, state, onSelect, onCreate, onProjectReport }) {
 function ProjectDetail({
   t,
   busy,
+  saving,
+  dirty,
   state,
   documents,
   libraries,
+  includePrefs,
+  draft,
   docId,
+  onDraft,
+  onInclude,
   onSave,
-  onBrief,
   onToggleDoc,
   onDelete,
   onStart,
@@ -158,9 +163,11 @@ function ProjectDetail({
   onOpenDoc,
   onDocReport,
   onProjectReport,
+  onRefreshAnalysis,
 }) {
   const project = state?.project ?? null
   const analysis = state?.analysis ?? null
+  const stale = Boolean(state?.analysisStale)
   const projectId = project?.id ?? ''
   const [fields, setFields] = useState({ name: '', client: '', dueAt: '', note: '' })
   const [brief, setBrief] = useState({})
@@ -175,23 +182,32 @@ function ProjectDetail({
     analysis: true,
     notes: false,
     readme: true,
+    ...(includePrefs ?? {}),
   })
   const [minutes, setMinutes] = useState('30')
   const [timeNote, setTimeNote] = useState('')
   const [confirmDelete, setConfirmDelete] = useState(false)
 
+  // 草稿只在切换项目时回填一次；之后用户输入自己说了算，不会被刷新覆盖。
   useEffect(() => {
-    if (!project) return
-    setFields({
-      name: project.name ?? '',
-      client: project.client ?? '',
-      dueAt: project.dueAt ?? '',
-      note: project.note ?? '',
-    })
-    setBrief(project.brief ? { ...project.brief } : {})
-    setTmValue(librarySelectValue(project.tmIds))
-    setGlossaryValue(librarySelectValue(project.glossaryIds))
-    setDefaultTm(project.defaultWriteTmId ?? '')
+    if (!project || !projectId) return
+    const restored = draft && draft.fields ? draft : null
+    setFields(
+      restored
+        ? { ...restored.fields }
+        : {
+            name: project.name ?? '',
+            client: project.client ?? '',
+            dueAt: project.dueAt ?? '',
+            note: project.note ?? '',
+          },
+    )
+    setBrief(restored ? { ...(restored.brief ?? {}) } : project.brief ? { ...project.brief } : {})
+    setTmValue(restored?.tmValue ?? librarySelectValue(project.tmIds))
+    setGlossaryValue(restored?.glossaryValue ?? librarySelectValue(project.glossaryIds))
+    setDefaultTm(restored?.defaultTm ?? project.defaultWriteTmId ?? '')
+    setMinutes(restored?.minutes ?? '30')
+    setTimeNote(restored?.timeNote ?? '')
     setConfirmDelete(false)
   }, [projectId])
 
@@ -203,18 +219,79 @@ function ProjectDetail({
   const glossaryLibraries = libraries?.glossary ?? []
   const effectiveTm = project.resources?.effectiveTmIds ?? []
   const inbox = Boolean(project.inbox)
-  const docs = project.documents ?? []
-  const patch = () => ({
-    name: fields.name,
-    client: fields.client,
-    dueAt: fields.dueAt,
-    note: fields.note,
-    tmIds: librarySelectIds(tmValue),
-    glossaryIds: librarySelectIds(glossaryValue),
-    defaultWriteTmId: defaultTm || null,
-  })
-  const quoteTotal = state?.analysis?.quote?.total
-  const currency = state?.analysis?.quote?.currency ?? ''
+  const rows = Array.isArray(project.documentRows) ? project.documentRows : []
+  const quoteTotal = analysis?.quote?.total
+  const currency = analysis?.quote?.currency ?? ''
+
+  /** 把当前整套表单作为草稿交给 controller：离开/切换时能恢复，也能提醒未保存。 */
+  const pushDraft = (next, markDirty = true) => {
+    onDraft(
+      {
+        fields: next.fields,
+        brief: next.brief,
+        tmValue: next.tmValue,
+        glossaryValue: next.glossaryValue,
+        defaultTm: next.defaultTm,
+        minutes: next.minutes,
+        timeNote: next.timeNote,
+        settings: {
+          name: next.fields.name,
+          client: next.fields.client,
+          dueAt: next.fields.dueAt,
+          note: next.fields.note,
+          tmIds: librarySelectIds(next.tmValue),
+          glossaryIds: librarySelectIds(next.glossaryValue),
+          defaultWriteTmId: next.defaultTm || null,
+        },
+      },
+      markDirty,
+    )
+  }
+
+  const base = () => ({ fields, brief, tmValue, glossaryValue, defaultTm, minutes, timeNote })
+
+  const setField = (key, value) => {
+    const nextFields = { ...fields, [key]: value }
+    setFields(nextFields)
+    pushDraft({ ...base(), fields: nextFields })
+  }
+
+  const setBriefField = (key, value) => {
+    const next = { ...brief, [key]: value }
+    setBrief(next)
+    pushDraft({ ...base(), brief: next })
+  }
+
+  const chooseTm = (value) => {
+    setTmValue(value)
+    pushDraft({ ...base(), tmValue: value })
+  }
+
+  const chooseGlossary = (value) => {
+    setGlossaryValue(value)
+    pushDraft({ ...base(), glossaryValue: value })
+  }
+
+  const chooseDefaultTm = (value) => {
+    setDefaultTm(value)
+    pushDraft({ ...base(), defaultTm: value })
+  }
+
+  const editMinutes = (value) => {
+    setMinutes(value)
+    pushDraft({ ...base(), minutes: value }, false)
+  }
+
+  const editTimeNote = (value) => {
+    setTimeNote(value)
+    pushDraft({ ...base(), timeNote: value }, false)
+  }
+
+  const toggleInclude = (key) => {
+    const next = { ...include, [key]: !include[key] }
+    setInclude(next)
+    onInclude(next)
+  }
 
   return h(
     'div',
@@ -231,11 +308,7 @@ function ProjectDetail({
           project.name,
           inbox ? h('span', { className: 'cait-proj-tag' }, t('projects.inboxTag')) : null,
         ),
-        h(
-          'p',
-          { className: 'cait-hint' },
-          inbox ? t('projects.inboxHint') : t('projects.detailHint'),
-        ),
+        h('p', { className: 'cait-hint' }, inbox ? t('projects.inboxHint') : t('projects.detailHint')),
       ),
       h(
         'div',
@@ -274,7 +347,7 @@ function ProjectDetail({
         h('input', {
           className: 'cait-input',
           value: fields.name,
-          onChange: (event) => setFields({ ...fields, name: event.target.value }),
+          onChange: (event) => setField('name', event.target.value),
         }),
       ),
       h(
@@ -284,7 +357,7 @@ function ProjectDetail({
         h('input', {
           className: 'cait-input',
           value: fields.client,
-          onChange: (event) => setFields({ ...fields, client: event.target.value }),
+          onChange: (event) => setField('client', event.target.value),
         }),
       ),
       h(
@@ -295,7 +368,7 @@ function ProjectDetail({
           className: 'cait-input',
           type: 'date',
           value: fields.dueAt,
-          onChange: (event) => setFields({ ...fields, dueAt: event.target.value }),
+          onChange: (event) => setField('dueAt', event.target.value),
         }),
       ),
     ),
@@ -323,16 +396,33 @@ function ProjectDetail({
           )
         : null,
     ),
-    analysis
-      ? h(
-          'p',
-          { className: 'cait-hint' },
-          `${t('projects.analysis')}：${t('projects.analysisValue', {
-            matched: Math.round(analysis.totals?.matchedPercent ?? 0),
-            fresh: analysis.totals?.buckets?.new ?? 0,
-          })}`,
-        )
-      : null,
+    h(
+      'div',
+      { className: 'cait-proj-analysis' },
+      analysis
+        ? h(
+            'p',
+            { className: 'cait-hint' },
+            `${t('projects.analysis')}：${t('projects.analysisValue', {
+              matched: Math.round(analysis.totals?.matchedPercent ?? 0),
+              fresh: analysis.totals?.buckets?.new ?? 0,
+            })}`,
+          )
+        : h('p', { className: 'cait-hint' }, t('projects.analysisNone')),
+      stale ? h('span', { className: 'cait-hint is-danger' }, t('projects.analysisStale')) : null,
+      h(
+        'button',
+        {
+          type: 'button',
+          className: 'cait-minibtn',
+          disabled: Boolean(busy),
+          title: t('projects.refreshAnalysis'),
+          onClick: () => onRefreshAnalysis(),
+        },
+        h(Icon, { name: 'refresh', size: 12 }),
+        h('span', null, t('projects.refreshAnalysis')),
+      ),
+    ),
     h(
       'div',
       { className: 'cait-proj-actions' },
@@ -341,22 +431,11 @@ function ProjectDetail({
         {
           type: 'button',
           className: 'cait-btn cait-btn-primary',
-          disabled: Boolean(busy),
-          onClick: () => onSave(patch()),
+          disabled: Boolean(busy) || !dirty,
+          onClick: () => onSave(),
         },
-        busy ? h(Spinner, { size: 13 }) : h(Icon, { name: 'save', size: 13 }),
-        h('span', null, t('projects.save')),
-      ),
-      h(
-        'button',
-        {
-          type: 'button',
-          className: 'cait-btn',
-          disabled: Boolean(busy),
-          onClick: () => onBrief(brief),
-        },
-        h(Icon, { name: 'save', size: 13 }),
-        h('span', null, t('projects.saveBrief')),
+        saving ? h(Spinner, { size: 13 }) : h(Icon, { name: 'save', size: 13 }),
+        h('span', null, t('projects.saveSettings')),
       ),
       h(
         'button',
@@ -369,6 +448,7 @@ function ProjectDetail({
         h(Icon, { name: 'download', size: 13 }),
         h('span', null, t('projects.export')),
       ),
+      dirty ? h('span', { className: 'cait-proj-dirty' }, t('projects.unsavedHint')) : null,
       inbox
         ? null
         : confirmDelete
@@ -419,16 +499,24 @@ function ProjectDetail({
         h(
           'tbody',
           null,
-          docs.length
-            ? docs.map((doc) =>
+          rows.length
+            ? rows.map((doc) =>
                 h(
                   'tr',
                   { key: doc.id, className: doc.id === docId ? 'is-current' : '' },
-                  h('td', null, h('button', {
-                    type: 'button',
-                    className: 'cait-linkbtn',
-                    onClick: () => onOpenDoc(doc.id),
-                  }, doc.name)),
+                  h(
+                    'td',
+                    null,
+                    h(
+                      'button',
+                      {
+                        type: 'button',
+                        className: 'cait-linkbtn',
+                        onClick: () => onOpenDoc(doc.id),
+                      },
+                      doc.name,
+                    ),
+                  ),
                   h('td', null, statusChip(t, doc)),
                   h(
                     'td',
@@ -453,6 +541,16 @@ function ProjectDetail({
                         {
                           type: 'button',
                           className: 'cait-minibtn',
+                          title: t('projects.openDoc'),
+                          onClick: () => onOpenDoc(doc.id),
+                        },
+                        h(Icon, { name: 'arrowRight', size: 12 }),
+                      ),
+                      h(
+                        'button',
+                        {
+                          type: 'button',
+                          className: 'cait-minibtn',
                           title: t('projects.reportHtml'),
                           onClick: () => onDocReport(doc.id, 'html'),
                         },
@@ -468,21 +566,27 @@ function ProjectDetail({
                         },
                         h(Icon, { name: 'download', size: 12 }),
                       ),
-                      h(
-                        'button',
-                        {
-                          type: 'button',
-                          className: 'cait-minibtn',
-                          title: t('projects.moveOut'),
-                          onClick: () => onToggleDoc(doc.id, false),
-                        },
-                        h(Icon, { name: 'close', size: 12 }),
-                      ),
+                      inbox
+                        ? null
+                        : h(
+                            'button',
+                            {
+                              type: 'button',
+                              className: 'cait-minibtn',
+                              title: t('projects.moveOut'),
+                              onClick: () => onToggleDoc(doc.id, false),
+                            },
+                            h(Icon, { name: 'close', size: 12 }),
+                          ),
                     ),
                   ),
                 ),
               )
-            : h('tr', null, h('td', { colSpan: 6 }, h('span', { className: 'cait-hint' }, t('projects.noDocs')))),
+            : h(
+                'tr',
+                null,
+                h('td', { colSpan: 6 }, h('span', { className: 'cait-hint' }, t('projects.noDocs'))),
+              ),
         ),
       ),
     ),
@@ -517,11 +621,7 @@ function ProjectDetail({
         )
       : null,
     h('h4', { className: 'cait-section-title' }, t('projects.brief')),
-    h(
-      'p',
-      { className: 'cait-hint' },
-      t('projects.briefHint'),
-    ),
+    h('p', { className: 'cait-hint' }, t('projects.briefHint')),
     h(
       'div',
       { className: 'cait-formrow' },
@@ -535,12 +635,12 @@ function ProjectDetail({
                 className: 'cait-input',
                 rows: 2,
                 value: brief[field] ?? '',
-                onChange: (event) => setBrief({ ...brief, [field]: event.target.value }),
+                onChange: (event) => setBriefField(field, event.target.value),
               })
             : h('input', {
                 className: 'cait-input',
                 value: brief[field] ?? '',
-                onChange: (event) => setBrief({ ...brief, [field]: event.target.value }),
+                onChange: (event) => setBriefField(field, event.target.value),
               }),
         ),
       ),
@@ -555,7 +655,7 @@ function ProjectDetail({
         h('span', null, t('projects.tm')),
         h(
           'select',
-          { className: 'cait-input', value: tmValue, onChange: (event) => setTmValue(event.target.value) },
+          { className: 'cait-input', value: tmValue, onChange: (event) => chooseTm(event.target.value) },
           h('option', { value: '' }, t('projects.inherit')),
           tmLibraries.map((lib) => h('option', { key: lib.tmId, value: lib.tmId }, lib.name)),
           h('option', { value: '__none__' }, t('projects.none')),
@@ -570,7 +670,7 @@ function ProjectDetail({
           {
             className: 'cait-input',
             value: glossaryValue,
-            onChange: (event) => setGlossaryValue(event.target.value),
+            onChange: (event) => chooseGlossary(event.target.value),
           },
           h('option', { value: '' }, t('projects.inherit')),
           glossaryLibraries.map((lib) =>
@@ -588,7 +688,7 @@ function ProjectDetail({
           {
             className: 'cait-input',
             value: effectiveTm.includes(defaultTm) ? defaultTm : '',
-            onChange: (event) => setDefaultTm(event.target.value),
+            onChange: (event) => chooseDefaultTm(event.target.value),
           },
           h('option', { value: '' }, t('projects.auto')),
           effectiveTm.map((id) => {
@@ -609,7 +709,7 @@ function ProjectDetail({
           h('input', {
             type: 'checkbox',
             checked: include[key],
-            onChange: () => setInclude({ ...include, [key]: !include[key] }),
+            onChange: () => toggleInclude(key),
           }),
           h('span', null, t(label)),
         ),
@@ -650,13 +750,13 @@ function ProjectDetail({
         className: 'cait-input',
         style: { width: '80px' },
         value: minutes,
-        onChange: (event) => setMinutes(event.target.value),
+        onChange: (event) => editMinutes(event.target.value),
       }),
       h('input', {
         className: 'cait-input',
         placeholder: t('projects.timeNote'),
         value: timeNote,
-        onChange: (event) => setTimeNote(event.target.value),
+        onChange: (event) => editTimeNote(event.target.value),
       }),
       h(
         'button',
@@ -666,7 +766,10 @@ function ProjectDetail({
           disabled: Boolean(busy),
           onClick: async () => {
             const ok = await onAddTime(Number(minutes), timeNote)
-            if (ok) setTimeNote('')
+            if (ok) {
+              setTimeNote('')
+              pushDraft({ ...base(), timeNote: '' }, false)
+            }
           },
         },
         t('projects.addTime'),
@@ -852,17 +955,22 @@ function AllDocuments({
 function ProjectsPage({
   t,
   busy,
+  saving,
+  dirty,
   state,
   documents,
   libraries,
   projects,
+  includePrefs,
+  draft,
   docId,
   tab,
   onTab,
   onSelect,
   onCreate,
+  onDraft,
+  onInclude,
   onSave,
-  onBrief,
   onToggleDoc,
   onDelete,
   onStart,
@@ -874,6 +982,7 @@ function ProjectsPage({
   onReport,
   onDocReport,
   onMoveDoc,
+  onRefreshAnalysis,
 }) {
   const list = state?.list?.projects ?? projects ?? []
   const documentsCount = (documents ?? []).length
@@ -928,6 +1037,7 @@ function ProjectsPage({
             t,
             busy,
             state,
+            projects: list,
             onSelect,
             onCreate,
             onProjectReport: onReport,
@@ -935,12 +1045,17 @@ function ProjectsPage({
           h(ProjectDetail, {
             t,
             busy,
+            saving,
+            dirty,
             state,
             documents,
             libraries,
+            includePrefs,
+            draft,
             docId,
+            onDraft,
+            onInclude,
             onSave,
-            onBrief,
             onToggleDoc,
             onDelete,
             onStart,
@@ -951,6 +1066,7 @@ function ProjectsPage({
             onOpenDoc,
             onDocReport,
             onProjectReport: onReport,
+            onRefreshAnalysis,
           }),
         ),
   )
@@ -1043,4 +1159,37 @@ function ProjectPicker({ t, busy, pick, onPick, onClose }) {
   )
 }
 
-export { ProjectsPage, ProjectPicker }
+/** 未保存设置的拦截框：保存并离开 / 放弃修改 / 取消。 */
+function ProjectUnsaved({ t, onChoose }) {
+  return h(
+    Modal,
+    { title: t('projects.unsavedTitle'), onClose: () => onChoose('cancel') },
+    h('p', { className: 'cait-hint' }, t('projects.unsavedBody')),
+    h(
+      'div',
+      { className: 'cait-modal-actions' },
+      h(
+        'button',
+        { type: 'button', className: 'cait-btn', onClick: () => onChoose('cancel') },
+        t('panel.cancel'),
+      ),
+      h(
+        'button',
+        { type: 'button', className: 'cait-btn is-danger', onClick: () => onChoose('discard') },
+        t('projects.unsavedDiscard'),
+      ),
+      h(
+        'button',
+        {
+          type: 'button',
+          className: 'cait-btn cait-btn-primary',
+          onClick: () => onChoose('save'),
+        },
+        h(Icon, { name: 'save', size: 13 }),
+        h('span', null, t('projects.unsavedSave')),
+      ),
+    ),
+  )
+}
+
+export { ProjectsPage, ProjectPicker, ProjectUnsaved }
