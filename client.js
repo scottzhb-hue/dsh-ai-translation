@@ -201,6 +201,7 @@ var ZH_WORKFLOW = {
   "deliver.open": "交付",
   "deliver.title": "交付包",
   "deliver.hint": "交付前先看一遍下面这些检查项；确认无误后一次性打包下载（目标稿、双语稿、术语表、质检、分析、说明）。",
+  "deliver.jobHint": "本文档属于作业「{name}」；整批交付请用顶栏「作业」面板里的「导出作业交付包」。",
   "deliver.client": "客户",
   "deliver.batch": "批次",
   "deliver.blocking": "阻断",
@@ -269,12 +270,64 @@ var ZH_WORKFLOW = {
   "mtlocal.saved": "本地 MT 设置已保存。",
   "mtlocal.test": "测试连接",
   "mtlocal.testOk": "连接正常：{ms} ms · {model}",
-  "mtlocal.testFailed": "连接失败：{message}"
+  "mtlocal.testFailed": "连接失败：{message}",
+  "jobs.open": "作业",
+  "jobs.title": "作业",
+  "jobs.hint": "把同一批交付的文档归到一个作业：共享 brief 与术语库/TM，按作业汇总分析、交付并记录工时。文档自己的设置优先于作业。",
+  "jobs.namePlaceholder": "新作业名称…",
+  "jobs.create": "新建作业",
+  "jobs.created": "作业已创建。",
+  "jobs.empty": "还没有作业。先建一个，再把文档勾进来。",
+  "jobs.pick": "从左边选一个作业，或新建一个。",
+  "jobs.fieldName": "作业名称",
+  "jobs.client": "客户",
+  "jobs.dueAt": "截止日期",
+  "jobs.overdue": "已过截止日期 {dueAt}，仍有未确认句段。",
+  "jobs.documents": "文档",
+  "jobs.segments": "句段",
+  "jobs.words": "字数",
+  "jobs.minutes": "分钟",
+  "jobs.analysis": "匹配分析",
+  "jobs.analysisValue": "TM 覆盖 {matched}%，新句段 {fresh} 段",
+  "jobs.note": "备注",
+  "jobs.brief": "作业级 brief",
+  "jobs.domain": "领域",
+  "jobs.audience": "读者",
+  "jobs.tone": "语调",
+  "jobs.notes": "说明",
+  "jobs.doNotTranslate": "不翻译词",
+  "jobs.styleSample": "风格样例",
+  "jobs.resources": "继承资源",
+  "jobs.tm": "翻译记忆库",
+  "jobs.glossary": "术语库",
+  "jobs.defaultTm": "默认写入库",
+  "jobs.inherit": "继承全局挂载",
+  "jobs.none": "不读任何库",
+  "jobs.auto": "自动",
+  "jobs.docs": "作业内文档",
+  "jobs.current": "当前",
+  "jobs.time": "工时",
+  "jobs.start": "开始计时",
+  "jobs.stop": "停止计时",
+  "jobs.running": "计时中",
+  "jobs.timeNote": "工时备注",
+  "jobs.addTime": "补记工时",
+  "jobs.delivery": "整包交付",
+  "jobs.delete": "删除作业",
+  "jobs.deleteConfirm": "确认删除作业",
+  "jobs.saveBrief": "保存 brief",
+  "jobs.export": "导出作业交付包",
+  "jobs.save": "保存作业",
+  "jobs.saved": "作业已保存。",
+  "jobs.briefSaved": "作业 brief 已保存。",
+  "jobs.exported": "作业交付包已导出：{entries} 个文件，跳过 {skipped} 项。",
+  "jobs.deleted": "作业已删除，{released} 篇文档已解除归属。"
 };
 var EN_WORKFLOW = {
   "deliver.open": "Deliver",
   "deliver.title": "Delivery package",
   "deliver.hint": "Review the checks below, then download one package with the target DOCX, bilingual DOCX, glossary, QA, analysis and readme.",
+  "deliver.jobHint": 'This document belongs to job "{name}"; use "Export job delivery" in the Jobs panel to package the whole batch.',
   "deliver.client": "Client",
   "deliver.batch": "Batch",
   "deliver.blocking": "Blocking",
@@ -343,12 +396,64 @@ var EN_WORKFLOW = {
   "mtlocal.saved": "Local MT settings saved.",
   "mtlocal.test": "Test connection",
   "mtlocal.testOk": "Connected: {ms} ms · {model}",
-  "mtlocal.testFailed": "Connection failed: {message}"
+  "mtlocal.testFailed": "Connection failed: {message}",
+  "jobs.open": "Jobs",
+  "jobs.title": "Jobs",
+  "jobs.hint": "Group documents delivered together into one job: shared brief and TM/glossary, aggregated analysis, one delivery package, tracked time. Document settings win over job settings.",
+  "jobs.namePlaceholder": "New job name…",
+  "jobs.create": "Create job",
+  "jobs.created": "Job created.",
+  "jobs.empty": "No jobs yet. Create one, then tick the documents.",
+  "jobs.pick": "Pick a job on the left, or create one.",
+  "jobs.fieldName": "Job name",
+  "jobs.client": "Client",
+  "jobs.dueAt": "Due date",
+  "jobs.overdue": "Past due {dueAt} with unconfirmed segments.",
+  "jobs.documents": "Documents",
+  "jobs.segments": "Segments",
+  "jobs.words": "Words",
+  "jobs.minutes": "min",
+  "jobs.analysis": "Match analysis",
+  "jobs.analysisValue": "TM coverage {matched}%, {fresh} new segments",
+  "jobs.note": "Note",
+  "jobs.brief": "Job brief",
+  "jobs.domain": "Domain",
+  "jobs.audience": "Audience",
+  "jobs.tone": "Tone",
+  "jobs.notes": "Notes",
+  "jobs.doNotTranslate": "Do not translate",
+  "jobs.styleSample": "Style sample",
+  "jobs.resources": "Inherited resources",
+  "jobs.tm": "Translation memory",
+  "jobs.glossary": "Glossary",
+  "jobs.defaultTm": "Default write TM",
+  "jobs.inherit": "Inherit global mounts",
+  "jobs.none": "Read no library",
+  "jobs.auto": "Automatic",
+  "jobs.docs": "Documents in job",
+  "jobs.current": "current",
+  "jobs.time": "Time",
+  "jobs.start": "Start timer",
+  "jobs.stop": "Stop timer",
+  "jobs.running": "running",
+  "jobs.timeNote": "Time note",
+  "jobs.addTime": "Add time",
+  "jobs.delivery": "Package delivery",
+  "jobs.delete": "Delete job",
+  "jobs.deleteConfirm": "Confirm delete",
+  "jobs.saveBrief": "Save brief",
+  "jobs.export": "Export job package",
+  "jobs.save": "Save job",
+  "jobs.saved": "Job saved.",
+  "jobs.briefSaved": "Job brief saved.",
+  "jobs.exported": "Job package exported: {entries} files, {skipped} skipped.",
+  "jobs.deleted": "Job deleted; {released} documents released."
 };
 var JA_WORKFLOW = {
   "deliver.open": "納品",
   "deliver.title": "納品パッケージ",
   "deliver.hint": "下のチェックを確認してから、訳文稿・対訳稿・用語集・QA・分析・説明をまとめてダウンロードします。",
+  "deliver.jobHint": "このドキュメントはジョブ「{name}」に属しています。バッチ全体の納品は「ジョブ」パネルの「ジョブ納品パッケージを書き出す」から行います。",
   "deliver.client": "クライアント",
   "deliver.batch": "バッチ",
   "deliver.blocking": "要修正",
@@ -417,7 +522,58 @@ var JA_WORKFLOW = {
   "mtlocal.saved": "ローカル MT 設定を保存しました。",
   "mtlocal.test": "接続テスト",
   "mtlocal.testOk": "接続 OK：{ms} ms · {model}",
-  "mtlocal.testFailed": "接続失敗：{message}"
+  "mtlocal.testFailed": "接続失敗：{message}",
+  "jobs.open": "ジョブ",
+  "jobs.title": "ジョブ",
+  "jobs.hint": "同じ納品にまとめる文書を 1 つのジョブに：brief と TM/用語集を共有し、分析・納品・工数をまとめて扱います。文書側の設定が優先されます。",
+  "jobs.namePlaceholder": "新しいジョブ名…",
+  "jobs.create": "ジョブ作成",
+  "jobs.created": "ジョブを作成しました。",
+  "jobs.empty": "ジョブはまだありません。作成して文書を割り当ててください。",
+  "jobs.pick": "左からジョブを選ぶか、新規作成してください。",
+  "jobs.fieldName": "ジョブ名",
+  "jobs.client": "クライアント",
+  "jobs.dueAt": "納期",
+  "jobs.overdue": "納期 {dueAt} を過ぎています（未確定あり）。",
+  "jobs.documents": "文書",
+  "jobs.segments": "セグメント",
+  "jobs.words": "語数",
+  "jobs.minutes": "分",
+  "jobs.analysis": "マッチ分析",
+  "jobs.analysisValue": "TM カバー率 {matched}%、新規 {fresh} セグメント",
+  "jobs.note": "メモ",
+  "jobs.brief": "ジョブ brief",
+  "jobs.domain": "分野",
+  "jobs.audience": "読者",
+  "jobs.tone": "トーン",
+  "jobs.notes": "指示",
+  "jobs.doNotTranslate": "訳さない語",
+  "jobs.styleSample": "スタイル例",
+  "jobs.resources": "継承リソース",
+  "jobs.tm": "翻訳メモリ",
+  "jobs.glossary": "用語集",
+  "jobs.defaultTm": "既定の書き込み TM",
+  "jobs.inherit": "グローバル設定を継承",
+  "jobs.none": "ライブラリを読まない",
+  "jobs.auto": "自動",
+  "jobs.docs": "ジョブ内の文書",
+  "jobs.current": "現在",
+  "jobs.time": "工数",
+  "jobs.start": "計測開始",
+  "jobs.stop": "計測停止",
+  "jobs.running": "計測中",
+  "jobs.timeNote": "工数メモ",
+  "jobs.addTime": "工数を追加",
+  "jobs.delivery": "一括納品",
+  "jobs.delete": "ジョブ削除",
+  "jobs.deleteConfirm": "削除を確定",
+  "jobs.saveBrief": "brief を保存",
+  "jobs.export": "ジョブ納品パッケージ",
+  "jobs.save": "ジョブを保存",
+  "jobs.saved": "ジョブを保存しました。",
+  "jobs.briefSaved": "ジョブ brief を保存しました。",
+  "jobs.exported": "{entries} 件を書き出しました（{skipped} 件スキップ）。",
+  "jobs.deleted": "ジョブを削除し、{released} 件の文書を解除しました。"
 };
 var WORKFLOW_DICTS = { zh: ZH_WORKFLOW, en: EN_WORKFLOW, ja: JA_WORKFLOW };
 
@@ -3114,6 +3270,26 @@ var CSS = `
 .cait-usage-row span{min-width:0;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .cait-usage-row em{flex:0 0 auto;font-style:normal;font-size:11px;color:var(--dsw-alias-label-secondary);white-space:nowrap}
 .cait-usage-empty{margin:0;font-size:12px;line-height:1.6;color:var(--dsw-alias-label-secondary)}
+.cait-job-layout{display:grid;grid-template-columns:minmax(0,220px) minmax(0,1fr);gap:10px;align-items:start}
+.cait-modal-wide:has(.cait-job-layout){width:min(960px,100%)}
+.cait-job-list{display:flex;flex-direction:column;gap:8px;min-width:0}
+.cait-job-list .cait-formrow{flex-direction:column}
+.cait-job-items{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:3px;max-height:44vh;overflow:auto}
+.cait-job-item{display:flex;flex-direction:column;gap:2px;width:100%;text-align:left;padding:6px 8px;border:1px solid transparent;border-radius:7px;background:transparent;color:var(--dsw-alias-label-primary)}
+.cait-job-item:hover{background:var(--dsw-alias-bg-layer-2)}
+.cait-job-item.is-active{border-color:color-mix(in srgb,var(--dsw-alias-brand-primary) 40%,transparent);background:color-mix(in srgb,var(--dsw-alias-brand-primary) 6%,transparent)}
+.cait-job-item-name{font-size:11.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cait-job-item-meta{font-size:10px;color:var(--dsw-alias-label-secondary);font-variant-numeric:tabular-nums}
+.cait-job-detail{display:flex;flex-direction:column;gap:6px;min-width:0}
+.cait-job-detail .cait-formrow{flex-wrap:wrap}
+.cait-job-detail .cait-formrow .cait-field{flex:1 1 150px;margin-bottom:0}
+.cait-section-title{margin:8px 0 2px;font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--dsw-alias-label-secondary)}
+.cait-check-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px;max-height:180px;overflow:auto}
+.cait-check-list li{display:flex;align-items:center;gap:6px}
+.cait-time-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px;max-height:150px;overflow:auto;font-size:11px;color:var(--dsw-alias-label-secondary)}
+.cait-time-list li{display:flex;align-items:center;gap:6px;justify-content:space-between}
+.cait-field textarea.cait-input{height:auto;min-height:44px;resize:vertical}
+.cait-job-timer{justify-content:flex-start}
 @media(max-width:1180px){.cait-main{grid-template-columns:minmax(0,1fr) 308px}.cait-body{grid-template-columns:218px minmax(0,1fr)}.cait-editor-col{padding:18px 20px 34px}.cait-actions .cait-btn-label{display:none}.cait-actions .cait-btn{padding:0 8px}.cait-libpage-body{grid-template-columns:196px minmax(0,1fr) 264px}}
 @media(max-width:940px){.cait-topbar{flex-wrap:wrap}.cait-body{grid-template-columns:190px minmax(0,1fr)}.cait-main{grid-template-columns:minmax(0,1fr)}.cait-cat{border-left:0;border-top:1px solid var(--dsw-alias-border-l1);max-height:43%;min-height:210px}.cait-features{grid-template-columns:1fr}.cait-docbar{display:flex;order:3;flex:1 1 100%;padding:7px 0 0;border-left:0;border-top:1px solid var(--dsw-alias-border-l1)}}
 @media(max-width:700px){.cait-body{grid-template-columns:minmax(0,1fr)}.cait-rail{display:none}.cait-editor-col{padding:14px}.cait-topbar{padding:9px 10px}.cait-export-grid{grid-template-columns:1fr}}
@@ -3992,6 +4168,7 @@ function Topbar({
   onPreTranslate,
   onOpenDelivery,
   onOpenBatch,
+  onOpenJobs,
   onOpenQuote,
   onCancelPreTranslate,
   onReplace,
@@ -4121,6 +4298,17 @@ function Topbar({
         },
         h(Icon, { name: "list", size: 14 }),
         h("span", { className: "cait-btn-label" }, t("batch.open"))
+      ) : null,
+      documentsView ? h(
+        "button",
+        {
+          className: "cait-btn",
+          onClick: onOpenJobs,
+          disabled: Boolean(busy),
+          title: t("jobs.open")
+        },
+        h(Icon, { name: "folder", size: 14 }),
+        h("span", { className: "cait-btn-label" }, t("jobs.open"))
       ) : null,
       documentsView ? h(
         "button",
@@ -8731,7 +8919,7 @@ function AnalysisModal({ t, analysis, busy, onClose }) {
 }
 
 // client/components/workflow.js
-function DeliveryModal({ t, busy, checks, onRun, onClose, onJump, labels, onLabels }) {
+function DeliveryModal({ t, busy, checks, onRun, onClose, onJump, labels, onLabels, jobName }) {
   const [include, setInclude] = useState({
     target: true,
     bilingual: true,
@@ -8750,6 +8938,7 @@ function DeliveryModal({ t, busy, checks, onRun, onClose, onJump, labels, onLabe
     Modal,
     { title: t("deliver.title"), onClose, wide: true },
     h("p", { className: "cait-hint" }, t("deliver.hint")),
+    jobName ? h("p", { className: "cait-hint" }, t("deliver.jobHint", { name: jobName })) : null,
     h(
       "div",
       { className: "cait-formrow" },
@@ -9136,6 +9325,467 @@ function LocalMtModal({ t, busy, state, onSave, onTest, onClose }) {
         },
         t("mtlocal.test")
       )
+    )
+  );
+}
+
+// client/components/jobs.js
+var BRIEF_FIELDS = [
+  ["domain", "jobs.domain"],
+  ["audience", "jobs.audience"],
+  ["tone", "jobs.tone"],
+  ["notes", "jobs.notes"],
+  ["doNotTranslate", "jobs.doNotTranslate"],
+  ["styleSample", "jobs.styleSample"]
+];
+var INCLUDE_KEYS = [
+  ["target", "deliver.includeTarget"],
+  ["bilingual", "deliver.includeBilingual"],
+  ["glossary", "deliver.includeGlossary"],
+  ["qa", "deliver.includeQa"],
+  ["analysis", "deliver.includeAnalysis"],
+  ["notes", "deliver.includeNotes"],
+  ["readme", "deliver.includeReadme"]
+];
+function librarySelectValue(ids) {
+  if (ids === null || ids === void 0) return "";
+  if (!ids.length) return "__none__";
+  return ids[0];
+}
+function librarySelectIds(value) {
+  if (value === "") return null;
+  if (value === "__none__") return [];
+  return [value];
+}
+function JobsModal({
+  t,
+  busy,
+  state,
+  documents,
+  libraries,
+  docId,
+  onSelect,
+  onCreate,
+  onSave,
+  onBrief,
+  onToggleDoc,
+  onDelete,
+  onStart,
+  onStop,
+  onAddTime,
+  onDeleteTime,
+  onExport,
+  onClose
+}) {
+  const jobs = state?.jobs?.jobs ?? [];
+  const job = state?.job ?? null;
+  const analysis = state?.analysis ?? null;
+  const jobId = job?.id ?? "";
+  const [name, setName] = useState("");
+  const [fields, setFields] = useState({ name: "", client: "", dueAt: "", note: "" });
+  const [brief, setBrief] = useState({});
+  const [tmValue, setTmValue] = useState("");
+  const [glossaryValue, setGlossaryValue] = useState("");
+  const [defaultTm, setDefaultTm] = useState("");
+  const [include, setInclude] = useState({ target: true, bilingual: true, glossary: true, qa: true, analysis: true, notes: false, readme: true });
+  const [minutes, setMinutes] = useState("30");
+  const [timeNote, setTimeNote] = useState("");
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  useEffect(() => {
+    if (!job) return;
+    setFields({
+      name: job.name ?? "",
+      client: job.client ?? "",
+      dueAt: job.dueAt ?? "",
+      note: job.note ?? ""
+    });
+    setBrief(job.brief ? { ...job.brief } : {});
+    setTmValue(librarySelectValue(job.tmIds));
+    setGlossaryValue(librarySelectValue(job.glossaryIds));
+    setDefaultTm(job.defaultWriteTmId ?? "");
+    setConfirmDelete(false);
+  }, [jobId]);
+  const tmLibraries = libraries?.tm ?? [];
+  const glossaryLibraries = libraries?.glossary ?? [];
+  const effectiveTm = job?.resources?.effectiveTmIds ?? [];
+  const patches = () => ({
+    name: fields.name,
+    client: fields.client,
+    dueAt: fields.dueAt,
+    note: fields.note,
+    tmIds: librarySelectIds(tmValue),
+    glossaryIds: librarySelectIds(glossaryValue),
+    defaultWriteTmId: defaultTm || null
+  });
+  return h(
+    Modal,
+    { title: t("jobs.title"), onClose, wide: true },
+    h("p", { className: "cait-hint" }, t("jobs.hint")),
+    h(
+      "div",
+      { className: "cait-job-layout" },
+      h(
+        "div",
+        { className: "cait-job-list" },
+        h(
+          "div",
+          { className: "cait-formrow" },
+          h("input", {
+            className: "cait-input",
+            placeholder: t("jobs.namePlaceholder"),
+            value: name,
+            onChange: (event) => setName(event.target.value)
+          }),
+          h(
+            "button",
+            {
+              type: "button",
+              className: "cait-btn",
+              disabled: Boolean(busy) || !name.trim(),
+              onClick: async () => {
+                const created = await onCreate(name.trim());
+                if (created) setName("");
+              }
+            },
+            h(Icon, { name: "plus", size: 13 }),
+            h("span", null, t("jobs.create"))
+          )
+        ),
+        jobs.length ? h(
+          "ul",
+          { className: "cait-job-items" },
+          jobs.map(
+            (item) => h(
+              "li",
+              { key: item.id },
+              h(
+                "button",
+                {
+                  type: "button",
+                  className: `cait-job-item${item.id === jobId ? " is-active" : ""}`,
+                  onClick: () => onSelect(item.id)
+                },
+                h("span", { className: "cait-job-item-name" }, item.name),
+                h(
+                  "span",
+                  { className: "cait-job-item-meta" },
+                  `${item.documents} · ${item.percent ?? 0}%` + (item.running ? ` · ${t("jobs.running")}` : "")
+                )
+              )
+            )
+          )
+        ) : h("p", { className: "cait-hint" }, t("jobs.empty"))
+      ),
+      job ? h(
+        "div",
+        { className: "cait-job-detail" },
+        h(
+          "div",
+          { className: "cait-formrow" },
+          h("label", { className: "cait-field" }, h("span", null, t("jobs.fieldName")), h("input", {
+            className: "cait-input",
+            value: fields.name,
+            onChange: (event) => setFields({ ...fields, name: event.target.value })
+          })),
+          h("label", { className: "cait-field" }, h("span", null, t("jobs.client")), h("input", {
+            className: "cait-input",
+            value: fields.client,
+            onChange: (event) => setFields({ ...fields, client: event.target.value })
+          })),
+          h("label", { className: "cait-field" }, h("span", null, t("jobs.dueAt")), h("input", {
+            className: "cait-input",
+            type: "date",
+            value: fields.dueAt,
+            onChange: (event) => setFields({ ...fields, dueAt: event.target.value })
+          }))
+        ),
+        job.overdue ? h("p", { className: "cait-hint is-danger" }, t("jobs.overdue", { dueAt: job.dueAt })) : null,
+        h(
+          "div",
+          { className: "cait-chips" },
+          h("span", { className: "cait-chip" }, `${t("jobs.documents")} ${job.documents}`),
+          h("span", { className: "cait-chip" }, `${t("jobs.segments")} ${job.segments}`),
+          h("span", { className: "cait-chip" }, `${t("jobs.words")} ${job.words}`),
+          h("span", { className: "cait-chip" }, `${job.percent ?? 0}%`),
+          h("span", { className: "cait-chip" }, `${t("jobs.minutes")} ${job.minutes ?? 0}`)
+        ),
+        analysis ? h(
+          "p",
+          { className: "cait-hint" },
+          `${t("jobs.analysis")}：${t("jobs.analysisValue", {
+            matched: Math.round(analysis.totals?.matchedPercent ?? 0),
+            fresh: analysis.totals?.buckets?.new ?? 0
+          })}`
+        ) : null,
+        h(
+          "label",
+          { className: "cait-field" },
+          h("span", null, t("jobs.note")),
+          h("textarea", {
+            className: "cait-input",
+            rows: 2,
+            value: fields.note,
+            onChange: (event) => setFields({ ...fields, note: event.target.value })
+          })
+        ),
+        h("h4", { className: "cait-section-title" }, t("jobs.brief")),
+        h(
+          "div",
+          { className: "cait-formrow" },
+          BRIEF_FIELDS.map(
+            ([field, label]) => h(
+              "label",
+              { key: field, className: "cait-field" },
+              h("span", null, t(label)),
+              field === "notes" || field === "doNotTranslate" || field === "styleSample" ? h("textarea", {
+                className: "cait-input",
+                rows: 2,
+                value: brief[field] ?? "",
+                onChange: (event) => setBrief({ ...brief, [field]: event.target.value })
+              }) : h("input", {
+                className: "cait-input",
+                value: brief[field] ?? "",
+                onChange: (event) => setBrief({ ...brief, [field]: event.target.value })
+              })
+            )
+          )
+        ),
+        h("h4", { className: "cait-section-title" }, t("jobs.resources")),
+        h(
+          "div",
+          { className: "cait-formrow" },
+          h(
+            "label",
+            { className: "cait-field" },
+            h("span", null, t("jobs.tm")),
+            h(
+              "select",
+              {
+                className: "cait-input",
+                value: tmValue,
+                onChange: (event) => setTmValue(event.target.value)
+              },
+              h("option", { value: "" }, t("jobs.inherit")),
+              tmLibraries.map(
+                (lib) => h("option", { key: lib.tmId, value: lib.tmId }, lib.name)
+              ),
+              h("option", { value: "__none__" }, t("jobs.none"))
+            )
+          ),
+          h(
+            "label",
+            { className: "cait-field" },
+            h("span", null, t("jobs.glossary")),
+            h(
+              "select",
+              {
+                className: "cait-input",
+                value: glossaryValue,
+                onChange: (event) => setGlossaryValue(event.target.value)
+              },
+              h("option", { value: "" }, t("jobs.inherit")),
+              glossaryLibraries.map(
+                (lib) => h("option", { key: lib.glossaryId, value: lib.glossaryId }, lib.name)
+              ),
+              h("option", { value: "__none__" }, t("jobs.none"))
+            )
+          ),
+          h(
+            "label",
+            { className: "cait-field" },
+            h("span", null, t("jobs.defaultTm")),
+            h(
+              "select",
+              {
+                className: "cait-input",
+                value: effectiveTm.includes(defaultTm) ? defaultTm : "",
+                onChange: (event) => setDefaultTm(event.target.value)
+              },
+              h("option", { value: "" }, t("jobs.auto")),
+              effectiveTm.map((id) => {
+                const lib = tmLibraries.find((item) => item.tmId === id);
+                return h("option", { key: id, value: id }, lib?.name ?? id);
+              })
+            )
+          )
+        ),
+        h("h4", { className: "cait-section-title" }, t("jobs.docs")),
+        h(
+          "ul",
+          { className: "cait-check-list" },
+          (documents ?? []).map(
+            (item) => h(
+              "li",
+              { key: item.id },
+              h(
+                "label",
+                { className: "cait-check" },
+                h("input", {
+                  type: "checkbox",
+                  checked: item.jobId === job.id,
+                  onChange: (event) => onToggleDoc(item.id, event.target.checked)
+                }),
+                h("span", null, `${item.name}${item.id === docId ? ` · ${t("jobs.current")}` : ""}`)
+              ),
+              item.jobId && item.jobId !== job.id ? h("span", { className: "cait-hint" }, `→ ${item.jobName ?? ""}`) : null
+            )
+          )
+        ),
+        h("h4", { className: "cait-section-title" }, t("jobs.time")),
+        h(
+          "div",
+          { className: "cait-chips cait-job-timer" },
+          h(
+            "button",
+            {
+              type: "button",
+              className: "cait-btn",
+              disabled: Boolean(busy) || job.running,
+              onClick: () => onStart()
+            },
+            h(Icon, { name: "play", size: 12 }),
+            h("span", null, t("jobs.start"))
+          ),
+          h(
+            "button",
+            {
+              type: "button",
+              className: "cait-btn",
+              disabled: Boolean(busy) || !job.running,
+              onClick: () => onStop()
+            },
+            h(Icon, { name: "check", size: 12 }),
+            h("span", null, t("jobs.stop"))
+          ),
+          h("span", { className: "cait-hint" }, job.running ? t("jobs.running") : "")
+        ),
+        h(
+          "div",
+          { className: "cait-formrow" },
+          h("input", {
+            className: "cait-input",
+            style: { width: "80px" },
+            value: minutes,
+            onChange: (event) => setMinutes(event.target.value)
+          }),
+          h("input", {
+            className: "cait-input",
+            placeholder: t("jobs.timeNote"),
+            value: timeNote,
+            onChange: (event) => setTimeNote(event.target.value)
+          }),
+          h(
+            "button",
+            {
+              type: "button",
+              className: "cait-btn",
+              disabled: Boolean(busy),
+              onClick: async () => {
+                const ok = await onAddTime(Number(minutes), timeNote);
+                if (ok) setTimeNote("");
+              }
+            },
+            t("jobs.addTime")
+          )
+        ),
+        (job.time?.entries ?? []).length ? h(
+          "ul",
+          { className: "cait-time-list" },
+          job.time.entries.map(
+            (entry2) => h(
+              "li",
+              { key: entry2.id },
+              h("span", null, `${entry2.at.slice(0, 10)} · ${entry2.minutes} ${t("jobs.minutes")}${entry2.note ? ` · ${entry2.note}` : ""}`),
+              h(
+                "button",
+                {
+                  type: "button",
+                  className: "cait-linkbtn",
+                  onClick: () => onDeleteTime(entry2.id)
+                },
+                h(Icon, { name: "trash", size: 12 })
+              )
+            )
+          )
+        ) : null,
+        h("h4", { className: "cait-section-title" }, t("jobs.delivery")),
+        h(
+          "div",
+          { className: "cait-checks" },
+          INCLUDE_KEYS.map(
+            ([key, label]) => h(
+              "label",
+              { key, className: "cait-check" },
+              h("input", {
+                type: "checkbox",
+                checked: include[key],
+                onChange: () => setInclude({ ...include, [key]: !include[key] })
+              }),
+              h("span", null, t(label))
+            )
+          )
+        ),
+        h(
+          "div",
+          { className: "cait-modal-actions" },
+          h(
+            "button",
+            { type: "button", className: "cait-btn", disabled: Boolean(busy), onClick: onClose },
+            t("panel.cancel")
+          ),
+          confirmDelete ? h(
+            "button",
+            {
+              type: "button",
+              className: "cait-btn is-danger",
+              disabled: Boolean(busy),
+              onClick: () => onDelete()
+            },
+            t("jobs.deleteConfirm")
+          ) : h(
+            "button",
+            {
+              type: "button",
+              className: "cait-btn",
+              disabled: Boolean(busy),
+              onClick: () => setConfirmDelete(true)
+            },
+            t("jobs.delete")
+          ),
+          h(
+            "button",
+            {
+              type: "button",
+              className: "cait-btn",
+              disabled: Boolean(busy),
+              onClick: () => onBrief(brief)
+            },
+            t("jobs.saveBrief")
+          ),
+          h(
+            "button",
+            {
+              type: "button",
+              className: "cait-btn",
+              disabled: Boolean(busy),
+              onClick: () => onExport(include)
+            },
+            h(Icon, { name: "download", size: 13 }),
+            h("span", null, t("jobs.export"))
+          ),
+          h(
+            "button",
+            {
+              type: "button",
+              className: "cait-btn cait-btn-primary",
+              disabled: Boolean(busy),
+              onClick: () => onSave(patches())
+            },
+            busy ? h(Spinner, { size: 13 }) : h(Icon, { name: "save", size: 13 }),
+            h("span", null, t("jobs.save"))
+          )
+        )
+      ) : h("div", { className: "cait-job-detail" }, h("p", { className: "cait-hint" }, t("jobs.pick")))
     )
   );
 }
@@ -10236,6 +10886,211 @@ function useWorkbenchController({ i18n, translate }) {
       setBusy("");
     }
   };
+  const [jobsState, setJobsState] = useState(null);
+  const flattenJobDetail = (detail2) => ({
+    ...detail2.job,
+    brief: detail2.brief,
+    resources: detail2.resources,
+    time: detail2.time
+  });
+  const loadJobDetail = async (jobId) => {
+    const [detail2, analysis2] = await Promise.all([
+      rpc("jobDetail", { jobId }),
+      rpc("jobAnalysis", { jobId })
+    ]);
+    setJobsState((current) => ({
+      ...current ?? {},
+      job: flattenJobDetail(detail2),
+      analysis: analysis2
+    }));
+    return detail2;
+  };
+  const openJobs = async (jobId) => {
+    setModal({ type: "jobs" });
+    try {
+      const list = await rpc("jobsList");
+      setJobsState({ jobs: list, job: null });
+      const target = jobId || doc?.jobId || list.jobs[0]?.id;
+      if (target) await loadJobDetail(target);
+    } catch (error) {
+      report(error);
+    }
+  };
+  const selectJob = async (jobId) => {
+    setBusy("jobs");
+    try {
+      await loadJobDetail(jobId);
+    } catch (error) {
+      report(error);
+    } finally {
+      setBusy("");
+    }
+  };
+  const createJobInModal = async (name) => {
+    setBusy("jobs");
+    try {
+      const result = await rpc("createJob", { name });
+      setJobsState({ jobs: result.jobs, job: null });
+      await loadJobDetail(result.job.id);
+      notify(t("jobs.created"));
+      return result.job;
+    } catch (error) {
+      report(error);
+      return null;
+    } finally {
+      setBusy("");
+    }
+  };
+  const saveJobInModal = async (patch) => {
+    const jobId = jobsState?.job?.id;
+    if (!jobId) return;
+    setBusy("jobs");
+    try {
+      await rpc("updateJob", { jobId, ...patch });
+      await loadJobDetail(jobId);
+      notify(t("jobs.saved"));
+    } catch (error) {
+      report(error);
+    } finally {
+      setBusy("");
+    }
+  };
+  const saveJobBriefInModal = async (brief) => {
+    const jobId = jobsState?.job?.id;
+    if (!jobId) return;
+    setBusy("jobs");
+    try {
+      const result = await rpc("setJobBrief", { jobId, brief });
+      setJobsState((current) => ({ ...current ?? {}, jobs: result.jobs }));
+      await loadJobDetail(jobId);
+      notify(t("jobs.briefSaved"));
+    } catch (error) {
+      report(error);
+    } finally {
+      setBusy("");
+    }
+  };
+  const toggleJobDoc = async (documentId, checked) => {
+    const jobId = jobsState?.job?.id;
+    if (!jobId) return;
+    setBusy("jobs");
+    try {
+      const result = await rpc("assignDocumentJob", {
+        documentId,
+        jobId: checked ? jobId : ""
+      });
+      if (result?.state) replaceRemoteState(result.state);
+      await loadJobDetail(jobId);
+    } catch (error) {
+      report(error);
+    } finally {
+      setBusy("");
+    }
+  };
+  const startJobTimerInModal = async () => {
+    const jobId = jobsState?.job?.id;
+    if (!jobId) return;
+    setBusy("jobs");
+    try {
+      const result = await rpc("startJobTimer", { jobId });
+      setJobsState((current) => ({
+        ...current ?? {},
+        jobs: result.jobs,
+        job: { ...current.job, running: true, time: result.time }
+      }));
+    } catch (error) {
+      report(error);
+    } finally {
+      setBusy("");
+    }
+  };
+  const stopJobTimerInModal = async () => {
+    const jobId = jobsState?.job?.id;
+    if (!jobId) return;
+    setBusy("jobs");
+    try {
+      const result = await rpc("stopJobTimer", { jobId });
+      setJobsState((current) => ({
+        ...current ?? {},
+        jobs: result.jobs,
+        job: { ...current.job, running: false, time: result.time }
+      }));
+    } catch (error) {
+      report(error);
+    } finally {
+      setBusy("");
+    }
+  };
+  const addJobTimeInModal = async (minutes, note) => {
+    const jobId = jobsState?.job?.id;
+    if (!jobId) return false;
+    setBusy("jobs");
+    try {
+      const result = await rpc("addTimeEntry", { jobId, minutes, note });
+      setJobsState((current) => ({
+        ...current ?? {},
+        jobs: result.jobs,
+        job: { ...current.job, time: result.time }
+      }));
+      return true;
+    } catch (error) {
+      report(error);
+      return false;
+    } finally {
+      setBusy("");
+    }
+  };
+  const deleteJobTimeInModal = async (entryId) => {
+    const jobId = jobsState?.job?.id;
+    if (!jobId) return;
+    setBusy("jobs");
+    try {
+      const result = await rpc("deleteTimeEntry", { jobId, entryId });
+      setJobsState((current) => ({
+        ...current ?? {},
+        jobs: result.jobs,
+        job: { ...current.job, time: result.time }
+      }));
+    } catch (error) {
+      report(error);
+    } finally {
+      setBusy("");
+    }
+  };
+  const exportJobDeliveryInModal = async (include) => {
+    const jobId = jobsState?.job?.id;
+    if (!jobId) return;
+    setBusy("jobs");
+    try {
+      const result = await rpc("exportJobDelivery", { jobId, include });
+      downloadFile(result.filename, decodeBase64(result.content), result.mime);
+      notify(
+        t("jobs.exported", {
+          entries: (result.entries || []).length,
+          skipped: (result.skipped || []).length
+        })
+      );
+    } catch (error) {
+      report(error);
+    } finally {
+      setBusy("");
+    }
+  };
+  const deleteJobInModal = async () => {
+    const jobId = jobsState?.job?.id;
+    if (!jobId) return;
+    setBusy("jobs");
+    try {
+      const result = await rpc("deleteJob", { jobId, confirm: true });
+      if (result?.state) replaceRemoteState(result.state);
+      notify(t("jobs.deleted", { released: (result.released || []).length }));
+      setModal(null);
+    } catch (error) {
+      report(error);
+    } finally {
+      setBusy("");
+    }
+  };
   const saveBrief = async (brief) => {
     if (!doc || busy) return false;
     setBusy("brief");
@@ -11186,6 +12041,19 @@ function useWorkbenchController({ i18n, translate }) {
     openLocalMt,
     saveLocalMt,
     testLocalMt,
+    jobsState,
+    openJobs,
+    selectJob,
+    createJobInModal,
+    saveJobInModal,
+    saveJobBriefInModal,
+    toggleJobDoc,
+    startJobTimerInModal,
+    stopJobTimerInModal,
+    addJobTimeInModal,
+    deleteJobTimeInModal,
+    exportJobDeliveryInModal,
+    deleteJobInModal,
     exportLibraryTo,
     importLibraryTo,
     generateMt,
@@ -11359,6 +12227,19 @@ function Workbench({ i18n, translate }) {
     openLocalMt,
     saveLocalMt,
     testLocalMt,
+    jobsState,
+    openJobs,
+    selectJob,
+    createJobInModal,
+    saveJobInModal,
+    saveJobBriefInModal,
+    toggleJobDoc,
+    startJobTimerInModal,
+    stopJobTimerInModal,
+    addJobTimeInModal,
+    deleteJobTimeInModal,
+    exportJobDeliveryInModal,
+    deleteJobInModal,
     libraryIoOptions,
     exportLibraryTo,
     importLibraryTo,
@@ -11501,6 +12382,16 @@ function Workbench({ i18n, translate }) {
       docOnly: true,
       run: () => clearPretranslated()
     },
+    {
+      id: "deliver",
+      title: t("deliver.open"),
+      hint: "",
+      docOnly: true,
+      run: () => openDelivery()
+    },
+    { id: "batch", title: t("batch.open"), hint: "", docOnly: true, run: () => openBatch() },
+    { id: "quote", title: t("quote.open"), hint: "", docOnly: true, run: () => openQuote() },
+    { id: "jobs", title: t("jobs.open"), hint: "", run: () => openJobs() },
     { id: "documents", title: t("cmd.documents"), hint: "", run: () => setView("documents") },
     { id: "libraries", title: t("cmd.libraries"), hint: "", run: () => setView("libraries") },
     { id: "align", title: t("cmd.align"), hint: "", run: () => setView("align") },
@@ -11537,6 +12428,10 @@ function Workbench({ i18n, translate }) {
       pre,
       onPreTranslate: () => openAiChat("pretranslate"),
       onCancelPreTranslate: cancelPreTranslate,
+      onOpenDelivery: openDelivery,
+      onOpenBatch: openBatch,
+      onOpenJobs: () => openJobs(),
+      onOpenQuote: openQuote,
       onReplace: openReplace,
       view,
       onView: setView
@@ -11801,6 +12696,7 @@ function Workbench({ i18n, translate }) {
       busy: Boolean(busy),
       checks: deliverChecks,
       labels: { client: doc?.client || "", batch: doc?.batch || "" },
+      jobName: doc?.jobName || "",
       onRun: runDelivery,
       onJump: (index2) => chooseSegment(index2),
       onClose: () => setModal(null)
@@ -11833,6 +12729,26 @@ function Workbench({ i18n, translate }) {
       state: mtLocalConfig,
       onSave: saveLocalMt,
       onTest: testLocalMt,
+      onClose: () => setModal(null)
+    }) : null,
+    modal?.type === "jobs" ? h(JobsModal, {
+      t,
+      busy: Boolean(busy),
+      state: jobsState,
+      documents: data?.documents ?? [],
+      libraries: data?.libraries,
+      docId: doc?.id,
+      onSelect: selectJob,
+      onCreate: createJobInModal,
+      onSave: saveJobInModal,
+      onBrief: saveJobBriefInModal,
+      onToggleDoc: toggleJobDoc,
+      onDelete: deleteJobInModal,
+      onStart: startJobTimerInModal,
+      onStop: stopJobTimerInModal,
+      onAddTime: addJobTimeInModal,
+      onDeleteTime: deleteJobTimeInModal,
+      onExport: exportJobDeliveryInModal,
       onClose: () => setModal(null)
     }) : null,
     modal?.type === "analysis" ? h(AnalysisModal, {

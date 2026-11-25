@@ -1198,6 +1198,227 @@ export function useWorkbenchController({ i18n, translate }) {
     }
   }
 
+  // —— 作业（job）层：多文件共享 brief 与库，按作业汇总与交付 ——
+  const [jobsState, setJobsState] = useState(null)
+
+  const flattenJobDetail = (detail) => ({
+    ...detail.job,
+    brief: detail.brief,
+    resources: detail.resources,
+    time: detail.time,
+  })
+
+  const loadJobDetail = async (jobId) => {
+    const [detail, analysis] = await Promise.all([
+      rpc('jobDetail', { jobId }),
+      rpc('jobAnalysis', { jobId }),
+    ])
+    setJobsState((current) => ({
+      ...(current ?? {}),
+      job: flattenJobDetail(detail),
+      analysis,
+    }))
+    return detail
+  }
+
+  const openJobs = async (jobId) => {
+    setModal({ type: 'jobs' })
+    try {
+      const list = await rpc('jobsList')
+      setJobsState({ jobs: list, job: null })
+      const target = jobId || doc?.jobId || list.jobs[0]?.id
+      if (target) await loadJobDetail(target)
+    } catch (error) {
+      report(error)
+    }
+  }
+
+  const selectJob = async (jobId) => {
+    setBusy('jobs')
+    try {
+      await loadJobDetail(jobId)
+    } catch (error) {
+      report(error)
+    } finally {
+      setBusy('')
+    }
+  }
+
+  const createJobInModal = async (name) => {
+    setBusy('jobs')
+    try {
+      const result = await rpc('createJob', { name })
+      setJobsState({ jobs: result.jobs, job: null })
+      await loadJobDetail(result.job.id)
+      notify(t('jobs.created'))
+      return result.job
+    } catch (error) {
+      report(error)
+      return null
+    } finally {
+      setBusy('')
+    }
+  }
+
+  const saveJobInModal = async (patch) => {
+    const jobId = jobsState?.job?.id
+    if (!jobId) return
+    setBusy('jobs')
+    try {
+      await rpc('updateJob', { jobId, ...patch })
+      await loadJobDetail(jobId)
+      notify(t('jobs.saved'))
+    } catch (error) {
+      report(error)
+    } finally {
+      setBusy('')
+    }
+  }
+
+  const saveJobBriefInModal = async (brief) => {
+    const jobId = jobsState?.job?.id
+    if (!jobId) return
+    setBusy('jobs')
+    try {
+      const result = await rpc('setJobBrief', { jobId, brief })
+      setJobsState((current) => ({ ...(current ?? {}), jobs: result.jobs }))
+      await loadJobDetail(jobId)
+      notify(t('jobs.briefSaved'))
+    } catch (error) {
+      report(error)
+    } finally {
+      setBusy('')
+    }
+  }
+
+  const toggleJobDoc = async (documentId, checked) => {
+    const jobId = jobsState?.job?.id
+    if (!jobId) return
+    setBusy('jobs')
+    try {
+      const result = await rpc('assignDocumentJob', {
+        documentId,
+        jobId: checked ? jobId : '',
+      })
+      if (result?.state) replaceRemoteState(result.state)
+      await loadJobDetail(jobId)
+    } catch (error) {
+      report(error)
+    } finally {
+      setBusy('')
+    }
+  }
+
+  const startJobTimerInModal = async () => {
+    const jobId = jobsState?.job?.id
+    if (!jobId) return
+    setBusy('jobs')
+    try {
+      const result = await rpc('startJobTimer', { jobId })
+      setJobsState((current) => ({
+        ...(current ?? {}),
+        jobs: result.jobs,
+        job: { ...current.job, running: true, time: result.time },
+      }))
+    } catch (error) {
+      report(error)
+    } finally {
+      setBusy('')
+    }
+  }
+
+  const stopJobTimerInModal = async () => {
+    const jobId = jobsState?.job?.id
+    if (!jobId) return
+    setBusy('jobs')
+    try {
+      const result = await rpc('stopJobTimer', { jobId })
+      setJobsState((current) => ({
+        ...(current ?? {}),
+        jobs: result.jobs,
+        job: { ...current.job, running: false, time: result.time },
+      }))
+    } catch (error) {
+      report(error)
+    } finally {
+      setBusy('')
+    }
+  }
+
+  const addJobTimeInModal = async (minutes, note) => {
+    const jobId = jobsState?.job?.id
+    if (!jobId) return false
+    setBusy('jobs')
+    try {
+      const result = await rpc('addTimeEntry', { jobId, minutes, note })
+      setJobsState((current) => ({
+        ...(current ?? {}),
+        jobs: result.jobs,
+        job: { ...current.job, time: result.time },
+      }))
+      return true
+    } catch (error) {
+      report(error)
+      return false
+    } finally {
+      setBusy('')
+    }
+  }
+
+  const deleteJobTimeInModal = async (entryId) => {
+    const jobId = jobsState?.job?.id
+    if (!jobId) return
+    setBusy('jobs')
+    try {
+      const result = await rpc('deleteTimeEntry', { jobId, entryId })
+      setJobsState((current) => ({
+        ...(current ?? {}),
+        jobs: result.jobs,
+        job: { ...current.job, time: result.time },
+      }))
+    } catch (error) {
+      report(error)
+    } finally {
+      setBusy('')
+    }
+  }
+
+  const exportJobDeliveryInModal = async (include) => {
+    const jobId = jobsState?.job?.id
+    if (!jobId) return
+    setBusy('jobs')
+    try {
+      const result = await rpc('exportJobDelivery', { jobId, include })
+      downloadFile(result.filename, decodeBase64(result.content), result.mime)
+      notify(
+        t('jobs.exported', {
+          entries: (result.entries || []).length,
+          skipped: (result.skipped || []).length,
+        }),
+      )
+    } catch (error) {
+      report(error)
+    } finally {
+      setBusy('')
+    }
+  }
+
+  const deleteJobInModal = async () => {
+    const jobId = jobsState?.job?.id
+    if (!jobId) return
+    setBusy('jobs')
+    try {
+      const result = await rpc('deleteJob', { jobId, confirm: true })
+      if (result?.state) replaceRemoteState(result.state)
+      notify(t('jobs.deleted', { released: (result.released || []).length }))
+      setModal(null)
+    } catch (error) {
+      report(error)
+    } finally {
+      setBusy('')
+    }
+  }
+
   const saveBrief = async (brief) => {
     if (!doc || busy) return false
     setBusy('brief')
@@ -2234,6 +2455,19 @@ export function useWorkbenchController({ i18n, translate }) {
     openLocalMt,
     saveLocalMt,
     testLocalMt,
+    jobsState,
+    openJobs,
+    selectJob,
+    createJobInModal,
+    saveJobInModal,
+    saveJobBriefInModal,
+    toggleJobDoc,
+    startJobTimerInModal,
+    stopJobTimerInModal,
+    addJobTimeInModal,
+    deleteJobTimeInModal,
+    exportJobDeliveryInModal,
+    deleteJobInModal,
     exportLibraryTo,
     importLibraryTo,
     generateMt,

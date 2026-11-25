@@ -35,6 +35,7 @@
 | 15 | 批量动作与筛选（待译 / 未确认 / 高风险 / 重复 / 新句段 / 模糊 / 锁定 / 批注） | 已上线 | `lib/batch.js`（新增） | `client/components/workflow.js`、`client/components/shell.js`、`client/workbench/controller.js` | 无（新模块） |
 | 16 | 本地 MT 端点（OpenAI 兼容，Key 存 `~/.dsh/cait`） | 已上线 | `lib/mt-local.js`（新增）、`lib/mt-translate.js`、`lib/settings.js` | `client/components/workflow.js`、`client/components/panels.js`、`client/workbench/controller.js` | 无（新模块） |
 | 17 | 报价单 + 译后编辑度量 + 项目/批次标签 | 已上线 | `lib/quote.js`（新增）、`lib/workflow.js`（新增）、`lib/segments.js`（记录 keepRatio）、`lib/settings.js`、`lib/document-view.js`、`lib/persistence.js` | `client/components/workflow.js`、`client/components/shell.js`、`client/workbench/controller.js` | 无（新模块） |
+| 18 | 作业（job）层：多文件共享 brief / TM / 术语库，作业级分析与交付，工时 | 已上线 | `lib/jobs.js`（新增）、`lib/libraries.js`、`lib/brief.js`、`lib/persistence.js`、`lib/limits.js`、`lib/api.js`、`lib/document-view.js`、`lib/ai-chat.js`、`lib/mt-translate.js`、`lib/review.js`、`lib/tools.js` | `client/components/jobs.js`（新增）、`client/components/workbench.js`、`client/components/shell.js`、`client/workbench/controller.js`、`client/locales-workflow.js`、`client/styles.js`、`client.js` | 无（新模块） |
 
 ## 明细
 
@@ -172,10 +173,25 @@
   - `package.json` 的 `files` 增加 `"docs"`，否则 `npm pack` 不会带上这些文件。
 - **验证**：用 `@deepseek-ai/dsh-plugin-detail` 的 `localFiles` + `languageChain` + `readPackageDocument` 直读已装副本 —— `zh`/`zh-CN` → `docs/DETAIL.zh.md`（`origin=locale`）、`en` → `docs/DETAIL.md`、`ja` → `docs/DETAIL.ja.md`；`detailImage("docs/DETAIL.zh.md", "preview.svg")` → `{path:"docs/preview.svg", mediaType:"image/svg+xml"}`；`npm pack` 后 tarball 115 个文件（新增 4 个 docs 文件）。
 - **边界**：`meta.detail` 只影响详情页正文，标题与说明仍来自 `meta.title` / `meta.description`（说明里含一句向上游 CAIT 作者 Jovi Lecca 的致谢）；文档里不要写安装步骤（安装入口在页面上）；插图只放 README，避免详情页图片与文字争夺注意力。
+### 18 作业（job）层
+
+- **动机**：1.1.0 只给文档打了 `client` / `batch` 两个自由文本标签，批次汇总靠字符串匹配。结果同一批文件之间无法共享 brief 和术语库，报价要一篇篇算，交付也要一篇篇打包。
+- **数据模型**：
+  - 新增实体 `job`（`lib/jobs.js`）：`{ id, name, client, dueAt, note, archivedAt, brief, tmIds, glossaryIds, defaultWriteTmId, time: { entries, since } }`，随 `store.json` 落在 `jobs` 数组里（`STORE_VERSION` 7 → 8）。
+  - 文档新增 `jobId`；资源继承链 `mounts → job → doc`，`doc.tmIds` 为 `null` 时先看作业，再回退全局挂载，因此旧数据不需要迁移。
+  - `lib/libraries.js`：新增 `effectiveTmBinding` / `effectiveGlossaryBinding`（返回 `{ source: 'document'|'job'|'mounts', ids }`），`documentResourcesView` 多回 `tmSource` / `glossarySource` / `jobId`。
+  - `lib/brief.js`：`mergeBriefs(jobBrief, docBrief)` 以作业为底、文档非空字段覆盖；`briefForDocument(doc)` 成为 AI 对话、MT、审校取 brief 的唯一入口。
+- **接口**：`lib/jobs.js` 提供 24 个方法（createJob / updateJob / deleteJob / listJobs / jobDetail / jobSummary / assignDocumentJob / assignJobDocuments / jobAnalysis / jobTime / startJobTimer / stopJobTimer / addTimeEntry / deleteTimeEntry / exportJobDelivery / getJobBrief / setJobBrief 等），`lib/api.js` 同步登记 handler 与 `MUTATIONS`。
+  - `jobAnalysis` 逐文档复用 `analyzeDocument` 求和，给出整批的 ICE / 精确 / 模糊 / 新句段分布。
+  - `exportJobDelivery` 打包每篇文档的目标稿与双语稿，外加合并的 `*.analysis.csv`、术语表、`*.qa.csv`、批注汇总、`*.time.csv` 与交付说明。
+  - 工时：`time.since` 是秒表起点（同一时间只跑一个作业），`time.entries` 是补记；重启后仍在走的秒表继续计时。
+- **客户端**：`client/components/jobs.js` 的左列切作业、右列编辑（名称 / 客户 / 截止 / 备注 / brief / 资源 / 文档清单 / 工时 / 交付选项）；顶栏「作业」按钮与命令面板都能打开。顺带修掉顶栏「交付 / 批量 / 报价」没有接点击处理的上游遗留问题。
+- **验证**：`_tmp/job-layer-test.mjs`（临时脚本）覆盖创建 / 归集 / brief 继承与覆盖 / 作业级 TM 继承与文档覆盖 / 秒表与补记 / 作业分析 / 作业交付包 / 重启后还原 / 删作业只解绑文档；`audit-workflow.mjs` 的作业段 43 项检查全部通过（脚本总计 116 项 PASS）。
+- **边界**：作业不删文档（删作业只解绑）；`jobAnalysis` 的 TM 查询随句段数线性增长，只在打开作业面板和打包时调用；作业级 TM 只影响该作业下的文档，全局挂载仍是默认值。
+
 ## 维护与发布须知
 
-1. **为什么手改 `client.js`**：本机 profile 里没有可用的 esbuild（`node_modules\@esbuild` 是空目录，DSH 安装包内也没有），`scripts/build-client.mjs` 跑不起来；插件的 `exports["./client"]` 指向打包产物 `client.js`，所以每次改客户端都要**源码 `client/*.js` 与 `client.js` 同步改**（bundle 是全双引号 + 分号风格）。
-   插件的 `devDependencies` 里有 `esbuild ^0.28.2`：若在插件目录装好开发依赖（`npm install --include=dev`），可用 `npm run build:client` 从 `client/` 重新生成 `client.js`。本地每轮补丁都保持源码与产物一致，理论上重新构建可复现；首次重建后**务必与现有 `client.js` 做一次差异比对**再替换。
+1. **客户端产物怎么来**：`client.js` 由 `node scripts/build-client.mjs` 从 `client/` 源码用 esbuild 打成一个 CommonJS 包、再套 `__ModuleLoader__.load` 外框生成，**不要手改 `client.js`**。改完 `client/` 后跑 `node scripts/check-client.mjs`，确认产物与源码一致。仓库副本里 `scripts/` 与 esbuild 都可用；在受限沙箱里 esbuild 启动子进程会被拒（`spawn EPERM`），构建/校验需要放开权限跑一次。
 2. **npm 打包白名单**：`package.json` 的 `files` 已加入 `OPTIMIZATIONS.md`；若再新增文档（如 `docs/`），记得同步该数组，否则 `npm pack` 不会带上。
 3. **备份命名**：每轮改动前把要改的文件复制成 `<原文件名>.bak-<主题>-<时间戳>`（如 `client.js.bak-term-20261122-1905`）；07 的备份放在工作区 `cait-usage-backup-20261122-225245/`。
 4. **回滚**：用对应 `.bak-*` 覆盖回去即可；改过服务端要重启 DSH，改过 `client.js` 要强刷。
@@ -191,7 +207,7 @@
    - 例外：只想临时验证、且不重启时可以改已装副本；一旦重启即失效，务必回到上面的流程。
 9. **发布门禁**：`npm run check:publish`（`scripts/check-publish.mjs`，`prepublishOnly` 会自动调用）校验包身份（name/version/license/author/contributors）、`files` 白名单与实际文件、`LICENSE` 与 `NOTICE` 的上游署名、三语 locale 键一致性与全部 `.js` 模块的 ESM 语法。上游的 `npm run check` 依赖 `eslint`/`prettier`/`esbuild` 与 `_dev/`，在发布树里无法运行，因此不作为发布门禁。
 
-10. **版本号约定**：包名 `@scottzhb-hue/dsh-ai-translation`，当前 `1.0.2`（已发布到 GitHub Packages）。改动累积后递增 patch（`1.0.3`、`1.0.4`…），新增功能递增 minor；同步更新 `CHANGELOG.md` 并打 `v<version>` 标签触发发布流水线。
+10. **版本号约定**：包名 `@scottzhb-hue/dsh-ai-translation`，当前 `1.2.0`。改动累积后递增 patch（`1.2.1`…），新增功能递增 minor；同步更新 `CHANGELOG.md` 并打 `v<version>` 标签触发发布流水线。`store.json` 结构变化时同步升 `lib/limits.js` 的 `STORE_VERSION`。
 
 
 ## 已知上游缺陷（建议 upstream issue）

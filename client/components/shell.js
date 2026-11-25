@@ -198,6 +198,7 @@ function Topbar({
   onPreTranslate,
   onOpenDelivery,
   onOpenBatch,
+  onOpenJobs,
   onOpenQuote,
   onCancelPreTranslate,
   onReplace,
@@ -340,6 +341,19 @@ function Topbar({
             },
             h(Icon, { name: 'list', size: 14 }),
             h('span', { className: 'cait-btn-label' }, t('batch.open')),
+          )
+        : null,
+      documentsView
+        ? h(
+            'button',
+            {
+              className: 'cait-btn',
+              onClick: onOpenJobs,
+              disabled: Boolean(busy),
+              title: t('jobs.open'),
+            },
+            h(Icon, { name: 'folder', size: 14 }),
+            h('span', { className: 'cait-btn-label' }, t('jobs.open')),
           )
         : null,
       documentsView

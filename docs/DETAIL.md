@@ -15,6 +15,7 @@
 - The AI assistant keeps multi-turn history, can summarise it into the project brief, and validates message shapes defensively.
 - Model routing skips vision-wrapper routes and shows the real error instead of a generic failure.
 - Built-in token usage and cost tracking at official prices, with peak/off-peak rates.
+- Several documents can share one **job**: a common brief, shared memories and glossaries, whole-batch match analysis and delivery packaging, plus time tracking per job.
 
 ### Data and privacy
 

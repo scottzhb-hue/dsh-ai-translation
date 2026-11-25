@@ -22,6 +22,7 @@ import {
   AnalysisModal,
 } from './dialogs.js'
 import { DeliveryModal, BatchModal, QuoteModal, LocalMtModal } from './workflow.js'
+import { JobsModal } from './jobs.js'
 import { useWorkbenchController } from '../workbench/controller.js'
 import { UsageModal } from './usage.js'
 
@@ -169,6 +170,19 @@ function Workbench({ i18n, translate }) {
     openLocalMt,
     saveLocalMt,
     testLocalMt,
+    jobsState,
+    openJobs,
+    selectJob,
+    createJobInModal,
+    saveJobInModal,
+    saveJobBriefInModal,
+    toggleJobDoc,
+    startJobTimerInModal,
+    stopJobTimerInModal,
+    addJobTimeInModal,
+    deleteJobTimeInModal,
+    exportJobDeliveryInModal,
+    deleteJobInModal,
     libraryIoOptions,
     exportLibraryTo,
     importLibraryTo,
@@ -314,6 +328,16 @@ function Workbench({ i18n, translate }) {
       docOnly: true,
       run: () => clearPretranslated(),
     },
+    {
+      id: 'deliver',
+      title: t('deliver.open'),
+      hint: '',
+      docOnly: true,
+      run: () => openDelivery(),
+    },
+    { id: 'batch', title: t('batch.open'), hint: '', docOnly: true, run: () => openBatch() },
+    { id: 'quote', title: t('quote.open'), hint: '', docOnly: true, run: () => openQuote() },
+    { id: 'jobs', title: t('jobs.open'), hint: '', run: () => openJobs() },
     { id: 'documents', title: t('cmd.documents'), hint: '', run: () => setView('documents') },
     { id: 'libraries', title: t('cmd.libraries'), hint: '', run: () => setView('libraries') },
     { id: 'align', title: t('cmd.align'), hint: '', run: () => setView('align') },
@@ -352,6 +376,10 @@ function Workbench({ i18n, translate }) {
       pre,
       onPreTranslate: () => openAiChat('pretranslate'),
       onCancelPreTranslate: cancelPreTranslate,
+      onOpenDelivery: openDelivery,
+      onOpenBatch: openBatch,
+      onOpenJobs: () => openJobs(),
+      onOpenQuote: openQuote,
       onReplace: openReplace,
       view,
       onView: setView,
@@ -646,6 +674,7 @@ function Workbench({ i18n, translate }) {
               busy: Boolean(busy),
               checks: deliverChecks,
               labels: { client: doc?.client || '', batch: doc?.batch || '' },
+              jobName: doc?.jobName || '',
               onRun: runDelivery,
               onJump: (index) => chooseSegment(index),
               onClose: () => setModal(null),
@@ -687,6 +716,28 @@ function Workbench({ i18n, translate }) {
               onClose: () => setModal(null),
             })
           : null,
+    modal?.type === 'jobs'
+      ? h(JobsModal, {
+          t,
+          busy: Boolean(busy),
+          state: jobsState,
+          documents: data?.documents ?? [],
+          libraries: data?.libraries,
+          docId: doc?.id,
+          onSelect: selectJob,
+          onCreate: createJobInModal,
+          onSave: saveJobInModal,
+          onBrief: saveJobBriefInModal,
+          onToggleDoc: toggleJobDoc,
+          onDelete: deleteJobInModal,
+          onStart: startJobTimerInModal,
+          onStop: stopJobTimerInModal,
+          onAddTime: addJobTimeInModal,
+          onDeleteTime: deleteJobTimeInModal,
+          onExport: exportJobDeliveryInModal,
+          onClose: () => setModal(null),
+        })
+      : null,
     modal?.type === 'analysis'
       ? h(AnalysisModal, {
           t,

@@ -73,6 +73,24 @@ manual reload.
 
 ## Features
 
+### New in 1.2.0
+
+- **Jobs.** Group several documents under one job (client, due date, note). The
+  job panel lists its documents, progress, words, tracked time, and match
+  analysis; open it from the top bar or the command palette.
+- **Shared brief.** A job carries domain / audience / tone / notes /
+  do-not-translate / style sample; every document in it inherits the brief, the
+  document's own non-empty fields win, and chat, MT, and review all work from the
+  merged result.
+- **Shared TM and glossary.** Bind libraries to the job and its documents inherit
+  them; a document can still override or opt out, and the resources panel marks
+  what is inherited.
+- **Job analysis and delivery.** Compute match buckets for the whole job in one
+  pass, then export every document plus a combined analysis CSV, glossary, QA
+  CSV, notes, time CSV, and delivery note in a single ZIP.
+- **Time tracking.** A job-level stopwatch (one job at a time, keeps running
+  across restarts) plus manual entries.
+
 ### New in 1.1.7
 
 - **DOCX depth.** Table cells, headers, footers, footnotes, and endnotes are
