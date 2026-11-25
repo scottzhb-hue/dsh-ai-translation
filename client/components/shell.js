@@ -198,7 +198,6 @@ function Topbar({
   onPreTranslate,
   onOpenDelivery,
   onOpenBatch,
-  onOpenJobs,
   onOpenQuote,
   onCancelPreTranslate,
   onReplace,
@@ -210,7 +209,7 @@ function Topbar({
   const closedDocuments = (data.documents || []).filter((item) => !openIds.has(item.id))
   const documentsView = view === 'documents'
   const viewTabs = [
-    { id: 'documents', label: t('nav.documents') },
+    { id: 'projects', label: t('projects.title') },
     { id: 'libraries', label: t('nav.libraries') },
     { id: 'align', label: t('nav.align') },
   ]
@@ -248,6 +247,17 @@ function Topbar({
       ? h(
           'div',
           { className: 'cait-docbar' },
+          h(
+            'button',
+            {
+              type: 'button',
+              className: 'cait-doc-back',
+              title: t('projects.backToProject'),
+              onClick: () => onView('projects'),
+            },
+            h(Icon, { name: 'folder', size: 12 }),
+            h('span', null, doc?.projectName || t('projects.title')),
+          ),
           h(DocTabs, {
             t,
             documents: data.openDocuments || data.documents || [],
@@ -348,19 +358,6 @@ function Topbar({
             'button',
             {
               className: 'cait-btn',
-              onClick: onOpenJobs,
-              disabled: Boolean(busy),
-              title: t('jobs.open'),
-            },
-            h(Icon, { name: 'folder', size: 14 }),
-            h('span', { className: 'cait-btn-label' }, t('jobs.open')),
-          )
-        : null,
-      documentsView
-        ? h(
-            'button',
-            {
-              className: 'cait-btn',
               onClick: onOpenQuote,
               disabled: Boolean(busy) || !doc,
               title: t('quote.open'),
@@ -382,27 +379,23 @@ function Topbar({
             h('span', { className: 'cait-btn-label' }, t('replace.open')),
           )
         : null,
-      documentsView
-        ? h(
-            'button',
-            { className: 'cait-btn', onClick: onNew, disabled: Boolean(busy), title: t('nav.new') },
-            h(Icon, { name: 'plus', size: 14 }),
-            h('span', { className: 'cait-btn-label' }, t('nav.new')),
-          )
-        : null,
-      documentsView
-        ? h(
-            'button',
-            {
-              className: 'cait-btn',
-              onClick: onImport,
-              disabled: Boolean(busy),
-              title: t('nav.import'),
-            },
-            h(Icon, { name: 'download', size: 14 }),
-            h('span', { className: 'cait-btn-label' }, t('nav.import')),
-          )
-        : null,
+      h(
+        'button',
+        { className: 'cait-btn', onClick: onNew, disabled: Boolean(busy), title: t('nav.new') },
+        h(Icon, { name: 'plus', size: 14 }),
+        h('span', { className: 'cait-btn-label' }, t('nav.new')),
+      ),
+      h(
+        'button',
+        {
+          className: 'cait-btn',
+          onClick: onImport,
+          disabled: Boolean(busy),
+          title: t('nav.import'),
+        },
+        h(Icon, { name: 'download', size: 14 }),
+        h('span', { className: 'cait-btn-label' }, t('nav.import')),
+      ),
       documentsView
         ? h(
             'button',

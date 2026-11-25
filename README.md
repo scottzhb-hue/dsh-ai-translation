@@ -75,21 +75,28 @@ manual reload.
 
 ### New in 1.2.0
 
-- **Jobs.** Group several documents under one job (client, due date, note). The
-  job panel lists its documents, progress, words, tracked time, and match
-  analysis; open it from the top bar or the command palette.
-- **Shared brief.** A job carries domain / audience / tone / notes /
-  do-not-translate / style sample; every document in it inherits the brief, the
-  document's own non-empty fields win, and chat, MT, and review all work from the
-  merged result.
-- **Shared TM and glossary.** Bind libraries to the job and its documents inherit
-  them; a document can still override or opt out, and the resources panel marks
-  what is inherited.
-- **Job analysis and delivery.** Compute match buckets for the whole job in one
-  pass, then export every document plus a combined analysis CSV, glossary, QA
-  CSV, notes, time CSV, and delivery note in a single ZIP.
-- **Time tracking.** A job-level stopwatch (one job at a time, keeps running
-  across restarts) plus manual entries.
+- **Projects.** Group documents under one project (client, due date, note). The
+  plugin opens on the project view: the project list on the left, the selected
+  project on the right with its documents, four-state status and progress,
+  segments, words, tracked time, quote, and match analysis. Rename any project
+  at any time.
+- **Unfiled.** Documents without a project land in the built-in "Unfiled"
+  project. After a document is created or imported, a dialog asks where it
+  belongs: an existing project, a new one, or Unfiled.
+- **All documents.** A secondary tab lists documents across projects, filterable
+  by state (untranslated / incomplete / translated / done) and by name, with
+  report and re-assignment actions in each row.
+- **Shared brief, TM, and glossary.** A project carries the brief and the
+  library bindings; its documents inherit them, a document can still override or
+  opt out, and the resources panel marks what is inherited.
+- **Project analysis, quote, and reports.** One pass computes match buckets for
+  the whole project and turns them into a quote. Project and document reports
+  come as printable HTML and CSV with status, progress, matches, QA, time, and
+  the quote amount.
+- **Project delivery.** Export every document plus a combined analysis CSV,
+  glossary, QA CSV, notes, time CSV, and delivery note in a single ZIP.
+- **Time tracking.** A project-level stopwatch (one project at a time, keeps
+  running across restarts) plus manual entries.
 
 ### New in 1.1.7
 

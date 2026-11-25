@@ -201,7 +201,6 @@ var ZH_WORKFLOW = {
   "deliver.open": "交付",
   "deliver.title": "交付包",
   "deliver.hint": "交付前先看一遍下面这些检查项；确认无误后一次性打包下载（目标稿、双语稿、术语表、质检、分析、说明）。",
-  "deliver.jobHint": "本文档属于作业「{name}」；整批交付请用顶栏「作业」面板里的「导出作业交付包」。",
   "deliver.client": "客户",
   "deliver.batch": "批次",
   "deliver.blocking": "阻断",
@@ -270,64 +269,12 @@ var ZH_WORKFLOW = {
   "mtlocal.saved": "本地 MT 设置已保存。",
   "mtlocal.test": "测试连接",
   "mtlocal.testOk": "连接正常：{ms} ms · {model}",
-  "mtlocal.testFailed": "连接失败：{message}",
-  "jobs.open": "作业",
-  "jobs.title": "作业",
-  "jobs.hint": "把同一批交付的文档归到一个作业：共享 brief 与术语库/TM，按作业汇总分析、交付并记录工时。文档自己的设置优先于作业。",
-  "jobs.namePlaceholder": "新作业名称…",
-  "jobs.create": "新建作业",
-  "jobs.created": "作业已创建。",
-  "jobs.empty": "还没有作业。先建一个，再把文档勾进来。",
-  "jobs.pick": "从左边选一个作业，或新建一个。",
-  "jobs.fieldName": "作业名称",
-  "jobs.client": "客户",
-  "jobs.dueAt": "截止日期",
-  "jobs.overdue": "已过截止日期 {dueAt}，仍有未确认句段。",
-  "jobs.documents": "文档",
-  "jobs.segments": "句段",
-  "jobs.words": "字数",
-  "jobs.minutes": "分钟",
-  "jobs.analysis": "匹配分析",
-  "jobs.analysisValue": "TM 覆盖 {matched}%，新句段 {fresh} 段",
-  "jobs.note": "备注",
-  "jobs.brief": "作业级 brief",
-  "jobs.domain": "领域",
-  "jobs.audience": "读者",
-  "jobs.tone": "语调",
-  "jobs.notes": "说明",
-  "jobs.doNotTranslate": "不翻译词",
-  "jobs.styleSample": "风格样例",
-  "jobs.resources": "继承资源",
-  "jobs.tm": "翻译记忆库",
-  "jobs.glossary": "术语库",
-  "jobs.defaultTm": "默认写入库",
-  "jobs.inherit": "继承全局挂载",
-  "jobs.none": "不读任何库",
-  "jobs.auto": "自动",
-  "jobs.docs": "作业内文档",
-  "jobs.current": "当前",
-  "jobs.time": "工时",
-  "jobs.start": "开始计时",
-  "jobs.stop": "停止计时",
-  "jobs.running": "计时中",
-  "jobs.timeNote": "工时备注",
-  "jobs.addTime": "补记工时",
-  "jobs.delivery": "整包交付",
-  "jobs.delete": "删除作业",
-  "jobs.deleteConfirm": "确认删除作业",
-  "jobs.saveBrief": "保存 brief",
-  "jobs.export": "导出作业交付包",
-  "jobs.save": "保存作业",
-  "jobs.saved": "作业已保存。",
-  "jobs.briefSaved": "作业 brief 已保存。",
-  "jobs.exported": "作业交付包已导出：{entries} 个文件，跳过 {skipped} 项。",
-  "jobs.deleted": "作业已删除，{released} 篇文档已解除归属。"
+  "mtlocal.testFailed": "连接失败：{message}"
 };
 var EN_WORKFLOW = {
   "deliver.open": "Deliver",
   "deliver.title": "Delivery package",
   "deliver.hint": "Review the checks below, then download one package with the target DOCX, bilingual DOCX, glossary, QA, analysis and readme.",
-  "deliver.jobHint": 'This document belongs to job "{name}"; use "Export job delivery" in the Jobs panel to package the whole batch.',
   "deliver.client": "Client",
   "deliver.batch": "Batch",
   "deliver.blocking": "Blocking",
@@ -396,64 +343,12 @@ var EN_WORKFLOW = {
   "mtlocal.saved": "Local MT settings saved.",
   "mtlocal.test": "Test connection",
   "mtlocal.testOk": "Connected: {ms} ms · {model}",
-  "mtlocal.testFailed": "Connection failed: {message}",
-  "jobs.open": "Jobs",
-  "jobs.title": "Jobs",
-  "jobs.hint": "Group documents delivered together into one job: shared brief and TM/glossary, aggregated analysis, one delivery package, tracked time. Document settings win over job settings.",
-  "jobs.namePlaceholder": "New job name…",
-  "jobs.create": "Create job",
-  "jobs.created": "Job created.",
-  "jobs.empty": "No jobs yet. Create one, then tick the documents.",
-  "jobs.pick": "Pick a job on the left, or create one.",
-  "jobs.fieldName": "Job name",
-  "jobs.client": "Client",
-  "jobs.dueAt": "Due date",
-  "jobs.overdue": "Past due {dueAt} with unconfirmed segments.",
-  "jobs.documents": "Documents",
-  "jobs.segments": "Segments",
-  "jobs.words": "Words",
-  "jobs.minutes": "min",
-  "jobs.analysis": "Match analysis",
-  "jobs.analysisValue": "TM coverage {matched}%, {fresh} new segments",
-  "jobs.note": "Note",
-  "jobs.brief": "Job brief",
-  "jobs.domain": "Domain",
-  "jobs.audience": "Audience",
-  "jobs.tone": "Tone",
-  "jobs.notes": "Notes",
-  "jobs.doNotTranslate": "Do not translate",
-  "jobs.styleSample": "Style sample",
-  "jobs.resources": "Inherited resources",
-  "jobs.tm": "Translation memory",
-  "jobs.glossary": "Glossary",
-  "jobs.defaultTm": "Default write TM",
-  "jobs.inherit": "Inherit global mounts",
-  "jobs.none": "Read no library",
-  "jobs.auto": "Automatic",
-  "jobs.docs": "Documents in job",
-  "jobs.current": "current",
-  "jobs.time": "Time",
-  "jobs.start": "Start timer",
-  "jobs.stop": "Stop timer",
-  "jobs.running": "running",
-  "jobs.timeNote": "Time note",
-  "jobs.addTime": "Add time",
-  "jobs.delivery": "Package delivery",
-  "jobs.delete": "Delete job",
-  "jobs.deleteConfirm": "Confirm delete",
-  "jobs.saveBrief": "Save brief",
-  "jobs.export": "Export job package",
-  "jobs.save": "Save job",
-  "jobs.saved": "Job saved.",
-  "jobs.briefSaved": "Job brief saved.",
-  "jobs.exported": "Job package exported: {entries} files, {skipped} skipped.",
-  "jobs.deleted": "Job deleted; {released} documents released."
+  "mtlocal.testFailed": "Connection failed: {message}"
 };
 var JA_WORKFLOW = {
   "deliver.open": "納品",
   "deliver.title": "納品パッケージ",
   "deliver.hint": "下のチェックを確認してから、訳文稿・対訳稿・用語集・QA・分析・説明をまとめてダウンロードします。",
-  "deliver.jobHint": "このドキュメントはジョブ「{name}」に属しています。バッチ全体の納品は「ジョブ」パネルの「ジョブ納品パッケージを書き出す」から行います。",
   "deliver.client": "クライアント",
   "deliver.batch": "バッチ",
   "deliver.blocking": "要修正",
@@ -522,60 +417,293 @@ var JA_WORKFLOW = {
   "mtlocal.saved": "ローカル MT 設定を保存しました。",
   "mtlocal.test": "接続テスト",
   "mtlocal.testOk": "接続 OK：{ms} ms · {model}",
-  "mtlocal.testFailed": "接続失敗：{message}",
-  "jobs.open": "ジョブ",
-  "jobs.title": "ジョブ",
-  "jobs.hint": "同じ納品にまとめる文書を 1 つのジョブに：brief と TM/用語集を共有し、分析・納品・工数をまとめて扱います。文書側の設定が優先されます。",
-  "jobs.namePlaceholder": "新しいジョブ名…",
-  "jobs.create": "ジョブ作成",
-  "jobs.created": "ジョブを作成しました。",
-  "jobs.empty": "ジョブはまだありません。作成して文書を割り当ててください。",
-  "jobs.pick": "左からジョブを選ぶか、新規作成してください。",
-  "jobs.fieldName": "ジョブ名",
-  "jobs.client": "クライアント",
-  "jobs.dueAt": "納期",
-  "jobs.overdue": "納期 {dueAt} を過ぎています（未確定あり）。",
-  "jobs.documents": "文書",
-  "jobs.segments": "セグメント",
-  "jobs.words": "語数",
-  "jobs.minutes": "分",
-  "jobs.analysis": "マッチ分析",
-  "jobs.analysisValue": "TM カバー率 {matched}%、新規 {fresh} セグメント",
-  "jobs.note": "メモ",
-  "jobs.brief": "ジョブ brief",
-  "jobs.domain": "分野",
-  "jobs.audience": "読者",
-  "jobs.tone": "トーン",
-  "jobs.notes": "指示",
-  "jobs.doNotTranslate": "訳さない語",
-  "jobs.styleSample": "スタイル例",
-  "jobs.resources": "継承リソース",
-  "jobs.tm": "翻訳メモリ",
-  "jobs.glossary": "用語集",
-  "jobs.defaultTm": "既定の書き込み TM",
-  "jobs.inherit": "グローバル設定を継承",
-  "jobs.none": "ライブラリを読まない",
-  "jobs.auto": "自動",
-  "jobs.docs": "ジョブ内の文書",
-  "jobs.current": "現在",
-  "jobs.time": "工数",
-  "jobs.start": "計測開始",
-  "jobs.stop": "計測停止",
-  "jobs.running": "計測中",
-  "jobs.timeNote": "工数メモ",
-  "jobs.addTime": "工数を追加",
-  "jobs.delivery": "一括納品",
-  "jobs.delete": "ジョブ削除",
-  "jobs.deleteConfirm": "削除を確定",
-  "jobs.saveBrief": "brief を保存",
-  "jobs.export": "ジョブ納品パッケージ",
-  "jobs.save": "ジョブを保存",
-  "jobs.saved": "ジョブを保存しました。",
-  "jobs.briefSaved": "ジョブ brief を保存しました。",
-  "jobs.exported": "{entries} 件を書き出しました（{skipped} 件スキップ）。",
-  "jobs.deleted": "ジョブを削除し、{released} 件の文書を解除しました。"
+  "mtlocal.testFailed": "接続失敗：{message}"
 };
 var WORKFLOW_DICTS = { zh: ZH_WORKFLOW, en: EN_WORKFLOW, ja: JA_WORKFLOW };
+var ZH_PROJECTS = {
+  "projects.title": "项目",
+  "projects.backToProject": "← 项目",
+  "projects.hint": "同一批交付的文档放进一个项目：共享 brief 与术语库/TM，按项目汇总、交付、出报告并记录工时。文档自己的设置优先于项目。",
+  "projects.tabProjects": "项目",
+  "projects.tabDocs": "所有文档",
+  "projects.newPlaceholder": "新项目名称…",
+  "projects.empty": "还没有项目。先建一个，导入文档时再选归属。",
+  "projects.pick": "从左边选一个项目，或新建一个。",
+  "projects.detailHint": "点文档名开始翻译；状态与进度实时更新。",
+  "projects.inboxTag": "未分类",
+  "projects.inboxHint": "没有归属的文档都在这里。可以改名，也可以把文档移到别的项目。",
+  "projects.documents": "文档",
+  "projects.docsUnit": "篇",
+  "projects.segments": "句段",
+  "projects.words": "字数",
+  "projects.percent": "进度",
+  "projects.minutes": "分钟",
+  "projects.minutesUnit": "分钟",
+  "projects.completed": "已完成",
+  "projects.quote": "报价",
+  "projects.analysis": "匹配分析",
+  "projects.analysisValue": "TM 覆盖 {matched}%，新句段 {fresh} 段",
+  "projects.fieldName": "项目名称",
+  "projects.client": "客户",
+  "projects.dueAt": "截止日期",
+  "projects.overdue": "已过截止日期 {dueAt}，仍有未确认句段。",
+  "projects.overdueShort": "已超期",
+  "projects.save": "保存项目",
+  "projects.saved": "项目已保存。",
+  "projects.saveBrief": "保存 brief",
+  "projects.briefSaved": "项目 brief 已保存。",
+  "projects.export": "导出项目交付包",
+  "projects.exported": "项目交付包已导出：{entries} 个文件，跳过 {skipped} 项。",
+  "projects.delete": "删除项目",
+  "projects.deleteConfirm": "确认删除？文档会移到未分类",
+  "projects.deleted": "项目已删除，{released} 篇文档已移到未分类。",
+  "projects.docs": "文档",
+  "projects.docsHint": "每篇文档都可以单独出报告；交付包按项目整体打包。",
+  "projects.colDocument": "文档",
+  "projects.colProject": "项目",
+  "projects.colStatus": "状态",
+  "projects.colProgress": "进度",
+  "projects.colSegments": "句段",
+  "projects.colActions": "报告 / 移动",
+  "projects.noDocs": "这个项目还没有文档。导入文档时选它，或在下面把已有文档勾进来。",
+  "projects.noMatch": "没有符合条件的文档。",
+  "projects.moveOut": "移到未分类",
+  "projects.moveHint": "改归属",
+  "projects.addDocs": "把已有文档加进这个项目",
+  "projects.current": "当前",
+  "projects.brief": "项目 brief",
+  "projects.briefHint": "项目 brief 会作为默认值继承给每篇文档，文档自己的 brief 覆盖同名字段。",
+  "projects.domain": "领域",
+  "projects.audience": "读者",
+  "projects.tone": "语气",
+  "projects.notes": "备注",
+  "projects.doNotTranslate": "不译项",
+  "projects.styleSample": "风格样例",
+  "projects.resources": "共享资源",
+  "projects.tm": "翻译记忆库",
+  "projects.glossary": "术语库",
+  "projects.defaultTm": "默认写入库",
+  "projects.inherit": "继承全局挂载",
+  "projects.none": "不读任何库",
+  "projects.auto": "自动（取第一个）",
+  "projects.delivery": "交付内容",
+  "projects.time": "工时",
+  "projects.start": "开始计时",
+  "projects.stop": "停止计时",
+  "projects.running": "计时中",
+  "projects.timeNote": "这单做了什么…",
+  "projects.addTime": "补记",
+  "projects.report": "项目报告",
+  "projects.reportHtml": "HTML 报告",
+  "projects.reportCsv": "CSV 报告",
+  "projects.reportReady": "报告已生成。",
+  "projects.created": "项目已创建。",
+  "projects.statusAll": "全部",
+  "projects.statusDone": "已完成",
+  "projects.statusTranslated": "已翻译",
+  "projects.statusIncomplete": "未完成",
+  "projects.statusUntranslated": "未翻译",
+  "projects.search": "按文档名或项目名搜索…",
+  "projects.assignTitle": "这篇文档属于哪个项目？",
+  "projects.assignHint": "「{name}」已创建。选一个项目，或者先放未分类，之后随时可以移动。",
+  "projects.assignNew": "新建项目",
+  "projects.assignInbox": "放入未分类（之后可改名或转移）",
+  "projects.assign": "确定归属",
+  "projects.assigned": "文档已归入项目。",
+  "projects.moved": "文档已移动。",
+  "deliver.projectHint": "本文档属于项目「{name}」；整批交付请到「项目」页导出项目交付包。"
+};
+var EN_PROJECTS = {
+  "projects.title": "Projects",
+  "projects.backToProject": "← Projects",
+  "projects.hint": "Group documents delivered together into one project: shared brief and TM/glossary, aggregated analysis, one delivery package, reports and tracked time. Document settings win over project settings.",
+  "projects.tabProjects": "Projects",
+  "projects.tabDocs": "All documents",
+  "projects.newPlaceholder": "New project name…",
+  "projects.empty": "No projects yet. Create one, then pick it when you import documents.",
+  "projects.pick": "Pick a project on the left, or create one.",
+  "projects.detailHint": "Click a document name to start translating; status and progress update live.",
+  "projects.inboxTag": "Unfiled",
+  "projects.inboxHint": "Documents without a project land here. Rename it, or move documents to another project.",
+  "projects.documents": "Documents",
+  "projects.docsUnit": "docs",
+  "projects.segments": "Segments",
+  "projects.words": "Words",
+  "projects.percent": "Progress",
+  "projects.minutes": "min",
+  "projects.minutesUnit": "min",
+  "projects.completed": "Done",
+  "projects.quote": "Quote",
+  "projects.analysis": "Match analysis",
+  "projects.analysisValue": "TM coverage {matched}%, {fresh} new segments",
+  "projects.fieldName": "Project name",
+  "projects.client": "Client",
+  "projects.dueAt": "Due date",
+  "projects.overdue": "Past due {dueAt} with unconfirmed segments.",
+  "projects.overdueShort": "overdue",
+  "projects.save": "Save project",
+  "projects.saved": "Project saved.",
+  "projects.saveBrief": "Save brief",
+  "projects.briefSaved": "Project brief saved.",
+  "projects.export": "Export project delivery",
+  "projects.exported": "Project package exported: {entries} files, {skipped} skipped.",
+  "projects.delete": "Delete project",
+  "projects.deleteConfirm": "Delete? Documents move to Unfiled",
+  "projects.deleted": "Project deleted; {released} documents moved to Unfiled.",
+  "projects.docs": "Documents",
+  "projects.docsHint": "Each document can produce its own report; the delivery package covers the whole project.",
+  "projects.colDocument": "Document",
+  "projects.colProject": "Project",
+  "projects.colStatus": "Status",
+  "projects.colProgress": "Progress",
+  "projects.colSegments": "Segments",
+  "projects.colActions": "Report / move",
+  "projects.noDocs": "No documents yet. Pick this project when importing, or tick existing documents below.",
+  "projects.noMatch": "No documents match.",
+  "projects.moveOut": "Move to Unfiled",
+  "projects.moveHint": "Move to",
+  "projects.addDocs": "Add existing documents to this project",
+  "projects.current": "current",
+  "projects.brief": "Project brief",
+  "projects.briefHint": "The project brief is inherited by every document; a document brief overrides the same fields.",
+  "projects.domain": "Domain",
+  "projects.audience": "Audience",
+  "projects.tone": "Tone",
+  "projects.notes": "Notes",
+  "projects.doNotTranslate": "Do not translate",
+  "projects.styleSample": "Style sample",
+  "projects.resources": "Shared resources",
+  "projects.tm": "Translation memory",
+  "projects.glossary": "Glossary",
+  "projects.defaultTm": "Default write TM",
+  "projects.inherit": "Inherit mounted libraries",
+  "projects.none": "Read no library",
+  "projects.auto": "Auto (first one)",
+  "projects.delivery": "Delivery contents",
+  "projects.time": "Time",
+  "projects.start": "Start timer",
+  "projects.stop": "Stop timer",
+  "projects.running": "running",
+  "projects.timeNote": "What did you work on…",
+  "projects.addTime": "Add time",
+  "projects.report": "Project report",
+  "projects.reportHtml": "HTML report",
+  "projects.reportCsv": "CSV report",
+  "projects.reportReady": "Report generated.",
+  "projects.created": "Project created.",
+  "projects.statusAll": "All",
+  "projects.statusDone": "Done",
+  "projects.statusTranslated": "Translated",
+  "projects.statusIncomplete": "Incomplete",
+  "projects.statusUntranslated": "Untranslated",
+  "projects.search": "Search by document or project name…",
+  "projects.assignTitle": "Which project does this document belong to?",
+  "projects.assignHint": '"{name}" was created. Pick a project, or file it under Unfiled and move it later.',
+  "projects.assignNew": "New project",
+  "projects.assignInbox": "File under Unfiled (rename or move later)",
+  "projects.assign": "Assign",
+  "projects.assigned": "Document assigned to the project.",
+  "projects.moved": "Document moved.",
+  "deliver.projectHint": 'This document belongs to project "{name}"; use the Projects page to export the whole batch.'
+};
+var JA_PROJECTS = {
+  "projects.title": "プロジェクト",
+  "projects.backToProject": "← プロジェクト",
+  "projects.hint": "同じ納品分の文書を 1 つのプロジェクトにまとめます。ブリーフと TM/用語集を共有し、分析・納品・レポート・工数をプロジェクト単位で集計します。文書側の設定が優先されます。",
+  "projects.tabProjects": "プロジェクト",
+  "projects.tabDocs": "すべての文書",
+  "projects.newPlaceholder": "新しいプロジェクト名…",
+  "projects.empty": "プロジェクトがまだありません。作成してから文書を取り込みます。",
+  "projects.pick": "左からプロジェクトを選ぶか、新規作成してください。",
+  "projects.detailHint": "文書名をクリックすると翻訳を開始します。状態と進捗は自動更新されます。",
+  "projects.inboxTag": "未分類",
+  "projects.inboxHint": "所属のない文書はここに入ります。名前の変更や他のプロジェクトへの移動ができます。",
+  "projects.documents": "文書",
+  "projects.docsUnit": "件",
+  "projects.segments": "セグメント",
+  "projects.words": "語数",
+  "projects.percent": "進捗",
+  "projects.minutes": "分",
+  "projects.minutesUnit": "分",
+  "projects.completed": "完了",
+  "projects.quote": "見積",
+  "projects.analysis": "マッチ分析",
+  "projects.analysisValue": "TM カバー {matched}%、新規 {fresh} セグメント",
+  "projects.fieldName": "プロジェクト名",
+  "projects.client": "クライアント",
+  "projects.dueAt": "納期",
+  "projects.overdue": "納期 {dueAt} を過ぎていますが未確認のセグメントがあります。",
+  "projects.overdueShort": "期限超過",
+  "projects.save": "保存",
+  "projects.saved": "プロジェクトを保存しました。",
+  "projects.saveBrief": "ブリーフを保存",
+  "projects.briefSaved": "プロジェクトブリーフを保存しました。",
+  "projects.export": "プロジェクト納品を書き出す",
+  "projects.exported": "納品パッケージを書き出しました：{entries} ファイル、{skipped} 件スキップ。",
+  "projects.delete": "プロジェクトを削除",
+  "projects.deleteConfirm": "削除しますか？文書は未分類へ移動します",
+  "projects.deleted": "プロジェクトを削除しました。{released} 件の文書を未分類へ移動しました。",
+  "projects.docs": "文書",
+  "projects.docsHint": "文書ごとのレポートも出力できます。納品パッケージはプロジェクト全体をまとめます。",
+  "projects.colDocument": "文書",
+  "projects.colProject": "プロジェクト",
+  "projects.colStatus": "状態",
+  "projects.colProgress": "進捗",
+  "projects.colSegments": "セグメント",
+  "projects.colActions": "レポート / 移動",
+  "projects.noDocs": "文書がありません。取り込み時にこのプロジェクトを選ぶか、下の一覧から追加してください。",
+  "projects.noMatch": "条件に合う文書がありません。",
+  "projects.moveOut": "未分類へ移動",
+  "projects.moveHint": "移動先",
+  "projects.addDocs": "既存の文書をこのプロジェクトに追加",
+  "projects.current": "現在",
+  "projects.brief": "プロジェクトブリーフ",
+  "projects.briefHint": "プロジェクトブリーフは各文書に継承されます。文書側の同名項目が優先されます。",
+  "projects.domain": "分野",
+  "projects.audience": "読者",
+  "projects.tone": "トーン",
+  "projects.notes": "メモ",
+  "projects.doNotTranslate": "翻訳しない語",
+  "projects.styleSample": "スタイル例",
+  "projects.resources": "共有リソース",
+  "projects.tm": "翻訳メモリ",
+  "projects.glossary": "用語集",
+  "projects.defaultTm": "既定の書き込み TM",
+  "projects.inherit": "マウント済みを継承",
+  "projects.none": "どのライブラリも読まない",
+  "projects.auto": "自動（先頭）",
+  "projects.delivery": "納品内容",
+  "projects.time": "工数",
+  "projects.start": "計測開始",
+  "projects.stop": "計測停止",
+  "projects.running": "計測中",
+  "projects.timeNote": "何をしたか…",
+  "projects.addTime": "追記",
+  "projects.report": "プロジェクトレポート",
+  "projects.reportHtml": "HTML レポート",
+  "projects.reportCsv": "CSV レポート",
+  "projects.reportReady": "レポートを生成しました。",
+  "projects.created": "プロジェクトを作成しました。",
+  "projects.statusAll": "すべて",
+  "projects.statusDone": "完了",
+  "projects.statusTranslated": "翻訳済み",
+  "projects.statusIncomplete": "未完了",
+  "projects.statusUntranslated": "未翻訳",
+  "projects.search": "文書名・プロジェクト名で検索…",
+  "projects.assignTitle": "この文書はどのプロジェクトに属しますか？",
+  "projects.assignHint": "「{name}」を作成しました。プロジェクトを選ぶか、未分類に入れて後で移動できます。",
+  "projects.assignNew": "新しいプロジェクト",
+  "projects.assignInbox": "未分類に入れる（後で改名・移動可）",
+  "projects.assign": "決定",
+  "projects.assigned": "文書をプロジェクトに割り当てました。",
+  "projects.moved": "文書を移動しました。",
+  "deliver.projectHint": "この文書はプロジェクト「{name}」に属します。一括納品は「プロジェクト」画面から書き出してください。"
+};
+var PROJECT_DICTS = {
+  zh: ZH_PROJECTS,
+  en: EN_PROJECTS,
+  ja: JA_PROJECTS
+};
 
 // client/locales.js
 var ZH = {
@@ -857,7 +985,6 @@ var ZH = {
   "toast.exported": "文件已导出",
   "toast.copied": "已复制到剪贴板",
   "toast.mtReady": "译文建议已生成",
-  "nav.documents": "文档",
   "nav.libraries": "库",
   "library.title": "翻译记忆与术语库",
   "library.tmTab": "翻译记忆",
@@ -1272,7 +1399,6 @@ var EN = {
   "toast.exported": "File exported",
   "toast.copied": "Copied to clipboard",
   "toast.mtReady": "Suggestion ready",
-  "nav.documents": "Documents",
   "nav.libraries": "Libraries",
   "library.title": "Translation memory and glossary",
   "library.tmTab": "Translation memory",
@@ -1687,7 +1813,6 @@ var JA = {
   "toast.exported": "ファイルをエクスポートしました",
   "toast.copied": "クリップボードにコピーしました",
   "toast.mtReady": "訳文候補を生成しました",
-  "nav.documents": "文書",
   "nav.libraries": "ライブラリ",
   "library.title": "翻訳メモリと用語集",
   "library.tmTab": "翻訳メモリ",
@@ -2602,9 +2727,9 @@ var UI_LANGS = [
 ];
 var UI_LANG_CODES = UI_LANGS.map(([code]) => code);
 var UI_DICTS = {
-  zh: { ...ZH, ...WORKFLOW_DICTS.zh },
-  en: { ...EN, ...WORKFLOW_DICTS.en },
-  ja: { ...JA, ...WORKFLOW_DICTS.ja }
+  zh: { ...ZH, ...WORKFLOW_DICTS.zh, ...PROJECT_DICTS.zh },
+  en: { ...EN, ...WORKFLOW_DICTS.en, ...PROJECT_DICTS.en },
+  ja: { ...JA, ...WORKFLOW_DICTS.ja, ...PROJECT_DICTS.ja }
 };
 function interpolateText(text, vars) {
   if (!vars || typeof text !== "string" || text.indexOf("{") < 0) return text;
@@ -3270,26 +3395,58 @@ var CSS = `
 .cait-usage-row span{min-width:0;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .cait-usage-row em{flex:0 0 auto;font-style:normal;font-size:11px;color:var(--dsw-alias-label-secondary);white-space:nowrap}
 .cait-usage-empty{margin:0;font-size:12px;line-height:1.6;color:var(--dsw-alias-label-secondary)}
-.cait-job-layout{display:grid;grid-template-columns:minmax(0,220px) minmax(0,1fr);gap:10px;align-items:start}
-.cait-modal-wide:has(.cait-job-layout){width:min(960px,100%)}
-.cait-job-list{display:flex;flex-direction:column;gap:8px;min-width:0}
-.cait-job-list .cait-formrow{flex-direction:column}
-.cait-job-items{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:3px;max-height:44vh;overflow:auto}
-.cait-job-item{display:flex;flex-direction:column;gap:2px;width:100%;text-align:left;padding:6px 8px;border:1px solid transparent;border-radius:7px;background:transparent;color:var(--dsw-alias-label-primary)}
-.cait-job-item:hover{background:var(--dsw-alias-bg-layer-2)}
-.cait-job-item.is-active{border-color:color-mix(in srgb,var(--dsw-alias-brand-primary) 40%,transparent);background:color-mix(in srgb,var(--dsw-alias-brand-primary) 6%,transparent)}
-.cait-job-item-name{font-size:11.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.cait-job-item-meta{font-size:10px;color:var(--dsw-alias-label-secondary);font-variant-numeric:tabular-nums}
-.cait-job-detail{display:flex;flex-direction:column;gap:6px;min-width:0}
-.cait-job-detail .cait-formrow{flex-wrap:wrap}
-.cait-job-detail .cait-formrow .cait-field{flex:1 1 150px;margin-bottom:0}
+.cait-doc-back{flex:0 0 auto;display:inline-flex;align-items:center;gap:5px;height:26px;max-width:180px;padding:0 9px;border:1px solid var(--dsw-alias-border-l1);border-radius:7px;background:var(--dsw-alias-bg-layer-1);color:var(--dsw-alias-label-secondary);font-size:11px}
+.cait-doc-back:hover{background:var(--dsw-alias-bg-layer-2);color:var(--dsw-alias-label-primary)}
+.cait-doc-back span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cait-projpage{display:flex;flex-direction:column;gap:10px;height:100%;min-height:0;overflow:auto;padding:14px 18px 22px}
+.cait-proj-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.cait-proj-body{display:grid;grid-template-columns:minmax(0,236px) minmax(0,1fr);gap:12px;align-items:start}
+.cait-proj-list{display:flex;flex-direction:column;gap:8px;min-width:0}
+.cait-proj-new{display:flex;flex-direction:column;gap:6px}
+.cait-proj-items{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:3px;max-height:calc(100vh - 210px);overflow:auto}
+.cait-proj-item{display:flex;flex-direction:column;gap:2px;width:100%;text-align:left;padding:7px 9px;border:1px solid transparent;border-radius:8px;background:transparent;color:var(--dsw-alias-label-primary)}
+.cait-proj-item:hover{background:var(--dsw-alias-bg-layer-2)}
+.cait-proj-item.is-active{border-color:color-mix(in srgb,var(--dsw-alias-brand-primary) 40%,transparent);background:color-mix(in srgb,var(--dsw-alias-brand-primary) 6%,transparent)}
+.cait-proj-item-title{display:flex;align-items:center;gap:6px;min-width:0}
+.cait-proj-item-name{font-size:11.5px;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cait-proj-tag{flex:0 0 auto;padding:1px 6px;border-radius:999px;border:1px solid var(--dsw-alias-border-l1);font-size:9.5px;line-height:1.5;color:var(--dsw-alias-label-secondary)}
+.cait-proj-item-meta{font-size:10px;color:var(--dsw-alias-label-secondary);font-variant-numeric:tabular-nums}
+.cait-proj-detail{display:flex;flex-direction:column;gap:6px;min-width:0}
+.cait-proj-detail .cait-formrow{flex-wrap:wrap}
+.cait-proj-detail .cait-formrow .cait-field{flex:1 1 150px;margin-bottom:0}
+.cait-proj-detail-head{display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.cait-proj-title{display:flex;align-items:center;gap:6px;font-size:13.5px;font-weight:650}
+.cait-proj-head-actions,.cait-proj-actions{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.cait-proj-tablewrap{overflow:auto;border:1px solid var(--dsw-alias-border-l1);border-radius:8px}
+.cait-proj-tablewrap .cait-table{margin:0}
+.cait-proj-table td{vertical-align:middle}
+.cait-proj-bar{display:block;height:4px;width:110px;border-radius:3px;overflow:hidden;background:var(--dsw-alias-bg-layer-3);margin-bottom:2px}
+.cait-proj-bar span{display:block;height:100%;background:var(--dsw-alias-brand-primary);transition:width .2s ease}
+.cait-proj-rowactions{display:inline-flex;align-items:center;gap:4px}
+.cait-proj-status{display:inline-flex;align-items:center;padding:2px 7px;border-radius:999px;font-size:10px;line-height:1.5;white-space:nowrap;border:1px solid var(--dsw-alias-border-l1);color:var(--dsw-alias-label-secondary)}
+.cait-proj-status.is-done{color:var(--dsw-alias-state-success-primary);border-color:color-mix(in srgb,var(--dsw-alias-state-success-primary) 35%,transparent);background:color-mix(in srgb,var(--dsw-alias-state-success-primary) 10%,transparent)}
+.cait-proj-status.is-translated{color:var(--dsw-alias-state-info-primary);border-color:color-mix(in srgb,var(--dsw-alias-state-info-primary) 35%,transparent);background:color-mix(in srgb,var(--dsw-alias-state-info-primary) 10%,transparent)}
+.cait-proj-status.is-incomplete{color:var(--dsw-alias-state-warn-primary);border-color:color-mix(in srgb,var(--dsw-alias-state-warn-primary) 35%,transparent);background:color-mix(in srgb,var(--dsw-alias-state-warn-primary) 10%,transparent)}
+.cait-table{width:100%;border-collapse:collapse;font-size:11px;line-height:1.45}
+.cait-table th,.cait-table td{padding:5px 8px;border-bottom:1px solid var(--dsw-alias-border-l1);text-align:left;white-space:nowrap}
+.cait-table th{font-size:10px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;color:var(--dsw-alias-label-secondary);background:var(--dsw-alias-bg-layer-1)}
+.cait-table tbody tr:last-child td{border-bottom:0}
+.cait-table tr.is-current td{background:color-mix(in srgb,var(--dsw-alias-brand-primary) 4%,transparent)}
+.cait-checks{display:flex;flex-wrap:wrap;gap:6px 14px}
+.cait-check{display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--dsw-alias-label-primary)}
+.cait-proj-alldocs{display:flex;flex-direction:column;gap:8px;min-width:0}
+.cait-proj-toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.cait-proj-toolbar .cait-input{max-width:260px;height:26px}
+.cait-proj-movesel{height:24px;font-size:10.5px;max-width:130px}
+.cait-proj-addmore{margin:4px 0 0}
+.cait-proj-addmore summary{cursor:pointer;font-size:11.5px;color:var(--dsw-alias-label-secondary)}
+.cait-proj-picklist{display:flex;flex-direction:column;gap:4px;max-height:220px;overflow:auto;margin:8px 0}
 .cait-section-title{margin:8px 0 2px;font-size:10px;letter-spacing:.05em;text-transform:uppercase;color:var(--dsw-alias-label-secondary)}
 .cait-check-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px;max-height:180px;overflow:auto}
 .cait-check-list li{display:flex;align-items:center;gap:6px}
 .cait-time-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px;max-height:150px;overflow:auto;font-size:11px;color:var(--dsw-alias-label-secondary)}
 .cait-time-list li{display:flex;align-items:center;gap:6px;justify-content:space-between}
 .cait-field textarea.cait-input{height:auto;min-height:44px;resize:vertical}
-.cait-job-timer{justify-content:flex-start}
 @media(max-width:1180px){.cait-main{grid-template-columns:minmax(0,1fr) 308px}.cait-body{grid-template-columns:218px minmax(0,1fr)}.cait-editor-col{padding:18px 20px 34px}.cait-actions .cait-btn-label{display:none}.cait-actions .cait-btn{padding:0 8px}.cait-libpage-body{grid-template-columns:196px minmax(0,1fr) 264px}}
 @media(max-width:940px){.cait-topbar{flex-wrap:wrap}.cait-body{grid-template-columns:190px minmax(0,1fr)}.cait-main{grid-template-columns:minmax(0,1fr)}.cait-cat{border-left:0;border-top:1px solid var(--dsw-alias-border-l1);max-height:43%;min-height:210px}.cait-features{grid-template-columns:1fr}.cait-docbar{display:flex;order:3;flex:1 1 100%;padding:7px 0 0;border-left:0;border-top:1px solid var(--dsw-alias-border-l1)}}
 @media(max-width:700px){.cait-body{grid-template-columns:minmax(0,1fr)}.cait-rail{display:none}.cait-editor-col{padding:14px}.cait-topbar{padding:9px 10px}.cait-export-grid{grid-template-columns:1fr}}
@@ -4168,7 +4325,6 @@ function Topbar({
   onPreTranslate,
   onOpenDelivery,
   onOpenBatch,
-  onOpenJobs,
   onOpenQuote,
   onCancelPreTranslate,
   onReplace,
@@ -4180,7 +4336,7 @@ function Topbar({
   const closedDocuments = (data.documents || []).filter((item) => !openIds.has(item.id));
   const documentsView = view === "documents";
   const viewTabs = [
-    { id: "documents", label: t("nav.documents") },
+    { id: "projects", label: t("projects.title") },
     { id: "libraries", label: t("nav.libraries") },
     { id: "align", label: t("nav.align") }
   ];
@@ -4217,6 +4373,17 @@ function Topbar({
     documentsView ? h(
       "div",
       { className: "cait-docbar" },
+      h(
+        "button",
+        {
+          type: "button",
+          className: "cait-doc-back",
+          title: t("projects.backToProject"),
+          onClick: () => onView("projects")
+        },
+        h(Icon, { name: "folder", size: 12 }),
+        h("span", null, doc?.projectName || t("projects.title"))
+      ),
       h(DocTabs, {
         t,
         documents: data.openDocuments || data.documents || [],
@@ -4303,17 +4470,6 @@ function Topbar({
         "button",
         {
           className: "cait-btn",
-          onClick: onOpenJobs,
-          disabled: Boolean(busy),
-          title: t("jobs.open")
-        },
-        h(Icon, { name: "folder", size: 14 }),
-        h("span", { className: "cait-btn-label" }, t("jobs.open"))
-      ) : null,
-      documentsView ? h(
-        "button",
-        {
-          className: "cait-btn",
           onClick: onOpenQuote,
           disabled: Boolean(busy) || !doc,
           title: t("quote.open")
@@ -4332,13 +4488,13 @@ function Topbar({
         h(Icon, { name: "search", size: 14 }),
         h("span", { className: "cait-btn-label" }, t("replace.open"))
       ) : null,
-      documentsView ? h(
+      h(
         "button",
         { className: "cait-btn", onClick: onNew, disabled: Boolean(busy), title: t("nav.new") },
         h(Icon, { name: "plus", size: 14 }),
         h("span", { className: "cait-btn-label" }, t("nav.new"))
-      ) : null,
-      documentsView ? h(
+      ),
+      h(
         "button",
         {
           className: "cait-btn",
@@ -4348,7 +4504,7 @@ function Topbar({
         },
         h(Icon, { name: "download", size: 14 }),
         h("span", { className: "cait-btn-label" }, t("nav.import"))
-      ) : null,
+      ),
       documentsView ? h(
         "button",
         {
@@ -8919,7 +9075,7 @@ function AnalysisModal({ t, analysis, busy, onClose }) {
 }
 
 // client/components/workflow.js
-function DeliveryModal({ t, busy, checks, onRun, onClose, onJump, labels, onLabels, jobName }) {
+function DeliveryModal({ t, busy, checks, onRun, onClose, onJump, labels, onLabels, projectName }) {
   const [include, setInclude] = useState({
     target: true,
     bilingual: true,
@@ -8938,7 +9094,7 @@ function DeliveryModal({ t, busy, checks, onRun, onClose, onJump, labels, onLabe
     Modal,
     { title: t("deliver.title"), onClose, wide: true },
     h("p", { className: "cait-hint" }, t("deliver.hint")),
-    jobName ? h("p", { className: "cait-hint" }, t("deliver.jobHint", { name: jobName })) : null,
+    projectName ? h("p", { className: "cait-hint" }, t("deliver.projectHint", { name: projectName })) : null,
     h(
       "div",
       { className: "cait-formrow" },
@@ -9329,14 +9485,14 @@ function LocalMtModal({ t, busy, state, onSave, onTest, onClose }) {
   );
 }
 
-// client/components/jobs.js
+// client/components/projects.js
 var BRIEF_FIELDS = [
-  ["domain", "jobs.domain"],
-  ["audience", "jobs.audience"],
-  ["tone", "jobs.tone"],
-  ["notes", "jobs.notes"],
-  ["doNotTranslate", "jobs.doNotTranslate"],
-  ["styleSample", "jobs.styleSample"]
+  ["domain", "projects.domain"],
+  ["audience", "projects.audience"],
+  ["tone", "projects.tone"],
+  ["notes", "projects.notes"],
+  ["doNotTranslate", "projects.doNotTranslate"],
+  ["styleSample", "projects.styleSample"]
 ];
 var INCLUDE_KEYS = [
   ["target", "deliver.includeTarget"],
@@ -9347,6 +9503,13 @@ var INCLUDE_KEYS = [
   ["notes", "deliver.includeNotes"],
   ["readme", "deliver.includeReadme"]
 ];
+var STATUS_FILTERS = ["", "untranslated", "incomplete", "translated", "done"];
+var STATUS_LABEL = {
+  done: "projects.statusDone",
+  translated: "projects.statusTranslated",
+  incomplete: "projects.statusIncomplete",
+  untranslated: "projects.statusUntranslated"
+};
 function librarySelectValue(ids) {
   if (ids === null || ids === void 0) return "";
   if (!ids.length) return "__none__";
@@ -9357,13 +9520,779 @@ function librarySelectIds(value) {
   if (value === "__none__") return [];
   return [value];
 }
-function JobsModal({
+function statusChip(t, doc) {
+  const code = doc.status?.code ?? doc.status ?? "";
+  const label = doc.status?.label ?? doc.statusLabel ?? t(STATUS_LABEL[code] ?? "projects.statusUntranslated");
+  return h("span", { className: `cait-proj-status is-${code}` }, label);
+}
+function ProjectList({ t, busy, state, onSelect, onCreate, onProjectReport }) {
+  const projects = state?.list?.projects ?? [];
+  const active = state?.project?.id ?? "";
+  const [name, setName] = useState("");
+  return h(
+    "div",
+    { className: "cait-proj-list" },
+    h(
+      "div",
+      { className: "cait-proj-new" },
+      h("input", {
+        className: "cait-input",
+        placeholder: t("projects.newPlaceholder"),
+        value: name,
+        onChange: (event) => setName(event.target.value),
+        onKeyDown: (event) => {
+          if (event.key !== "Enter" || !name.trim()) return;
+          onCreate(name.trim()).then((created) => {
+            if (created) setName("");
+          });
+        }
+      }),
+      h(
+        "button",
+        {
+          type: "button",
+          className: "cait-btn cait-btn-primary",
+          disabled: Boolean(busy) || !name.trim(),
+          onClick: async () => {
+            const created = await onCreate(name.trim());
+            if (created) setName("");
+          }
+        },
+        h(Icon, { name: "plus", size: 13 })
+      )
+    ),
+    projects.length ? h(
+      "ul",
+      { className: "cait-proj-items" },
+      projects.map(
+        (project) => h(
+          "li",
+          { key: project.id },
+          h(
+            "button",
+            {
+              type: "button",
+              className: `cait-proj-item${project.id === active ? " is-active" : ""}${project.overdue ? " is-overdue" : ""}`,
+              onClick: () => onSelect(project.id)
+            },
+            h(
+              "span",
+              { className: "cait-proj-item-title" },
+              h("span", { className: "cait-proj-item-name" }, project.name),
+              project.inbox ? h("span", { className: "cait-proj-tag" }, t("projects.inboxTag")) : null
+            ),
+            h(
+              "span",
+              { className: "cait-proj-item-meta" },
+              `${project.documents} ${t("projects.docsUnit")} · ${project.percent ?? 0}%` + (project.running ? ` · ${t("projects.running")}` : "") + (project.overdue ? ` · ${t("projects.overdueShort")}` : "")
+            )
+          ),
+          h(
+            "button",
+            {
+              type: "button",
+              className: "cait-linkbtn cait-proj-report",
+              title: t("projects.report"),
+              onClick: () => onProjectReport(project.id)
+            },
+            h(Icon, { name: "chart", size: 12 })
+          )
+        )
+      )
+    ) : h("p", { className: "cait-hint" }, t("projects.empty"))
+  );
+}
+function ProjectDetail({
   t,
   busy,
   state,
   documents,
   libraries,
   docId,
+  onSave,
+  onBrief,
+  onToggleDoc,
+  onDelete,
+  onStart,
+  onStop,
+  onAddTime,
+  onDeleteTime,
+  onExport,
+  onOpenDoc,
+  onDocReport,
+  onProjectReport
+}) {
+  const project = state?.project ?? null;
+  const analysis = state?.analysis ?? null;
+  const projectId = project?.id ?? "";
+  const [fields, setFields] = useState({ name: "", client: "", dueAt: "", note: "" });
+  const [brief, setBrief] = useState({});
+  const [tmValue, setTmValue] = useState("");
+  const [glossaryValue, setGlossaryValue] = useState("");
+  const [defaultTm, setDefaultTm] = useState("");
+  const [include, setInclude] = useState({
+    target: true,
+    bilingual: true,
+    glossary: true,
+    qa: true,
+    analysis: true,
+    notes: false,
+    readme: true
+  });
+  const [minutes, setMinutes] = useState("30");
+  const [timeNote, setTimeNote] = useState("");
+  const [confirmDelete, setConfirmDelete] = useState(false);
+  useEffect(() => {
+    if (!project) return;
+    setFields({
+      name: project.name ?? "",
+      client: project.client ?? "",
+      dueAt: project.dueAt ?? "",
+      note: project.note ?? ""
+    });
+    setBrief(project.brief ? { ...project.brief } : {});
+    setTmValue(librarySelectValue(project.tmIds));
+    setGlossaryValue(librarySelectValue(project.glossaryIds));
+    setDefaultTm(project.defaultWriteTmId ?? "");
+    setConfirmDelete(false);
+  }, [projectId]);
+  if (!project) {
+    return h("div", { className: "cait-proj-detail" }, h("p", { className: "cait-hint" }, t("projects.pick")));
+  }
+  const tmLibraries = libraries?.tm ?? [];
+  const glossaryLibraries = libraries?.glossary ?? [];
+  const effectiveTm = project.resources?.effectiveTmIds ?? [];
+  const inbox = Boolean(project.inbox);
+  const docs = project.documents ?? [];
+  const patch = () => ({
+    name: fields.name,
+    client: fields.client,
+    dueAt: fields.dueAt,
+    note: fields.note,
+    tmIds: librarySelectIds(tmValue),
+    glossaryIds: librarySelectIds(glossaryValue),
+    defaultWriteTmId: defaultTm || null
+  });
+  const quoteTotal = state?.analysis?.quote?.total;
+  const currency = state?.analysis?.quote?.currency ?? "";
+  return h(
+    "div",
+    { className: "cait-proj-detail" },
+    h(
+      "div",
+      { className: "cait-proj-detail-head" },
+      h(
+        "div",
+        null,
+        h(
+          "h2",
+          { className: "cait-proj-title" },
+          project.name,
+          inbox ? h("span", { className: "cait-proj-tag" }, t("projects.inboxTag")) : null
+        ),
+        h(
+          "p",
+          { className: "cait-hint" },
+          inbox ? t("projects.inboxHint") : t("projects.detailHint")
+        )
+      ),
+      h(
+        "div",
+        { className: "cait-proj-head-actions" },
+        h(
+          "button",
+          {
+            type: "button",
+            className: "cait-btn",
+            disabled: Boolean(busy),
+            onClick: () => onProjectReport(projectId, "html")
+          },
+          h(Icon, { name: "file", size: 13 }),
+          h("span", null, t("projects.reportHtml"))
+        ),
+        h(
+          "button",
+          {
+            type: "button",
+            className: "cait-btn",
+            disabled: Boolean(busy),
+            onClick: () => onProjectReport(projectId, "csv")
+          },
+          h(Icon, { name: "download", size: 13 }),
+          h("span", null, t("projects.reportCsv"))
+        )
+      )
+    ),
+    h(
+      "div",
+      { className: "cait-formrow" },
+      h(
+        "label",
+        { className: "cait-field" },
+        h("span", null, t("projects.fieldName")),
+        h("input", {
+          className: "cait-input",
+          value: fields.name,
+          onChange: (event) => setFields({ ...fields, name: event.target.value })
+        })
+      ),
+      h(
+        "label",
+        { className: "cait-field" },
+        h("span", null, t("projects.client")),
+        h("input", {
+          className: "cait-input",
+          value: fields.client,
+          onChange: (event) => setFields({ ...fields, client: event.target.value })
+        })
+      ),
+      h(
+        "label",
+        { className: "cait-field" },
+        h("span", null, t("projects.dueAt")),
+        h("input", {
+          className: "cait-input",
+          type: "date",
+          value: fields.dueAt,
+          onChange: (event) => setFields({ ...fields, dueAt: event.target.value })
+        })
+      )
+    ),
+    project.overdue ? h("p", { className: "cait-hint is-danger" }, t("projects.overdue", { dueAt: project.dueAt })) : null,
+    h(
+      "div",
+      { className: "cait-chips" },
+      h("span", { className: "cait-chip" }, `${t("projects.documents")} ${project.documents}`),
+      h("span", { className: "cait-chip" }, `${t("projects.segments")} ${project.segments}`),
+      h("span", { className: "cait-chip" }, `${t("projects.words")} ${project.words}`),
+      h("span", { className: "cait-chip" }, `${t("projects.percent")} ${project.percent ?? 0}%`),
+      h("span", { className: "cait-chip" }, `${t("projects.minutes")} ${project.minutes ?? 0}`),
+      h(
+        "span",
+        { className: "cait-chip" },
+        `${t("projects.completed")} ${project.statusCounts?.done ?? 0}/${project.documents}`
+      ),
+      quoteTotal !== void 0 ? h(
+        "span",
+        { className: "cait-chip" },
+        `${t("projects.quote")} ${currency} ${Number(quoteTotal).toFixed(2)}`
+      ) : null
+    ),
+    analysis ? h(
+      "p",
+      { className: "cait-hint" },
+      `${t("projects.analysis")}：${t("projects.analysisValue", {
+        matched: Math.round(analysis.totals?.matchedPercent ?? 0),
+        fresh: analysis.totals?.buckets?.new ?? 0
+      })}`
+    ) : null,
+    h(
+      "div",
+      { className: "cait-proj-actions" },
+      h(
+        "button",
+        {
+          type: "button",
+          className: "cait-btn cait-btn-primary",
+          disabled: Boolean(busy),
+          onClick: () => onSave(patch())
+        },
+        busy ? h(Spinner, { size: 13 }) : h(Icon, { name: "save", size: 13 }),
+        h("span", null, t("projects.save"))
+      ),
+      h(
+        "button",
+        {
+          type: "button",
+          className: "cait-btn",
+          disabled: Boolean(busy),
+          onClick: () => onBrief(brief)
+        },
+        h(Icon, { name: "save", size: 13 }),
+        h("span", null, t("projects.saveBrief"))
+      ),
+      h(
+        "button",
+        {
+          type: "button",
+          className: "cait-btn",
+          disabled: Boolean(busy),
+          onClick: () => onExport(include)
+        },
+        h(Icon, { name: "download", size: 13 }),
+        h("span", null, t("projects.export"))
+      ),
+      inbox ? null : confirmDelete ? h(
+        "button",
+        {
+          type: "button",
+          className: "cait-btn is-danger",
+          disabled: Boolean(busy),
+          onClick: () => onDelete()
+        },
+        t("projects.deleteConfirm")
+      ) : h(
+        "button",
+        {
+          type: "button",
+          className: "cait-btn",
+          disabled: Boolean(busy),
+          onClick: () => setConfirmDelete(true)
+        },
+        h(Icon, { name: "trash", size: 13 }),
+        h("span", null, t("projects.delete"))
+      )
+    ),
+    h("h4", { className: "cait-section-title" }, t("projects.docs")),
+    h("p", { className: "cait-hint" }, t("projects.docsHint")),
+    h(
+      "div",
+      { className: "cait-proj-tablewrap" },
+      h(
+        "table",
+        { className: "cait-table cait-proj-table" },
+        h(
+          "thead",
+          null,
+          h(
+            "tr",
+            null,
+            h("th", null, t("projects.colDocument")),
+            h("th", null, t("projects.colStatus")),
+            h("th", null, t("projects.colProgress")),
+            h("th", null, t("projects.colSegments")),
+            h("th", null, t("projects.colWords")),
+            h("th", null, t("projects.colActions"))
+          )
+        ),
+        h(
+          "tbody",
+          null,
+          docs.length ? docs.map(
+            (doc) => h(
+              "tr",
+              { key: doc.id, className: doc.id === docId ? "is-current" : "" },
+              h("td", null, h("button", {
+                type: "button",
+                className: "cait-linkbtn",
+                onClick: () => onOpenDoc(doc.id)
+              }, doc.name)),
+              h("td", null, statusChip(t, doc)),
+              h(
+                "td",
+                null,
+                h(
+                  "div",
+                  { className: "cait-proj-bar", title: `${doc.percent}%` },
+                  h("span", { style: { width: `${doc.percent}%` } })
+                ),
+                h("span", { className: "cait-hint" }, `${doc.percent}%`)
+              ),
+              h("td", null, doc.segments),
+              h("td", null, doc.words),
+              h(
+                "td",
+                null,
+                h(
+                  "span",
+                  { className: "cait-proj-rowactions" },
+                  h(
+                    "button",
+                    {
+                      type: "button",
+                      className: "cait-minibtn",
+                      title: t("projects.reportHtml"),
+                      onClick: () => onDocReport(doc.id, "html")
+                    },
+                    h(Icon, { name: "chart", size: 12 })
+                  ),
+                  h(
+                    "button",
+                    {
+                      type: "button",
+                      className: "cait-minibtn",
+                      title: t("projects.reportCsv"),
+                      onClick: () => onDocReport(doc.id, "csv")
+                    },
+                    h(Icon, { name: "download", size: 12 })
+                  ),
+                  h(
+                    "button",
+                    {
+                      type: "button",
+                      className: "cait-minibtn",
+                      title: t("projects.moveOut"),
+                      onClick: () => onToggleDoc(doc.id, false)
+                    },
+                    h(Icon, { name: "close", size: 12 })
+                  )
+                )
+              )
+            )
+          ) : h("tr", null, h("td", { colSpan: 6 }, h("span", { className: "cait-hint" }, t("projects.noDocs"))))
+        )
+      )
+    ),
+    (documents ?? []).length ? h(
+      "details",
+      { className: "cait-proj-addmore" },
+      h("summary", null, t("projects.addDocs")),
+      h(
+        "ul",
+        { className: "cait-check-list" },
+        (documents ?? []).map(
+          (item) => h(
+            "li",
+            { key: item.id },
+            h(
+              "label",
+              { className: "cait-check" },
+              h("input", {
+                type: "checkbox",
+                checked: item.projectId === projectId,
+                onChange: (event) => onToggleDoc(item.id, event.target.checked)
+              }),
+              h("span", null, `${item.name}${item.id === docId ? ` · ${t("projects.current")}` : ""}`)
+            ),
+            item.projectId && item.projectId !== projectId ? h("span", { className: "cait-hint" }, `→ ${item.projectName ?? ""}`) : null
+          )
+        )
+      )
+    ) : null,
+    h("h4", { className: "cait-section-title" }, t("projects.brief")),
+    h(
+      "p",
+      { className: "cait-hint" },
+      t("projects.briefHint")
+    ),
+    h(
+      "div",
+      { className: "cait-formrow" },
+      BRIEF_FIELDS.map(
+        ([field, label]) => h(
+          "label",
+          { key: field, className: "cait-field" },
+          h("span", null, t(label)),
+          field === "notes" || field === "doNotTranslate" || field === "styleSample" ? h("textarea", {
+            className: "cait-input",
+            rows: 2,
+            value: brief[field] ?? "",
+            onChange: (event) => setBrief({ ...brief, [field]: event.target.value })
+          }) : h("input", {
+            className: "cait-input",
+            value: brief[field] ?? "",
+            onChange: (event) => setBrief({ ...brief, [field]: event.target.value })
+          })
+        )
+      )
+    ),
+    h("h4", { className: "cait-section-title" }, t("projects.resources")),
+    h(
+      "div",
+      { className: "cait-formrow" },
+      h(
+        "label",
+        { className: "cait-field" },
+        h("span", null, t("projects.tm")),
+        h(
+          "select",
+          { className: "cait-input", value: tmValue, onChange: (event) => setTmValue(event.target.value) },
+          h("option", { value: "" }, t("projects.inherit")),
+          tmLibraries.map((lib) => h("option", { key: lib.tmId, value: lib.tmId }, lib.name)),
+          h("option", { value: "__none__" }, t("projects.none"))
+        )
+      ),
+      h(
+        "label",
+        { className: "cait-field" },
+        h("span", null, t("projects.glossary")),
+        h(
+          "select",
+          {
+            className: "cait-input",
+            value: glossaryValue,
+            onChange: (event) => setGlossaryValue(event.target.value)
+          },
+          h("option", { value: "" }, t("projects.inherit")),
+          glossaryLibraries.map(
+            (lib) => h("option", { key: lib.glossaryId, value: lib.glossaryId }, lib.name)
+          ),
+          h("option", { value: "__none__" }, t("projects.none"))
+        )
+      ),
+      h(
+        "label",
+        { className: "cait-field" },
+        h("span", null, t("projects.defaultTm")),
+        h(
+          "select",
+          {
+            className: "cait-input",
+            value: effectiveTm.includes(defaultTm) ? defaultTm : "",
+            onChange: (event) => setDefaultTm(event.target.value)
+          },
+          h("option", { value: "" }, t("projects.auto")),
+          effectiveTm.map((id) => {
+            const lib = tmLibraries.find((item) => item.tmId === id);
+            return h("option", { key: id, value: id }, lib?.name ?? id);
+          })
+        )
+      )
+    ),
+    h("h4", { className: "cait-section-title" }, t("projects.delivery")),
+    h(
+      "div",
+      { className: "cait-checks" },
+      INCLUDE_KEYS.map(
+        ([key, label]) => h(
+          "label",
+          { key, className: "cait-check" },
+          h("input", {
+            type: "checkbox",
+            checked: include[key],
+            onChange: () => setInclude({ ...include, [key]: !include[key] })
+          }),
+          h("span", null, t(label))
+        )
+      )
+    ),
+    h("h4", { className: "cait-section-title" }, t("projects.time")),
+    h(
+      "div",
+      { className: "cait-chips cait-proj-timer" },
+      h(
+        "button",
+        {
+          type: "button",
+          className: "cait-btn",
+          disabled: Boolean(busy) || project.running,
+          onClick: () => onStart()
+        },
+        h(Icon, { name: "play", size: 12 }),
+        h("span", null, t("projects.start"))
+      ),
+      h(
+        "button",
+        {
+          type: "button",
+          className: "cait-btn",
+          disabled: Boolean(busy) || !project.running,
+          onClick: () => onStop()
+        },
+        h(Icon, { name: "check", size: 12 }),
+        h("span", null, t("projects.stop"))
+      ),
+      h("span", { className: "cait-hint" }, project.running ? t("projects.running") : "")
+    ),
+    h(
+      "div",
+      { className: "cait-formrow" },
+      h("input", {
+        className: "cait-input",
+        style: { width: "80px" },
+        value: minutes,
+        onChange: (event) => setMinutes(event.target.value)
+      }),
+      h("input", {
+        className: "cait-input",
+        placeholder: t("projects.timeNote"),
+        value: timeNote,
+        onChange: (event) => setTimeNote(event.target.value)
+      }),
+      h(
+        "button",
+        {
+          type: "button",
+          className: "cait-btn",
+          disabled: Boolean(busy),
+          onClick: async () => {
+            const ok = await onAddTime(Number(minutes), timeNote);
+            if (ok) setTimeNote("");
+          }
+        },
+        t("projects.addTime")
+      )
+    ),
+    (project.time?.entries ?? []).length ? h(
+      "ul",
+      { className: "cait-time-list" },
+      project.time.entries.map(
+        (entry2) => h(
+          "li",
+          { key: entry2.id },
+          h(
+            "span",
+            null,
+            `${entry2.at.slice(0, 10)} · ${entry2.minutes} ${t("projects.minutesUnit")}${entry2.note ? ` · ${entry2.note}` : ""}`
+          ),
+          h(
+            "button",
+            { type: "button", className: "cait-linkbtn", onClick: () => onDeleteTime(entry2.id) },
+            h(Icon, { name: "trash", size: 12 })
+          )
+        )
+      )
+    ) : null
+  );
+}
+function AllDocuments({
+  t,
+  busy,
+  documents,
+  projects,
+  docId,
+  onOpenDoc,
+  onDocReport,
+  onMove,
+  onOpenProject
+}) {
+  const [filter, setFilter] = useState("");
+  const [query, setQuery] = useState("");
+  const rows = (documents ?? []).filter((doc) => {
+    const code = doc.status?.code ?? "";
+    if (filter && code !== filter) return false;
+    if (!query.trim()) return true;
+    const text = `${doc.name} ${doc.projectName ?? ""}`.toLowerCase();
+    return text.includes(query.trim().toLowerCase());
+  });
+  return h(
+    "div",
+    { className: "cait-proj-alldocs" },
+    h(
+      "div",
+      { className: "cait-proj-toolbar" },
+      h(
+        "div",
+        { className: "cait-chips" },
+        STATUS_FILTERS.map(
+          (code) => h(
+            "button",
+            {
+              key: code || "all",
+              type: "button",
+              className: `cait-chip${filter === code ? " is-active" : ""}`,
+              onClick: () => setFilter(code)
+            },
+            code ? t(STATUS_LABEL[code]) : t("projects.statusAll")
+          )
+        )
+      ),
+      h("input", {
+        className: "cait-input",
+        placeholder: t("projects.search"),
+        value: query,
+        onChange: (event) => setQuery(event.target.value)
+      })
+    ),
+    h(
+      "div",
+      { className: "cait-proj-tablewrap" },
+      h(
+        "table",
+        { className: "cait-table" },
+        h(
+          "thead",
+          null,
+          h(
+            "tr",
+            null,
+            h("th", null, t("projects.colDocument")),
+            h("th", null, t("projects.colProject")),
+            h("th", null, t("projects.colStatus")),
+            h("th", null, t("projects.colProgress")),
+            h("th", null, t("projects.colSegments")),
+            h("th", null, t("projects.colActions"))
+          )
+        ),
+        h(
+          "tbody",
+          null,
+          rows.length ? rows.map(
+            (doc) => h(
+              "tr",
+              { key: doc.id, className: doc.id === docId ? "is-current" : "" },
+              h(
+                "td",
+                null,
+                h(
+                  "button",
+                  { type: "button", className: "cait-linkbtn", onClick: () => onOpenDoc(doc.id) },
+                  doc.name
+                )
+              ),
+              h(
+                "td",
+                null,
+                h(
+                  "button",
+                  {
+                    type: "button",
+                    className: "cait-linkbtn",
+                    onClick: () => onOpenProject(doc.projectId)
+                  },
+                  doc.projectName || t("projects.inboxTag")
+                )
+              ),
+              h("td", null, statusChip(t, doc)),
+              h("td", null, `${doc.progress?.percent ?? 0}%`),
+              h("td", null, doc.progress?.total ?? 0),
+              h(
+                "td",
+                null,
+                h(
+                  "span",
+                  { className: "cait-proj-rowactions" },
+                  h(
+                    "button",
+                    {
+                      type: "button",
+                      className: "cait-minibtn",
+                      title: t("projects.reportHtml"),
+                      onClick: () => onDocReport(doc.id, "html")
+                    },
+                    h(Icon, { name: "chart", size: 12 })
+                  ),
+                  h(
+                    "button",
+                    {
+                      type: "button",
+                      className: "cait-minibtn",
+                      title: t("projects.reportCsv"),
+                      onClick: () => onDocReport(doc.id, "csv")
+                    },
+                    h(Icon, { name: "download", size: 12 })
+                  ),
+                  h("select", {
+                    className: "cait-proj-movesel",
+                    value: doc.projectId ?? "",
+                    title: t("projects.moveHint"),
+                    onChange: (event) => onMove(doc.id, event.target.value)
+                  }, (projects ?? []).map(
+                    (project) => h("option", { key: project.id, value: project.id }, project.name)
+                  ))
+                )
+              )
+            )
+          ) : h(
+            "tr",
+            null,
+            h("td", { colSpan: 6 }, h("span", { className: "cait-hint" }, t("projects.noMatch")))
+          )
+        )
+      )
+    )
+  );
+}
+function ProjectsPage({
+  t,
+  busy,
+  state,
+  documents,
+  libraries,
+  projects,
+  docId,
+  tab,
+  onTab,
   onSelect,
   onCreate,
   onSave,
@@ -9375,417 +10304,169 @@ function JobsModal({
   onAddTime,
   onDeleteTime,
   onExport,
-  onClose
+  onOpenDoc,
+  onReport,
+  onDocReport,
+  onMoveDoc
 }) {
-  const jobs = state?.jobs?.jobs ?? [];
-  const job = state?.job ?? null;
-  const analysis = state?.analysis ?? null;
-  const jobId = job?.id ?? "";
-  const [name, setName] = useState("");
-  const [fields, setFields] = useState({ name: "", client: "", dueAt: "", note: "" });
-  const [brief, setBrief] = useState({});
-  const [tmValue, setTmValue] = useState("");
-  const [glossaryValue, setGlossaryValue] = useState("");
-  const [defaultTm, setDefaultTm] = useState("");
-  const [include, setInclude] = useState({ target: true, bilingual: true, glossary: true, qa: true, analysis: true, notes: false, readme: true });
-  const [minutes, setMinutes] = useState("30");
-  const [timeNote, setTimeNote] = useState("");
-  const [confirmDelete, setConfirmDelete] = useState(false);
-  useEffect(() => {
-    if (!job) return;
-    setFields({
-      name: job.name ?? "",
-      client: job.client ?? "",
-      dueAt: job.dueAt ?? "",
-      note: job.note ?? ""
-    });
-    setBrief(job.brief ? { ...job.brief } : {});
-    setTmValue(librarySelectValue(job.tmIds));
-    setGlossaryValue(librarySelectValue(job.glossaryIds));
-    setDefaultTm(job.defaultWriteTmId ?? "");
-    setConfirmDelete(false);
-  }, [jobId]);
-  const tmLibraries = libraries?.tm ?? [];
-  const glossaryLibraries = libraries?.glossary ?? [];
-  const effectiveTm = job?.resources?.effectiveTmIds ?? [];
-  const patches = () => ({
-    name: fields.name,
-    client: fields.client,
-    dueAt: fields.dueAt,
-    note: fields.note,
-    tmIds: librarySelectIds(tmValue),
-    glossaryIds: librarySelectIds(glossaryValue),
-    defaultWriteTmId: defaultTm || null
-  });
+  const list = state?.list?.projects ?? projects ?? [];
+  const documentsCount = (documents ?? []).length;
   return h(
-    Modal,
-    { title: t("jobs.title"), onClose, wide: true },
-    h("p", { className: "cait-hint" }, t("jobs.hint")),
+    "div",
+    { className: "cait-projpage" },
     h(
       "div",
-      { className: "cait-job-layout" },
+      { className: "cait-proj-head" },
       h(
         "div",
-        { className: "cait-job-list" },
+        { className: "cait-libtabs" },
         h(
-          "div",
-          { className: "cait-formrow" },
-          h("input", {
-            className: "cait-input",
-            placeholder: t("jobs.namePlaceholder"),
-            value: name,
-            onChange: (event) => setName(event.target.value)
-          }),
-          h(
-            "button",
-            {
-              type: "button",
-              className: "cait-btn",
-              disabled: Boolean(busy) || !name.trim(),
-              onClick: async () => {
-                const created = await onCreate(name.trim());
-                if (created) setName("");
-              }
-            },
-            h(Icon, { name: "plus", size: 13 }),
-            h("span", null, t("jobs.create"))
-          )
+          "button",
+          {
+            type: "button",
+            className: `cait-libtabs-item${tab === "projects" ? " active" : ""}`,
+            onClick: () => onTab("projects")
+          },
+          t("projects.tabProjects"),
+          h("span", { className: "cait-libtabs-count" }, list.length)
         ),
-        jobs.length ? h(
-          "ul",
-          { className: "cait-job-items" },
-          jobs.map(
-            (item) => h(
-              "li",
-              { key: item.id },
-              h(
-                "button",
-                {
-                  type: "button",
-                  className: `cait-job-item${item.id === jobId ? " is-active" : ""}`,
-                  onClick: () => onSelect(item.id)
-                },
-                h("span", { className: "cait-job-item-name" }, item.name),
-                h(
-                  "span",
-                  { className: "cait-job-item-meta" },
-                  `${item.documents} · ${item.percent ?? 0}%` + (item.running ? ` · ${t("jobs.running")}` : "")
-                )
-              )
-            )
-          )
-        ) : h("p", { className: "cait-hint" }, t("jobs.empty"))
+        h(
+          "button",
+          {
+            type: "button",
+            className: `cait-libtabs-item${tab === "docs" ? " active" : ""}`,
+            onClick: () => onTab("docs")
+          },
+          t("projects.tabDocs"),
+          h("span", { className: "cait-libtabs-count" }, documentsCount)
+        )
       ),
-      job ? h(
-        "div",
-        { className: "cait-job-detail" },
-        h(
-          "div",
-          { className: "cait-formrow" },
-          h("label", { className: "cait-field" }, h("span", null, t("jobs.fieldName")), h("input", {
-            className: "cait-input",
-            value: fields.name,
-            onChange: (event) => setFields({ ...fields, name: event.target.value })
-          })),
-          h("label", { className: "cait-field" }, h("span", null, t("jobs.client")), h("input", {
-            className: "cait-input",
-            value: fields.client,
-            onChange: (event) => setFields({ ...fields, client: event.target.value })
-          })),
-          h("label", { className: "cait-field" }, h("span", null, t("jobs.dueAt")), h("input", {
-            className: "cait-input",
-            type: "date",
-            value: fields.dueAt,
-            onChange: (event) => setFields({ ...fields, dueAt: event.target.value })
-          }))
-        ),
-        job.overdue ? h("p", { className: "cait-hint is-danger" }, t("jobs.overdue", { dueAt: job.dueAt })) : null,
-        h(
-          "div",
-          { className: "cait-chips" },
-          h("span", { className: "cait-chip" }, `${t("jobs.documents")} ${job.documents}`),
-          h("span", { className: "cait-chip" }, `${t("jobs.segments")} ${job.segments}`),
-          h("span", { className: "cait-chip" }, `${t("jobs.words")} ${job.words}`),
-          h("span", { className: "cait-chip" }, `${job.percent ?? 0}%`),
-          h("span", { className: "cait-chip" }, `${t("jobs.minutes")} ${job.minutes ?? 0}`)
-        ),
-        analysis ? h(
-          "p",
-          { className: "cait-hint" },
-          `${t("jobs.analysis")}：${t("jobs.analysisValue", {
-            matched: Math.round(analysis.totals?.matchedPercent ?? 0),
-            fresh: analysis.totals?.buckets?.new ?? 0
-          })}`
-        ) : null,
+      h("span", { className: "cait-libhint" }, t("projects.hint"))
+    ),
+    tab === "docs" ? h(AllDocuments, {
+      t,
+      busy,
+      documents,
+      projects: list,
+      docId,
+      onOpenDoc,
+      onDocReport,
+      onOpenProject: onSelect,
+      onMove: onMoveDoc
+    }) : h(
+      "div",
+      { className: "cait-proj-body" },
+      h(ProjectList, {
+        t,
+        busy,
+        state,
+        onSelect,
+        onCreate,
+        onProjectReport: onReport
+      }),
+      h(ProjectDetail, {
+        t,
+        busy,
+        state,
+        documents,
+        libraries,
+        docId,
+        onSave,
+        onBrief,
+        onToggleDoc,
+        onDelete,
+        onStart,
+        onStop,
+        onAddTime,
+        onDeleteTime,
+        onExport,
+        onOpenDoc,
+        onDocReport,
+        onProjectReport: onReport
+      })
+    )
+  );
+}
+function ProjectPicker({ t, busy, pick, onPick, onClose }) {
+  const [projectId, setProjectId] = useState("");
+  const [newName, setNewName] = useState("");
+  const documentId = pick?.documentId ?? "";
+  useEffect(() => {
+    setProjectId("");
+    setNewName("");
+  }, [documentId]);
+  if (!pick) return null;
+  const projects = pick.projects ?? [];
+  return h(
+    Modal,
+    { title: t("projects.assignTitle"), onClose },
+    h("p", { className: "cait-hint" }, t("projects.assignHint", { name: pick.name ?? "" })),
+    h(
+      "ul",
+      { className: "cait-proj-picklist" },
+      h(
+        "li",
+        null,
         h(
           "label",
-          { className: "cait-field" },
-          h("span", null, t("jobs.note")),
-          h("textarea", {
-            className: "cait-input",
-            rows: 2,
-            value: fields.note,
-            onChange: (event) => setFields({ ...fields, note: event.target.value })
-          })
-        ),
-        h("h4", { className: "cait-section-title" }, t("jobs.brief")),
-        h(
-          "div",
-          { className: "cait-formrow" },
-          BRIEF_FIELDS.map(
-            ([field, label]) => h(
-              "label",
-              { key: field, className: "cait-field" },
-              h("span", null, t(label)),
-              field === "notes" || field === "doNotTranslate" || field === "styleSample" ? h("textarea", {
-                className: "cait-input",
-                rows: 2,
-                value: brief[field] ?? "",
-                onChange: (event) => setBrief({ ...brief, [field]: event.target.value })
-              }) : h("input", {
-                className: "cait-input",
-                value: brief[field] ?? "",
-                onChange: (event) => setBrief({ ...brief, [field]: event.target.value })
-              })
-            )
-          )
-        ),
-        h("h4", { className: "cait-section-title" }, t("jobs.resources")),
-        h(
-          "div",
-          { className: "cait-formrow" },
-          h(
-            "label",
-            { className: "cait-field" },
-            h("span", null, t("jobs.tm")),
-            h(
-              "select",
-              {
-                className: "cait-input",
-                value: tmValue,
-                onChange: (event) => setTmValue(event.target.value)
-              },
-              h("option", { value: "" }, t("jobs.inherit")),
-              tmLibraries.map(
-                (lib) => h("option", { key: lib.tmId, value: lib.tmId }, lib.name)
-              ),
-              h("option", { value: "__none__" }, t("jobs.none"))
-            )
-          ),
-          h(
-            "label",
-            { className: "cait-field" },
-            h("span", null, t("jobs.glossary")),
-            h(
-              "select",
-              {
-                className: "cait-input",
-                value: glossaryValue,
-                onChange: (event) => setGlossaryValue(event.target.value)
-              },
-              h("option", { value: "" }, t("jobs.inherit")),
-              glossaryLibraries.map(
-                (lib) => h("option", { key: lib.glossaryId, value: lib.glossaryId }, lib.name)
-              ),
-              h("option", { value: "__none__" }, t("jobs.none"))
-            )
-          ),
-          h(
-            "label",
-            { className: "cait-field" },
-            h("span", null, t("jobs.defaultTm")),
-            h(
-              "select",
-              {
-                className: "cait-input",
-                value: effectiveTm.includes(defaultTm) ? defaultTm : "",
-                onChange: (event) => setDefaultTm(event.target.value)
-              },
-              h("option", { value: "" }, t("jobs.auto")),
-              effectiveTm.map((id) => {
-                const lib = tmLibraries.find((item) => item.tmId === id);
-                return h("option", { key: id, value: id }, lib?.name ?? id);
-              })
-            )
-          )
-        ),
-        h("h4", { className: "cait-section-title" }, t("jobs.docs")),
-        h(
-          "ul",
-          { className: "cait-check-list" },
-          (documents ?? []).map(
-            (item) => h(
-              "li",
-              { key: item.id },
-              h(
-                "label",
-                { className: "cait-check" },
-                h("input", {
-                  type: "checkbox",
-                  checked: item.jobId === job.id,
-                  onChange: (event) => onToggleDoc(item.id, event.target.checked)
-                }),
-                h("span", null, `${item.name}${item.id === docId ? ` · ${t("jobs.current")}` : ""}`)
-              ),
-              item.jobId && item.jobId !== job.id ? h("span", { className: "cait-hint" }, `→ ${item.jobName ?? ""}`) : null
-            )
-          )
-        ),
-        h("h4", { className: "cait-section-title" }, t("jobs.time")),
-        h(
-          "div",
-          { className: "cait-chips cait-job-timer" },
-          h(
-            "button",
-            {
-              type: "button",
-              className: "cait-btn",
-              disabled: Boolean(busy) || job.running,
-              onClick: () => onStart()
-            },
-            h(Icon, { name: "play", size: 12 }),
-            h("span", null, t("jobs.start"))
-          ),
-          h(
-            "button",
-            {
-              type: "button",
-              className: "cait-btn",
-              disabled: Boolean(busy) || !job.running,
-              onClick: () => onStop()
-            },
-            h(Icon, { name: "check", size: 12 }),
-            h("span", null, t("jobs.stop"))
-          ),
-          h("span", { className: "cait-hint" }, job.running ? t("jobs.running") : "")
-        ),
-        h(
-          "div",
-          { className: "cait-formrow" },
+          { className: "cait-check" },
           h("input", {
-            className: "cait-input",
-            style: { width: "80px" },
-            value: minutes,
-            onChange: (event) => setMinutes(event.target.value)
+            type: "radio",
+            name: "project-pick",
+            checked: projectId === "",
+            onChange: () => setProjectId("")
           }),
-          h("input", {
-            className: "cait-input",
-            placeholder: t("jobs.timeNote"),
-            value: timeNote,
-            onChange: (event) => setTimeNote(event.target.value)
-          }),
+          h("span", null, t("projects.assignInbox"))
+        )
+      ),
+      projects.filter((project) => !project.inbox).map(
+        (project) => h(
+          "li",
+          { key: project.id },
           h(
-            "button",
-            {
-              type: "button",
-              className: "cait-btn",
-              disabled: Boolean(busy),
-              onClick: async () => {
-                const ok = await onAddTime(Number(minutes), timeNote);
-                if (ok) setTimeNote("");
-              }
-            },
-            t("jobs.addTime")
-          )
-        ),
-        (job.time?.entries ?? []).length ? h(
-          "ul",
-          { className: "cait-time-list" },
-          job.time.entries.map(
-            (entry2) => h(
-              "li",
-              { key: entry2.id },
-              h("span", null, `${entry2.at.slice(0, 10)} · ${entry2.minutes} ${t("jobs.minutes")}${entry2.note ? ` · ${entry2.note}` : ""}`),
-              h(
-                "button",
-                {
-                  type: "button",
-                  className: "cait-linkbtn",
-                  onClick: () => onDeleteTime(entry2.id)
-                },
-                h(Icon, { name: "trash", size: 12 })
-              )
-            )
-          )
-        ) : null,
-        h("h4", { className: "cait-section-title" }, t("jobs.delivery")),
-        h(
-          "div",
-          { className: "cait-checks" },
-          INCLUDE_KEYS.map(
-            ([key, label]) => h(
-              "label",
-              { key, className: "cait-check" },
-              h("input", {
-                type: "checkbox",
-                checked: include[key],
-                onChange: () => setInclude({ ...include, [key]: !include[key] })
-              }),
-              h("span", null, t(label))
-            )
-          )
-        ),
-        h(
-          "div",
-          { className: "cait-modal-actions" },
-          h(
-            "button",
-            { type: "button", className: "cait-btn", disabled: Boolean(busy), onClick: onClose },
-            t("panel.cancel")
-          ),
-          confirmDelete ? h(
-            "button",
-            {
-              type: "button",
-              className: "cait-btn is-danger",
-              disabled: Boolean(busy),
-              onClick: () => onDelete()
-            },
-            t("jobs.deleteConfirm")
-          ) : h(
-            "button",
-            {
-              type: "button",
-              className: "cait-btn",
-              disabled: Boolean(busy),
-              onClick: () => setConfirmDelete(true)
-            },
-            t("jobs.delete")
-          ),
-          h(
-            "button",
-            {
-              type: "button",
-              className: "cait-btn",
-              disabled: Boolean(busy),
-              onClick: () => onBrief(brief)
-            },
-            t("jobs.saveBrief")
-          ),
-          h(
-            "button",
-            {
-              type: "button",
-              className: "cait-btn",
-              disabled: Boolean(busy),
-              onClick: () => onExport(include)
-            },
-            h(Icon, { name: "download", size: 13 }),
-            h("span", null, t("jobs.export"))
-          ),
-          h(
-            "button",
-            {
-              type: "button",
-              className: "cait-btn cait-btn-primary",
-              disabled: Boolean(busy),
-              onClick: () => onSave(patches())
-            },
-            busy ? h(Spinner, { size: 13 }) : h(Icon, { name: "save", size: 13 }),
-            h("span", null, t("jobs.save"))
+            "label",
+            { className: "cait-check" },
+            h("input", {
+              type: "radio",
+              name: "project-pick",
+              checked: projectId === project.id,
+              onChange: () => setProjectId(project.id)
+            }),
+            h("span", null, `${project.name} · ${project.documents} ${t("projects.docsUnit")}`)
           )
         )
-      ) : h("div", { className: "cait-job-detail" }, h("p", { className: "cait-hint" }, t("jobs.pick")))
+      )
+    ),
+    h(
+      "label",
+      { className: "cait-field" },
+      h("span", null, t("projects.assignNew")),
+      h("input", {
+        className: "cait-input",
+        placeholder: t("projects.newPlaceholder"),
+        value: newName,
+        onChange: (event) => setNewName(event.target.value)
+      })
+    ),
+    h(
+      "div",
+      { className: "cait-modal-actions" },
+      h(
+        "button",
+        { type: "button", className: "cait-btn", onClick: onClose },
+        t("panel.cancel")
+      ),
+      h(
+        "button",
+        {
+          type: "button",
+          className: "cait-btn cait-btn-primary",
+          disabled: Boolean(busy),
+          onClick: () => onPick({ projectId, newName })
+        },
+        busy ? h(Spinner, { size: 13 }) : h(Icon, { name: "check", size: 13 }),
+        h("span", null, t("projects.assign"))
+      )
     )
   );
 }
@@ -9842,7 +10523,7 @@ function useWorkbenchController({ i18n, translate }) {
   const [tab, setTab] = useState("tm");
   const [railQuery, setRailQuery] = useState("");
   const [railFilter, setRailFilter] = useState("all");
-  const [view, setView] = useState("documents");
+  const [view, setView] = useState("projects");
   const [libSeed, setLibSeed] = useState(null);
   const openLibrary = (kind, query) => {
     setLibSeed({
@@ -10409,10 +11090,22 @@ function useWorkbenchController({ i18n, translate }) {
         });
       }
       adoptState(result.state);
-      const created = !result.reused;
-      setModal(created ? { type: "ai", mode: "brief" } : null);
-      if (result.reused) notify(t("toast.docAlreadyOpen"));
-      else importNotice(result, t("toast.imported"));
+      if (result.reused) {
+        setModal(null);
+        notify(t("toast.docAlreadyOpen"));
+        return;
+      }
+      importNotice(result, t("toast.imported"));
+      if (result.document?.id) {
+        setModal(null);
+        await openProjectPicker({
+          documentId: result.document.id,
+          name: result.document.name ?? "",
+          afterBrief: true
+        });
+      } else {
+        setModal({ type: "ai", mode: "brief" });
+      }
     } catch (error) {
       report(error);
     } finally {
@@ -10886,54 +11579,64 @@ function useWorkbenchController({ i18n, translate }) {
       setBusy("");
     }
   };
-  const [jobsState, setJobsState] = useState(null);
-  const flattenJobDetail = (detail2) => ({
-    ...detail2.job,
+  const [projectsState, setProjectsState] = useState(null);
+  const [projectPick, setProjectPick] = useState(null);
+  const flattenProjectDetail = (detail2) => ({
+    ...detail2.project,
     brief: detail2.brief,
     resources: detail2.resources,
     time: detail2.time
   });
-  const loadJobDetail = async (jobId) => {
+  const refreshProjectList = async () => {
+    const list = await rpc("projectsList");
+    setProjectsState((current) => ({ ...current ?? {}, list }));
+    return list;
+  };
+  const loadProjectDetail = async (projectId) => {
     const [detail2, analysis2] = await Promise.all([
-      rpc("jobDetail", { jobId }),
-      rpc("jobAnalysis", { jobId })
+      rpc("projectDetail", { projectId }),
+      rpc("projectAnalysis", { projectId })
     ]);
-    setJobsState((current) => ({
+    setProjectsState((current) => ({
       ...current ?? {},
-      job: flattenJobDetail(detail2),
+      project: flattenProjectDetail(detail2),
       analysis: analysis2
     }));
     return detail2;
   };
-  const openJobs = async (jobId) => {
-    setModal({ type: "jobs" });
+  const openProjects = async (projectId) => {
+    if (view !== "projects") setView("projects");
+    setBusy("projects");
     try {
-      const list = await rpc("jobsList");
-      setJobsState({ jobs: list, job: null });
-      const target = jobId || doc?.jobId || list.jobs[0]?.id;
-      if (target) await loadJobDetail(target);
-    } catch (error) {
-      report(error);
-    }
-  };
-  const selectJob = async (jobId) => {
-    setBusy("jobs");
-    try {
-      await loadJobDetail(jobId);
+      const list = await rpc("projectsList");
+      setProjectsState({ list, project: null });
+      const fallback = list.projects.find((item) => !item.inbox) ?? list.projects[0];
+      const target = projectId || doc?.projectId || fallback?.id;
+      if (target) await loadProjectDetail(target);
     } catch (error) {
       report(error);
     } finally {
       setBusy("");
     }
   };
-  const createJobInModal = async (name) => {
-    setBusy("jobs");
+  const selectProject = async (projectId) => {
+    setBusy("projects");
     try {
-      const result = await rpc("createJob", { name });
-      setJobsState({ jobs: result.jobs, job: null });
-      await loadJobDetail(result.job.id);
-      notify(t("jobs.created"));
-      return result.job;
+      await loadProjectDetail(projectId);
+    } catch (error) {
+      report(error);
+    } finally {
+      setBusy("");
+    }
+  };
+  const createProjectAction = async (name) => {
+    setBusy("projects");
+    try {
+      const result = await rpc("createProject", { name });
+      await refreshProjectList();
+      await loadProjectDetail(result.project.id);
+      notify(t("projects.created"));
+      return result.project;
     } catch (error) {
       report(error);
       return null;
@@ -10941,62 +11644,80 @@ function useWorkbenchController({ i18n, translate }) {
       setBusy("");
     }
   };
-  const saveJobInModal = async (patch) => {
-    const jobId = jobsState?.job?.id;
-    if (!jobId) return;
-    setBusy("jobs");
+  const saveProject = async (patch) => {
+    const projectId = projectsState?.project?.id;
+    if (!projectId) return;
+    setBusy("projects");
     try {
-      await rpc("updateJob", { jobId, ...patch });
-      await loadJobDetail(jobId);
-      notify(t("jobs.saved"));
+      const result = await rpc("updateProject", { projectId, ...patch });
+      setProjectsState((current) => ({ ...current ?? {}, list: result.projects }));
+      await loadProjectDetail(projectId);
+      notify(t("projects.saved"));
     } catch (error) {
       report(error);
     } finally {
       setBusy("");
     }
   };
-  const saveJobBriefInModal = async (brief) => {
-    const jobId = jobsState?.job?.id;
-    if (!jobId) return;
-    setBusy("jobs");
+  const saveProjectBrief = async (brief) => {
+    const projectId = projectsState?.project?.id;
+    if (!projectId) return;
+    setBusy("projects");
     try {
-      const result = await rpc("setJobBrief", { jobId, brief });
-      setJobsState((current) => ({ ...current ?? {}, jobs: result.jobs }));
-      await loadJobDetail(jobId);
-      notify(t("jobs.briefSaved"));
+      const result = await rpc("setProjectBrief", { projectId, brief });
+      setProjectsState((current) => ({ ...current ?? {}, list: result.projects }));
+      await loadProjectDetail(projectId);
+      notify(t("projects.briefSaved"));
     } catch (error) {
       report(error);
     } finally {
       setBusy("");
     }
   };
-  const toggleJobDoc = async (documentId, checked) => {
-    const jobId = jobsState?.job?.id;
-    if (!jobId) return;
-    setBusy("jobs");
+  const toggleProjectDoc = async (documentId, checked) => {
+    const projectId = projectsState?.project?.id;
+    if (!projectId) return;
+    setBusy("projects");
     try {
-      const result = await rpc("assignDocumentJob", {
+      const result = await rpc("assignDocumentProject", {
         documentId,
-        jobId: checked ? jobId : ""
+        projectId: checked ? projectId : ""
       });
       if (result?.state) replaceRemoteState(result.state);
-      await loadJobDetail(jobId);
+      await refreshProjectList();
+      await loadProjectDetail(projectId);
     } catch (error) {
       report(error);
     } finally {
       setBusy("");
     }
   };
-  const startJobTimerInModal = async () => {
-    const jobId = jobsState?.job?.id;
-    if (!jobId) return;
-    setBusy("jobs");
+  const assignDocToProject = async (documentId, projectId) => {
+    setBusy("projects");
     try {
-      const result = await rpc("startJobTimer", { jobId });
-      setJobsState((current) => ({
+      const result = await rpc("assignDocumentProject", { documentId, projectId });
+      if (result?.state) replaceRemoteState(result.state);
+      await refreshProjectList();
+      if (projectsState?.project?.id) await loadProjectDetail(projectsState.project.id);
+      notify(t("projects.moved"));
+      return true;
+    } catch (error) {
+      report(error);
+      return false;
+    } finally {
+      setBusy("");
+    }
+  };
+  const startProjectTimerAction = async () => {
+    const projectId = projectsState?.project?.id;
+    if (!projectId) return;
+    setBusy("projects");
+    try {
+      const result = await rpc("startProjectTimer", { projectId });
+      setProjectsState((current) => ({
         ...current ?? {},
-        jobs: result.jobs,
-        job: { ...current.job, running: true, time: result.time }
+        list: result.projects,
+        project: { ...current.project, running: true, time: result.time }
       }));
     } catch (error) {
       report(error);
@@ -11004,16 +11725,16 @@ function useWorkbenchController({ i18n, translate }) {
       setBusy("");
     }
   };
-  const stopJobTimerInModal = async () => {
-    const jobId = jobsState?.job?.id;
-    if (!jobId) return;
-    setBusy("jobs");
+  const stopProjectTimerAction = async () => {
+    const projectId = projectsState?.project?.id;
+    if (!projectId) return;
+    setBusy("projects");
     try {
-      const result = await rpc("stopJobTimer", { jobId });
-      setJobsState((current) => ({
+      const result = await rpc("stopProjectTimer", { projectId });
+      setProjectsState((current) => ({
         ...current ?? {},
-        jobs: result.jobs,
-        job: { ...current.job, running: false, time: result.time }
+        list: result.projects,
+        project: { ...current.project, running: false, time: result.time }
       }));
     } catch (error) {
       report(error);
@@ -11021,16 +11742,16 @@ function useWorkbenchController({ i18n, translate }) {
       setBusy("");
     }
   };
-  const addJobTimeInModal = async (minutes, note) => {
-    const jobId = jobsState?.job?.id;
-    if (!jobId) return false;
-    setBusy("jobs");
+  const addProjectTime = async (minutes, note) => {
+    const projectId = projectsState?.project?.id;
+    if (!projectId) return false;
+    setBusy("projects");
     try {
-      const result = await rpc("addTimeEntry", { jobId, minutes, note });
-      setJobsState((current) => ({
+      const result = await rpc("addTimeEntry", { projectId, minutes, note });
+      setProjectsState((current) => ({
         ...current ?? {},
-        jobs: result.jobs,
-        job: { ...current.job, time: result.time }
+        list: result.projects,
+        project: { ...current.project, time: result.time }
       }));
       return true;
     } catch (error) {
@@ -11040,16 +11761,16 @@ function useWorkbenchController({ i18n, translate }) {
       setBusy("");
     }
   };
-  const deleteJobTimeInModal = async (entryId) => {
-    const jobId = jobsState?.job?.id;
-    if (!jobId) return;
-    setBusy("jobs");
+  const deleteProjectTime = async (entryId) => {
+    const projectId = projectsState?.project?.id;
+    if (!projectId) return;
+    setBusy("projects");
     try {
-      const result = await rpc("deleteTimeEntry", { jobId, entryId });
-      setJobsState((current) => ({
+      const result = await rpc("deleteTimeEntry", { projectId, entryId });
+      setProjectsState((current) => ({
         ...current ?? {},
-        jobs: result.jobs,
-        job: { ...current.job, time: result.time }
+        list: result.projects,
+        project: { ...current.project, time: result.time }
       }));
     } catch (error) {
       report(error);
@@ -11057,15 +11778,15 @@ function useWorkbenchController({ i18n, translate }) {
       setBusy("");
     }
   };
-  const exportJobDeliveryInModal = async (include) => {
-    const jobId = jobsState?.job?.id;
-    if (!jobId) return;
-    setBusy("jobs");
+  const exportProjectDeliveryAction = async (include) => {
+    const projectId = projectsState?.project?.id;
+    if (!projectId) return;
+    setBusy("projects");
     try {
-      const result = await rpc("exportJobDelivery", { jobId, include });
+      const result = await rpc("exportProjectDelivery", { projectId, include });
       downloadFile(result.filename, decodeBase64(result.content), result.mime);
       notify(
-        t("jobs.exported", {
+        t("projects.exported", {
           entries: (result.entries || []).length,
           skipped: (result.skipped || []).length
         })
@@ -11076,15 +11797,77 @@ function useWorkbenchController({ i18n, translate }) {
       setBusy("");
     }
   };
-  const deleteJobInModal = async () => {
-    const jobId = jobsState?.job?.id;
-    if (!jobId) return;
-    setBusy("jobs");
+  const downloadProjectReport = async (projectId, format = "html") => {
+    const target = projectId || projectsState?.project?.id;
+    if (!target) return;
+    setBusy("projects");
     try {
-      const result = await rpc("deleteJob", { jobId, confirm: true });
+      const result = await rpc("projectReport", { projectId: target, format });
+      downloadFile(result.filename, result.content, result.mime);
+      notify(t("projects.reportReady"));
+    } catch (error) {
+      report(error);
+    } finally {
+      setBusy("");
+    }
+  };
+  const downloadDocumentReport = async (documentId, format = "html") => {
+    setBusy("report");
+    try {
+      const result = await rpc("documentReport", { documentId, format });
+      downloadFile(result.filename, result.content, result.mime);
+      notify(t("projects.reportReady"));
+    } catch (error) {
+      report(error);
+    } finally {
+      setBusy("");
+    }
+  };
+  const deleteProjectAction = async () => {
+    const projectId = projectsState?.project?.id;
+    if (!projectId) return;
+    setBusy("projects");
+    try {
+      const result = await rpc("deleteProject", { projectId, confirm: true });
       if (result?.state) replaceRemoteState(result.state);
-      notify(t("jobs.deleted", { released: (result.released || []).length }));
-      setModal(null);
+      notify(t("projects.deleted", { released: (result.released || []).length }));
+      const list = await rpc("projectsList");
+      setProjectsState({ list, project: null });
+      const fallback = list.projects[0];
+      if (fallback) await loadProjectDetail(fallback.id);
+    } catch (error) {
+      report(error);
+    } finally {
+      setBusy("");
+    }
+  };
+  const openProjectPicker = async ({ documentId, name, afterBrief = false }) => {
+    try {
+      const list = await rpc("projectsList");
+      setProjectPick({ documentId, name, afterBrief, projects: list.projects, newName: "" });
+    } catch (error) {
+      report(error);
+    }
+  };
+  const closeProjectPicker = () => setProjectPick(null);
+  const pickProject = async ({ projectId, newName }) => {
+    if (!projectPick) return;
+    setBusy("projects");
+    try {
+      let targetId = String(projectId ?? "");
+      if (!targetId && String(newName ?? "").trim()) {
+        const created = await rpc("createProject", { name: String(newName).trim() });
+        targetId = created.project.id;
+      }
+      const result = await rpc("assignDocumentProject", {
+        documentId: projectPick.documentId,
+        projectId: targetId
+      });
+      if (result?.state) replaceRemoteState(result.state);
+      const afterBrief = projectPick.afterBrief;
+      setProjectPick(null);
+      notify(t("projects.assigned"));
+      if (afterBrief) setModal({ type: "ai", mode: "brief" });
     } catch (error) {
       report(error);
     } finally {
@@ -12041,19 +12824,27 @@ function useWorkbenchController({ i18n, translate }) {
     openLocalMt,
     saveLocalMt,
     testLocalMt,
-    jobsState,
-    openJobs,
-    selectJob,
-    createJobInModal,
-    saveJobInModal,
-    saveJobBriefInModal,
-    toggleJobDoc,
-    startJobTimerInModal,
-    stopJobTimerInModal,
-    addJobTimeInModal,
-    deleteJobTimeInModal,
-    exportJobDeliveryInModal,
-    deleteJobInModal,
+    projectsState,
+    projectPick,
+    openProjects,
+    selectProject,
+    createProjectAction,
+    saveProject,
+    saveProjectBrief,
+    toggleProjectDoc,
+    assignDocToProject,
+    refreshProjectList,
+    startProjectTimerAction,
+    stopProjectTimerAction,
+    addProjectTime,
+    deleteProjectTime,
+    exportProjectDeliveryAction,
+    deleteProjectAction,
+    downloadProjectReport,
+    downloadDocumentReport,
+    openProjectPicker,
+    closeProjectPicker,
+    pickProject,
     exportLibraryTo,
     importLibraryTo,
     generateMt,
@@ -12227,19 +13018,27 @@ function Workbench({ i18n, translate }) {
     openLocalMt,
     saveLocalMt,
     testLocalMt,
-    jobsState,
-    openJobs,
-    selectJob,
-    createJobInModal,
-    saveJobInModal,
-    saveJobBriefInModal,
-    toggleJobDoc,
-    startJobTimerInModal,
-    stopJobTimerInModal,
-    addJobTimeInModal,
-    deleteJobTimeInModal,
-    exportJobDeliveryInModal,
-    deleteJobInModal,
+    projectsState,
+    projectPick,
+    openProjects,
+    selectProject,
+    createProjectAction,
+    saveProject,
+    saveProjectBrief,
+    toggleProjectDoc,
+    assignDocToProject,
+    refreshProjectList,
+    startProjectTimerAction,
+    stopProjectTimerAction,
+    addProjectTime,
+    deleteProjectTime,
+    exportProjectDeliveryAction,
+    deleteProjectAction,
+    downloadProjectReport,
+    downloadDocumentReport,
+    openProjectPicker,
+    closeProjectPicker,
+    pickProject,
     libraryIoOptions,
     exportLibraryTo,
     importLibraryTo,
@@ -12267,6 +13066,7 @@ function Workbench({ i18n, translate }) {
     saveTerm
   } = useWorkbenchController({ i18n, translate });
   const [aiQuick, setAiQuick] = useState("");
+  const [projectTab, setProjectTab] = useState("projects");
   const [libraryIo, setLibraryIo] = useState(null);
   const ioOptions = libraryIo ? libraryIoOptions(libraryIo.kind) : { libraries: [], libraryId: "" };
   if (loading) {
@@ -12391,7 +13191,7 @@ function Workbench({ i18n, translate }) {
     },
     { id: "batch", title: t("batch.open"), hint: "", docOnly: true, run: () => openBatch() },
     { id: "quote", title: t("quote.open"), hint: "", docOnly: true, run: () => openQuote() },
-    { id: "jobs", title: t("jobs.open"), hint: "", run: () => openJobs() },
+    { id: "projects", title: t("projects.title"), hint: "", run: () => setView("projects") },
     { id: "documents", title: t("cmd.documents"), hint: "", run: () => setView("documents") },
     { id: "libraries", title: t("cmd.libraries"), hint: "", run: () => setView("libraries") },
     { id: "align", title: t("cmd.align"), hint: "", run: () => setView("align") },
@@ -12430,13 +13230,41 @@ function Workbench({ i18n, translate }) {
       onCancelPreTranslate: cancelPreTranslate,
       onOpenDelivery: openDelivery,
       onOpenBatch: openBatch,
-      onOpenJobs: () => openJobs(),
       onOpenQuote: openQuote,
       onReplace: openReplace,
       view,
       onView: setView
     }),
     h(SaveBanner, { t, storage: data?.storage, stale, onRefresh: refreshState }),
+    view === "projects" ? h(ProjectsPage, {
+      t,
+      busy,
+      state: projectsState,
+      documents: data?.documents ?? [],
+      libraries: data?.libraries,
+      projects: data?.projects?.projects ?? [],
+      docId: doc?.id,
+      tab: projectTab,
+      onTab: setProjectTab,
+      onSelect: selectProject,
+      onCreate: createProjectAction,
+      onSave: saveProject,
+      onBrief: saveProjectBrief,
+      onToggleDoc: toggleProjectDoc,
+      onDelete: deleteProjectAction,
+      onStart: startProjectTimerAction,
+      onStop: stopProjectTimerAction,
+      onAddTime: addProjectTime,
+      onDeleteTime: deleteProjectTime,
+      onExport: exportProjectDeliveryAction,
+      onOpenDoc: (documentId) => {
+        openDocument(documentId);
+        setView("documents");
+      },
+      onReport: downloadProjectReport,
+      onDocReport: downloadDocumentReport,
+      onMoveDoc: assignDocToProject
+    }) : null,
     view === "libraries" ? h(LibraryPage, {
       t,
       data,
@@ -12696,7 +13524,7 @@ function Workbench({ i18n, translate }) {
       busy: Boolean(busy),
       checks: deliverChecks,
       labels: { client: doc?.client || "", batch: doc?.batch || "" },
-      jobName: doc?.jobName || "",
+      projectName: doc?.projectName || "",
       onRun: runDelivery,
       onJump: (index2) => chooseSegment(index2),
       onClose: () => setModal(null)
@@ -12729,26 +13557,6 @@ function Workbench({ i18n, translate }) {
       state: mtLocalConfig,
       onSave: saveLocalMt,
       onTest: testLocalMt,
-      onClose: () => setModal(null)
-    }) : null,
-    modal?.type === "jobs" ? h(JobsModal, {
-      t,
-      busy: Boolean(busy),
-      state: jobsState,
-      documents: data?.documents ?? [],
-      libraries: data?.libraries,
-      docId: doc?.id,
-      onSelect: selectJob,
-      onCreate: createJobInModal,
-      onSave: saveJobInModal,
-      onBrief: saveJobBriefInModal,
-      onToggleDoc: toggleJobDoc,
-      onDelete: deleteJobInModal,
-      onStart: startJobTimerInModal,
-      onStop: stopJobTimerInModal,
-      onAddTime: addJobTimeInModal,
-      onDeleteTime: deleteJobTimeInModal,
-      onExport: exportJobDeliveryInModal,
       onClose: () => setModal(null)
     }) : null,
     modal?.type === "analysis" ? h(AnalysisModal, {
@@ -12806,6 +13614,13 @@ function Workbench({ i18n, translate }) {
       onClose: () => setModal(null),
       onConfirm: runConfirm
     }) : null,
+    h(ProjectPicker, {
+      t,
+      busy,
+      pick: projectPick,
+      onPick: pickProject,
+      onClose: closeProjectPicker
+    }),
     toast ? h(Toast, { toast }) : null
   );
 }

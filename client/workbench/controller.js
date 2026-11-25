@@ -32,7 +32,7 @@ export function useWorkbenchController({ i18n, translate }) {
   const [railFilter, setRailFilter] = useState('all')
   // Two top-level workspaces: the translator's document and the library
   // manager. The latter needs no document, so it must not be a modal.
-  const [view, setView] = useState('documents')
+  const [view, setView] = useState('projects')
   // A seed carries the panel's search text into the library workspace.
   const [libSeed, setLibSeed] = useState(null)
 
@@ -681,10 +681,24 @@ export function useWorkbenchController({ i18n, translate }) {
         })
       }
       adoptState(result.state)
-      const created = !result.reused
-      setModal(created ? { type: 'ai', mode: 'brief' } : null)
-      if (result.reused) notify(t('toast.docAlreadyOpen'))
-      else importNotice(result, t('toast.imported'))
+      if (result.reused) {
+        setModal(null)
+        notify(t('toast.docAlreadyOpen'))
+        return
+      }
+      importNotice(result, t('toast.imported'))
+      // Every new document is filed into a project before translation starts,
+      // so the picker opens right here instead of leaving it to the user.
+      if (result.document?.id) {
+        setModal(null)
+        await openProjectPicker({
+          documentId: result.document.id,
+          name: result.document.name ?? '',
+          afterBrief: true,
+        })
+      } else {
+        setModal({ type: 'ai', mode: 'brief' })
+      }
     } catch (error) {
       report(error)
     } finally {
@@ -1198,45 +1212,45 @@ export function useWorkbenchController({ i18n, translate }) {
     }
   }
 
-  // —— 作业（job）层：多文件共享 brief 与库，按作业汇总与交付 ——
-  const [jobsState, setJobsState] = useState(null)
+  // —— 项目（project）层：多文件共享 brief 与库，按项目汇总、交付、出报告 ——
+  const [projectsState, setProjectsState] = useState(null)
+  const [projectPick, setProjectPick] = useState(null)
 
-  const flattenJobDetail = (detail) => ({
-    ...detail.job,
+  const flattenProjectDetail = (detail) => ({
+    ...detail.project,
     brief: detail.brief,
     resources: detail.resources,
     time: detail.time,
   })
 
-  const loadJobDetail = async (jobId) => {
+  const refreshProjectList = async () => {
+    const list = await rpc('projectsList')
+    setProjectsState((current) => ({ ...(current ?? {}), list }))
+    return list
+  }
+
+  const loadProjectDetail = async (projectId) => {
     const [detail, analysis] = await Promise.all([
-      rpc('jobDetail', { jobId }),
-      rpc('jobAnalysis', { jobId }),
+      rpc('projectDetail', { projectId }),
+      rpc('projectAnalysis', { projectId }),
     ])
-    setJobsState((current) => ({
+    setProjectsState((current) => ({
       ...(current ?? {}),
-      job: flattenJobDetail(detail),
+      project: flattenProjectDetail(detail),
       analysis,
     }))
     return detail
   }
 
-  const openJobs = async (jobId) => {
-    setModal({ type: 'jobs' })
+  const openProjects = async (projectId) => {
+    if (view !== 'projects') setView('projects')
+    setBusy('projects')
     try {
-      const list = await rpc('jobsList')
-      setJobsState({ jobs: list, job: null })
-      const target = jobId || doc?.jobId || list.jobs[0]?.id
-      if (target) await loadJobDetail(target)
-    } catch (error) {
-      report(error)
-    }
-  }
-
-  const selectJob = async (jobId) => {
-    setBusy('jobs')
-    try {
-      await loadJobDetail(jobId)
+      const list = await rpc('projectsList')
+      setProjectsState({ list, project: null })
+      const fallback = list.projects.find((item) => !item.inbox) ?? list.projects[0]
+      const target = projectId || doc?.projectId || fallback?.id
+      if (target) await loadProjectDetail(target)
     } catch (error) {
       report(error)
     } finally {
@@ -1244,14 +1258,25 @@ export function useWorkbenchController({ i18n, translate }) {
     }
   }
 
-  const createJobInModal = async (name) => {
-    setBusy('jobs')
+  const selectProject = async (projectId) => {
+    setBusy('projects')
     try {
-      const result = await rpc('createJob', { name })
-      setJobsState({ jobs: result.jobs, job: null })
-      await loadJobDetail(result.job.id)
-      notify(t('jobs.created'))
-      return result.job
+      await loadProjectDetail(projectId)
+    } catch (error) {
+      report(error)
+    } finally {
+      setBusy('')
+    }
+  }
+
+  const createProjectAction = async (name) => {
+    setBusy('projects')
+    try {
+      const result = await rpc('createProject', { name })
+      await refreshProjectList()
+      await loadProjectDetail(result.project.id)
+      notify(t('projects.created'))
+      return result.project
     } catch (error) {
       report(error)
       return null
@@ -1260,14 +1285,15 @@ export function useWorkbenchController({ i18n, translate }) {
     }
   }
 
-  const saveJobInModal = async (patch) => {
-    const jobId = jobsState?.job?.id
-    if (!jobId) return
-    setBusy('jobs')
+  const saveProject = async (patch) => {
+    const projectId = projectsState?.project?.id
+    if (!projectId) return
+    setBusy('projects')
     try {
-      await rpc('updateJob', { jobId, ...patch })
-      await loadJobDetail(jobId)
-      notify(t('jobs.saved'))
+      const result = await rpc('updateProject', { projectId, ...patch })
+      setProjectsState((current) => ({ ...(current ?? {}), list: result.projects }))
+      await loadProjectDetail(projectId)
+      notify(t('projects.saved'))
     } catch (error) {
       report(error)
     } finally {
@@ -1275,15 +1301,15 @@ export function useWorkbenchController({ i18n, translate }) {
     }
   }
 
-  const saveJobBriefInModal = async (brief) => {
-    const jobId = jobsState?.job?.id
-    if (!jobId) return
-    setBusy('jobs')
+  const saveProjectBrief = async (brief) => {
+    const projectId = projectsState?.project?.id
+    if (!projectId) return
+    setBusy('projects')
     try {
-      const result = await rpc('setJobBrief', { jobId, brief })
-      setJobsState((current) => ({ ...(current ?? {}), jobs: result.jobs }))
-      await loadJobDetail(jobId)
-      notify(t('jobs.briefSaved'))
+      const result = await rpc('setProjectBrief', { projectId, brief })
+      setProjectsState((current) => ({ ...(current ?? {}), list: result.projects }))
+      await loadProjectDetail(projectId)
+      notify(t('projects.briefSaved'))
     } catch (error) {
       report(error)
     } finally {
@@ -1291,17 +1317,19 @@ export function useWorkbenchController({ i18n, translate }) {
     }
   }
 
-  const toggleJobDoc = async (documentId, checked) => {
-    const jobId = jobsState?.job?.id
-    if (!jobId) return
-    setBusy('jobs')
+  /** Move one document in or out of the selected project (unchecked → 未分类). */
+  const toggleProjectDoc = async (documentId, checked) => {
+    const projectId = projectsState?.project?.id
+    if (!projectId) return
+    setBusy('projects')
     try {
-      const result = await rpc('assignDocumentJob', {
+      const result = await rpc('assignDocumentProject', {
         documentId,
-        jobId: checked ? jobId : '',
+        projectId: checked ? projectId : '',
       })
       if (result?.state) replaceRemoteState(result.state)
-      await loadJobDetail(jobId)
+      await refreshProjectList()
+      await loadProjectDetail(projectId)
     } catch (error) {
       report(error)
     } finally {
@@ -1309,16 +1337,33 @@ export function useWorkbenchController({ i18n, translate }) {
     }
   }
 
-  const startJobTimerInModal = async () => {
-    const jobId = jobsState?.job?.id
-    if (!jobId) return
-    setBusy('jobs')
+  const assignDocToProject = async (documentId, projectId) => {
+    setBusy('projects')
     try {
-      const result = await rpc('startJobTimer', { jobId })
-      setJobsState((current) => ({
+      const result = await rpc('assignDocumentProject', { documentId, projectId })
+      if (result?.state) replaceRemoteState(result.state)
+      await refreshProjectList()
+      if (projectsState?.project?.id) await loadProjectDetail(projectsState.project.id)
+      notify(t('projects.moved'))
+      return true
+    } catch (error) {
+      report(error)
+      return false
+    } finally {
+      setBusy('')
+    }
+  }
+
+  const startProjectTimerAction = async () => {
+    const projectId = projectsState?.project?.id
+    if (!projectId) return
+    setBusy('projects')
+    try {
+      const result = await rpc('startProjectTimer', { projectId })
+      setProjectsState((current) => ({
         ...(current ?? {}),
-        jobs: result.jobs,
-        job: { ...current.job, running: true, time: result.time },
+        list: result.projects,
+        project: { ...current.project, running: true, time: result.time },
       }))
     } catch (error) {
       report(error)
@@ -1327,16 +1372,16 @@ export function useWorkbenchController({ i18n, translate }) {
     }
   }
 
-  const stopJobTimerInModal = async () => {
-    const jobId = jobsState?.job?.id
-    if (!jobId) return
-    setBusy('jobs')
+  const stopProjectTimerAction = async () => {
+    const projectId = projectsState?.project?.id
+    if (!projectId) return
+    setBusy('projects')
     try {
-      const result = await rpc('stopJobTimer', { jobId })
-      setJobsState((current) => ({
+      const result = await rpc('stopProjectTimer', { projectId })
+      setProjectsState((current) => ({
         ...(current ?? {}),
-        jobs: result.jobs,
-        job: { ...current.job, running: false, time: result.time },
+        list: result.projects,
+        project: { ...current.project, running: false, time: result.time },
       }))
     } catch (error) {
       report(error)
@@ -1345,16 +1390,16 @@ export function useWorkbenchController({ i18n, translate }) {
     }
   }
 
-  const addJobTimeInModal = async (minutes, note) => {
-    const jobId = jobsState?.job?.id
-    if (!jobId) return false
-    setBusy('jobs')
+  const addProjectTime = async (minutes, note) => {
+    const projectId = projectsState?.project?.id
+    if (!projectId) return false
+    setBusy('projects')
     try {
-      const result = await rpc('addTimeEntry', { jobId, minutes, note })
-      setJobsState((current) => ({
+      const result = await rpc('addTimeEntry', { projectId, minutes, note })
+      setProjectsState((current) => ({
         ...(current ?? {}),
-        jobs: result.jobs,
-        job: { ...current.job, time: result.time },
+        list: result.projects,
+        project: { ...current.project, time: result.time },
       }))
       return true
     } catch (error) {
@@ -1365,16 +1410,16 @@ export function useWorkbenchController({ i18n, translate }) {
     }
   }
 
-  const deleteJobTimeInModal = async (entryId) => {
-    const jobId = jobsState?.job?.id
-    if (!jobId) return
-    setBusy('jobs')
+  const deleteProjectTime = async (entryId) => {
+    const projectId = projectsState?.project?.id
+    if (!projectId) return
+    setBusy('projects')
     try {
-      const result = await rpc('deleteTimeEntry', { jobId, entryId })
-      setJobsState((current) => ({
+      const result = await rpc('deleteTimeEntry', { projectId, entryId })
+      setProjectsState((current) => ({
         ...(current ?? {}),
-        jobs: result.jobs,
-        job: { ...current.job, time: result.time },
+        list: result.projects,
+        project: { ...current.project, time: result.time },
       }))
     } catch (error) {
       report(error)
@@ -1383,15 +1428,15 @@ export function useWorkbenchController({ i18n, translate }) {
     }
   }
 
-  const exportJobDeliveryInModal = async (include) => {
-    const jobId = jobsState?.job?.id
-    if (!jobId) return
-    setBusy('jobs')
+  const exportProjectDeliveryAction = async (include) => {
+    const projectId = projectsState?.project?.id
+    if (!projectId) return
+    setBusy('projects')
     try {
-      const result = await rpc('exportJobDelivery', { jobId, include })
+      const result = await rpc('exportProjectDelivery', { projectId, include })
       downloadFile(result.filename, decodeBase64(result.content), result.mime)
       notify(
-        t('jobs.exported', {
+        t('projects.exported', {
           entries: (result.entries || []).length,
           skipped: (result.skipped || []).length,
         }),
@@ -1403,15 +1448,86 @@ export function useWorkbenchController({ i18n, translate }) {
     }
   }
 
-  const deleteJobInModal = async () => {
-    const jobId = jobsState?.job?.id
-    if (!jobId) return
-    setBusy('jobs')
+  const downloadProjectReport = async (projectId, format = 'html') => {
+    const target = projectId || projectsState?.project?.id
+    if (!target) return
+    setBusy('projects')
     try {
-      const result = await rpc('deleteJob', { jobId, confirm: true })
+      const result = await rpc('projectReport', { projectId: target, format })
+      downloadFile(result.filename, result.content, result.mime)
+      notify(t('projects.reportReady'))
+    } catch (error) {
+      report(error)
+    } finally {
+      setBusy('')
+    }
+  }
+
+  const downloadDocumentReport = async (documentId, format = 'html') => {
+    setBusy('report')
+    try {
+      const result = await rpc('documentReport', { documentId, format })
+      downloadFile(result.filename, result.content, result.mime)
+      notify(t('projects.reportReady'))
+    } catch (error) {
+      report(error)
+    } finally {
+      setBusy('')
+    }
+  }
+
+  const deleteProjectAction = async () => {
+    const projectId = projectsState?.project?.id
+    if (!projectId) return
+    setBusy('projects')
+    try {
+      const result = await rpc('deleteProject', { projectId, confirm: true })
       if (result?.state) replaceRemoteState(result.state)
-      notify(t('jobs.deleted', { released: (result.released || []).length }))
-      setModal(null)
+      notify(t('projects.deleted', { released: (result.released || []).length }))
+      const list = await rpc('projectsList')
+      setProjectsState({ list, project: null })
+      const fallback = list.projects[0]
+      if (fallback) await loadProjectDetail(fallback.id)
+    } catch (error) {
+      report(error)
+    } finally {
+      setBusy('')
+    }
+  }
+
+  /**
+   * The project picker every new document goes through: pick an existing
+   * project, type a new name, or fall back to「未分类」and sort it out later.
+   */
+  const openProjectPicker = async ({ documentId, name, afterBrief = false }) => {
+    try {
+      const list = await rpc('projectsList')
+      setProjectPick({ documentId, name, afterBrief, projects: list.projects, newName: '' })
+    } catch (error) {
+      report(error)
+    }
+  }
+
+  const closeProjectPicker = () => setProjectPick(null)
+
+  const pickProject = async ({ projectId, newName }) => {
+    if (!projectPick) return
+    setBusy('projects')
+    try {
+      let targetId = String(projectId ?? '')
+      if (!targetId && String(newName ?? '').trim()) {
+        const created = await rpc('createProject', { name: String(newName).trim() })
+        targetId = created.project.id
+      }
+      const result = await rpc('assignDocumentProject', {
+        documentId: projectPick.documentId,
+        projectId: targetId,
+      })
+      if (result?.state) replaceRemoteState(result.state)
+      const afterBrief = projectPick.afterBrief
+      setProjectPick(null)
+      notify(t('projects.assigned'))
+      if (afterBrief) setModal({ type: 'ai', mode: 'brief' })
     } catch (error) {
       report(error)
     } finally {
@@ -2455,19 +2571,27 @@ export function useWorkbenchController({ i18n, translate }) {
     openLocalMt,
     saveLocalMt,
     testLocalMt,
-    jobsState,
-    openJobs,
-    selectJob,
-    createJobInModal,
-    saveJobInModal,
-    saveJobBriefInModal,
-    toggleJobDoc,
-    startJobTimerInModal,
-    stopJobTimerInModal,
-    addJobTimeInModal,
-    deleteJobTimeInModal,
-    exportJobDeliveryInModal,
-    deleteJobInModal,
+    projectsState,
+    projectPick,
+    openProjects,
+    selectProject,
+    createProjectAction,
+    saveProject,
+    saveProjectBrief,
+    toggleProjectDoc,
+    assignDocToProject,
+    refreshProjectList,
+    startProjectTimerAction,
+    stopProjectTimerAction,
+    addProjectTime,
+    deleteProjectTime,
+    exportProjectDeliveryAction,
+    deleteProjectAction,
+    downloadProjectReport,
+    downloadDocumentReport,
+    openProjectPicker,
+    closeProjectPicker,
+    pickProject,
     exportLibraryTo,
     importLibraryTo,
     generateMt,

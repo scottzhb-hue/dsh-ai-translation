@@ -35,7 +35,7 @@
 | 15 | 批量动作与筛选（待译 / 未确认 / 高风险 / 重复 / 新句段 / 模糊 / 锁定 / 批注） | 已上线 | `lib/batch.js`（新增） | `client/components/workflow.js`、`client/components/shell.js`、`client/workbench/controller.js` | 无（新模块） |
 | 16 | 本地 MT 端点（OpenAI 兼容，Key 存 `~/.dsh/cait`） | 已上线 | `lib/mt-local.js`（新增）、`lib/mt-translate.js`、`lib/settings.js` | `client/components/workflow.js`、`client/components/panels.js`、`client/workbench/controller.js` | 无（新模块） |
 | 17 | 报价单 + 译后编辑度量 + 项目/批次标签 | 已上线 | `lib/quote.js`（新增）、`lib/workflow.js`（新增）、`lib/segments.js`（记录 keepRatio）、`lib/settings.js`、`lib/document-view.js`、`lib/persistence.js` | `client/components/workflow.js`、`client/components/shell.js`、`client/workbench/controller.js` | 无（新模块） |
-| 18 | 作业（job）层：多文件共享 brief / TM / 术语库，作业级分析与交付，工时 | 已上线 | `lib/jobs.js`（新增）、`lib/libraries.js`、`lib/brief.js`、`lib/persistence.js`、`lib/limits.js`、`lib/api.js`、`lib/document-view.js`、`lib/ai-chat.js`、`lib/mt-translate.js`、`lib/review.js`、`lib/tools.js` | `client/components/jobs.js`（新增）、`client/components/workbench.js`、`client/components/shell.js`、`client/workbench/controller.js`、`client/locales-workflow.js`、`client/styles.js`、`client.js` | 无（新模块） |
+| 18 | 项目（project）层：多文件共享 brief / TM / 术语库，项目级分析、报价、报告与交付，工时 | 已上线 | `lib/projects.js`（新增）、`lib/quote.js`、`lib/analysis.js`、`lib/libraries.js`、`lib/brief.js`、`lib/persistence.js`、`lib/limits.js`、`lib/api.js`、`lib/document-view.js`、`lib/ai-chat.js`、`lib/mt-translate.js`、`lib/review.js`、`lib/tools.js`、`lib/documents.js`、`lib/store.js`、`lib/store-mixins.js` | `client/components/projects.js`（新增）、`client/components/workbench.js`、`client/components/shell.js`、`client/components/workflow.js`、`client/locales-workflow.js`、`client/locales.js`、`client/workbench/controller.js`、`client/styles.js` |
 
 ## 明细
 
@@ -173,21 +173,25 @@
   - `package.json` 的 `files` 增加 `"docs"`，否则 `npm pack` 不会带上这些文件。
 - **验证**：用 `@deepseek-ai/dsh-plugin-detail` 的 `localFiles` + `languageChain` + `readPackageDocument` 直读已装副本 —— `zh`/`zh-CN` → `docs/DETAIL.zh.md`（`origin=locale`）、`en` → `docs/DETAIL.md`、`ja` → `docs/DETAIL.ja.md`；`detailImage("docs/DETAIL.zh.md", "preview.svg")` → `{path:"docs/preview.svg", mediaType:"image/svg+xml"}`；`npm pack` 后 tarball 115 个文件（新增 4 个 docs 文件）。
 - **边界**：`meta.detail` 只影响详情页正文，标题与说明仍来自 `meta.title` / `meta.description`（说明里含一句向上游 CAIT 作者 Jovi Lecca 的致谢）；文档里不要写安装步骤（安装入口在页面上）；插图只放 README，避免详情页图片与文字争夺注意力。
-### 18 作业（job）层
+### 18 项目（project）层
 
-- **动机**：1.1.0 只给文档打了 `client` / `batch` 两个自由文本标签，批次汇总靠字符串匹配。结果同一批文件之间无法共享 brief 和术语库，报价要一篇篇算，交付也要一篇篇打包。
+- **动机**：1.1.0 只给文档打了 `client` / `batch` 两个自由文本标签，批次汇总靠字符串匹配。同一批文件之间无法共享 brief 与术语库，报价要一篇篇算，交付也要一篇篇打包，文档状态也没有统一口径。
 - **数据模型**：
-  - 新增实体 `job`（`lib/jobs.js`）：`{ id, name, client, dueAt, note, archivedAt, brief, tmIds, glossaryIds, defaultWriteTmId, time: { entries, since } }`，随 `store.json` 落在 `jobs` 数组里（`STORE_VERSION` 7 → 8）。
-  - 文档新增 `jobId`；资源继承链 `mounts → job → doc`，`doc.tmIds` 为 `null` 时先看作业，再回退全局挂载，因此旧数据不需要迁移。
-  - `lib/libraries.js`：新增 `effectiveTmBinding` / `effectiveGlossaryBinding`（返回 `{ source: 'document'|'job'|'mounts', ids }`），`documentResourcesView` 多回 `tmSource` / `glossarySource` / `jobId`。
-  - `lib/brief.js`：`mergeBriefs(jobBrief, docBrief)` 以作业为底、文档非空字段覆盖；`briefForDocument(doc)` 成为 AI 对话、MT、审校取 brief 的唯一入口。
-- **接口**：`lib/jobs.js` 提供 24 个方法（createJob / updateJob / deleteJob / listJobs / jobDetail / jobSummary / assignDocumentJob / assignJobDocuments / jobAnalysis / jobTime / startJobTimer / stopJobTimer / addTimeEntry / deleteTimeEntry / exportJobDelivery / getJobBrief / setJobBrief 等），`lib/api.js` 同步登记 handler 与 `MUTATIONS`。
-  - `jobAnalysis` 逐文档复用 `analyzeDocument` 求和，给出整批的 ICE / 精确 / 模糊 / 新句段分布。
-  - `exportJobDelivery` 打包每篇文档的目标稿与双语稿，外加合并的 `*.analysis.csv`、术语表、`*.qa.csv`、批注汇总、`*.time.csv` 与交付说明。
-  - 工时：`time.since` 是秒表起点（同一时间只跑一个作业），`time.entries` 是补记；重启后仍在走的秒表继续计时。
-- **客户端**：`client/components/jobs.js` 的左列切作业、右列编辑（名称 / 客户 / 截止 / 备注 / brief / 资源 / 文档清单 / 工时 / 交付选项）；顶栏「作业」按钮与命令面板都能打开。顺带修掉顶栏「交付 / 批量 / 报价」没有接点击处理的上游遗留问题。
-- **验证**：`_tmp/job-layer-test.mjs`（临时脚本）覆盖创建 / 归集 / brief 继承与覆盖 / 作业级 TM 继承与文档覆盖 / 秒表与补记 / 作业分析 / 作业交付包 / 重启后还原 / 删作业只解绑文档；`audit-workflow.mjs` 的作业段 43 项检查全部通过（脚本总计 116 项 PASS）。
-- **边界**：作业不删文档（删作业只解绑）；`jobAnalysis` 的 TM 查询随句段数线性增长，只在打开作业面板和打包时调用；作业级 TM 只影响该作业下的文档，全局挂载仍是默认值。
+  - 新增实体 `project`（`lib/projects.js`）：`{ id, name, client, dueAt, note, archivedAt, brief, tmIds, glossaryIds, defaultWriteTmId, time: { entries, since } }`，随 `store.json` 落在 `projects` 数组里。
+  - 文档新增 `projectId`；资源继承链 `mounts → project → doc`，`doc.tmIds` 为 `null` 时先看项目，再回退全局挂载，因此旧数据不需要迁移。
+  - 「未分类」（`project_inbox`）由 `ensureInboxProject()` 自动建立，无归属或悬空 `projectId` 的文档一律兜进来；它不可删除（`INBOX_PROJECT`），但可以改名。
+  - store 版本仍是 8：旧的 `jobs` / `jobId` 在 restore 时自动转成 `projects` / `projectId`。
+  - `lib/libraries.js`：`effectiveTmBinding` / `effectiveGlossaryBinding` 返回 `{ source: 'document'|'project'|'mounts', ids }`，`documentResourcesView` 多回 `tmSource` / `glossarySource` / `projectId`。
+  - `lib/brief.js`：`mergeBriefs(projectBrief, docBrief)` 以项目为底、文档非空字段覆盖；`briefForDocument(doc)` 成为 AI 对话、MT、审校取 brief 的唯一入口。
+- **状态与接口**：`documentStatus(doc)` 分四档——全部确认 `done`、全部有译文 `translated`、部分有译文 `incomplete`、其余 `untranslated`，进度 = 已确认 / 总句段。`lib/projects.js` 提供 30 个方法（createProject / updateProject / deleteProject / listProjects / projectDetail / assignDocumentProject / assignProjectDocuments / projectAnalysis / projectQuote / projectReport / documentReport / projectTime / exportProjectDelivery 等），`lib/api.js` 同步登记 handler 与 `MUTATIONS`。
+  - `projectAnalysis` 逐文档复用 `analyzeDocument` 求和，并顺手用汇总数字调 `quoteSummary` 出报价，不重查 TM；`projectQuote` 复用它。
+  - `projectReport` / `documentReport` 出 CSV（文档表 + TOTAL + `metric,value`，含 `quote_total`）和可打印 HTML（内联 CSS、KPI、状态表、匹配与报价、质检条目、工时），文件名 `*.report.csv|.html`。
+  - `exportProjectDelivery` 打包每篇文档的目标稿与双语稿，外加合并的 `*.analysis.csv`、术语表、`*.qa.csv`、批注汇总、`*.time.csv` 与交付说明。
+  - 工时：`time.since` 是秒表起点（同一时间只跑一个项目），`time.entries` 是补记；重启后仍在走的秒表继续计时。
+- **客户端**：`client/components/projects.js` 的 `ProjectsPage` 两栏（左项目列表、右项目详情：文档表、状态 chip 与进度条、项目级/文档级报告、brief、资源、工时、交付），次级标签「所有文档」提供跨项目四档筛选；`ProjectPicker` 在新建 / 导入文档后弹出选归属。顶栏标签改为 项目 / 术语库 / 对齐，从项目点开文档后文档栏左侧有返回按钮。顺带修掉顶栏「交付 / 批量 / 报价」没有接点击处理的上游遗留问题。
+- **验证**：`audit-workflow.mjs` 的项目段覆盖建项目 / 归集 / 未分类 / brief 继承 / TM 继承与覆盖 / 改名 / 四档状态 / 秒表与补记 / 分析与报价 / HTML+CSV 报告 / 交付 ZIP / 错误码 / 重启还原 / 删项目退回未分类，脚本总计 **137 项 PASS**。
+- **边界**：项目不删文档（删项目把文档退回未分类）；`projectAnalysis` 的 TM 查询随句段数线性增长，只在打开项目页、出报告和打包时调用；项目级 TM 只影响该项目下的文档，全局挂载仍是默认值。
+
 
 ## 维护与发布须知
 

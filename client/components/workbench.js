@@ -22,7 +22,7 @@ import {
   AnalysisModal,
 } from './dialogs.js'
 import { DeliveryModal, BatchModal, QuoteModal, LocalMtModal } from './workflow.js'
-import { JobsModal } from './jobs.js'
+import { ProjectsPage, ProjectPicker } from './projects.js'
 import { useWorkbenchController } from '../workbench/controller.js'
 import { UsageModal } from './usage.js'
 
@@ -170,19 +170,27 @@ function Workbench({ i18n, translate }) {
     openLocalMt,
     saveLocalMt,
     testLocalMt,
-    jobsState,
-    openJobs,
-    selectJob,
-    createJobInModal,
-    saveJobInModal,
-    saveJobBriefInModal,
-    toggleJobDoc,
-    startJobTimerInModal,
-    stopJobTimerInModal,
-    addJobTimeInModal,
-    deleteJobTimeInModal,
-    exportJobDeliveryInModal,
-    deleteJobInModal,
+    projectsState,
+    projectPick,
+    openProjects,
+    selectProject,
+    createProjectAction,
+    saveProject,
+    saveProjectBrief,
+    toggleProjectDoc,
+    assignDocToProject,
+    refreshProjectList,
+    startProjectTimerAction,
+    stopProjectTimerAction,
+    addProjectTime,
+    deleteProjectTime,
+    exportProjectDeliveryAction,
+    deleteProjectAction,
+    downloadProjectReport,
+    downloadDocumentReport,
+    openProjectPicker,
+    closeProjectPicker,
+    pickProject,
     libraryIoOptions,
     exportLibraryTo,
     importLibraryTo,
@@ -210,6 +218,7 @@ function Workbench({ i18n, translate }) {
     saveTerm,
   } = useWorkbenchController({ i18n, translate })
   const [aiQuick, setAiQuick] = useState('')
+  const [projectTab, setProjectTab] = useState('projects')
   const [libraryIo, setLibraryIo] = useState(null)
   const ioOptions = libraryIo ? libraryIoOptions(libraryIo.kind) : { libraries: [], libraryId: '' }
 
@@ -337,7 +346,7 @@ function Workbench({ i18n, translate }) {
     },
     { id: 'batch', title: t('batch.open'), hint: '', docOnly: true, run: () => openBatch() },
     { id: 'quote', title: t('quote.open'), hint: '', docOnly: true, run: () => openQuote() },
-    { id: 'jobs', title: t('jobs.open'), hint: '', run: () => openJobs() },
+    { id: 'projects', title: t('projects.title'), hint: '', run: () => setView('projects') },
     { id: 'documents', title: t('cmd.documents'), hint: '', run: () => setView('documents') },
     { id: 'libraries', title: t('cmd.libraries'), hint: '', run: () => setView('libraries') },
     { id: 'align', title: t('cmd.align'), hint: '', run: () => setView('align') },
@@ -378,13 +387,43 @@ function Workbench({ i18n, translate }) {
       onCancelPreTranslate: cancelPreTranslate,
       onOpenDelivery: openDelivery,
       onOpenBatch: openBatch,
-      onOpenJobs: () => openJobs(),
       onOpenQuote: openQuote,
       onReplace: openReplace,
       view,
       onView: setView,
     }),
     h(SaveBanner, { t, storage: data?.storage, stale, onRefresh: refreshState }),
+    view === 'projects'
+      ? h(ProjectsPage, {
+          t,
+          busy,
+          state: projectsState,
+          documents: data?.documents ?? [],
+          libraries: data?.libraries,
+          projects: data?.projects?.projects ?? [],
+          docId: doc?.id,
+          tab: projectTab,
+          onTab: setProjectTab,
+          onSelect: selectProject,
+          onCreate: createProjectAction,
+          onSave: saveProject,
+          onBrief: saveProjectBrief,
+          onToggleDoc: toggleProjectDoc,
+          onDelete: deleteProjectAction,
+          onStart: startProjectTimerAction,
+          onStop: stopProjectTimerAction,
+          onAddTime: addProjectTime,
+          onDeleteTime: deleteProjectTime,
+          onExport: exportProjectDeliveryAction,
+          onOpenDoc: (documentId) => {
+            openDocument(documentId)
+            setView('documents')
+          },
+          onReport: downloadProjectReport,
+          onDocReport: downloadDocumentReport,
+          onMoveDoc: assignDocToProject,
+        })
+      : null,
     view === 'libraries'
       ? h(LibraryPage, {
           t,
@@ -674,7 +713,7 @@ function Workbench({ i18n, translate }) {
               busy: Boolean(busy),
               checks: deliverChecks,
               labels: { client: doc?.client || '', batch: doc?.batch || '' },
-              jobName: doc?.jobName || '',
+              projectName: doc?.projectName || '',
               onRun: runDelivery,
               onJump: (index) => chooseSegment(index),
               onClose: () => setModal(null),
@@ -716,28 +755,6 @@ function Workbench({ i18n, translate }) {
               onClose: () => setModal(null),
             })
           : null,
-    modal?.type === 'jobs'
-      ? h(JobsModal, {
-          t,
-          busy: Boolean(busy),
-          state: jobsState,
-          documents: data?.documents ?? [],
-          libraries: data?.libraries,
-          docId: doc?.id,
-          onSelect: selectJob,
-          onCreate: createJobInModal,
-          onSave: saveJobInModal,
-          onBrief: saveJobBriefInModal,
-          onToggleDoc: toggleJobDoc,
-          onDelete: deleteJobInModal,
-          onStart: startJobTimerInModal,
-          onStop: stopJobTimerInModal,
-          onAddTime: addJobTimeInModal,
-          onDeleteTime: deleteJobTimeInModal,
-          onExport: exportJobDeliveryInModal,
-          onClose: () => setModal(null),
-        })
-      : null,
     modal?.type === 'analysis'
       ? h(AnalysisModal, {
           t,
@@ -809,6 +826,13 @@ function Workbench({ i18n, translate }) {
           onConfirm: runConfirm,
         })
       : null,
+    h(ProjectPicker, {
+      t,
+      busy,
+      pick: projectPick,
+      onPick: pickProject,
+      onClose: closeProjectPicker,
+    }),
     toast ? h(Toast, { toast }) : null,
   )
 }

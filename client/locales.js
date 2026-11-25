@@ -1,4 +1,4 @@
-import { WORKFLOW_DICTS } from './locales-workflow.js'
+import { PROJECT_DICTS, WORKFLOW_DICTS } from './locales-workflow.js'
 
 const ZH = {
   'app.title': 'AI辅助翻译',
@@ -287,7 +287,6 @@ const ZH = {
   'toast.exported': '文件已导出',
   'toast.copied': '已复制到剪贴板',
   'toast.mtReady': '译文建议已生成',
-  'nav.documents': '文档',
   'nav.libraries': '库',
   'library.title': '翻译记忆与术语库',
   'library.tmTab': '翻译记忆',
@@ -731,7 +730,6 @@ const EN = {
   'toast.exported': 'File exported',
   'toast.copied': 'Copied to clipboard',
   'toast.mtReady': 'Suggestion ready',
-  'nav.documents': 'Documents',
   'nav.libraries': 'Libraries',
   'library.title': 'Translation memory and glossary',
   'library.tmTab': 'Translation memory',
@@ -1181,7 +1179,6 @@ const JA = {
   'toast.exported': 'ファイルをエクスポートしました',
   'toast.copied': 'クリップボードにコピーしました',
   'toast.mtReady': '訳文候補を生成しました',
-  'nav.documents': '文書',
   'nav.libraries': 'ライブラリ',
   'library.title': '翻訳メモリと用語集',
   'library.tmTab': '翻訳メモリ',
@@ -2130,9 +2127,9 @@ const UI_LANGS = [
 ]
 const UI_LANG_CODES = UI_LANGS.map(([code]) => code)
 const UI_DICTS = {
-  zh: { ...ZH, ...WORKFLOW_DICTS.zh },
-  en: { ...EN, ...WORKFLOW_DICTS.en },
-  ja: { ...JA, ...WORKFLOW_DICTS.ja },
+  zh: { ...ZH, ...WORKFLOW_DICTS.zh, ...PROJECT_DICTS.zh },
+  en: { ...EN, ...WORKFLOW_DICTS.en, ...PROJECT_DICTS.en },
+  ja: { ...JA, ...WORKFLOW_DICTS.ja, ...PROJECT_DICTS.ja },
 }
 
 function interpolateText(text, vars) {

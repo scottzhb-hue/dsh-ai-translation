@@ -10,7 +10,7 @@ import { Spinner, Icon, Modal } from './base.js'
 
 const SEVERITY_LABEL = { high: 'blocking', medium: 'review', low: 'notice' }
 
-function DeliveryModal({ t, busy, checks, onRun, onClose, onJump, labels, onLabels, jobName }) {
+function DeliveryModal({ t, busy, checks, onRun, onClose, onJump, labels, onLabels, projectName }) {
   const [include, setInclude] = useState({
     target: true,
     bilingual: true,
@@ -30,7 +30,9 @@ function DeliveryModal({ t, busy, checks, onRun, onClose, onJump, labels, onLabe
     Modal,
     { title: t('deliver.title'), onClose, wide: true },
     h('p', { className: 'cait-hint' }, t('deliver.hint')),
-    jobName ? h('p', { className: 'cait-hint' }, t('deliver.jobHint', { name: jobName })) : null,
+    projectName
+      ? h('p', { className: 'cait-hint' }, t('deliver.projectHint', { name: projectName }))
+      : null,
     h(
       'div',
       { className: 'cait-formrow' },
