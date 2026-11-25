@@ -7,6 +7,24 @@ All notable changes to CAIT are documented here. The project follows
 > 以下 `1.1.8` 及更早的条目属于上游 CAIT（作者 Jovi Lecca，Apache-2.0），
 > 保留原文以便溯源。本分支 `dsh-ai-translation` 从 `1.0.1` 起独立编号。
 
+## [1.1.0] - 2026-11-25
+
+以自由译员的实际动作为中心补完工作流：交付、批量、报价、本地 MT。
+
+### Added
+
+- 交付包：交付前一屏检查（空译 / 未确认 / 源文照抄 / 批注未关 / QA 高危），一键打包目标稿 DOCX、双语稿 DOCX、术语表 CSV、质检 CSV、分析 CSV、批注与交付说明为 ZIP。
+- 批量动作：按待译 / 未确认 / 高风险 / 重复 / 新句段 / 模糊匹配 / 已锁定 / 有批注筛选，批量确认、锁定、解锁、清空译文。
+- 本地 MT：可把翻译请求发到本机 OpenAI 兼容端点（LM Studio / Ollama / vLLM），带连接测试与超时；API Key 只存本机 ~/.dsh/cait。
+- 报价单：按匹配档位折扣（ICE / 100% / 85–99% / 70–84% / 新句段）计算金额，可导出 TXT / CSV / JSON。
+- 译后编辑投入：确认句段时记录 MT 建议的保留率，统计平均保留率与分布。
+- 项目 / 批次：给文档打客户与批次标签，按批次汇总进度与字数。
+
+### Changed
+
+- 客户端构建改为 node scripts/build-client.mjs 生成 client.js（模块 id 由 package.json 的 name 派生），不再手工镜像打包产物。
+- settings 新增 mtLocal / quote / postEdit 三组配置并按白名单还原；文档新增 client / batch 字段并随 store.json 持久化。
+
 ## [1.0.5] - 2026-11-24
 
 ### Added

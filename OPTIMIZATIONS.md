@@ -31,6 +31,10 @@
 | 11 | 旧版 Office 导入：`.doc` / `.xls` / `.ppt` 先经本机 Office 转 OOXML 再导入 | 已上线 | `lib/legacy-office.js`（新增）、`lib/file-ops.js`、`lib/import-file.js` | `client/components/forms.js`、`client/components/pages.js`、`client/locales.js`、`client.js` | 无（新模块，无覆盖式改动） |
 | 12 | 术语库导入/导出入口（术语面板 + 库页，选择器弹窗） | 已上线 | `lib/library-view.js`（`exportGlossary` + `defaultGlossaryFor`） | `client/components/panels.js`、`client/components/pages.js`、`client/components/workbench.js`、`client/workbench/controller.js`、`client/styles.js`、`client.js` | 无（仅新增入口与目标库解析，复用既有 RPC） |
 | 13 | 插件详情页本地化（docs/DETAIL*.md + meta.detail + 特性插图） | 已上线 | — | locale/{zh,en,ja}.json、docs/DETAIL.zh.md、docs/DETAIL.md、docs/DETAIL.ja.md、docs/preview.svg、package.json | 无（新增文件） |
+| 14 | 交付包与交付前检查（ZIP：目标稿 / 双语稿 / 术语表 / 质检 / 分析 / 说明） | 已上线 | `lib/deliver.js`（新增）、`lib/zip.js`（新增）、`lib/store-mixins.js`、`lib/api.js` | `client/components/workflow.js`（新增）、`client/components/workbench.js`、`client/components/shell.js`、`client/workbench/controller.js`、`client/locales-workflow.js` | 无（新模块） |
+| 15 | 批量动作与筛选（待译 / 未确认 / 高风险 / 重复 / 新句段 / 模糊 / 锁定 / 批注） | 已上线 | `lib/batch.js`（新增） | `client/components/workflow.js`、`client/components/shell.js`、`client/workbench/controller.js` | 无（新模块） |
+| 16 | 本地 MT 端点（OpenAI 兼容，Key 存 `~/.dsh/cait`） | 已上线 | `lib/mt-local.js`（新增）、`lib/mt-translate.js`、`lib/settings.js` | `client/components/workflow.js`、`client/components/panels.js`、`client/workbench/controller.js` | 无（新模块） |
+| 17 | 报价单 + 译后编辑度量 + 项目/批次标签 | 已上线 | `lib/quote.js`（新增）、`lib/workflow.js`（新增）、`lib/segments.js`（记录 keepRatio）、`lib/settings.js`、`lib/document-view.js`、`lib/persistence.js` | `client/components/workflow.js`、`client/components/shell.js`、`client/workbench/controller.js` | 无（新模块） |
 
 ## 明细
 
@@ -196,6 +200,18 @@
 - 术语库只认普通 CSV，不支持 SDL MultiTerm / Trados 导出的 `>>L<<` 表头格式；语言列非法时整次导入失败。
 - 句段合并/拆分被格式白名单挡住，DOCX 无法操作（本清单 01/02 已本地修复）。
 - `lib/persist` 与设置字段是白名单式，新增字段容易漏（03/04 均已补 `persistence.js`）。
+
+### 14–17 工作流：交付 / 批量 / 本地 MT / 报价
+
+- **动机**：自由译员的日常不是「逐句翻译」，而是「交稿前别翻车、批量动作用得少、成本与报价说得清、能换本地模型保密」。
+- **实现**：
+  - `lib/zip.js`：零依赖 store-only ZIP（CRC32 + 中央目录 + EOCD），交付包不引入新依赖。
+  - `lib/deliver.js`：`deliveryChecks` 汇总空译 / 未确认 / 源文照抄 / 批注未关 / QA 高危，分 blocking / review / notice 三档；`exportDelivery` 逐项生成并打包，单项失败只记 `skipped`。
+  - `lib/batch.js`：筛选（`batchSelection`）+ 确认 / 锁定 / 清空（复用 `segments.js` 的单段实现，保证状态机一致）。
+  - `lib/mt-local.js`：`fetch` 本机 OpenAI 兼容端点，Key 存 `<dataDir>/mt-local.json`；`mt-translate.js` 在解析路由前优先用本地端点，未启用则完全走原路径。
+  - `lib/quote.js` / `lib/workflow.js`：按 `MATCH_BUCKETS` 分档计价，`postEdit.keepRatio` 在 `confirmSegment` 落库，客户 / 批次标签随文档持久化。
+- **验证**：真实 store 副本（488 段）—— 交付包 6 个文件、200 KB ZIP 且 `PK\x03\x04` 魔数正确；检查项 488 段中 320 已确认、321 条 medium、169 条 low；批量筛选 risk 命中 321、pending 0；报价 18,542 词 → ICE 11,661 词 × 0.3 + 新句段 6,778 词 × 1.0 = ¥1236.87；`setMtLocal` 后状态可读回；批次汇总与 `workloadSnapshot` 一致。
+- **边界**：交付包不含 TMX（体积不可控）；报价是本地估算，不替代合同；本地 MT 不校验模型能力（端点自负责）；批次只是标签，不是独立作业数据库。
 
 ## 后续候选
 

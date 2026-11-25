@@ -196,6 +196,9 @@ function Topbar({
   onCleanClosed,
   pre,
   onPreTranslate,
+  onOpenDelivery,
+  onOpenBatch,
+  onOpenQuote,
   onCancelPreTranslate,
   onReplace,
   view,
@@ -311,6 +314,45 @@ function Topbar({
             },
             h(Icon, { name: 'sparkles', size: 14 }),
             h('span', { className: 'cait-btn-label' }, t('pretranslate.start')),
+          )
+        : null,
+      documentsView
+        ? h(
+            'button',
+            {
+              className: 'cait-btn',
+              onClick: onOpenDelivery,
+              disabled: Boolean(busy) || !doc,
+              title: t('deliver.open'),
+            },
+            h(Icon, { name: 'upload', size: 14 }),
+            h('span', { className: 'cait-btn-label' }, t('deliver.open')),
+          )
+        : null,
+      documentsView
+        ? h(
+            'button',
+            {
+              className: 'cait-btn',
+              onClick: onOpenBatch,
+              disabled: Boolean(busy) || !doc,
+              title: t('batch.open'),
+            },
+            h(Icon, { name: 'list', size: 14 }),
+            h('span', { className: 'cait-btn-label' }, t('batch.open')),
+          )
+        : null,
+      documentsView
+        ? h(
+            'button',
+            {
+              className: 'cait-btn',
+              onClick: onOpenQuote,
+              disabled: Boolean(busy) || !doc,
+              title: t('quote.open'),
+            },
+            h(Icon, { name: 'coins', size: 14 }),
+            h('span', { className: 'cait-btn-label' }, t('quote.open')),
           )
         : null,
       documentsView

@@ -1019,6 +1019,185 @@ export function useWorkbenchController({ i18n, translate }) {
     }
   }
 
+  // —— P0/P1：交付、批量、报价、本地 MT ——
+  const [deliverChecks, setDeliverChecks] = useState(null)
+  const [batchState, setBatchState] = useState({ filter: 'pending', indexes: [], total: 0, advice: null })
+  const [quoteConfig, setQuoteConfig] = useState(null)
+  const [quoteData, setQuoteData] = useState(null)
+  const [postEdit, setPostEdit] = useState(null)
+  const [mtLocalConfig, setMtLocalConfig] = useState(null)
+
+  const openDelivery = async () => {
+    if (!doc?.id) {
+      notify(t('deliver.noDocument'), 'error')
+      return
+    }
+    setModal({ type: 'deliver' })
+    try {
+      setDeliverChecks(await rpc('deliveryChecks', { documentId: doc.id }))
+    } catch (error) {
+      report(error)
+    }
+  }
+
+  const runDelivery = async ({ include, client, batch }) => {
+    if (!doc?.id) return
+    setBusy('delivery')
+    try {
+      await rpc('setDocumentBatch', { documentId: doc.id, client, batch })
+      const result = await rpc('exportDelivery', { documentId: doc.id, include })
+      downloadFile(result.filename, decodeBase64(result.content), result.mime)
+      notify(t('deliver.done', { entries: (result.entries || []).length, skipped: (result.skipped || []).length }))
+      setModal(null)
+    } catch (error) {
+      report(error)
+    } finally {
+      setBusy('')
+    }
+  }
+
+  const loadBatch = async (filter) => {
+    if (!doc?.id) return
+    try {
+      const [selection, advice] = await Promise.all([
+        rpc('batchSelection', { documentId: doc.id, filter }),
+        rpc('batchAdvice', { documentId: doc.id }),
+      ])
+      setBatchState({ filter, indexes: selection.indexes || [], total: selection.total || 0, advice })
+    } catch (error) {
+      report(error)
+    }
+  }
+
+  const openBatch = async () => {
+    if (!doc?.id) {
+      notify(t('batch.noDocument'), 'error')
+      return
+    }
+    setModal({ type: 'batch' })
+    await loadBatch('pending')
+  }
+
+  const runBatchOp = async ({ action, documentId, indexes }) => {
+    if (!documentId || !indexes?.length) return
+    setBusy('batch')
+    try {
+      let result
+      if (action === 'confirm') result = await rpc('batchConfirmSegments', { documentId, indexes, addToTm: true })
+      else if (action === 'clear') result = await rpc('batchClearTargets', { documentId, indexes })
+      else result = await rpc('batchSetLocked', { documentId, indexes, locked: action === 'lock' })
+      if (result?.state) replaceRemoteState(result.state)
+      notify(t('batch.done', { count: indexes.length }))
+      await loadBatch(batchState.filter)
+    } catch (error) {
+      report(error)
+    } finally {
+      setBusy('')
+    }
+  }
+
+  const openQuote = async () => {
+    if (!doc?.id) {
+      notify(t('quote.noDocument'), 'error')
+      return
+    }
+    setModal({ type: 'quote' })
+    try {
+      const [config, quote, stats] = await Promise.all([
+        rpc('quoteState'),
+        rpc('quoteDocument', { documentId: doc.id }),
+        rpc('postEditStats', { documentId: doc.id }),
+      ])
+      setQuoteConfig(config)
+      setQuoteData({ ...quote, client: doc.client || '', batch: doc.batch || '' })
+      setPostEdit(stats)
+    } catch (error) {
+      report(error)
+    }
+  }
+
+  const saveQuote = async (patch) => {
+    if (!doc?.id) return
+    setBusy('quote')
+    try {
+      const config = await rpc('setQuote', patch)
+      setQuoteConfig(config)
+      const quote = await rpc('quoteDocument', { documentId: doc.id })
+      setQuoteData({ ...quote, client: doc.client || '', batch: doc.batch || '' })
+      notify(t('quote.saved'))
+    } catch (error) {
+      report(error)
+    } finally {
+      setBusy('')
+    }
+  }
+
+  const exportQuoteFile = async (format) => {
+    if (!doc?.id) return
+    setBusy('quote')
+    try {
+      const result = await rpc('exportQuote', { documentId: doc.id, format })
+      downloadFile(result.filename, result.content, result.mime)
+      notify(t('quote.exported'))
+    } catch (error) {
+      report(error)
+    } finally {
+      setBusy('')
+    }
+  }
+
+  const saveDocLabels = async ({ client, batch }) => {
+    if (!doc?.id) return
+    setBusy('labels')
+    try {
+      await rpc('setDocumentBatch', { documentId: doc.id, client, batch })
+      notify(t('quote.labelsSaved'))
+      setQuoteData((current) => (current ? { ...current, client, batch } : current))
+    } catch (error) {
+      report(error)
+    } finally {
+      setBusy('')
+    }
+  }
+
+  const openLocalMt = async () => {
+    setModal({ type: 'localmt' })
+    try {
+      setMtLocalConfig(await rpc('mtLocalState'))
+    } catch (error) {
+      report(error)
+    }
+  }
+
+  const saveLocalMt = async (patch) => {
+    setBusy('mtlocal')
+    try {
+      const state = await rpc('setMtLocal', patch)
+      setMtLocalConfig(state)
+      notify(t('mtlocal.saved'))
+      return state
+    } catch (error) {
+      report(error)
+      return null
+    } finally {
+      setBusy('')
+    }
+  }
+
+  const testLocalMt = async (patch) => {
+    setBusy('mtlocal')
+    try {
+      await rpc('setMtLocal', patch)
+      const result = await rpc('mtLocalTest')
+      setMtLocalConfig(await rpc('mtLocalState'))
+      return { ok: true, latencyMs: result.latencyMs, model: result.model }
+    } catch (error) {
+      return { ok: false, message: error?.message || String(error) }
+    } finally {
+      setBusy('')
+    }
+  }
+
   const saveBrief = async (brief) => {
     if (!doc || busy) return false
     setBusy('brief')
@@ -2037,6 +2216,24 @@ export function useWorkbenchController({ i18n, translate }) {
     importGlossaryFile,
     exportGlossaryFile,
     libraryIoOptions,
+    deliverChecks,
+    batchState,
+    quoteConfig,
+    quoteData,
+    postEdit,
+    mtLocalConfig,
+    openDelivery,
+    runDelivery,
+    openBatch,
+    loadBatch,
+    runBatchOp,
+    openQuote,
+    saveQuote,
+    exportQuoteFile,
+    saveDocLabels,
+    openLocalMt,
+    saveLocalMt,
+    testLocalMt,
     exportLibraryTo,
     importLibraryTo,
     generateMt,

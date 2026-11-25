@@ -5,7 +5,12 @@ import { projectRoot, readAuthoredClient } from './lib/client-source.mjs'
 
 const strict = process.argv.includes('--strict')
 const { ZH, EN, JA } = await import(pathToFileURL(join(projectRoot, 'client', 'locales.js')).href)
-const DICTS = { zh: ZH, en: EN, ja: JA }
+const { WORKFLOW_DICTS } = await import(pathToFileURL(join(projectRoot, 'client', 'locales-workflow.js')).href)
+const DICTS = {
+  zh: { ...ZH, ...WORKFLOW_DICTS.zh },
+  en: { ...EN, ...WORKFLOW_DICTS.en },
+  ja: { ...JA, ...WORKFLOW_DICTS.ja },
+}
 
 let failed = false
 const fail = (message) => {
@@ -14,7 +19,7 @@ const fail = (message) => {
 }
 
 // 1. 三本字典的键必须完全对齐：少一个键，界面就会掉到别的语言或直接显示键名。
-const allKeys = new Set([...Object.keys(ZH), ...Object.keys(EN), ...Object.keys(JA)])
+const allKeys = new Set(Object.values(DICTS).flatMap((dict) => Object.keys(dict)))
 for (const [lang, dict] of Object.entries(DICTS)) {
   const missing = [...allKeys].filter((key) => !(key in dict))
   if (missing.length) {

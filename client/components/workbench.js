@@ -21,6 +21,7 @@ import {
   ResourceModal,
   AnalysisModal,
 } from './dialogs.js'
+import { DeliveryModal, BatchModal, QuoteModal, LocalMtModal } from './workflow.js'
 import { useWorkbenchController } from '../workbench/controller.js'
 import { UsageModal } from './usage.js'
 
@@ -150,6 +151,24 @@ function Workbench({ i18n, translate }) {
     importTmxFile,
     importGlossaryFile,
     exportGlossaryFile,
+    deliverChecks,
+    batchState,
+    quoteConfig,
+    quoteData,
+    postEdit,
+    mtLocalConfig,
+    openDelivery,
+    runDelivery,
+    openBatch,
+    loadBatch,
+    runBatchOp,
+    openQuote,
+    saveQuote,
+    exportQuoteFile,
+    saveDocLabels,
+    openLocalMt,
+    saveLocalMt,
+    testLocalMt,
     libraryIoOptions,
     exportLibraryTo,
     importLibraryTo,
@@ -493,6 +512,7 @@ function Workbench({ i18n, translate }) {
                   onDefineTerm: openTermDialog,
                   onImportGlossary: importGlossaryFile,
                   onOpenIo: (mode) => setLibraryIo({ mode, kind: 'glossary' }),
+              onOpenLocalMt: openLocalMt,
                   onClearGlossary: clearGlossary,
                   mt,
                   mtError,
@@ -620,6 +640,53 @@ function Workbench({ i18n, translate }) {
           },
         })
       : null,
+    modal?.type === 'deliver'
+          ? h(DeliveryModal, {
+              t,
+              busy: Boolean(busy),
+              checks: deliverChecks,
+              labels: { client: doc?.client || '', batch: doc?.batch || '' },
+              onRun: runDelivery,
+              onJump: (index) => chooseSegment(index),
+              onClose: () => setModal(null),
+            })
+          : null,
+        modal?.type === 'batch'
+          ? h(BatchModal, {
+              t,
+              busy: Boolean(busy),
+              documentId: doc?.id,
+              selection: batchState,
+              advice: batchState?.advice,
+              onSelect: loadBatch,
+              onRun: runBatchOp,
+              onClose: () => setModal(null),
+            })
+          : null,
+        modal?.type === 'quote'
+          ? h(QuoteModal, {
+              t,
+              busy: Boolean(busy),
+              state: quoteConfig,
+              quote: quoteData,
+              postEdit,
+              onSave: saveQuote,
+              onRefresh: openQuote,
+              onExport: exportQuoteFile,
+              onLabels: saveDocLabels,
+              onClose: () => setModal(null),
+            })
+          : null,
+        modal?.type === 'localmt'
+          ? h(LocalMtModal, {
+              t,
+              busy: Boolean(busy),
+              state: mtLocalConfig,
+              onSave: saveLocalMt,
+              onTest: testLocalMt,
+              onClose: () => setModal(null),
+            })
+          : null,
     modal?.type === 'analysis'
       ? h(AnalysisModal, {
           t,

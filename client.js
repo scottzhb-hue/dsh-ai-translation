@@ -196,6 +196,231 @@ function fuzzyPercent(value) {
   return Math.round(Math.min(1, Math.max(0, number)) * 100);
 }
 
+// client/locales-workflow.js
+var ZH_WORKFLOW = {
+  "deliver.open": "交付",
+  "deliver.title": "交付包",
+  "deliver.hint": "交付前先看一遍下面这些检查项；确认无误后一次性打包下载（目标稿、双语稿、术语表、质检、分析、说明）。",
+  "deliver.client": "客户",
+  "deliver.batch": "批次",
+  "deliver.blocking": "阻断",
+  "deliver.review": "需复核",
+  "deliver.notice": "提示",
+  "deliver.unconfirmed": "未确认",
+  "deliver.clean": "没有发现需要处理的问题。",
+  "deliver.includeTarget": "目标稿（DOCX）",
+  "deliver.includeBilingual": "双语对照稿（DOCX）",
+  "deliver.includeGlossary": "术语表（CSV）",
+  "deliver.includeQa": "质检报告（CSV）",
+  "deliver.includeAnalysis": "分析报告（CSV）",
+  "deliver.includeNotes": "批注（Markdown）",
+  "deliver.includeReadme": "交付说明（TXT）",
+  "deliver.download": "下载交付包",
+  "deliver.done": "已导出交付包：{entries} 个文件，跳过 {skipped} 项。",
+  "deliver.noDocument": "请先打开一个文档。",
+  "batch.open": "批量",
+  "batch.title": "批量操作",
+  "batch.hint": "按条件筛出句段，再一次性确认、锁定或清空；清空只清译文，不动原文。",
+  "batch.filter.pending": "待译",
+  "batch.filter.unconfirmed": "未确认",
+  "batch.filter.risk": "高风险",
+  "batch.filter.duplicate": "重复句段",
+  "batch.filter.new": "新句段",
+  "batch.filter.fuzzy": "模糊匹配",
+  "batch.filter.locked": "已锁定",
+  "batch.filter.notes": "有批注",
+  "batch.selected": "已选中 {count} 段",
+  "batch.confirm": "批量确认",
+  "batch.lock": "锁定",
+  "batch.unlock": "解锁",
+  "batch.clear": "清空译文",
+  "batch.done": "已处理 {count} 段。",
+  "batch.noDocument": "请先打开一个文档。",
+  "quote.open": "报价",
+  "quote.title": "报价单",
+  "quote.hint": "单价 × 匹配档位折扣 = 这一档的金额；改完单价或系数后点「保存单价」再「导出报价单」。",
+  "quote.currency": "币种",
+  "quote.rate": "单价",
+  "quote.minimum": "最低收费",
+  "quote.bucket": "档位",
+  "quote.segments": "句段",
+  "quote.words": "字数",
+  "quote.discount": "系数",
+  "quote.amount": "金额",
+  "quote.subtotal": "小计",
+  "quote.total": "合计",
+  "quote.postEdit": "译后编辑",
+  "quote.postEditValue": "已记录 {entries} 段，平均保留 {keep}%",
+  "quote.save": "保存单价",
+  "quote.saved": "报价设置已保存。",
+  "quote.refresh": "重新计算",
+  "quote.export": "导出报价单",
+  "quote.exported": "报价单已导出。",
+  "quote.saveLabels": "保存客户/批次",
+  "quote.labelsSaved": "客户与批次已保存。",
+  "quote.noDocument": "请先打开一个文档。",
+  "mtlocal.open": "本地 MT",
+  "mtlocal.title": "本地 MT",
+  "mtlocal.hint": "把翻译请求发到本机的 OpenAI 兼容端点（LM Studio、Ollama、vLLM 等）；不填就继续用 DSH 模型路由。API Key 只保存在本机 ~/.dsh/cait，不写进项目文件。",
+  "mtlocal.enable": "启用本地 MT",
+  "mtlocal.apiKey": "API Key（可留空）",
+  "mtlocal.timeout": "超时（毫秒）",
+  "mtlocal.save": "保存",
+  "mtlocal.saved": "本地 MT 设置已保存。",
+  "mtlocal.test": "测试连接",
+  "mtlocal.testOk": "连接正常：{ms} ms · {model}",
+  "mtlocal.testFailed": "连接失败：{message}"
+};
+var EN_WORKFLOW = {
+  "deliver.open": "Deliver",
+  "deliver.title": "Delivery package",
+  "deliver.hint": "Review the checks below, then download one package with the target DOCX, bilingual DOCX, glossary, QA, analysis and readme.",
+  "deliver.client": "Client",
+  "deliver.batch": "Batch",
+  "deliver.blocking": "Blocking",
+  "deliver.review": "Review",
+  "deliver.notice": "Notice",
+  "deliver.unconfirmed": "Unconfirmed",
+  "deliver.clean": "Nothing to fix.",
+  "deliver.includeTarget": "Target DOCX",
+  "deliver.includeBilingual": "Bilingual DOCX",
+  "deliver.includeGlossary": "Glossary (CSV)",
+  "deliver.includeQa": "QA report (CSV)",
+  "deliver.includeAnalysis": "Analysis (CSV)",
+  "deliver.includeNotes": "Notes (Markdown)",
+  "deliver.includeReadme": "Delivery note (TXT)",
+  "deliver.download": "Download package",
+  "deliver.done": "Package exported: {entries} files, {skipped} skipped.",
+  "deliver.noDocument": "Open a document first.",
+  "batch.open": "Batch",
+  "batch.title": "Batch actions",
+  "batch.hint": "Select segments by condition, then confirm, lock or clear them. Clearing only removes translations.",
+  "batch.filter.pending": "Untranslated",
+  "batch.filter.unconfirmed": "Unconfirmed",
+  "batch.filter.risk": "High risk",
+  "batch.filter.duplicate": "Duplicates",
+  "batch.filter.new": "New",
+  "batch.filter.fuzzy": "Fuzzy",
+  "batch.filter.locked": "Locked",
+  "batch.filter.notes": "Has notes",
+  "batch.selected": "{count} segments selected",
+  "batch.confirm": "Confirm all",
+  "batch.lock": "Lock",
+  "batch.unlock": "Unlock",
+  "batch.clear": "Clear translations",
+  "batch.done": "{count} segments processed.",
+  "batch.noDocument": "Open a document first.",
+  "quote.open": "Quote",
+  "quote.title": "Quotation",
+  "quote.hint": "Rate x match discount = the amount for that band. Save the rate, then export the quotation.",
+  "quote.currency": "Currency",
+  "quote.rate": "Rate",
+  "quote.minimum": "Minimum",
+  "quote.bucket": "Band",
+  "quote.segments": "Segments",
+  "quote.words": "Words",
+  "quote.discount": "Factor",
+  "quote.amount": "Amount",
+  "quote.subtotal": "Subtotal",
+  "quote.total": "Total",
+  "quote.postEdit": "Post-editing",
+  "quote.postEditValue": "{entries} segments recorded, {keep}% kept on average",
+  "quote.save": "Save rate",
+  "quote.saved": "Quotation settings saved.",
+  "quote.refresh": "Recompute",
+  "quote.export": "Export quotation",
+  "quote.exported": "Quotation exported.",
+  "quote.saveLabels": "Save client/batch",
+  "quote.labelsSaved": "Client and batch saved.",
+  "quote.noDocument": "Open a document first.",
+  "mtlocal.open": "Local MT",
+  "mtlocal.title": "Local MT",
+  "mtlocal.hint": "Send translation requests to a local OpenAI-compatible endpoint (LM Studio, Ollama, vLLM). Leave disabled to use the DSH model route. The API key stays in ~/.dsh/cait.",
+  "mtlocal.enable": "Enable local MT",
+  "mtlocal.apiKey": "API key (optional)",
+  "mtlocal.timeout": "Timeout (ms)",
+  "mtlocal.save": "Save",
+  "mtlocal.saved": "Local MT settings saved.",
+  "mtlocal.test": "Test connection",
+  "mtlocal.testOk": "Connected: {ms} ms · {model}",
+  "mtlocal.testFailed": "Connection failed: {message}"
+};
+var JA_WORKFLOW = {
+  "deliver.open": "納品",
+  "deliver.title": "納品パッケージ",
+  "deliver.hint": "下のチェックを確認してから、訳文稿・対訳稿・用語集・QA・分析・説明をまとめてダウンロードします。",
+  "deliver.client": "クライアント",
+  "deliver.batch": "バッチ",
+  "deliver.blocking": "要修正",
+  "deliver.review": "要確認",
+  "deliver.notice": "参考",
+  "deliver.unconfirmed": "未確定",
+  "deliver.clean": "対応が必要な問題はありません。",
+  "deliver.includeTarget": "訳文稿（DOCX）",
+  "deliver.includeBilingual": "対訳稿（DOCX）",
+  "deliver.includeGlossary": "用語集（CSV）",
+  "deliver.includeQa": "QA レポート（CSV）",
+  "deliver.includeAnalysis": "分析レポート（CSV）",
+  "deliver.includeNotes": "コメント（Markdown）",
+  "deliver.includeReadme": "納品メモ（TXT）",
+  "deliver.download": "パッケージをダウンロード",
+  "deliver.done": "{entries} 件を書き出しました（{skipped} 件スキップ）。",
+  "deliver.noDocument": "先に文書を開いてください。",
+  "batch.open": "一括",
+  "batch.title": "一括操作",
+  "batch.hint": "条件でセグメントを絞り込み、まとめて確定・ロック・クリアします。",
+  "batch.filter.pending": "未訳",
+  "batch.filter.unconfirmed": "未確定",
+  "batch.filter.risk": "高リスク",
+  "batch.filter.duplicate": "重複",
+  "batch.filter.new": "新規",
+  "batch.filter.fuzzy": "ファジー",
+  "batch.filter.locked": "ロック済み",
+  "batch.filter.notes": "コメントあり",
+  "batch.selected": "{count} 件選択中",
+  "batch.confirm": "一括確定",
+  "batch.lock": "ロック",
+  "batch.unlock": "解除",
+  "batch.clear": "訳文をクリア",
+  "batch.done": "{count} 件を処理しました。",
+  "batch.noDocument": "先に文書を開いてください。",
+  "quote.open": "見積",
+  "quote.title": "見積書",
+  "quote.hint": "単価 × マッチ帯の係数 = その帯の金額。単価を保存してから書き出します。",
+  "quote.currency": "通貨",
+  "quote.rate": "単価",
+  "quote.minimum": "最低料金",
+  "quote.bucket": "帯",
+  "quote.segments": "セグメント",
+  "quote.words": "語数",
+  "quote.discount": "係数",
+  "quote.amount": "金額",
+  "quote.subtotal": "小計",
+  "quote.total": "合計",
+  "quote.postEdit": "ポストエディット",
+  "quote.postEditValue": "{entries} 件を記録、平均保持率 {keep}%",
+  "quote.save": "単価を保存",
+  "quote.saved": "見積設定を保存しました。",
+  "quote.refresh": "再計算",
+  "quote.export": "見積を書き出す",
+  "quote.exported": "見積を書き出しました。",
+  "quote.saveLabels": "クライアント/バッチを保存",
+  "quote.labelsSaved": "クライアントとバッチを保存しました。",
+  "quote.noDocument": "先に文書を開いてください。",
+  "mtlocal.open": "ローカル MT",
+  "mtlocal.title": "ローカル MT",
+  "mtlocal.hint": "ローカルの OpenAI 互換エンドポイント（LM Studio / Ollama / vLLM）へ翻訳要求を送ります。無効なら DSH のモデル経路を使います。API キーは ~/.dsh/cait にのみ保存します。",
+  "mtlocal.enable": "ローカル MT を有効化",
+  "mtlocal.apiKey": "API キー（任意）",
+  "mtlocal.timeout": "タイムアウト（ms）",
+  "mtlocal.save": "保存",
+  "mtlocal.saved": "ローカル MT 設定を保存しました。",
+  "mtlocal.test": "接続テスト",
+  "mtlocal.testOk": "接続 OK：{ms} ms · {model}",
+  "mtlocal.testFailed": "接続失敗：{message}"
+};
+var WORKFLOW_DICTS = { zh: ZH_WORKFLOW, en: EN_WORKFLOW, ja: JA_WORKFLOW };
+
 // client/locales.js
 var ZH = {
   "app.title": "AI辅助翻译",
@@ -2220,7 +2445,11 @@ var UI_LANGS = [
   ["ja", "日本語"]
 ];
 var UI_LANG_CODES = UI_LANGS.map(([code]) => code);
-var UI_DICTS = { zh: ZH, en: EN, ja: JA };
+var UI_DICTS = {
+  zh: { ...ZH, ...WORKFLOW_DICTS.zh },
+  en: { ...EN, ...WORKFLOW_DICTS.en },
+  ja: { ...JA, ...WORKFLOW_DICTS.ja }
+};
 function interpolateText(text, vars) {
   if (!vars || typeof text !== "string" || text.indexOf("{") < 0) return text;
   return text.replace(
@@ -3761,6 +3990,9 @@ function Topbar({
   onCleanClosed,
   pre,
   onPreTranslate,
+  onOpenDelivery,
+  onOpenBatch,
+  onOpenQuote,
   onCancelPreTranslate,
   onReplace,
   view,
@@ -3867,6 +4099,39 @@ function Topbar({
         },
         h(Icon, { name: "sparkles", size: 14 }),
         h("span", { className: "cait-btn-label" }, t("pretranslate.start"))
+      ) : null,
+      documentsView ? h(
+        "button",
+        {
+          className: "cait-btn",
+          onClick: onOpenDelivery,
+          disabled: Boolean(busy) || !doc,
+          title: t("deliver.open")
+        },
+        h(Icon, { name: "upload", size: 14 }),
+        h("span", { className: "cait-btn-label" }, t("deliver.open"))
+      ) : null,
+      documentsView ? h(
+        "button",
+        {
+          className: "cait-btn",
+          onClick: onOpenBatch,
+          disabled: Boolean(busy) || !doc,
+          title: t("batch.open")
+        },
+        h(Icon, { name: "list", size: 14 }),
+        h("span", { className: "cait-btn-label" }, t("batch.open"))
+      ) : null,
+      documentsView ? h(
+        "button",
+        {
+          className: "cait-btn",
+          onClick: onOpenQuote,
+          disabled: Boolean(busy) || !doc,
+          title: t("quote.open")
+        },
+        h(Icon, { name: "coins", size: 14 }),
+        h("span", { className: "cait-btn-label" }, t("quote.open"))
       ) : null,
       documentsView ? h(
         "button",
@@ -4915,6 +5180,7 @@ function CatPanel({
   mtError,
   mtBusy,
   onGenerateMt,
+  onOpenLocalMt,
   onApplyMt,
   onCopy,
   onOpenSettings,
@@ -5234,6 +5500,16 @@ function CatPanel({
             { className: "cait-labelrow" },
             h("span", { className: "cait-label" }, t("panel.mtRoute")),
             h("span", { className: "cait-meta" }, settings.mt.provider || "—")
+          ),
+          h(
+            "button",
+            {
+              className: "cait-linkbtn",
+              type: "button",
+              onClick: onOpenLocalMt,
+              disabled: Boolean(busy)
+            },
+            t("mtlocal.open")
           ),
           h(
             "button",
@@ -8454,6 +8730,416 @@ function AnalysisModal({ t, analysis, busy, onClose }) {
   );
 }
 
+// client/components/workflow.js
+function DeliveryModal({ t, busy, checks, onRun, onClose, onJump, labels, onLabels }) {
+  const [include, setInclude] = useState({
+    target: true,
+    bilingual: true,
+    glossary: true,
+    qa: true,
+    analysis: true,
+    notes: false,
+    readme: true
+  });
+  const [client, setClient] = useState(labels?.client ?? "");
+  const [batch, setBatch] = useState(labels?.batch ?? "");
+  const counts = checks?.counts ?? { high: 0, medium: 0, low: 0 };
+  const items = checks?.items ?? [];
+  const toggle = (key) => setInclude((current) => ({ ...current, [key]: !current[key] }));
+  return h(
+    Modal,
+    { title: t("deliver.title"), onClose, wide: true },
+    h("p", { className: "cait-hint" }, t("deliver.hint")),
+    h(
+      "div",
+      { className: "cait-formrow" },
+      h("label", { className: "cait-field" }, h("span", null, t("deliver.client")), h("input", {
+        className: "cait-input",
+        value: client,
+        onChange: (event) => setClient(event.target.value)
+      })),
+      h("label", { className: "cait-field" }, h("span", null, t("deliver.batch")), h("input", {
+        className: "cait-input",
+        value: batch,
+        onChange: (event) => setBatch(event.target.value)
+      }))
+    ),
+    h(
+      "div",
+      { className: "cait-chips" },
+      h("span", { className: "cait-chip is-danger" }, `${t("deliver.blocking")} ${counts.high}`),
+      h("span", { className: "cait-chip is-warn" }, `${t("deliver.review")} ${counts.medium}`),
+      h("span", { className: "cait-chip" }, `${t("deliver.notice")} ${counts.low}`),
+      h("span", { className: "cait-chip" }, `${t("deliver.unconfirmed")} ${checks?.unconfirmed ?? 0}`)
+    ),
+    items.length ? h(
+      "ul",
+      { className: "cait-issues" },
+      items.slice(0, 12).map(
+        (item) => h(
+          "li",
+          { key: `${item.index}-${item.code}`, className: `cait-issue is-${item.severity}` },
+          h("button", { type: "button", className: "cait-linkbtn", onClick: () => onJump(item.index) }, `#${item.index + 1}`),
+          h("span", { className: "cait-issue-code" }, item.code),
+          h("span", { className: "cait-issue-msg" }, item.message)
+        )
+      )
+    ) : h("p", { className: "cait-hint" }, t("deliver.clean")),
+    h(
+      "div",
+      { className: "cait-checks" },
+      [
+        ["target", "deliver.includeTarget"],
+        ["bilingual", "deliver.includeBilingual"],
+        ["glossary", "deliver.includeGlossary"],
+        ["qa", "deliver.includeQa"],
+        ["analysis", "deliver.includeAnalysis"],
+        ["notes", "deliver.includeNotes"],
+        ["readme", "deliver.includeReadme"]
+      ].map(
+        ([key, label]) => h(
+          "label",
+          { key, className: "cait-check" },
+          h("input", { type: "checkbox", checked: include[key], onChange: () => toggle(key) }),
+          h("span", null, t(label))
+        )
+      )
+    ),
+    h(
+      "div",
+      { className: "cait-modal-actions" },
+      h("button", { type: "button", className: "cait-btn", onClick: onClose }, t("panel.cancel")),
+      h(
+        "button",
+        {
+          type: "button",
+          className: "cait-btn cait-btn-primary",
+          disabled: Boolean(busy),
+          onClick: () => onRun({ include, client, batch })
+        },
+        busy ? h(Spinner, { size: 13 }) : h(Icon, { name: "download", size: 13 }),
+        h("span", null, t("deliver.download"))
+      )
+    )
+  );
+}
+function BatchModal({ t, busy, documentId, selection, advice, onSelect, onRun, onClose }) {
+  const filters = ["pending", "unconfirmed", "risk", "duplicate", "new", "fuzzy", "locked", "notes"];
+  return h(
+    Modal,
+    { title: t("batch.title"), onClose, wide: true },
+    h("p", { className: "cait-hint" }, t("batch.hint")),
+    advice?.message ? h("p", { className: "cait-hint" }, advice.message) : null,
+    h(
+      "div",
+      { className: "cait-chips" },
+      filters.map(
+        (filter) => h(
+          "button",
+          {
+            key: filter,
+            type: "button",
+            className: `cait-chip${selection?.filter === filter ? " is-active" : ""}`,
+            onClick: () => onSelect(filter)
+          },
+          t(`batch.filter.${filter}`)
+        )
+      )
+    ),
+    h(
+      "p",
+      { className: "cait-hint" },
+      t("batch.selected", { count: selection?.indexes?.length ?? 0 })
+    ),
+    h(
+      "div",
+      { className: "cait-modal-actions" },
+      h("button", { type: "button", className: "cait-btn", onClick: onClose }, t("panel.cancel")),
+      h(
+        "button",
+        {
+          type: "button",
+          className: "cait-btn",
+          disabled: Boolean(busy) || !selection?.indexes?.length,
+          onClick: () => onRun({ action: "confirm", documentId, indexes: selection.indexes })
+        },
+        t("batch.confirm")
+      ),
+      h(
+        "button",
+        {
+          type: "button",
+          className: "cait-btn",
+          disabled: Boolean(busy) || !selection?.indexes?.length,
+          onClick: () => onRun({ action: "lock", documentId, indexes: selection.indexes })
+        },
+        t("batch.lock")
+      ),
+      h(
+        "button",
+        {
+          type: "button",
+          className: "cait-btn",
+          disabled: Boolean(busy) || !selection?.indexes?.length,
+          onClick: () => onRun({ action: "unlock", documentId, indexes: selection.indexes })
+        },
+        t("batch.unlock")
+      ),
+      h(
+        "button",
+        {
+          type: "button",
+          className: "cait-btn",
+          disabled: Boolean(busy) || !selection?.indexes?.length,
+          onClick: () => onRun({ action: "clear", documentId, indexes: selection.indexes })
+        },
+        t("batch.clear")
+      )
+    )
+  );
+}
+function QuoteModal({ t, busy, state, quote, postEdit, onSave, onRefresh, onExport, onLabels, onClose }) {
+  const [currency, setCurrency] = useState(state?.currency ?? "CNY");
+  const [rate, setRate] = useState(String(state?.rate ?? 120));
+  const [minimum, setMinimum] = useState(String(state?.minimum ?? 0));
+  const [discounts, setDiscounts] = useState(state?.discounts ?? {});
+  const [client, setClient] = useState(quote?.client ?? "");
+  const [batch, setBatch] = useState(quote?.batch ?? "");
+  useEffect(() => {
+    if (!state) return;
+    setCurrency(state.currency);
+    setRate(String(state.rate));
+    setMinimum(String(state.minimum));
+    setDiscounts(state.discounts ?? {});
+  }, [state]);
+  const lines = quote?.lines ?? [];
+  const setDiscount = (key, value) => setDiscounts((current) => ({ ...current, [key]: Number(value) }));
+  return h(
+    Modal,
+    { title: t("quote.title"), onClose, wide: true },
+    h("p", { className: "cait-hint" }, t("quote.hint")),
+    h(
+      "div",
+      { className: "cait-formrow" },
+      h("label", { className: "cait-field" }, h("span", null, t("quote.currency")), h("input", {
+        className: "cait-input",
+        value: currency,
+        onChange: (event) => setCurrency(event.target.value)
+      })),
+      h("label", { className: "cait-field" }, h("span", null, `${t("quote.rate")} (${state?.unitLabel ?? ""})`), h("input", {
+        className: "cait-input",
+        value: rate,
+        onChange: (event) => setRate(event.target.value)
+      })),
+      h("label", { className: "cait-field" }, h("span", null, t("quote.minimum")), h("input", {
+        className: "cait-input",
+        value: minimum,
+        onChange: (event) => setMinimum(event.target.value)
+      }))
+    ),
+    h(
+      "table",
+      { className: "cait-table" },
+      h(
+        "thead",
+        null,
+        h(
+          "tr",
+          null,
+          h("th", null, t("quote.bucket")),
+          h("th", null, t("quote.segments")),
+          h("th", null, t("quote.words")),
+          h("th", null, t("quote.discount")),
+          h("th", null, t("quote.amount"))
+        )
+      ),
+      h(
+        "tbody",
+        null,
+        lines.map(
+          (line) => h(
+            "tr",
+            { key: line.bucket },
+            h("td", null, line.label),
+            h("td", null, line.segments),
+            h("td", null, line.words),
+            h(
+              "td",
+              null,
+              h("input", {
+                className: "cait-input",
+                style: { width: "64px" },
+                value: discounts[line.bucket] ?? line.discount,
+                onChange: (event) => setDiscount(line.bucket, event.target.value)
+              })
+            ),
+            h("td", null, `${line.amount} ${quote?.currency ?? ""}`)
+          )
+        )
+      )
+    ),
+    h(
+      "p",
+      { className: "cait-hint" },
+      `${t("quote.subtotal")}：${quote?.subtotal ?? 0} ${quote?.currency ?? ""} · ${t("quote.total")}：${quote?.total ?? 0} ${quote?.currency ?? ""}`
+    ),
+    postEdit ? h(
+      "p",
+      { className: "cait-hint" },
+      `${t("quote.postEdit")}：${t("quote.postEditValue", {
+        entries: postEdit.entries,
+        keep: Math.round((postEdit.averageKeep ?? 0) * 100)
+      })}`
+    ) : null,
+    h(
+      "div",
+      { className: "cait-formrow" },
+      h("label", { className: "cait-field" }, h("span", null, t("deliver.client")), h("input", {
+        className: "cait-input",
+        value: client,
+        onChange: (event) => setClient(event.target.value)
+      })),
+      h("label", { className: "cait-field" }, h("span", null, t("deliver.batch")), h("input", {
+        className: "cait-input",
+        value: batch,
+        onChange: (event) => setBatch(event.target.value)
+      }))
+    ),
+    h(
+      "div",
+      { className: "cait-modal-actions" },
+      h("button", { type: "button", className: "cait-btn", onClick: onClose }, t("panel.cancel")),
+      h(
+        "button",
+        {
+          type: "button",
+          className: "cait-btn",
+          disabled: Boolean(busy),
+          onClick: () => onLabels({ client, batch })
+        },
+        t("quote.saveLabels")
+      ),
+      h(
+        "button",
+        {
+          type: "button",
+          className: "cait-btn",
+          disabled: Boolean(busy),
+          onClick: () => onSave({ currency, rate, minimum, discounts })
+        },
+        t("quote.save")
+      ),
+      h(
+        "button",
+        { type: "button", className: "cait-btn", disabled: Boolean(busy), onClick: () => onRefresh() },
+        t("quote.refresh")
+      ),
+      h(
+        "button",
+        {
+          type: "button",
+          className: "cait-btn cait-btn-primary",
+          disabled: Boolean(busy),
+          onClick: () => onExport("txt")
+        },
+        h(Icon, { name: "download", size: 13 }),
+        h("span", null, t("quote.export"))
+      )
+    )
+  );
+}
+function LocalMtModal({ t, busy, state, onSave, onTest, onClose }) {
+  const [enabled, setEnabled] = useState(Boolean(state?.enabled));
+  const [baseUrl, setBaseUrl] = useState(state?.baseUrl ?? "");
+  const [model, setModel] = useState(state?.model ?? "");
+  const [apiKey, setApiKey] = useState("");
+  const [timeoutMs, setTimeoutMs] = useState(String(state?.timeoutMs ?? 6e4));
+  const [result, setResult] = useState(null);
+  useEffect(() => {
+    if (!state) return;
+    setEnabled(Boolean(state.enabled));
+    setBaseUrl(state.baseUrl ?? "");
+    setModel(state.model ?? "");
+    setTimeoutMs(String(state.timeoutMs ?? 6e4));
+  }, [state]);
+  return h(
+    Modal,
+    { title: t("mtlocal.title"), onClose, wide: true },
+    h("p", { className: "cait-hint" }, t("mtlocal.hint")),
+    h(
+      "label",
+      { className: "cait-check" },
+      h("input", { type: "checkbox", checked: enabled, onChange: (event) => setEnabled(event.target.checked) }),
+      h("span", null, t("mtlocal.enable"))
+    ),
+    h(
+      "div",
+      { className: "cait-formrow" },
+      h("label", { className: "cait-field" }, h("span", null, "Base URL"), h("input", {
+        className: "cait-input",
+        placeholder: "http://127.0.0.1:1234/v1",
+        value: baseUrl,
+        onChange: (event) => setBaseUrl(event.target.value)
+      })),
+      h("label", { className: "cait-field" }, h("span", null, "Model"), h("input", {
+        className: "cait-input",
+        placeholder: "qwen2.5-14b-instruct",
+        value: model,
+        onChange: (event) => setModel(event.target.value)
+      }))
+    ),
+    h(
+      "div",
+      { className: "cait-formrow" },
+      h("label", { className: "cait-field" }, h("span", null, t("mtlocal.apiKey")), h("input", {
+        className: "cait-input",
+        type: "password",
+        placeholder: state?.hasKey ? "••••••" : "",
+        value: apiKey,
+        onChange: (event) => setApiKey(event.target.value)
+      })),
+      h("label", { className: "cait-field" }, h("span", null, t("mtlocal.timeout")), h("input", {
+        className: "cait-input",
+        value: timeoutMs,
+        onChange: (event) => setTimeoutMs(event.target.value)
+      }))
+    ),
+    result ? h(
+      "p",
+      { className: "cait-hint" },
+      result.ok ? t("mtlocal.testOk", { ms: result.latencyMs, model: result.model ?? "" }) : t("mtlocal.testFailed", { message: result.message ?? "" })
+    ) : null,
+    h(
+      "div",
+      { className: "cait-modal-actions" },
+      h("button", { type: "button", className: "cait-btn", onClick: onClose }, t("panel.cancel")),
+      h(
+        "button",
+        {
+          type: "button",
+          className: "cait-btn",
+          disabled: Boolean(busy),
+          onClick: async () => {
+            const next = await onSave({ enabled, baseUrl, model, apiKey, timeoutMs });
+            if (next) setResult({ ok: true, latencyMs: 0, model: next.model, message: "" });
+          }
+        },
+        t("mtlocal.save")
+      ),
+      h(
+        "button",
+        {
+          type: "button",
+          className: "cait-btn cait-btn-primary",
+          disabled: Boolean(busy),
+          onClick: async () => setResult(await onTest({ enabled, baseUrl, model, apiKey, timeoutMs }))
+        },
+        t("mtlocal.test")
+      )
+    )
+  );
+}
+
 // client/errors.js
 var ERROR_FAMILIES = [
   { prefix: "INVALID_", key: "error.invalid" },
@@ -9383,6 +10069,171 @@ function useWorkbenchController({ i18n, translate }) {
       notify(t("term.defaultSaved"));
     } catch (error) {
       report(error);
+    }
+  };
+  const [deliverChecks, setDeliverChecks] = useState(null);
+  const [batchState, setBatchState] = useState({ filter: "pending", indexes: [], total: 0, advice: null });
+  const [quoteConfig, setQuoteConfig] = useState(null);
+  const [quoteData, setQuoteData] = useState(null);
+  const [postEdit, setPostEdit] = useState(null);
+  const [mtLocalConfig, setMtLocalConfig] = useState(null);
+  const openDelivery = async () => {
+    if (!doc?.id) {
+      notify(t("deliver.noDocument"), "error");
+      return;
+    }
+    setModal({ type: "deliver" });
+    try {
+      setDeliverChecks(await rpc("deliveryChecks", { documentId: doc.id }));
+    } catch (error) {
+      report(error);
+    }
+  };
+  const runDelivery = async ({ include, client, batch }) => {
+    if (!doc?.id) return;
+    setBusy("delivery");
+    try {
+      await rpc("setDocumentBatch", { documentId: doc.id, client, batch });
+      const result = await rpc("exportDelivery", { documentId: doc.id, include });
+      downloadFile(result.filename, decodeBase64(result.content), result.mime);
+      notify(t("deliver.done", { entries: (result.entries || []).length, skipped: (result.skipped || []).length }));
+      setModal(null);
+    } catch (error) {
+      report(error);
+    } finally {
+      setBusy("");
+    }
+  };
+  const loadBatch = async (filter) => {
+    if (!doc?.id) return;
+    try {
+      const [selection, advice] = await Promise.all([
+        rpc("batchSelection", { documentId: doc.id, filter }),
+        rpc("batchAdvice", { documentId: doc.id })
+      ]);
+      setBatchState({ filter, indexes: selection.indexes || [], total: selection.total || 0, advice });
+    } catch (error) {
+      report(error);
+    }
+  };
+  const openBatch = async () => {
+    if (!doc?.id) {
+      notify(t("batch.noDocument"), "error");
+      return;
+    }
+    setModal({ type: "batch" });
+    await loadBatch("pending");
+  };
+  const runBatchOp = async ({ action, documentId, indexes }) => {
+    if (!documentId || !indexes?.length) return;
+    setBusy("batch");
+    try {
+      let result;
+      if (action === "confirm") result = await rpc("batchConfirmSegments", { documentId, indexes, addToTm: true });
+      else if (action === "clear") result = await rpc("batchClearTargets", { documentId, indexes });
+      else result = await rpc("batchSetLocked", { documentId, indexes, locked: action === "lock" });
+      if (result?.state) replaceRemoteState(result.state);
+      notify(t("batch.done", { count: indexes.length }));
+      await loadBatch(batchState.filter);
+    } catch (error) {
+      report(error);
+    } finally {
+      setBusy("");
+    }
+  };
+  const openQuote = async () => {
+    if (!doc?.id) {
+      notify(t("quote.noDocument"), "error");
+      return;
+    }
+    setModal({ type: "quote" });
+    try {
+      const [config, quote, stats] = await Promise.all([
+        rpc("quoteState"),
+        rpc("quoteDocument", { documentId: doc.id }),
+        rpc("postEditStats", { documentId: doc.id })
+      ]);
+      setQuoteConfig(config);
+      setQuoteData({ ...quote, client: doc.client || "", batch: doc.batch || "" });
+      setPostEdit(stats);
+    } catch (error) {
+      report(error);
+    }
+  };
+  const saveQuote = async (patch) => {
+    if (!doc?.id) return;
+    setBusy("quote");
+    try {
+      const config = await rpc("setQuote", patch);
+      setQuoteConfig(config);
+      const quote = await rpc("quoteDocument", { documentId: doc.id });
+      setQuoteData({ ...quote, client: doc.client || "", batch: doc.batch || "" });
+      notify(t("quote.saved"));
+    } catch (error) {
+      report(error);
+    } finally {
+      setBusy("");
+    }
+  };
+  const exportQuoteFile = async (format) => {
+    if (!doc?.id) return;
+    setBusy("quote");
+    try {
+      const result = await rpc("exportQuote", { documentId: doc.id, format });
+      downloadFile(result.filename, result.content, result.mime);
+      notify(t("quote.exported"));
+    } catch (error) {
+      report(error);
+    } finally {
+      setBusy("");
+    }
+  };
+  const saveDocLabels = async ({ client, batch }) => {
+    if (!doc?.id) return;
+    setBusy("labels");
+    try {
+      await rpc("setDocumentBatch", { documentId: doc.id, client, batch });
+      notify(t("quote.labelsSaved"));
+      setQuoteData((current) => current ? { ...current, client, batch } : current);
+    } catch (error) {
+      report(error);
+    } finally {
+      setBusy("");
+    }
+  };
+  const openLocalMt = async () => {
+    setModal({ type: "localmt" });
+    try {
+      setMtLocalConfig(await rpc("mtLocalState"));
+    } catch (error) {
+      report(error);
+    }
+  };
+  const saveLocalMt = async (patch) => {
+    setBusy("mtlocal");
+    try {
+      const state = await rpc("setMtLocal", patch);
+      setMtLocalConfig(state);
+      notify(t("mtlocal.saved"));
+      return state;
+    } catch (error) {
+      report(error);
+      return null;
+    } finally {
+      setBusy("");
+    }
+  };
+  const testLocalMt = async (patch) => {
+    setBusy("mtlocal");
+    try {
+      await rpc("setMtLocal", patch);
+      const result = await rpc("mtLocalTest");
+      setMtLocalConfig(await rpc("mtLocalState"));
+      return { ok: true, latencyMs: result.latencyMs, model: result.model };
+    } catch (error) {
+      return { ok: false, message: error?.message || String(error) };
+    } finally {
+      setBusy("");
     }
   };
   const saveBrief = async (brief) => {
@@ -10317,6 +11168,24 @@ function useWorkbenchController({ i18n, translate }) {
     importGlossaryFile,
     exportGlossaryFile,
     libraryIoOptions,
+    deliverChecks,
+    batchState,
+    quoteConfig,
+    quoteData,
+    postEdit,
+    mtLocalConfig,
+    openDelivery,
+    runDelivery,
+    openBatch,
+    loadBatch,
+    runBatchOp,
+    openQuote,
+    saveQuote,
+    exportQuoteFile,
+    saveDocLabels,
+    openLocalMt,
+    saveLocalMt,
+    testLocalMt,
     exportLibraryTo,
     importLibraryTo,
     generateMt,
@@ -10472,6 +11341,24 @@ function Workbench({ i18n, translate }) {
     importTmxFile,
     importGlossaryFile,
     exportGlossaryFile,
+    deliverChecks,
+    batchState,
+    quoteConfig,
+    quoteData,
+    postEdit,
+    mtLocalConfig,
+    openDelivery,
+    runDelivery,
+    openBatch,
+    loadBatch,
+    runBatchOp,
+    openQuote,
+    saveQuote,
+    exportQuoteFile,
+    saveDocLabels,
+    openLocalMt,
+    saveLocalMt,
+    testLocalMt,
     libraryIoOptions,
     exportLibraryTo,
     importLibraryTo,
@@ -10797,6 +11684,7 @@ function Workbench({ i18n, translate }) {
           onDefineTerm: openTermDialog,
           onImportGlossary: importGlossaryFile,
           onOpenIo: (mode) => setLibraryIo({ mode, kind: "glossary" }),
+          onOpenLocalMt: openLocalMt,
           onClearGlossary: clearGlossary,
           mt,
           mtError,
@@ -10907,6 +11795,45 @@ function Workbench({ i18n, translate }) {
           await exportLibraryTo({ kind: libraryIo.kind, libraryId: payload.libraryId, format: payload.format });
         }
       }
+    }) : null,
+    modal?.type === "deliver" ? h(DeliveryModal, {
+      t,
+      busy: Boolean(busy),
+      checks: deliverChecks,
+      labels: { client: doc?.client || "", batch: doc?.batch || "" },
+      onRun: runDelivery,
+      onJump: (index2) => chooseSegment(index2),
+      onClose: () => setModal(null)
+    }) : null,
+    modal?.type === "batch" ? h(BatchModal, {
+      t,
+      busy: Boolean(busy),
+      documentId: doc?.id,
+      selection: batchState,
+      advice: batchState?.advice,
+      onSelect: loadBatch,
+      onRun: runBatchOp,
+      onClose: () => setModal(null)
+    }) : null,
+    modal?.type === "quote" ? h(QuoteModal, {
+      t,
+      busy: Boolean(busy),
+      state: quoteConfig,
+      quote: quoteData,
+      postEdit,
+      onSave: saveQuote,
+      onRefresh: openQuote,
+      onExport: exportQuoteFile,
+      onLabels: saveDocLabels,
+      onClose: () => setModal(null)
+    }) : null,
+    modal?.type === "localmt" ? h(LocalMtModal, {
+      t,
+      busy: Boolean(busy),
+      state: mtLocalConfig,
+      onSave: saveLocalMt,
+      onTest: testLocalMt,
+      onClose: () => setModal(null)
     }) : null,
     modal?.type === "analysis" ? h(AnalysisModal, {
       t,

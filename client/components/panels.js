@@ -28,6 +28,7 @@ function CatPanel({
   mtError,
   mtBusy,
   onGenerateMt,
+  onOpenLocalMt,
   onApplyMt,
   onCopy,
   onOpenSettings,
@@ -365,6 +366,16 @@ function CatPanel({
                 { className: 'cait-labelrow' },
                 h('span', { className: 'cait-label' }, t('panel.mtRoute')),
                 h('span', { className: 'cait-meta' }, settings.mt.provider || '—'),
+              ),
+              h(
+                'button',
+                {
+                  className: 'cait-linkbtn',
+                  type: 'button',
+                  onClick: onOpenLocalMt,
+                  disabled: Boolean(busy),
+                },
+                t('mtlocal.open'),
               ),
               h(
                 'button',

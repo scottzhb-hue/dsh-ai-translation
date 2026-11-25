@@ -1,3 +1,5 @@
+import { WORKFLOW_DICTS } from './locales-workflow.js'
+
 const ZH = {
   'app.title': 'AI辅助翻译',
   'app.subtitle': '翻译工作台',
@@ -2127,7 +2129,11 @@ const UI_LANGS = [
   ['ja', '日本語'],
 ]
 const UI_LANG_CODES = UI_LANGS.map(([code]) => code)
-const UI_DICTS = { zh: ZH, en: EN, ja: JA }
+const UI_DICTS = {
+  zh: { ...ZH, ...WORKFLOW_DICTS.zh },
+  en: { ...EN, ...WORKFLOW_DICTS.en },
+  ja: { ...JA, ...WORKFLOW_DICTS.ja },
+}
 
 function interpolateText(text, vars) {
   if (!vars || typeof text !== 'string' || text.indexOf('{') < 0) return text
