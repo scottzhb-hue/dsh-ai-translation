@@ -25,6 +25,12 @@ All notable changes to CAIT are documented here. The project follows
 - 客户端构建改为 node scripts/build-client.mjs 生成 client.js（模块 id 由 package.json 的 name 派生），不再手工镜像打包产物。
 - settings 新增 mtLocal / quote / postEdit 三组配置并按白名单还原；文档新增 client / batch 字段并随 store.json 持久化。
 
+### Fixed
+
+- 重启后丢失的设置：`settings.quote`、`settings.mtLocal`、`settings.postEdit` 之前没有写进 `store.json`，重开插件会退回默认值。本地 MT 端点、报价单价与译后编辑开关现在都会持久化。
+- 重启后丢失的译后编辑记录：`segment.postEdit`（保留率快照）之前只在内存里，重新加载文档即消失，现在会随句段一起还原。
+- 报价弹窗读不到客户 / 批次：`quoteDocument` 现在回传 `client` / `batch`，打开报价单时会带上已保存的标签。
+
 ## [1.0.5] - 2026-11-24
 
 ### Added
