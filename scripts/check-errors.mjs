@@ -17,7 +17,25 @@ const fail = (message) => {
   console.error(`✗ ${message}`)
 }
 
-const codes = new Set(collectErrorCodes())
+// 这两类码故意不写进字典：
+// 1) 路由/导入类错误由服务端直接给出带细节的中文消息（含 provider/model 或转换原因），
+//    客户端 `describeError` 在没有专属键、也不匹配类别时回落到 `error.message`，
+//    加字典反而会把真实原因盖成一句通用文案。
+// 2) `CAIT_CONVERT_OK` 是旧版 Office 转换脚本的成功标记，不是错误码。
+const SERVER_MESSAGE_CODES = new Set([
+  'AI_ROUTE_ERROR',
+  'AI_ROUTE_UNAVAILABLE',
+  'EMPTY_MESSAGE',
+  'LEGACY_OFFICE_EXTENSION',
+  'LEGACY_OFFICE_UNAVAILABLE',
+  'MT_ROUTE_ERROR',
+  'REVIEW_ROUTE_ERROR',
+])
+const NOT_ERROR_CODES = new Set(['CAIT_CONVERT_OK'])
+
+const codes = new Set(
+  collectErrorCodes().filter((code) => !SERVER_MESSAGE_CODES.has(code) && !NOT_ERROR_CODES.has(code)),
+)
 
 // 1. 每个码都必须能落到「专属文案」或「类别文案」，不能只剩 error.generic。
 // 注意只判断「有没有候选键」不够：专属键可能压根没写进字典，所以要看字典里是否真的有。

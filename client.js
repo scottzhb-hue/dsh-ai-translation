@@ -1,6 +1,6 @@
 // 由 scripts/build-client.mjs 从 client/ 构建生成，请勿手工修改。
 window.__ModuleLoader__.load({
-  id: '@scottzhb-hue/dsh-ai-translation',
+  id: "@scottzhb-hue/dsh-ai-translation",
   factory(require) {
     const module = { exports: {} }
     const exports = module.exports
@@ -4391,7 +4391,7 @@ function EditorPane({
   const menuLeft = termMenu ? clampMenu(termMenu.x, typeof window === "undefined" ? 1280 : window.innerWidth, 236) : 0;
   const menuTop = termMenu ? clampMenu(termMenu.y, typeof window === "undefined" ? 800 : window.innerHeight, 96) : 0;
   useEffect(() => {
-    if (!termMenu) return undefined;
+    if (!termMenu) return void 0;
     const closeMenu = () => setTermMenu(null);
     const onMenuKey = (event) => {
       if (event.key === "Escape") closeMenu();
@@ -6034,9 +6034,7 @@ function LibraryPage({
   const scopeKey = scopeIds.join(",");
   const defaultWriteId = kind === "tm" ? data?.mounts?.defaultTmId : data?.mounts?.defaultGlossaryId;
   const targetLibraryId = libraries.some((library) => library[idKey] === defaultWriteId) ? defaultWriteId : libraries[0]?.[idKey] || "";
-  // Export can target any library; fall back to the default write library.
   const exportTargetId = libraries.some((library) => library[idKey] === exportLibraryId) ? exportLibraryId : targetLibraryId;
-
   const changeWriteLibrary = async (value) => {
     if (!value || value === targetLibraryId) return;
     if (kind === "tm") {
@@ -7797,7 +7795,6 @@ function LibraryIoModal({
     )
   );
 }
-
 function BriefModal({ t, doc, busy, onClose, onSave }) {
   const initial = doc.brief || {};
   const [form, setForm] = useState({
@@ -9879,7 +9876,6 @@ function useWorkbenchController({ i18n, translate }) {
       setBusy("");
     }
   };
-
   const libraryIoOptions = (kind) => {
     const mountedGlossary = Array.isArray(doc?.glossaryIds) && doc.glossaryIds.length ? doc.glossaryIds : data?.mounts?.glossaryIds || [];
     const mountedTm = Array.isArray(doc?.tmIds) && doc.tmIds.length ? doc.tmIds : data?.mounts?.tmIds || [];
@@ -9933,7 +9929,6 @@ function useWorkbenchController({ i18n, translate }) {
       setBusy("");
     }
   };
-
   const generateMt = async () => {
     if (!doc || !segment || mtBusy) return;
     setMtBusy(true);

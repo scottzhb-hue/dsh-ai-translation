@@ -34,10 +34,15 @@ export function readAuthoredClient({ includeLocales = false } = {}) {
     .join('\n')
 }
 
+// 模块 id 必须与 package.json 的 name 一致（DSH 按包名注册模块），改名时
+// 只改 package.json 即可，避免构建产物与清单再次漂移。
+const packageJson = JSON.parse(readFileSync(join(projectRoot, 'package.json'), 'utf8'))
+const moduleId = typeof packageJson.name === 'string' && packageJson.name ? packageJson.name : 'dsh-ai-translation'
+
 // 外框保持 DSH 侧契约不变：factory 收到 require，返回 entry 的默认导出。
 const HEADER = `// 由 scripts/build-client.mjs 从 client/ 构建生成，请勿手工修改。
 window.__ModuleLoader__.load({
-  id: 'dsh-ai-translation',
+  id: ${JSON.stringify(moduleId)},
   factory(require) {
     const module = { exports: {} }
     const exports = module.exports
