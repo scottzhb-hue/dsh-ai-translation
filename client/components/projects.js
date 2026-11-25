@@ -149,6 +149,7 @@ function ProjectDetail({
   libraries,
   includePrefs,
   draft,
+  epoch,
   docId,
   onDraft,
   onInclude,
@@ -209,7 +210,7 @@ function ProjectDetail({
     setMinutes(restored?.minutes ?? '30')
     setTimeNote(restored?.timeNote ?? '')
     setConfirmDelete(false)
-  }, [projectId])
+  }, [projectId, epoch])
 
   if (!project) {
     return h('div', { className: 'cait-proj-detail' }, h('p', { className: 'cait-hint' }, t('projects.pick')))
@@ -963,6 +964,7 @@ function ProjectsPage({
   projects,
   includePrefs,
   draft,
+  epoch,
   docId,
   tab,
   onTab,
@@ -1052,6 +1054,7 @@ function ProjectsPage({
             libraries,
             includePrefs,
             draft,
+            epoch,
             docId,
             onDraft,
             onInclude,

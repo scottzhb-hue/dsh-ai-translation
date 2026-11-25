@@ -1217,6 +1217,7 @@ export function useWorkbenchController({ i18n, translate }) {
   const [projectPick, setProjectPick] = useState(null)
   const [projectTab, setProjectTab] = useState('projects')
   const [projectDrafts, setProjectDrafts] = useState({})
+  const [projectEpoch, setProjectEpoch] = useState(0)
   const [pendingNav, setPendingNav] = useState(null)
   const [includePrefs, setIncludePrefs] = useState(() => {
     try {
@@ -1328,6 +1329,7 @@ export function useWorkbenchController({ i18n, translate }) {
         analysisStale: analyze ? false : same ? Boolean(current.analysisStale) || stale : false,
       }
     })
+    setProjectEpoch((value) => value + 1)
     return detail
   }
 
@@ -2725,6 +2727,7 @@ export function useWorkbenchController({ i18n, translate }) {
     projectsState,
     projectPick,
     projectDrafts,
+    projectEpoch,
     openProjects,
     selectProject,
     createProjectAction,

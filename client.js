@@ -9639,6 +9639,7 @@ function ProjectDetail({
   libraries,
   includePrefs,
   draft,
+  epoch,
   docId,
   onDraft,
   onInclude,
@@ -9695,7 +9696,7 @@ function ProjectDetail({
     setMinutes(restored?.minutes ?? "30");
     setTimeNote(restored?.timeNote ?? "");
     setConfirmDelete(false);
-  }, [projectId]);
+  }, [projectId, epoch]);
   if (!project) {
     return h("div", { className: "cait-proj-detail" }, h("p", { className: "cait-hint" }, t("projects.pick")));
   }
@@ -10408,6 +10409,7 @@ function ProjectsPage({
   projects,
   includePrefs,
   draft,
+  epoch,
   docId,
   tab,
   onTab,
@@ -10495,6 +10497,7 @@ function ProjectsPage({
         libraries,
         includePrefs,
         draft,
+        epoch,
         docId,
         onDraft,
         onInclude,
@@ -11741,6 +11744,7 @@ function useWorkbenchController({ i18n, translate }) {
   const [projectPick, setProjectPick] = useState(null);
   const [projectTab, setProjectTab] = useState("projects");
   const [projectDrafts, setProjectDrafts] = useState({});
+  const [projectEpoch, setProjectEpoch] = useState(0);
   const [pendingNav, setPendingNav] = useState(null);
   const [includePrefs, setIncludePrefs] = useState(() => {
     try {
@@ -11837,6 +11841,7 @@ function useWorkbenchController({ i18n, translate }) {
         analysisStale: analyze ? false : same ? Boolean(current.analysisStale) || stale2 : false
       };
     });
+    setProjectEpoch((value) => value + 1);
     return detail2;
   };
   const openProjects = async (projectId) => {
@@ -13114,6 +13119,7 @@ function useWorkbenchController({ i18n, translate }) {
     projectsState,
     projectPick,
     projectDrafts,
+    projectEpoch,
     openProjects,
     selectProject,
     createProjectAction,
@@ -13329,6 +13335,7 @@ function Workbench({ i18n, translate }) {
     requestOpenDocument,
     projectTab,
     projectDrafts,
+    projectEpoch,
     includePrefs,
     updateProjectDraft,
     pendingNav,
@@ -13554,6 +13561,7 @@ function Workbench({ i18n, translate }) {
       projects: data?.projects?.projects ?? [],
       includePrefs,
       draft: projectsState?.project?.id ? projectDrafts?.[projectsState.project.id] : null,
+      epoch: projectEpoch,
       docId: doc?.id,
       tab: projectTab,
       onTab: requestProjectTab,
