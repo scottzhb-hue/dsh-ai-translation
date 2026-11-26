@@ -36,6 +36,7 @@
 | 16 | 本地 MT 端点（OpenAI 兼容，Key 存 `~/.dsh/cait`） | 已上线 | `lib/mt-local.js`（新增）、`lib/mt-translate.js`、`lib/settings.js` | `client/components/workflow.js`、`client/components/panels.js`、`client/workbench/controller.js` | 无（新模块） |
 | 17 | 报价单 + 译后编辑度量 + 项目/批次标签 | 已上线 | `lib/quote.js`（新增）、`lib/workflow.js`（新增）、`lib/segments.js`（记录 keepRatio）、`lib/settings.js`、`lib/document-view.js`、`lib/persistence.js` | `client/components/workflow.js`、`client/components/shell.js`、`client/workbench/controller.js` | 无（新模块） |
 | 18 | 项目（project）层：多文件共享 brief / TM / 术语库，项目级分析、报价、报告与交付，工时 | 已上线 | `lib/projects.js`（新增）、`lib/quote.js`、`lib/analysis.js`、`lib/libraries.js`、`lib/brief.js`、`lib/persistence.js`、`lib/limits.js`、`lib/api.js`、`lib/document-view.js`、`lib/ai-chat.js`、`lib/mt-translate.js`、`lib/review.js`、`lib/tools.js`、`lib/documents.js`、`lib/store.js`、`lib/store-mixins.js` | `client/components/projects.js`（新增）、`client/components/workbench.js`、`client/components/shell.js`、`client/components/workflow.js`、`client/locales-workflow.js`、`client/locales.js`、`client/workbench/controller.js`、`client/styles.js` |
+| 19 | 欢迎页、项目内建文档、可见失败（错误边界 + 库加载兜底） | 已上线 | `client/components/home.js`（新增）、`client/components/error-boundary.js`（新增）、`client/workbench/controller.js`、`client/components/projects.js`、`client/components/pages.js`、`client/index.js` |
 
 ## 明细
 
@@ -192,6 +193,20 @@
 - **验证**：`audit-workflow.mjs` 的项目段覆盖建项目 / 归集 / 未分类 / brief 继承 / TM 继承与覆盖 / 改名 / 四档状态 / 秒表与补记 / 分析与报价 / HTML+CSV 报告 / 交付 ZIP / 错误码 / 重启还原 / 删项目退回未分类，脚本总计 **137 项 PASS**。
 - **边界**：项目不删文档（删项目把文档退回未分类）；`projectAnalysis` 的 TM 查询随句段数线性增长，只在打开项目页、出报告和打包时调用；项目级 TM 只影响该项目下的文档，全局挂载仍是默认值。
 
+
+### 19 欢迎页与可见失败
+
+**动机**：1.2.1 验收时用户反馈「点项目名进不去文档」「库页面一直转圈」「点项目崩溃」等 7 条问题。核验后发现首屏从不载入项目详情、项目内没有建文档入口、渲染异常被宿主错误边界静默吞掉（表现成白屏或“点了没反应”）。
+
+**做法**：
+
+- 欢迎页 `HomePage`（`client/components/home.js`）：默认 `view === 'home'`，粘贴文本 / 导入文件 / 加载演示 / 接着上次继续，并列出最近项目与已打开文档；顶栏品牌区变成按钮，随时回首页。
+- 项目内建文档：项目详情 `cait-proj-docactions` 提供「新建文档」「导入文件」，`modal.projectId` 预置项目，创建后直接进编辑器并后台刷新项目详情。
+- 文档表扩充：项目文档表加「更新时间」列、整行可点；「所有文档」8 列并整行可点，单元格按钮 `stopPropagation`。
+- 可见失败：`client/index.js` 用 `ErrorBoundary` 包住 `Workbench`，崩溃时显示可复制的错误文本；LibraryPage 的 `loadRows` 加请求令牌、15 秒超时与失败重试，不再无限转圈。
+- 首屏自动载入项目详情（挂载 effect），同一项目再次点击强制重载。
+
+**验证**：`_dev/test-workbench-mount.mjs`（18 项，完整 Workbench + 真实 store 副本）、`_dev/test-ui-controller.mjs`（24 项，controller 端到端）、`audit-workflow.mjs` 138 项全过。
 
 ## 维护与发布须知
 

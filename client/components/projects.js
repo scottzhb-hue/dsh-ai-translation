@@ -50,8 +50,16 @@ function librarySelectIds(value) {
   return [value]
 }
 
-function statusChip(t, doc) {
-  const code = doc.status?.code ?? doc.status ?? ''
+/** 文档/项目的更新时间：本地时区 `YYYY-MM-DD HH:mm`，空值显示破折号。 */
+function formatStamp(value) {
+  if (!value) return '—'
+  const date = new Date(value)
+  if (Number.isNaN(date.getTime())) return '—'
+  const pad = (part) => String(part).padStart(2, '0')
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}`
+}
+
+function statusChip(t, doc) {  const code = doc.status?.code ?? doc.status ?? ''
   const label = doc.status?.label ?? doc.statusLabel ?? t(STATUS_LABEL[code] ?? 'projects.statusUntranslated')
   return h('span', { className: `cait-proj-status is-${code}` }, label)
 }
@@ -162,6 +170,8 @@ function ProjectDetail({
   onDeleteTime,
   onExport,
   onOpenDoc,
+  onNewDoc,
+  onImportDoc,
   onDocReport,
   onProjectReport,
   onRefreshAnalysis,
@@ -477,6 +487,34 @@ function ProjectDetail({
     ),
     h('h4', { className: 'cait-section-title' }, t('projects.docs')),
     h('p', { className: 'cait-hint' }, t('projects.docsHint')),
+    !inbox
+      ? h(
+          'div',
+          { className: 'cait-proj-docactions' },
+          h(
+            'button',
+            {
+              type: 'button',
+              className: 'cait-btn',
+              disabled: Boolean(busy),
+              onClick: () => onNewDoc(projectId),
+            },
+            h(Icon, { name: 'plus', size: 13 }),
+            h('span', null, t('projects.newDoc')),
+          ),
+          h(
+            'button',
+            {
+              type: 'button',
+              className: 'cait-btn',
+              disabled: Boolean(busy),
+              onClick: () => onImportDoc(projectId),
+            },
+            h(Icon, { name: 'upload', size: 13 }),
+            h('span', null, t('projects.importDoc')),
+          ),
+        )
+      : null,
     h(
       'div',
       { className: 'cait-proj-tablewrap' },
@@ -494,6 +532,7 @@ function ProjectDetail({
             h('th', null, t('projects.colProgress')),
             h('th', null, t('projects.colSegments')),
             h('th', null, t('projects.colWords')),
+            h('th', null, t('projects.colUpdated')),
             h('th', null, t('projects.colActions')),
           ),
         ),
@@ -504,7 +543,12 @@ function ProjectDetail({
             ? rows.map((doc) =>
                 h(
                   'tr',
-                  { key: doc.id, className: doc.id === docId ? 'is-current' : '' },
+                  {
+                    key: doc.id,
+                    className: `cait-proj-row${doc.id === docId ? ' is-current' : ''}`,
+                    title: t('projects.openDoc'),
+                    onClick: () => onOpenDoc(doc.id),
+                  },
                   h(
                     'td',
                     null,
@@ -513,7 +557,10 @@ function ProjectDetail({
                       {
                         type: 'button',
                         className: 'cait-linkbtn',
-                        onClick: () => onOpenDoc(doc.id),
+                        onClick: (event) => {
+                          event.stopPropagation()
+                          onOpenDoc(doc.id)
+                        },
                       },
                       doc.name,
                     ),
@@ -531,12 +578,16 @@ function ProjectDetail({
                   ),
                   h('td', null, doc.segments),
                   h('td', null, doc.words),
+                  h('td', { className: 'cait-proj-updated' }, formatStamp(doc.updatedAt)),
                   h(
                     'td',
                     null,
                     h(
                       'span',
-                      { className: 'cait-proj-rowactions' },
+                      {
+                        className: 'cait-proj-rowactions',
+                        onClick: (event) => event.stopPropagation(),
+                      },
                       h(
                         'button',
                         {
@@ -586,7 +637,7 @@ function ProjectDetail({
             : h(
                 'tr',
                 null,
-                h('td', { colSpan: 6 }, h('span', { className: 'cait-hint' }, t('projects.noDocs'))),
+                h('td', { colSpan: 7 }, h('span', { className: 'cait-hint' }, t('projects.noDocs'))),
               ),
         ),
       ),
@@ -868,6 +919,8 @@ function AllDocuments({
             h('th', null, t('projects.colStatus')),
             h('th', null, t('projects.colProgress')),
             h('th', null, t('projects.colSegments')),
+            h('th', null, t('projects.colWords')),
+            h('th', null, t('projects.colUpdated')),
             h('th', null, t('projects.colActions')),
           ),
         ),
@@ -878,13 +931,25 @@ function AllDocuments({
             ? rows.map((doc) =>
                 h(
                   'tr',
-                  { key: doc.id, className: doc.id === docId ? 'is-current' : '' },
+                  {
+                    key: doc.id,
+                    className: `cait-proj-row${doc.id === docId ? ' is-current' : ''}`,
+                    title: t('projects.openDoc'),
+                    onClick: () => onOpenDoc(doc.id),
+                  },
                   h(
                     'td',
                     null,
                     h(
                       'button',
-                      { type: 'button', className: 'cait-linkbtn', onClick: () => onOpenDoc(doc.id) },
+                      {
+                        type: 'button',
+                        className: 'cait-linkbtn',
+                        onClick: (event) => {
+                          event.stopPropagation()
+                          onOpenDoc(doc.id)
+                        },
+                      },
                       doc.name,
                     ),
                   ),
@@ -896,7 +961,10 @@ function AllDocuments({
                       {
                         type: 'button',
                         className: 'cait-linkbtn',
-                        onClick: () => onOpenProject(doc.projectId),
+                        onClick: (event) => {
+                          event.stopPropagation()
+                          onOpenProject(doc.projectId)
+                        },
                       },
                       doc.projectName || t('projects.inboxTag'),
                     ),
@@ -904,12 +972,17 @@ function AllDocuments({
                   h('td', null, statusChip(t, doc)),
                   h('td', null, `${doc.progress?.percent ?? 0}%`),
                   h('td', null, doc.progress?.total ?? 0),
+                  h('td', null, doc.words ?? 0),
+                  h('td', { className: 'cait-proj-updated' }, formatStamp(doc.updatedAt)),
                   h(
                     'td',
                     null,
                     h(
                       'span',
-                      { className: 'cait-proj-rowactions' },
+                      {
+                        className: 'cait-proj-rowactions',
+                        onClick: (event) => event.stopPropagation(),
+                      },
                       h(
                         'button',
                         {
@@ -945,7 +1018,7 @@ function AllDocuments({
             : h(
                 'tr',
                 null,
-                h('td', { colSpan: 6 }, h('span', { className: 'cait-hint' }, t('projects.noMatch'))),
+                h('td', { colSpan: 8 }, h('span', { className: 'cait-hint' }, t('projects.noMatch'))),
               ),
         ),
       ),
@@ -981,6 +1054,8 @@ function ProjectsPage({
   onDeleteTime,
   onExport,
   onOpenDoc,
+  onNewDoc,
+  onImportDoc,
   onReport,
   onDocReport,
   onMoveDoc,
@@ -1067,6 +1142,8 @@ function ProjectsPage({
             onDeleteTime,
             onExport,
             onOpenDoc,
+            onNewDoc,
+            onImportDoc,
             onDocReport,
             onProjectReport: onReport,
             onRefreshAnalysis,

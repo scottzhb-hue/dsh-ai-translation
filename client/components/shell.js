@@ -203,6 +203,7 @@ function Topbar({
   onReplace,
   view,
   onView,
+  onHome,
 }) {
   const progress = doc?.progress || { percent: 0, confirmed: 0, total: 0 }
   const openIds = new Set((data.openDocuments || []).map((item) => item.id))
@@ -217,8 +218,13 @@ function Topbar({
     'header',
     { className: 'cait-topbar' },
     h(
-      'div',
-      { className: 'cait-brand' },
+      'button',
+      {
+        type: 'button',
+        className: `cait-brand${view === 'home' ? ' active' : ''}`,
+        title: t('home.open'),
+        onClick: () => (onHome ? onHome() : onView('home')),
+      },
       h('span', { className: 'cait-logo' }, h(CaitMark, { size: 17 })),
       h(
         'span',

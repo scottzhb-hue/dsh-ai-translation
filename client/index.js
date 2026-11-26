@@ -28,6 +28,7 @@ import { ZH, EN, JA, UI_LANG_CODES, resolveUiLang, makeTranslator } from './loca
 import { CSS_SCALED } from './styles.js'
 import { CaitSidebarIcon } from './components/shell.js'
 import { Workbench } from './components/workbench.js'
+import { ErrorBoundary } from './components/error-boundary.js'
 
 const entry = {
   // `locale` must be declared: Cordis guards service access with the inject
@@ -148,7 +149,9 @@ const entry = {
           name: 'main',
           key: '@scottzhb-hue/dsh-ai-translation',
         },
-        () => h(Workbench, { i18n, translate }),
+        // 工作台整体包在错误边界里：任何渲染异常都会显示可复制的错误文本，
+        // 而不是让宿主静默吞掉、表现为“点了没反应/整块空白”。
+        () => h(ErrorBoundary, null, h(Workbench, { i18n, translate })),
       ),
     )
   },

@@ -32,7 +32,9 @@ export function useWorkbenchController({ i18n, translate }) {
   const [railFilter, setRailFilter] = useState('all')
   // Two top-level workspaces: the translator's document and the library
   // manager. The latter needs no document, so it must not be a modal.
-  const [view, setView] = useState('projects')
+  // The welcome page is the landing view: it lets a first-time user paste text
+  // or import a file without knowing about the project/library tabs.
+  const [view, setView] = useState('home')
   // A seed carries the panel's search text into the library workspace.
   const [libSeed, setLibSeed] = useState(null)
 
@@ -658,6 +660,9 @@ export function useWorkbenchController({ i18n, translate }) {
       await loadDemo()
       return
     }
+    // Opened from a project header: the document is filed into that project and
+    // the归属对话框 is skipped, so the user lands in the editor immediately.
+    const targetProject = modal?.projectId || ''
     setBusy('create')
     try {
       let result
@@ -671,6 +676,7 @@ export function useWorkbenchController({ i18n, translate }) {
           targetLang: form.targetLang,
           csvSourceColumn: form.csvSourceColumn,
           csvTargetColumn: form.csvTargetColumn,
+          projectId: targetProject || undefined,
         })
       } else {
         result = await rpc('createDocument', {
@@ -678,6 +684,7 @@ export function useWorkbenchController({ i18n, translate }) {
           text: form.text,
           sourceLang: form.sourceLang,
           targetLang: form.targetLang,
+          projectId: targetProject || undefined,
         })
       }
       adoptState(result.state)
@@ -687,6 +694,13 @@ export function useWorkbenchController({ i18n, translate }) {
         return
       }
       importNotice(result, t('toast.imported'))
+      if (targetProject) {
+        // Already filed: refresh that project in the background and go translate.
+        setModal(null)
+        void loadProjectDetail(targetProject, { stale: true }).catch(report)
+        setView('documents')
+        return
+      }
       // Every new document is filed into a project before translation starts,
       // so the picker opens right here instead of leaving it to the user.
       if (result.document?.id) {
@@ -1274,6 +1288,7 @@ export function useWorkbenchController({ i18n, translate }) {
   }
 
   const requestView = (next) => {
+    if (next === view && next !== 'projects') return
     if (next === 'projects') {
       if (view === 'projects') void refreshProjectList().catch(report)
       else void openProjects()
@@ -1281,6 +1296,26 @@ export function useWorkbenchController({ i18n, translate }) {
     }
     if (guardProjectNav({ kind: 'view', view: next })) return
     setView(next)
+  }
+
+  /** 回到欢迎页（顶栏品牌区），带未保存设置时同样先拦一下。 */
+  const openHome = () => {
+    if (view === 'home') return
+    if (guardProjectNav({ kind: 'home' })) return
+    setView('home')
+  }
+
+  /** 欢迎页里点最近项目：直接进项目视图并载入该项目的详情。 */
+  const openProjectFromHome = (projectId) => {
+    if (guardProjectNav({ kind: 'project', projectId })) return
+    setView('projects')
+    void openProjects(projectId)
+  }
+
+  /** 项目详情里的「新建文档 / 导入文件」：预置当前项目，不再弹归属对话框。 */
+  const newDocumentInProject = (projectId, mode = 'text') => {
+    if (guardProjectNav({ kind: 'new', mode, projectId: projectId || '' })) return
+    setModal({ type: 'new', defaultMode: mode, projectId: projectId || '' })
   }
 
   /** 项目详情里的文档行：点开即进编辑器，有未保存设置时先拦一下。 */
@@ -1353,8 +1388,35 @@ export function useWorkbenchController({ i18n, translate }) {
     }
   }
 
-  const selectProject = async (projectId) => {
-    if (!projectId) return
+  /**
+   * The project view must never render as an empty page: as soon as the first
+   * snapshot arrives while that view is showing, load a detail (the last open
+   * project, else the first non-inbox one). requestView keeps it fresh later.
+   */
+  useEffect(() => {
+    if (!data || view !== 'projects') return
+    if (projectsState?.project || projectsState?.list) return
+    void openProjects()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data?.revision, view])
+
+  /** 欢迎页的「继续上次」：优先回到最近打开的文档，否则回最近的项目。 */
+  const resumeLast = () => {
+    const openDoc = data?.openDocuments?.[0]
+    if (openDoc?.id) {
+      setView('documents')
+      if (openDoc.id !== doc?.id) void openDocument(openDoc.id)
+      return
+    }
+    const first =
+      data?.projects?.projects?.find((item) => !item.inbox) ?? data?.projects?.projects?.[0]
+    if (first?.id) {
+      setView('projects')
+      void openProjects(first.id)
+    }
+  }
+
+  const selectProject = async (projectId) => {    if (!projectId) return
     setBusy('projects')
     try {
       await loadProjectDetail(projectId, { analyze: true })
@@ -1366,7 +1428,13 @@ export function useWorkbenchController({ i18n, translate }) {
   }
 
   const requestProject = (projectId) => {
-    if (!projectId || projectId === currentProjectId()) return
+    if (!projectId) return
+    // Clicking the project that is already open reloads it: the detail may be
+    // stale (documents moved, words edited) and an early return feels dead.
+    if (projectId === currentProjectId()) {
+      void selectProject(projectId)
+      return
+    }
     if (guardProjectNav({ kind: 'project', projectId })) return
     void selectProject(projectId)
   }
@@ -1452,6 +1520,8 @@ export function useWorkbenchController({ i18n, translate }) {
       if (projectId) await loadProjectDetail(projectId)
     }
     if (nav.kind === 'view') setView(nav.view)
+    else if (nav.kind === 'home') setView('home')
+    else if (nav.kind === 'new') setModal({ type: 'new', defaultMode: nav.mode, projectId: nav.projectId })
     else if (nav.kind === 'tab') setProjectTab(nav.tab)
     else if (nav.kind === 'project') await selectProject(nav.projectId)
     else if (nav.kind === 'doc') {
@@ -2737,6 +2807,10 @@ export function useWorkbenchController({ i18n, translate }) {
     requestProject,
     requestProjectTab,
     requestOpenDocument,
+    openHome,
+    openProjectFromHome,
+    newDocumentInProject,
+    resumeLast,
     projectTab,
     includePrefs,
     rememberInclude,

@@ -6,6 +6,7 @@ import { SegmentRail } from './rail.js'
 import { EditorPane } from './editor.js'
 import { CatPanel } from './panels.js'
 import { NewDocModal } from './forms.js'
+import { HomePage } from './home.js'
 import { AlignPage, LibraryPage } from './pages.js'
 import {
   ExportModal,
@@ -181,6 +182,10 @@ function Workbench({ i18n, translate }) {
     requestProject,
     requestProjectTab,
     requestOpenDocument,
+    openHome,
+    openProjectFromHome,
+    newDocumentInProject,
+    resumeLast,
     projectTab,
     projectDrafts,
     projectEpoch,
@@ -402,8 +407,22 @@ function Workbench({ i18n, translate }) {
       onReplace: openReplace,
       view,
       onView: requestView,
+      onHome: openHome,
     }),
     h(SaveBanner, { t, storage: data?.storage, stale, onRefresh: refreshState }),
+    view === 'home'
+      ? h(HomePage, {
+          t,
+          busy,
+          data,
+          onPasteCreate: createFromForm,
+          onImport: () => setModal({ type: 'new', defaultMode: 'file' }),
+          onDemo: () => createFromForm({ demo: true }),
+          onOpenProject: openProjectFromHome,
+          onOpenDoc: requestOpenDocument,
+          onResume: resumeLast,
+        })
+      : null,
     view === 'projects'
       ? h(ProjectsPage, {
           t,
@@ -433,6 +452,8 @@ function Workbench({ i18n, translate }) {
           onDeleteTime: deleteProjectTime,
           onExport: exportProjectDeliveryAction,
           onOpenDoc: requestOpenDocument,
+          onNewDoc: (projectId) => newDocumentInProject(projectId, 'text'),
+          onImportDoc: (projectId) => newDocumentInProject(projectId, 'file'),
           onReport: downloadProjectReport,
           onDocReport: downloadDocumentReport,
           onMoveDoc: assignDocToProject,

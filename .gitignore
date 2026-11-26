@@ -5,3 +5,4 @@ _dev/
 .DS_Store
 *.log
 *.tmp
+_tmp/

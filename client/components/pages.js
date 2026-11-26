@@ -477,8 +477,21 @@ function LibraryPage({
     setLang('')
   }, [kind])
 
+  const loadToken = useRef(0)
+  const [loadError, setLoadError] = useState(null)
+
   const loadRows = async () => {
+    const token = (loadToken.current += 1)
     setLoading(true)
+    setLoadError(null)
+    // A stuck bridge must not leave an endless spinner: give up after 15s and
+    // hand the user a retry button.
+    const timer = setTimeout(() => {
+      if (loadToken.current !== token) return
+      loadToken.current += 1
+      setLoading(false)
+      setLoadError({ code: 'TIMEOUT', message: 'request timed out' })
+    }, 15000)
     try {
       const params =
         kind === 'tm'
@@ -486,13 +499,16 @@ function LibraryPage({
           : { glossaryIds: scopeIds, query: debouncedQuery, page, pageSize }
       if (lang) params.sourceLang = lang
       const result = await rpc(kind === 'tm' ? 'listTmEntries' : 'listGlossaryEntries', params)
+      if (loadToken.current !== token) return
       setRows(result)
       if (result.page !== page) setPage(result.page)
     } catch (error) {
+      if (loadToken.current !== token) return
       report(error)
-      setRows(null)
+      setLoadError(error)
     } finally {
-      setLoading(false)
+      clearTimeout(timer)
+      if (loadToken.current === token) setLoading(false)
     }
   }
 
@@ -1186,9 +1202,22 @@ function LibraryPage({
         h(
           'div',
           { className: 'cait-libtable-wrap' },
-          loading && !rows?.entries?.length
+          loading && !rows?.entries?.length && !loadError
             ? h('div', { className: 'cait-center' }, h(Spinner), t('common.loading'))
-            : rows?.entries?.length
+            : loadError
+              ? h(
+                  'div',
+                  { className: 'cait-center cait-lib-error' },
+                  h('p', null, t('library.loadFailed')),
+                  h('p', { className: 'cait-hint' }, String(loadError?.message || loadError?.code || '')),
+                  h(
+                    'button',
+                    { type: 'button', className: 'cait-btn', onClick: () => void loadRows() },
+                    h(Icon, { name: 'refresh', size: 13 }),
+                    h('span', null, t('library.retry')),
+                  ),
+                )
+              : rows?.entries?.length
               ? h(
                   'table',
                   { className: 'cait-libtable' },

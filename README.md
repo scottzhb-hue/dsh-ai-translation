@@ -73,6 +73,13 @@ manual reload.
 
 ## Features
 
+### New in 1.2.2
+
+- **Welcome page**: opening the panel lands on a start page — paste source text, import a file, load the demo document, or resume the last session. Recent projects and open documents are listed there, and the brand area in the top bar returns to it at any time.
+- **Create inside a project**: the project detail now has "New document" and "Import file" actions that pre-assign the project and go straight to the editor.
+- **Richer document tables**: the project document list gained an "Updated" column, and the all-documents table shows name / project / status / progress / segments / words / updated / actions with clickable rows.
+- **Visible failures**: a render error now shows a copyable error panel instead of a blank panel, and the library page reports load failures with a retry button instead of spinning forever.
+
 ### New in 1.2.0
 
 - **Projects.** Group documents under one project (client, due date, note). The

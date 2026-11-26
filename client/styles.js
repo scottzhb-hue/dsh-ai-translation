@@ -576,6 +576,40 @@ const CSS = `
 .cait-proj-analysis{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:11px;color:var(--dsw-alias-label-secondary)}
 .cait-proj-dirty{font-size:10.5px;color:var(--dsw-alias-state-warn-primary)}
 .cait-proj-report{display:inline-flex;align-items:center;gap:4px}
+/* —— 欢迎页 —— */
+button.cait-brand{background:none;border:0;padding:0;cursor:pointer;text-align:left;color:inherit;font:inherit}
+button.cait-brand:hover .cait-brand-text strong{color:var(--dsw-alias-state-info-primary)}
+button.cait-brand.active .cait-brand-text strong{color:var(--dsw-alias-state-info-primary)}
+.cait-home{flex:1 1 auto;min-height:0;overflow:auto;padding:22px 26px 30px;display:flex;flex-direction:column;gap:14px;max-width:1080px;width:100%;margin:0 auto}
+.cait-home-hero{display:flex;flex-direction:column;gap:4px}
+.cait-home-title{margin:0;font-size:19px;font-weight:700}
+.cait-home-sub{margin:0;font-size:12px;color:var(--dsw-alias-label-secondary)}
+.cait-home-stats{display:flex;gap:14px;margin-top:4px;font-size:11px;color:var(--dsw-alias-label-secondary)}
+.cait-home-card{border:1px solid var(--dsw-alias-border-secondary);border-radius:9px;background:var(--dsw-alias-bg-secondary);padding:13px 14px;display:flex;flex-direction:column;gap:8px}
+.cait-home-cardhead{margin:0;font-size:12.5px;font-weight:600}
+.cait-home-textarea{height:140px;resize:vertical;font-family:var(--cait-mono,ui-monospace,monospace);font-size:12px}
+.cait-home-actions{justify-content:space-between;align-items:center;gap:10px}
+.cait-home-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}
+.cait-home-lists{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.cait-home-action{align-items:flex-start;text-align:left;cursor:pointer;color:inherit;font:inherit}
+.cait-home-action:disabled{opacity:.55;cursor:default}
+.cait-home-action strong{font-size:12.5px}
+.cait-home-action:hover:not(:disabled){border-color:var(--dsw-alias-state-info-primary)}
+.cait-home-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px;max-height:240px;overflow:auto}
+.cait-home-item{display:flex;align-items:baseline;justify-content:space-between;gap:10px;width:100%;background:none;border:0;border-radius:6px;padding:5px 6px;cursor:pointer;color:inherit;font:inherit;text-align:left}
+.cait-home-item:hover{background:var(--dsw-alias-bg-tertiary)}
+.cait-home-itemname{font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cait-home-itemmeta{font-size:10.5px;color:var(--dsw-alias-label-secondary);flex:0 0 auto}
+.cait-proj-docactions{display:flex;gap:6px;margin:0 0 6px}
+.cait-proj-row{cursor:pointer}
+.cait-proj-row:hover{background:var(--dsw-alias-bg-tertiary)}
+.cait-proj-updated{font-size:11px;color:var(--dsw-alias-label-secondary);white-space:nowrap}
+.cait-lib-error{gap:8px;flex-direction:column;align-items:center}
+/* —— 渲染出错时的兜底 —— */
+.cait-crash{display:flex;flex-direction:column;gap:10px;padding:18px;height:100%;overflow:auto;font-size:12px}
+.cait-crash-title{margin:0;font-size:14px;font-weight:700;color:var(--dsw-alias-state-error-primary)}
+.cait-crash-hint{margin:0;color:var(--dsw-alias-label-secondary)}
+.cait-crash-detail{margin:0;padding:10px;max-height:46vh;overflow:auto;font-family:var(--cait-mono,ui-monospace,monospace);font-size:10.5px;line-height:1.5;white-space:pre-wrap;border:1px solid var(--dsw-alias-border-secondary);border-radius:8px;background:var(--dsw-alias-bg-secondary)}
 @media(max-width:1180px){.cait-main{grid-template-columns:minmax(0,1fr) 308px}.cait-body{grid-template-columns:218px minmax(0,1fr)}.cait-editor-col{padding:18px 20px 34px}.cait-actions .cait-btn-label{display:none}.cait-actions .cait-btn{padding:0 8px}.cait-libpage-body{grid-template-columns:196px minmax(0,1fr) 264px}}
 @media(max-width:940px){.cait-topbar{flex-wrap:wrap}.cait-body{grid-template-columns:190px minmax(0,1fr)}.cait-main{grid-template-columns:minmax(0,1fr)}.cait-cat{border-left:0;border-top:1px solid var(--dsw-alias-border-l1);max-height:43%;min-height:210px}.cait-features{grid-template-columns:1fr}.cait-docbar{display:flex;order:3;flex:1 1 100%;padding:7px 0 0;border-left:0;border-top:1px solid var(--dsw-alias-border-l1)}}
 @media(max-width:700px){.cait-body{grid-template-columns:minmax(0,1fr)}.cait-rail{display:none}.cait-editor-col{padding:14px}.cait-topbar{padding:9px 10px}.cait-export-grid{grid-template-columns:1fr}}

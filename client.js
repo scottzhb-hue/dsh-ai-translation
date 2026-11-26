@@ -469,10 +469,12 @@ var ZH_PROJECTS = {
   "projects.colProject": "项目",
   "projects.colStatus": "状态",
   "projects.colProgress": "进度",
-  "projects.colSegments": "セグメント",
-  "projects.colWords": "語数",
+  "projects.colSegments": "句段",
   "projects.colWords": "字数",
+  "projects.colUpdated": "更新时间",
   "projects.colActions": "报告 / 移动",
+  "projects.newDoc": "新建文档",
+  "projects.importDoc": "导入文件",
   "projects.noDocs": "这个项目还没有文档。导入文档时选它，或在下面把已有文档勾进来。",
   "projects.noMatch": "没有符合条件的文档。",
   "projects.moveOut": "移到未分类",
@@ -520,7 +522,33 @@ var ZH_PROJECTS = {
   "projects.assign": "确定归属",
   "projects.assigned": "文档已归入项目。",
   "projects.moved": "文档已移动。",
-  "deliver.projectHint": "本文档属于项目「{name}」；整批交付请到「项目」页导出项目交付包。"
+  "deliver.projectHint": "本文档属于项目「{name}」；整批交付请到「项目」页导出项目交付包。",
+  "projects.colUpdated": "更新时间",
+  "projects.newDoc": "新建文档",
+  "projects.importDoc": "导入文件",
+  "library.loadFailed": "记忆库加载失败，请重试。",
+  "library.retry": "重试",
+  "home.open": "回到欢迎页",
+  "home.title": "开始一次新的翻译",
+  "home.subtitle": "粘贴文本、导入文件，或接着上次的项目继续。",
+  "home.statsDocs": "{n} 篇文档",
+  "home.statsSegments": "{n} 个句段",
+  "home.statsTm": "{n} 条记忆",
+  "home.pasteTitle": "粘贴文本开始翻译",
+  "home.pasteHint": "源文会按空行/换行切分成句段；创建后在弹窗里选择归属项目。",
+  "home.pastePlaceholder": "在此粘贴源文…",
+  "home.pasteNote": "创建后会先让你确认项目归属。",
+  "home.create": "创建并开始翻译",
+  "home.import": "导入文件",
+  "home.importHint": "DOCX / TMX / SRT / XLIFF / CSV 等",
+  "home.demo": "加载演示文档",
+  "home.demoHint": "先看看工作台长什么样",
+  "home.resume": "接着上次继续",
+  "home.resumeEmpty": "还没有可以继续的内容",
+  "home.recentProjects": "最近项目",
+  "home.openDocs": "已打开文档",
+  "home.projectMeta": "{docs} 篇 · {percent}%",
+  "home.docMeta": "{segments} 段 · {percent}%"
 };
 var EN_PROJECTS = {
   "projects.title": "Projects",
@@ -621,7 +649,33 @@ var EN_PROJECTS = {
   "projects.assign": "Assign",
   "projects.assigned": "Document assigned to the project.",
   "projects.moved": "Document moved.",
-  "deliver.projectHint": 'This document belongs to project "{name}"; use the Projects page to export the whole batch.'
+  "deliver.projectHint": 'This document belongs to project "{name}"; use the Projects page to export the whole batch.',
+  "projects.colUpdated": "Updated",
+  "projects.newDoc": "New document",
+  "projects.importDoc": "Import file",
+  "library.loadFailed": "The library failed to load. Try again.",
+  "library.retry": "Retry",
+  "home.open": "Back to the welcome page",
+  "home.title": "Start a new translation",
+  "home.subtitle": "Paste text, import a file, or resume your last project.",
+  "home.statsDocs": "{n} documents",
+  "home.statsSegments": "{n} segments",
+  "home.statsTm": "{n} TM entries",
+  "home.pasteTitle": "Paste source text",
+  "home.pasteHint": "The source is split into segments at line breaks; pick a project right after creating it.",
+  "home.pastePlaceholder": "Paste the source text here…",
+  "home.pasteNote": "You will be asked to choose a project after creating.",
+  "home.create": "Create and start",
+  "home.import": "Import a file",
+  "home.importHint": "DOCX / TMX / SRT / XLIFF / CSV and more",
+  "home.demo": "Load demo document",
+  "home.demoHint": "See what the workbench looks like",
+  "home.resume": "Resume last session",
+  "home.resumeEmpty": "Nothing to resume yet",
+  "home.recentProjects": "Recent projects",
+  "home.openDocs": "Open documents",
+  "home.projectMeta": "{docs} docs · {percent}%",
+  "home.docMeta": "{segments} segments · {percent}%"
 };
 var JA_PROJECTS = {
   "projects.title": "プロジェクト",
@@ -721,7 +775,33 @@ var JA_PROJECTS = {
   "projects.assign": "決定",
   "projects.assigned": "文書をプロジェクトに割り当てました。",
   "projects.moved": "文書を移動しました。",
-  "deliver.projectHint": "この文書はプロジェクト「{name}」に属します。一括納品は「プロジェクト」画面から書き出してください。"
+  "deliver.projectHint": "この文書はプロジェクト「{name}」に属します。一括納品は「プロジェクト」画面から書き出してください。",
+  "projects.colUpdated": "更新日時",
+  "projects.newDoc": "新規文書",
+  "projects.importDoc": "ファイル取込",
+  "library.loadFailed": "ライブラリを読み込めませんでした。再試行してください。",
+  "library.retry": "再試行",
+  "home.open": "ホーム画面に戻る",
+  "home.title": "新しい翻訳を始める",
+  "home.subtitle": "テキストを貼り付けるか、ファイルを取り込むか、前回の続きから再開できます。",
+  "home.statsDocs": "{n} 文書",
+  "home.statsSegments": "{n} セグメント",
+  "home.statsTm": "{n} 件のメモリ",
+  "home.pasteTitle": "テキストを貼り付けて開始",
+  "home.pasteHint": "原文は改行でセグメントに分割されます。作成後にプロジェクトを選択します。",
+  "home.pastePlaceholder": "ここに原文を貼り付けてください…",
+  "home.pasteNote": "作成後にプロジェクトの所属先を確認します。",
+  "home.create": "作成して開始",
+  "home.import": "ファイルを取り込む",
+  "home.importHint": "DOCX / TMX / SRT / XLIFF / CSV など",
+  "home.demo": "デモ文書を読み込む",
+  "home.demoHint": "ワークベンチの雰囲気を確認",
+  "home.resume": "前回の続きから",
+  "home.resumeEmpty": "続きになるものがありません",
+  "home.recentProjects": "最近のプロジェクト",
+  "home.openDocs": "開いている文書",
+  "home.projectMeta": "{docs} 文書 · {percent}%",
+  "home.docMeta": "{segments} セグメント · {percent}%"
 };
 var PROJECT_DICTS = {
   zh: ZH_PROJECTS,
@@ -3474,6 +3554,40 @@ var CSS = `
 .cait-proj-analysis{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:11px;color:var(--dsw-alias-label-secondary)}
 .cait-proj-dirty{font-size:10.5px;color:var(--dsw-alias-state-warn-primary)}
 .cait-proj-report{display:inline-flex;align-items:center;gap:4px}
+/* —— 欢迎页 —— */
+button.cait-brand{background:none;border:0;padding:0;cursor:pointer;text-align:left;color:inherit;font:inherit}
+button.cait-brand:hover .cait-brand-text strong{color:var(--dsw-alias-state-info-primary)}
+button.cait-brand.active .cait-brand-text strong{color:var(--dsw-alias-state-info-primary)}
+.cait-home{flex:1 1 auto;min-height:0;overflow:auto;padding:22px 26px 30px;display:flex;flex-direction:column;gap:14px;max-width:1080px;width:100%;margin:0 auto}
+.cait-home-hero{display:flex;flex-direction:column;gap:4px}
+.cait-home-title{margin:0;font-size:19px;font-weight:700}
+.cait-home-sub{margin:0;font-size:12px;color:var(--dsw-alias-label-secondary)}
+.cait-home-stats{display:flex;gap:14px;margin-top:4px;font-size:11px;color:var(--dsw-alias-label-secondary)}
+.cait-home-card{border:1px solid var(--dsw-alias-border-secondary);border-radius:9px;background:var(--dsw-alias-bg-secondary);padding:13px 14px;display:flex;flex-direction:column;gap:8px}
+.cait-home-cardhead{margin:0;font-size:12.5px;font-weight:600}
+.cait-home-textarea{height:140px;resize:vertical;font-family:var(--cait-mono,ui-monospace,monospace);font-size:12px}
+.cait-home-actions{justify-content:space-between;align-items:center;gap:10px}
+.cait-home-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}
+.cait-home-lists{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
+.cait-home-action{align-items:flex-start;text-align:left;cursor:pointer;color:inherit;font:inherit}
+.cait-home-action:disabled{opacity:.55;cursor:default}
+.cait-home-action strong{font-size:12.5px}
+.cait-home-action:hover:not(:disabled){border-color:var(--dsw-alias-state-info-primary)}
+.cait-home-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px;max-height:240px;overflow:auto}
+.cait-home-item{display:flex;align-items:baseline;justify-content:space-between;gap:10px;width:100%;background:none;border:0;border-radius:6px;padding:5px 6px;cursor:pointer;color:inherit;font:inherit;text-align:left}
+.cait-home-item:hover{background:var(--dsw-alias-bg-tertiary)}
+.cait-home-itemname{font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cait-home-itemmeta{font-size:10.5px;color:var(--dsw-alias-label-secondary);flex:0 0 auto}
+.cait-proj-docactions{display:flex;gap:6px;margin:0 0 6px}
+.cait-proj-row{cursor:pointer}
+.cait-proj-row:hover{background:var(--dsw-alias-bg-tertiary)}
+.cait-proj-updated{font-size:11px;color:var(--dsw-alias-label-secondary);white-space:nowrap}
+.cait-lib-error{gap:8px;flex-direction:column;align-items:center}
+/* —— 渲染出错时的兜底 —— */
+.cait-crash{display:flex;flex-direction:column;gap:10px;padding:18px;height:100%;overflow:auto;font-size:12px}
+.cait-crash-title{margin:0;font-size:14px;font-weight:700;color:var(--dsw-alias-state-error-primary)}
+.cait-crash-hint{margin:0;color:var(--dsw-alias-label-secondary)}
+.cait-crash-detail{margin:0;padding:10px;max-height:46vh;overflow:auto;font-family:var(--cait-mono,ui-monospace,monospace);font-size:10.5px;line-height:1.5;white-space:pre-wrap;border:1px solid var(--dsw-alias-border-secondary);border-radius:8px;background:var(--dsw-alias-bg-secondary)}
 @media(max-width:1180px){.cait-main{grid-template-columns:minmax(0,1fr) 308px}.cait-body{grid-template-columns:218px minmax(0,1fr)}.cait-editor-col{padding:18px 20px 34px}.cait-actions .cait-btn-label{display:none}.cait-actions .cait-btn{padding:0 8px}.cait-libpage-body{grid-template-columns:196px minmax(0,1fr) 264px}}
 @media(max-width:940px){.cait-topbar{flex-wrap:wrap}.cait-body{grid-template-columns:190px minmax(0,1fr)}.cait-main{grid-template-columns:minmax(0,1fr)}.cait-cat{border-left:0;border-top:1px solid var(--dsw-alias-border-l1);max-height:43%;min-height:210px}.cait-features{grid-template-columns:1fr}.cait-docbar{display:flex;order:3;flex:1 1 100%;padding:7px 0 0;border-left:0;border-top:1px solid var(--dsw-alias-border-l1)}}
 @media(max-width:700px){.cait-body{grid-template-columns:minmax(0,1fr)}.cait-rail{display:none}.cait-editor-col{padding:14px}.cait-topbar{padding:9px 10px}.cait-export-grid{grid-template-columns:1fr}}
@@ -4356,7 +4470,8 @@ function Topbar({
   onCancelPreTranslate,
   onReplace,
   view,
-  onView
+  onView,
+  onHome
 }) {
   const progress = doc?.progress || { percent: 0, confirmed: 0, total: 0 };
   const openIds = new Set((data.openDocuments || []).map((item) => item.id));
@@ -4371,8 +4486,13 @@ function Topbar({
     "header",
     { className: "cait-topbar" },
     h(
-      "div",
-      { className: "cait-brand" },
+      "button",
+      {
+        type: "button",
+        className: `cait-brand${view === "home" ? " active" : ""}`,
+        title: t("home.open"),
+        onClick: () => onHome ? onHome() : onView("home")
+      },
       h("span", { className: "cait-logo" }, h(CaitMark, { size: 17 })),
       h(
         "span",
@@ -6276,6 +6396,227 @@ function CatPanel({
   );
 }
 
+// client/components/home.js
+function HomePage({
+  t,
+  busy,
+  data,
+  onPasteCreate,
+  onImport,
+  onDemo,
+  onOpenProject,
+  onOpenDoc,
+  onResume
+}) {
+  const settings = data?.settings || {};
+  const [text, setText] = useState("");
+  const [name, setName] = useState("");
+  const [sourceLang, setSourceLang] = useState(settings.sourceLang || "en");
+  const [targetLang, setTargetLang] = useState(settings.targetLang || "zh-CN");
+  const projects = (data?.projects?.projects || []).filter((item) => !item.inbox).slice(0, 6);
+  const openDocs = (data?.openDocuments || []).slice(0, 6);
+  const stats = data?.stats || {};
+  const canCreate = Boolean(text.trim()) && !busy;
+  const submit = (event) => {
+    event?.preventDefault?.();
+    if (!canCreate) return;
+    onPasteCreate({
+      mode: "text",
+      name: name.trim() || text.trim().slice(0, 40),
+      text,
+      sourceLang,
+      targetLang
+    });
+  };
+  return h(
+    "div",
+    { className: "cait-home" },
+    h(
+      "div",
+      { className: "cait-home-hero" },
+      h("h1", { className: "cait-home-title" }, t("home.title")),
+      h("p", { className: "cait-home-sub" }, t("home.subtitle")),
+      h(
+        "div",
+        { className: "cait-home-stats" },
+        h("span", null, t("home.statsDocs", { n: stats.documents ?? 0 })),
+        h("span", null, t("home.statsSegments", { n: stats.segments ?? 0 })),
+        h("span", null, t("home.statsTm", { n: stats.tm ?? 0 }))
+      )
+    ),
+    h(
+      "form",
+      { className: "cait-home-card cait-home-paste", onSubmit: submit },
+      h("h2", { className: "cait-home-cardhead" }, t("home.pasteTitle")),
+      h("p", { className: "cait-hint" }, t("home.pasteHint")),
+      h(
+        "div",
+        { className: "cait-formrow" },
+        h(
+          "label",
+          { className: "cait-field" },
+          h("span", null, t("modal.new.name")),
+          h("input", {
+            className: "cait-input",
+            value: name,
+            placeholder: t("modal.new.namePlaceholder"),
+            onChange: (event) => setName(event.target.value)
+          })
+        ),
+        h(
+          "label",
+          { className: "cait-field" },
+          h("span", null, t("modal.new.sourceLang")),
+          h("input", {
+            className: "cait-input",
+            value: sourceLang,
+            onChange: (event) => setSourceLang(event.target.value)
+          })
+        ),
+        h(
+          "label",
+          { className: "cait-field" },
+          h("span", null, t("modal.new.targetLang")),
+          h("input", {
+            className: "cait-input",
+            value: targetLang,
+            onChange: (event) => setTargetLang(event.target.value)
+          })
+        )
+      ),
+      h("textarea", {
+        className: "cait-input cait-home-textarea",
+        value: text,
+        placeholder: t("home.pastePlaceholder"),
+        onChange: (event) => setText(event.target.value)
+      }),
+      h(
+        "div",
+        { className: "cait-modal-actions cait-home-actions" },
+        h("span", { className: "cait-hint" }, t("home.pasteNote")),
+        h(
+          "button",
+          { type: "submit", className: "cait-btn primary", disabled: !canCreate },
+          busy === "create" ? h(Spinner, { size: 13 }) : h(Icon, { name: "plus", size: 14 }),
+          t("home.create")
+        )
+      )
+    ),
+    h(
+      "div",
+      { className: "cait-home-cards" },
+      h(
+        "button",
+        {
+          type: "button",
+          className: "cait-home-card cait-home-action",
+          disabled: Boolean(busy),
+          onClick: onImport
+        },
+        h(Icon, { name: "upload", size: 18 }),
+        h("strong", null, t("home.import")),
+        h("span", { className: "cait-hint" }, t("home.importHint"))
+      ),
+      h(
+        "button",
+        {
+          type: "button",
+          className: "cait-home-card cait-home-action",
+          disabled: Boolean(busy),
+          onClick: onDemo
+        },
+        h(Icon, { name: "sparkles", size: 18 }),
+        h("strong", null, t("home.demo")),
+        h("span", { className: "cait-hint" }, t("home.demoHint"))
+      ),
+      h(
+        "button",
+        {
+          type: "button",
+          className: "cait-home-card cait-home-action",
+          disabled: Boolean(busy) || !openDocs.length && !projects.length,
+          onClick: onResume
+        },
+        h(Icon, { name: "play", size: 18 }),
+        h("strong", null, t("home.resume")),
+        h(
+          "span",
+          { className: "cait-hint" },
+          openDocs[0]?.name || projects[0]?.name || t("home.resumeEmpty")
+        )
+      )
+    ),
+    projects.length || openDocs.length ? h(
+      "div",
+      { className: "cait-home-cards cait-home-lists" },
+      projects.length ? h(
+        "div",
+        { className: "cait-home-card" },
+        h("h2", { className: "cait-home-cardhead" }, t("home.recentProjects")),
+        h(
+          "ul",
+          { className: "cait-home-list" },
+          projects.map(
+            (project) => h(
+              "li",
+              { key: project.id },
+              h(
+                "button",
+                {
+                  type: "button",
+                  className: "cait-home-item",
+                  onClick: () => onOpenProject(project.id)
+                },
+                h("span", { className: "cait-home-itemname" }, project.name),
+                h(
+                  "span",
+                  { className: "cait-home-itemmeta" },
+                  t("home.projectMeta", {
+                    docs: project.documents ?? 0,
+                    percent: project.percent ?? 0
+                  })
+                )
+              )
+            )
+          )
+        )
+      ) : null,
+      openDocs.length ? h(
+        "div",
+        { className: "cait-home-card" },
+        h("h2", { className: "cait-home-cardhead" }, t("home.openDocs")),
+        h(
+          "ul",
+          { className: "cait-home-list" },
+          openDocs.map(
+            (item) => h(
+              "li",
+              { key: item.id },
+              h(
+                "button",
+                {
+                  type: "button",
+                  className: "cait-home-item",
+                  onClick: () => onOpenDoc(item.id)
+                },
+                h("span", { className: "cait-home-itemname" }, item.name),
+                h(
+                  "span",
+                  { className: "cait-home-itemmeta" },
+                  t("home.docMeta", {
+                    segments: item.progress?.total ?? 0,
+                    percent: item.progress?.percent ?? 0
+                  })
+                )
+              )
+            )
+          )
+        )
+      ) : null
+    ) : null
+  );
+}
+
 // client/components/pages.js
 function AlignPage({ t, data, notify, report, onConfirm }) {
   const [sourceFile, setSourceFile] = useState(null);
@@ -6708,19 +7049,32 @@ function LibraryPage({
     setSelectedId("");
     setLang("");
   }, [kind]);
+  const loadToken = useRef(0);
+  const [loadError, setLoadError] = useState(null);
   const loadRows = async () => {
+    const token = loadToken.current += 1;
     setLoading(true);
+    setLoadError(null);
+    const timer = setTimeout(() => {
+      if (loadToken.current !== token) return;
+      loadToken.current += 1;
+      setLoading(false);
+      setLoadError({ code: "TIMEOUT", message: "request timed out" });
+    }, 15e3);
     try {
       const params = kind === "tm" ? { tmIds: scopeIds, query: debouncedQuery, page, pageSize } : { glossaryIds: scopeIds, query: debouncedQuery, page, pageSize };
       if (lang) params.sourceLang = lang;
       const result = await rpc(kind === "tm" ? "listTmEntries" : "listGlossaryEntries", params);
+      if (loadToken.current !== token) return;
       setRows(result);
       if (result.page !== page) setPage(result.page);
     } catch (error) {
+      if (loadToken.current !== token) return;
       report(error);
-      setRows(null);
+      setLoadError(error);
     } finally {
-      setLoading(false);
+      clearTimeout(timer);
+      if (loadToken.current === token) setLoading(false);
     }
   };
   useEffect(() => {
@@ -7352,7 +7706,18 @@ function LibraryPage({
         h(
           "div",
           { className: "cait-libtable-wrap" },
-          loading && !rows?.entries?.length ? h("div", { className: "cait-center" }, h(Spinner), t("common.loading")) : rows?.entries?.length ? h(
+          loading && !rows?.entries?.length && !loadError ? h("div", { className: "cait-center" }, h(Spinner), t("common.loading")) : loadError ? h(
+            "div",
+            { className: "cait-center cait-lib-error" },
+            h("p", null, t("library.loadFailed")),
+            h("p", { className: "cait-hint" }, String(loadError?.message || loadError?.code || "")),
+            h(
+              "button",
+              { type: "button", className: "cait-btn", onClick: () => void loadRows() },
+              h(Icon, { name: "refresh", size: 13 }),
+              h("span", null, t("library.retry"))
+            )
+          ) : rows?.entries?.length ? h(
             "table",
             { className: "cait-libtable" },
             h(
@@ -9547,6 +9912,13 @@ function librarySelectIds(value) {
   if (value === "__none__") return [];
   return [value];
 }
+function formatStamp(value) {
+  if (!value) return "—";
+  const date = new Date(value);
+  if (Number.isNaN(date.getTime())) return "—";
+  const pad = (part) => String(part).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}`;
+}
 function statusChip(t, doc) {
   const code = doc.status?.code ?? doc.status ?? "";
   const label = doc.status?.label ?? doc.statusLabel ?? t(STATUS_LABEL[code] ?? "projects.statusUntranslated");
@@ -9652,6 +10024,8 @@ function ProjectDetail({
   onDeleteTime,
   onExport,
   onOpenDoc,
+  onNewDoc,
+  onImportDoc,
   onDocReport,
   onProjectReport,
   onRefreshAnalysis
@@ -9939,6 +10313,32 @@ function ProjectDetail({
     ),
     h("h4", { className: "cait-section-title" }, t("projects.docs")),
     h("p", { className: "cait-hint" }, t("projects.docsHint")),
+    !inbox ? h(
+      "div",
+      { className: "cait-proj-docactions" },
+      h(
+        "button",
+        {
+          type: "button",
+          className: "cait-btn",
+          disabled: Boolean(busy),
+          onClick: () => onNewDoc(projectId)
+        },
+        h(Icon, { name: "plus", size: 13 }),
+        h("span", null, t("projects.newDoc"))
+      ),
+      h(
+        "button",
+        {
+          type: "button",
+          className: "cait-btn",
+          disabled: Boolean(busy),
+          onClick: () => onImportDoc(projectId)
+        },
+        h(Icon, { name: "upload", size: 13 }),
+        h("span", null, t("projects.importDoc"))
+      )
+    ) : null,
     h(
       "div",
       { className: "cait-proj-tablewrap" },
@@ -9956,6 +10356,7 @@ function ProjectDetail({
             h("th", null, t("projects.colProgress")),
             h("th", null, t("projects.colSegments")),
             h("th", null, t("projects.colWords")),
+            h("th", null, t("projects.colUpdated")),
             h("th", null, t("projects.colActions"))
           )
         ),
@@ -9965,7 +10366,12 @@ function ProjectDetail({
           rows.length ? rows.map(
             (doc) => h(
               "tr",
-              { key: doc.id, className: doc.id === docId ? "is-current" : "" },
+              {
+                key: doc.id,
+                className: `cait-proj-row${doc.id === docId ? " is-current" : ""}`,
+                title: t("projects.openDoc"),
+                onClick: () => onOpenDoc(doc.id)
+              },
               h(
                 "td",
                 null,
@@ -9974,7 +10380,10 @@ function ProjectDetail({
                   {
                     type: "button",
                     className: "cait-linkbtn",
-                    onClick: () => onOpenDoc(doc.id)
+                    onClick: (event) => {
+                      event.stopPropagation();
+                      onOpenDoc(doc.id);
+                    }
                   },
                   doc.name
                 )
@@ -9992,12 +10401,16 @@ function ProjectDetail({
               ),
               h("td", null, doc.segments),
               h("td", null, doc.words),
+              h("td", { className: "cait-proj-updated" }, formatStamp(doc.updatedAt)),
               h(
                 "td",
                 null,
                 h(
                   "span",
-                  { className: "cait-proj-rowactions" },
+                  {
+                    className: "cait-proj-rowactions",
+                    onClick: (event) => event.stopPropagation()
+                  },
                   h(
                     "button",
                     {
@@ -10044,7 +10457,7 @@ function ProjectDetail({
           ) : h(
             "tr",
             null,
-            h("td", { colSpan: 6 }, h("span", { className: "cait-hint" }, t("projects.noDocs")))
+            h("td", { colSpan: 7 }, h("span", { className: "cait-hint" }, t("projects.noDocs")))
           )
         )
       )
@@ -10316,6 +10729,8 @@ function AllDocuments({
             h("th", null, t("projects.colStatus")),
             h("th", null, t("projects.colProgress")),
             h("th", null, t("projects.colSegments")),
+            h("th", null, t("projects.colWords")),
+            h("th", null, t("projects.colUpdated")),
             h("th", null, t("projects.colActions"))
           )
         ),
@@ -10325,13 +10740,25 @@ function AllDocuments({
           rows.length ? rows.map(
             (doc) => h(
               "tr",
-              { key: doc.id, className: doc.id === docId ? "is-current" : "" },
+              {
+                key: doc.id,
+                className: `cait-proj-row${doc.id === docId ? " is-current" : ""}`,
+                title: t("projects.openDoc"),
+                onClick: () => onOpenDoc(doc.id)
+              },
               h(
                 "td",
                 null,
                 h(
                   "button",
-                  { type: "button", className: "cait-linkbtn", onClick: () => onOpenDoc(doc.id) },
+                  {
+                    type: "button",
+                    className: "cait-linkbtn",
+                    onClick: (event) => {
+                      event.stopPropagation();
+                      onOpenDoc(doc.id);
+                    }
+                  },
                   doc.name
                 )
               ),
@@ -10343,7 +10770,10 @@ function AllDocuments({
                   {
                     type: "button",
                     className: "cait-linkbtn",
-                    onClick: () => onOpenProject(doc.projectId)
+                    onClick: (event) => {
+                      event.stopPropagation();
+                      onOpenProject(doc.projectId);
+                    }
                   },
                   doc.projectName || t("projects.inboxTag")
                 )
@@ -10351,12 +10781,17 @@ function AllDocuments({
               h("td", null, statusChip(t, doc)),
               h("td", null, `${doc.progress?.percent ?? 0}%`),
               h("td", null, doc.progress?.total ?? 0),
+              h("td", null, doc.words ?? 0),
+              h("td", { className: "cait-proj-updated" }, formatStamp(doc.updatedAt)),
               h(
                 "td",
                 null,
                 h(
                   "span",
-                  { className: "cait-proj-rowactions" },
+                  {
+                    className: "cait-proj-rowactions",
+                    onClick: (event) => event.stopPropagation()
+                  },
                   h(
                     "button",
                     {
@@ -10391,7 +10826,7 @@ function AllDocuments({
           ) : h(
             "tr",
             null,
-            h("td", { colSpan: 6 }, h("span", { className: "cait-hint" }, t("projects.noMatch")))
+            h("td", { colSpan: 8 }, h("span", { className: "cait-hint" }, t("projects.noMatch")))
           )
         )
       )
@@ -10426,6 +10861,8 @@ function ProjectsPage({
   onDeleteTime,
   onExport,
   onOpenDoc,
+  onNewDoc,
+  onImportDoc,
   onReport,
   onDocReport,
   onMoveDoc,
@@ -10510,6 +10947,8 @@ function ProjectsPage({
         onDeleteTime,
         onExport,
         onOpenDoc,
+        onNewDoc,
+        onImportDoc,
         onDocReport,
         onProjectReport: onReport,
         onRefreshAnalysis
@@ -10684,7 +11123,7 @@ function useWorkbenchController({ i18n, translate }) {
   const [tab, setTab] = useState("tm");
   const [railQuery, setRailQuery] = useState("");
   const [railFilter, setRailFilter] = useState("all");
-  const [view, setView] = useState("projects");
+  const [view, setView] = useState("home");
   const [libSeed, setLibSeed] = useState(null);
   const openLibrary = (kind, query) => {
     setLibSeed({
@@ -11228,6 +11667,7 @@ function useWorkbenchController({ i18n, translate }) {
       await loadDemo();
       return;
     }
+    const targetProject = modal?.projectId || "";
     setBusy("create");
     try {
       let result;
@@ -11240,14 +11680,16 @@ function useWorkbenchController({ i18n, translate }) {
           sourceLang: form.sourceLang,
           targetLang: form.targetLang,
           csvSourceColumn: form.csvSourceColumn,
-          csvTargetColumn: form.csvTargetColumn
+          csvTargetColumn: form.csvTargetColumn,
+          projectId: targetProject || void 0
         });
       } else {
         result = await rpc("createDocument", {
           name: form.name,
           text: form.text,
           sourceLang: form.sourceLang,
-          targetLang: form.targetLang
+          targetLang: form.targetLang,
+          projectId: targetProject || void 0
         });
       }
       adoptState(result.state);
@@ -11257,6 +11699,12 @@ function useWorkbenchController({ i18n, translate }) {
         return;
       }
       importNotice(result, t("toast.imported"));
+      if (targetProject) {
+        setModal(null);
+        void loadProjectDetail(targetProject, { stale: true }).catch(report);
+        setView("documents");
+        return;
+      }
       if (result.document?.id) {
         setModal(null);
         await openProjectPicker({
@@ -11792,6 +12240,7 @@ function useWorkbenchController({ i18n, translate }) {
     return true;
   };
   const requestView = (next) => {
+    if (next === view && next !== "projects") return;
     if (next === "projects") {
       if (view === "projects") void refreshProjectList().catch(report);
       else void openProjects();
@@ -11799,6 +12248,20 @@ function useWorkbenchController({ i18n, translate }) {
     }
     if (guardProjectNav({ kind: "view", view: next })) return;
     setView(next);
+  };
+  const openHome = () => {
+    if (view === "home") return;
+    if (guardProjectNav({ kind: "home" })) return;
+    setView("home");
+  };
+  const openProjectFromHome = (projectId) => {
+    if (guardProjectNav({ kind: "project", projectId })) return;
+    setView("projects");
+    void openProjects(projectId);
+  };
+  const newDocumentInProject = (projectId, mode = "text") => {
+    if (guardProjectNav({ kind: "new", mode, projectId: projectId || "" })) return;
+    setModal({ type: "new", defaultMode: mode, projectId: projectId || "" });
   };
   const requestOpenDocument = async (documentId) => {
     if (!documentId) return;
@@ -11862,6 +12325,24 @@ function useWorkbenchController({ i18n, translate }) {
       setBusy("");
     }
   };
+  useEffect(() => {
+    if (!data || view !== "projects") return;
+    if (projectsState?.project || projectsState?.list) return;
+    void openProjects();
+  }, [data?.revision, view]);
+  const resumeLast = () => {
+    const openDoc = data?.openDocuments?.[0];
+    if (openDoc?.id) {
+      setView("documents");
+      if (openDoc.id !== doc?.id) void openDocument(openDoc.id);
+      return;
+    }
+    const first = data?.projects?.projects?.find((item) => !item.inbox) ?? data?.projects?.projects?.[0];
+    if (first?.id) {
+      setView("projects");
+      void openProjects(first.id);
+    }
+  };
   const selectProject = async (projectId) => {
     if (!projectId) return;
     setBusy("projects");
@@ -11874,7 +12355,11 @@ function useWorkbenchController({ i18n, translate }) {
     }
   };
   const requestProject = (projectId) => {
-    if (!projectId || projectId === currentProjectId()) return;
+    if (!projectId) return;
+    if (projectId === currentProjectId()) {
+      void selectProject(projectId);
+      return;
+    }
     if (guardProjectNav({ kind: "project", projectId })) return;
     void selectProject(projectId);
   };
@@ -11949,6 +12434,8 @@ function useWorkbenchController({ i18n, translate }) {
       if (projectId) await loadProjectDetail(projectId);
     }
     if (nav.kind === "view") setView(nav.view);
+    else if (nav.kind === "home") setView("home");
+    else if (nav.kind === "new") setModal({ type: "new", defaultMode: nav.mode, projectId: nav.projectId });
     else if (nav.kind === "tab") setProjectTab(nav.tab);
     else if (nav.kind === "project") await selectProject(nav.projectId);
     else if (nav.kind === "doc") {
@@ -13129,6 +13616,10 @@ function useWorkbenchController({ i18n, translate }) {
     requestProject,
     requestProjectTab,
     requestOpenDocument,
+    openHome,
+    openProjectFromHome,
+    newDocumentInProject,
+    resumeLast,
     projectTab,
     includePrefs,
     rememberInclude,
@@ -13333,6 +13824,10 @@ function Workbench({ i18n, translate }) {
     requestProject,
     requestProjectTab,
     requestOpenDocument,
+    openHome,
+    openProjectFromHome,
+    newDocumentInProject,
+    resumeLast,
     projectTab,
     projectDrafts,
     projectEpoch,
@@ -13548,9 +14043,21 @@ function Workbench({ i18n, translate }) {
       onOpenQuote: openQuote,
       onReplace: openReplace,
       view,
-      onView: requestView
+      onView: requestView,
+      onHome: openHome
     }),
     h(SaveBanner, { t, storage: data?.storage, stale, onRefresh: refreshState }),
+    view === "home" ? h(HomePage, {
+      t,
+      busy,
+      data,
+      onPasteCreate: createFromForm,
+      onImport: () => setModal({ type: "new", defaultMode: "file" }),
+      onDemo: () => createFromForm({ demo: true }),
+      onOpenProject: openProjectFromHome,
+      onOpenDoc: requestOpenDocument,
+      onResume: resumeLast
+    }) : null,
     view === "projects" ? h(ProjectsPage, {
       t,
       busy,
@@ -13579,6 +14086,8 @@ function Workbench({ i18n, translate }) {
       onDeleteTime: deleteProjectTime,
       onExport: exportProjectDeliveryAction,
       onOpenDoc: requestOpenDocument,
+      onNewDoc: (projectId) => newDocumentInProject(projectId, "text"),
+      onImportDoc: (projectId) => newDocumentInProject(projectId, "file"),
       onReport: downloadProjectReport,
       onDocReport: downloadDocumentReport,
       onMoveDoc: assignDocToProject,
@@ -13945,6 +14454,77 @@ function Workbench({ i18n, translate }) {
   );
 }
 
+// client/components/error-boundary.js
+var React2 = __toESM(require("react"), 1);
+var { Component, createElement: createElement2 } = React2;
+var CRASH_CSS = `
+.cait-crash{display:flex;flex-direction:column;gap:10px;padding:18px;height:100%;overflow:auto;font:12px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif;color:inherit}
+.cait-crash-title{margin:0;font-size:14px;font-weight:700;color:#e5534b}
+.cait-crash-hint{margin:0;opacity:.75}
+.cait-crash-detail{margin:0;padding:10px;max-height:46vh;overflow:auto;font-family:ui-monospace,monospace;font-size:10.5px;white-space:pre-wrap;border:1px solid rgba(128,128,128,.4);border-radius:8px;background:rgba(128,128,128,.1)}
+.cait-crash .cait-modal-actions{display:flex;gap:8px;justify-content:flex-end}
+.cait-crash .cait-btn{padding:5px 12px;border-radius:6px;border:1px solid rgba(128,128,128,.45);background:transparent;color:inherit;cursor:pointer;font:inherit}
+.cait-crash .cait-btn.primary{background:#3b82f6;border-color:#3b82f6;color:#fff}
+`;
+var ErrorBoundary = class extends Component {
+  constructor(props) {
+    super(props);
+    this.state = { error: null, stack: "" };
+  }
+  static getDerivedStateFromError(error) {
+    return { error };
+  }
+  componentDidCatch(error, info) {
+    const stack = String(error && error.stack || error || "") + String(info?.componentStack || "");
+    this.setState({ stack });
+    console.error("[@scottzhb-hue/dsh-ai-translation] render failed", error, info);
+  }
+  render() {
+    const { error, stack } = this.state;
+    if (!error) return this.props.children;
+    const detail = stack || String(error?.message || error || "");
+    return createElement2(
+      "div",
+      { className: "cait-crash" },
+      createElement2("style", null, CRASH_CSS),
+      createElement2("h2", { className: "cait-crash-title" }, "工作台渲染出错 / Workbench crashed"),
+      createElement2(
+        "p",
+        { className: "cait-crash-hint" },
+        "可以先点「重试」；如果反复出现，请复制下面的错误信息反馈。 / Retry first; copy the details below if it keeps happening."
+      ),
+      createElement2("pre", { className: "cait-crash-detail" }, detail),
+      createElement2(
+        "div",
+        { className: "cait-modal-actions" },
+        createElement2(
+          "button",
+          {
+            type: "button",
+            className: "cait-btn",
+            onClick: () => {
+              try {
+                void navigator.clipboard?.writeText(detail);
+              } catch {
+              }
+            }
+          },
+          "复制错误 / Copy"
+        ),
+        createElement2(
+          "button",
+          {
+            type: "button",
+            className: "cait-btn primary",
+            onClick: () => this.setState({ error: null, stack: "" })
+          },
+          "重试 / Retry"
+        )
+      )
+    );
+  }
+};
+
 // client/index.js
 var entry = {
   // `locale` must be declared: Cordis guards service access with the inject
@@ -14057,7 +14637,9 @@ var entry = {
           name: "main",
           key: "@scottzhb-hue/dsh-ai-translation"
         },
-        () => h(Workbench, { i18n, translate })
+        // 工作台整体包在错误边界里：任何渲染异常都会显示可复制的错误文本，
+        // 而不是让宿主静默吞掉、表现为“点了没反应/整块空白”。
+        () => h(ErrorBoundary, null, h(Workbench, { i18n, translate }))
       )
     );
   }
