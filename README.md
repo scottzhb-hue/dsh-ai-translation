@@ -73,6 +73,11 @@ manual reload.
 
 ## Features
 
+### Fixed in 1.2.7
+
+- Opening the project view no longer crashes (React #310: the collapse-state hook sat after an early return in the project detail).
+- The project detail test now covers the placeholder → detail transition.
+
 ### New in 1.2.6
 
 - Project detail is now a header + a documents card + collapsible sections: the document list is the first and largest block, with a 14px title, a document count badge and the new/import actions on the right.

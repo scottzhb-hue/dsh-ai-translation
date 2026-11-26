@@ -41,6 +41,7 @@
 | 21 | 顶栏按场景分组：新建/导入只留项目页；编辑器工具条收进「更多」；文档区去掉新开页面/打开已有文档 | 已上线 | `client/components/shell.js`、`client/components/workbench.js`、`client/styles.js`、`client/locales.js` |
 | 22 | 欢迎页重做为单入口：粘贴/导入合为一个主卡片的两个标签页，「继续工作」合并项目与文档列表 | 已上线 | `client/components/home.js`、`client/styles.js` |
 | 23 | 项目详情重排：文档清单上提放大、行内操作收敛为「打开 + ⋯」、设置收进可折叠分区 | 已上线 | `client/components/projects.js`、`client/styles.js`、`client/locales-workflow.js` |
+| 24 | 项目详情崩溃修复：折叠状态 hook 移到提前 return 之前，并补「占位 → 详情」回归 | 已上线 | `client/components/projects.js` | `_dev/test-ui-projects.mjs` |
 
 ## 明细
 
@@ -317,3 +318,17 @@
 - 顺带修 React 警告：`Panel` 标题数组补 `key`。
 
 验证：`_dev/test-ui-projects.mjs` 增加「项目设置默认折叠」并在展开后断言名称回填；`_dev/test-workbench-mount.mjs` 改为展开「更多」后断言导出交付包、展开「交付与工时」后断言计时控件；四套测试 32 + 17 项全过；`check-locales` 771×3、`check-undef` 96 文件、`audit-workflow` 138/138。
+
+### 24 项目视图崩溃（hooks 顺序）
+
+现象：装好 1.2.6 后，点开插件再点「项目」，界面直接抛 `Minified React error #310`（Rendered more hooks than during the previous render）。
+
+根因：`ProjectDetail` 在函数顶部先声明 10 个 hook，随后有一句「没有选中项目 → 渲染占位」的提前 `return`；1.2.6 新增的折叠状态 `const [openSections, setOpenSections] = useState(() => readSections())` 却写在了这句 return **之后**。占位态只登记 10 个 hook，切到详情态变成 11 个，React 判定 hook 数量变化并抛错。
+
+修法：把 `openSections` 挪到 `confirmDelete` 之后、任何提前 return 之前，并加注释说明原因。
+
+回归：`_dev/test-ui-projects.mjs` 增加「先渲染没有选中项目的占位、再通过 state 切换加载出项目」的用例——之前的用例都以“已经有项目”的单态渲染，所以没照出这类 hook 顺序问题。
+
+教训：**组件里任何 hook 都必须在第一个提前 return 之前**；对一个会从“空态”切到“有数据”的组件，测试必须覆盖这次切换，而不是只测终点状态。
+
+验证：四套测试全过（项目详情 23 项）、`audit-workflow` 138/138、`check-locales` 908×3（本轮顺手补上 `check-locales` 对 `PROJECT_DICTS` 的漏检）。

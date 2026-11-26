@@ -321,6 +321,9 @@ function ProjectDetail({
   const [minutes, setMinutes] = useState('30')
   const [timeNote, setTimeNote] = useState('')
   const [confirmDelete, setConfirmDelete] = useState(false)
+  // 折叠状态必须在任何提前 return 之前声明：ProjectDetail 在没有项目时先渲染占位，
+  // 如果 useState 放在 return 之后，第二次渲染的 hook 数量会变，React 直接抛 #310。
+  const [openSections, setOpenSections] = useState(() => readSections())
 
   // 草稿只在切换项目时回填一次；之后用户输入自己说了算，不会被刷新覆盖。
   useEffect(() => {
@@ -427,7 +430,6 @@ function ProjectDetail({
     onInclude(next)
   }
 
-  const [openSections, setOpenSections] = useState(() => readSections())
   const toggleSection = (key) =>
     setOpenSections((prev) => {
       const next = { ...prev, [key]: !prev[key] }

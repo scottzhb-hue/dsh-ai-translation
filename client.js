@@ -10393,6 +10393,7 @@ function ProjectDetail({
   const [minutes, setMinutes] = useState("30");
   const [timeNote, setTimeNote] = useState("");
   const [confirmDelete, setConfirmDelete] = useState(false);
+  const [openSections, setOpenSections] = useState(() => readSections());
   useEffect(() => {
     if (!project || !projectId) return;
     const restored = draft && draft.fields ? draft : null;
@@ -10481,7 +10482,6 @@ function ProjectDetail({
     setInclude(next);
     onInclude(next);
   };
-  const [openSections, setOpenSections] = useState(() => readSections());
   const toggleSection = (key) => setOpenSections((prev) => {
     const next = { ...prev, [key]: !prev[key] };
     try {
