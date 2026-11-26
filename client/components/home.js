@@ -1,11 +1,6 @@
-import { h, useMemo, useRef, useState } from '../react.js'
+import { h, useMemo, useState } from '../react.js'
 import { Icon, Spinner } from './base.js'
-
-const FILE_ACCEPT = [
-  '.txt', '.md', '.markdown', '.docx', '.doc', '.epub', '.tmx', '.csv',
-  '.srt', '.vtt', '.po', '.xlf', '.xliff', '.html', '.htm', '.json',
-  '.rtf', '.xlsx', '.xls', '.pptx', '.ppt',
-].join(',')
+import { FileDropField, filterImportFiles } from './forms.js'
 
 /** Relative "5 minutes ago" style stamp used by the continue-working list. */
 export function relativeStamp(t, iso) {
@@ -42,9 +37,8 @@ export function HomePage({
   const [name, setName] = useState('')
   const [sourceLang, setSourceLang] = useState(settings.sourceLang || 'en')
   const [targetLang, setTargetLang] = useState(settings.targetLang || 'zh-CN')
-  const [file, setFile] = useState(null)
-  const [over, setOver] = useState(false)
-  const fileRef = useRef(null)
+  const [files, setFiles] = useState([])
+  const [skipped, setSkipped] = useState([])
 
   const projects = (data?.projects?.projects || []).filter((item) => !item.inbox)
   const openDocs = data?.openDocuments || []
@@ -78,7 +72,7 @@ export function HomePage({
       .slice(0, 6)
   }, [projects, openDocs, t])
 
-  const canCreate = mode === 'text' ? Boolean(text.trim()) && !busy : Boolean(file) && !busy
+  const canCreate = mode === 'text' ? Boolean(text.trim()) && !busy : files.length > 0 && !busy
   const resumeTarget = openDocs[0] || projects[0] || null
   const showDemo = projects.length === 0 && openDocs.length === 0
 
@@ -88,7 +82,8 @@ export function HomePage({
     if (mode === 'file') {
       onPasteCreate({
         mode: 'file',
-        file,
+        files,
+        file: files[0] || null,
         name: '',
         sourceLang,
         targetLang,
@@ -104,16 +99,17 @@ export function HomePage({
     })
   }
 
-  const pickFile = () => {
+  const pickFiles = (list) => {
     if (busy) return
-    fileRef.current?.click()
-  }
-
-  const takeFile = (picked) => {
-    if (!picked) return
-    setFile(picked)
+    const { ok, skipped: rejected } = filterImportFiles(list)
+    if (!ok.length) {
+      setSkipped(rejected)
+      return
+    }
+    setFiles(ok)
+    setSkipped(rejected)
     setMode('file')
-    if (!name.trim()) setName(picked.name.replace(/\.[^.]+$/, ''))
+    if (!name.trim()) setName(ok.length === 1 ? ok[0].name.replace(/\.[^.]+$/, '') : '')
   }
 
   return h(
@@ -224,38 +220,13 @@ export function HomePage({
             placeholder: t('home.pastePlaceholder'),
             onChange: (event) => setText(event.target.value),
           })
-        : h(
-            'button',
-            {
-              type: 'button',
-              className: `cait-home-drop${over ? ' is-over' : ''}`,
-              disabled: Boolean(busy),
-              onClick: pickFile,
-              onDragOver: (event) => {
-                event.preventDefault()
-                setOver(true)
-              },
-              onDragLeave: () => setOver(false),
-              onDrop: (event) => {
-                event.preventDefault()
-                setOver(false)
-                takeFile(event.dataTransfer?.files?.[0])
-              },
-            },
-            h(Icon, { name: 'upload', size: 20 }),
-            h('strong', null, file ? file.name : t('home.pickFile')),
-            h('span', { className: 'cait-hint' }, t('home.fileHint')),
-          ),
-      h('input', {
-        ref: fileRef,
-        type: 'file',
-        accept: FILE_ACCEPT,
-        style: { display: 'none' },
-        onChange: (event) => {
-          takeFile(event.target.files?.[0])
-          event.target.value = ''
-        },
-      }),
+        : h(FileDropField, {
+            t,
+            files,
+            skipped,
+            onPick: pickFiles,
+            disabled: Boolean(busy),
+          }),
       h(
         'div',
         { className: 'cait-modal-actions cait-home-actions' },

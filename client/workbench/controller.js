@@ -683,12 +683,19 @@ export function useWorkbenchController({ i18n, translate }) {
     try {
       const batch = form.mode === 'file' ? form.files || (form.file ? [form.file] : []) : []
       if (batch.length > 1) {
+        const createdIds = []
         const done = []
         const failed = []
+        let cancelled = false
+        importCancelRef.current = false
         try {
           for (let index = 0; index < batch.length; index += 1) {
-            setImportProgress({ done: index, total: batch.length })
+            if (importCancelRef.current) {
+              cancelled = true
+              break
+            }
             const entry = batch[index]
+            setImportProgress({ done: index, total: batch.length, name: entry.name })
             try {
               const payload = await filePayload(entry)
               const imported = await rpc('importFile', {
@@ -700,17 +707,23 @@ export function useWorkbenchController({ i18n, translate }) {
                 projectId: targetProject || undefined,
               })
               if (imported.state) adoptState(imported.state)
+              if (imported.document?.id) createdIds.push(imported.document.id)
               done.push(imported.document?.name || entry.name)
             } catch (error) {
               failed.push({ name: entry.name, reason: describeError(error, t) })
             }
           }
         } finally {
-          setImportProgress({ done: batch.length, total: batch.length })
+          setImportProgress(null)
         }
         setModal(null)
         if (targetProject) void loadProjectDetail(targetProject, { stale: true }).catch(report)
-        if (done.length) {
+        if (cancelled) {
+          notify(
+            t('toast.importCancelled', { done: done.length, rest: batch.length - done.length }),
+            'error',
+          )
+        } else if (done.length) {
           notify(
             failed.length
               ? t('toast.importedManyPartial', { done: done.length, failed: failed.length })
@@ -722,7 +735,18 @@ export function useWorkbenchController({ i18n, translate }) {
           const summary = failed.map((item) => `${item.name}：${item.reason}`).join('；')
           notify(t('toast.importedManyFailed', { names: summary }), 'error')
         }
-        if (targetProject && done.length) setView('projects')
+        if (targetProject) {
+          if (done.length) setView('projects')
+          return
+        }
+        // 欢迎页批量导入：整批只问一次归属，选完打开第一篇，其余留在项目里。
+        if (createdIds.length) {
+          await openProjectPicker({
+            documentIds: createdIds,
+            name: createdIds.length > 1 ? '' : done[0],
+            afterBrief: createdIds.length === 1,
+          })
+        }
         return
       }
       let result
@@ -1294,6 +1318,8 @@ export function useWorkbenchController({ i18n, translate }) {
   const [projectDrafts, setProjectDrafts] = useState({})
   // 批量导入的进度：`{ done, total }`，只在文件页显示。
   const [importProgress, setImportProgress] = useState(null)
+  // 批量导入的取消标记：循环每轮开头读一次，取消后已导入的文档保留。
+  const importCancelRef = useRef(false)
   const [projectEpoch, setProjectEpoch] = useState(0)
   const [pendingNav, setPendingNav] = useState(null)
   const [includePrefs, setIncludePrefs] = useState(() => {
@@ -1828,10 +1854,22 @@ export function useWorkbenchController({ i18n, translate }) {
    * The project picker every new document goes through: pick an existing
    * project, type a new name, or fall back to「未分类」and sort it out later.
    */
-  const openProjectPicker = async ({ documentId, name, afterBrief = false }) => {
+  const cancelImport = () => {
+    importCancelRef.current = true
+    setImportProgress((current) => (current ? { ...current, cancelling: true } : current))
+  }
+
+  const openProjectPicker = async ({ documentId, documentIds, name, afterBrief = false }) => {
     try {
       const list = await rpc('projectsList')
-      setProjectPick({ documentId, name, afterBrief, projects: list.projects, newName: '' })
+      setProjectPick({
+        documentId,
+        documentIds: documentIds || [],
+        name,
+        afterBrief,
+        projects: list.projects,
+        newName: '',
+      })
     } catch (error) {
       report(error)
     }
@@ -1850,22 +1888,35 @@ export function useWorkbenchController({ i18n, translate }) {
         const created = await rpc('createProject', { name: String(newName).trim() })
         targetId = created.project.id
       }
-      const result = await rpc('assignDocumentProject', {
-        documentId: pending.documentId,
-        projectId: targetId,
-      })
-      applyDocumentSummary(result.document)
-      setProjectsState((current) => ({ ...(current ?? {}), list: result.projects }))
-      setProjectPick(null)
-      notify(t('projects.assigned'))
+      const batch = pending.documentIds || []
+      if (batch.length > 1) {
+        const result = await rpc('assignProjectDocuments', {
+          projectId: targetId,
+          documentIds: batch,
+        })
+        for (const summary of result.documents || []) applyDocumentSummary(summary)
+        setProjectsState((current) => ({ ...(current ?? {}), list: result.projects }))
+        setProjectPick(null)
+        notify(t('projects.assignedMany', { count: batch.length }))
+      } else {
+        const result = await rpc('assignDocumentProject', {
+          documentId: pending.documentId || batch[0],
+          projectId: targetId,
+        })
+        applyDocumentSummary(result.document)
+        setProjectsState((current) => ({ ...(current ?? {}), list: result.projects }))
+        setProjectPick(null)
+        notify(t('projects.assigned'))
+      }
     } catch (error) {
       report(error)
     } finally {
       setBusy('')
     }
-    if (!pending.documentId) return
+    const openId = pending.documentId || (pending.documentIds || [])[0]
+    if (!openId) return
     if (view === 'projects' && targetId) await loadProjectDetail(targetId, { stale: true })
-    await openDocument(pending.documentId)
+    await openDocument(openId)
     setView('documents')
     if (pending.afterBrief) setModal({ type: 'ai', mode: 'brief' })
   }
@@ -2843,6 +2894,7 @@ export function useWorkbenchController({ i18n, translate }) {
     closeDocumentTab,
     createFromForm,
     importProgress,
+    cancelImport,
     loadDemo,
     applyTm,
     applyTerm,

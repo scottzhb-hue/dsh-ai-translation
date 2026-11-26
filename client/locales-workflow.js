@@ -310,7 +310,7 @@ const ZH_PROJECTS = {
   'projects.docCount': '{count} 篇',
   'projects.openDoc': '打开',
   'projects.moveHint': '改归属',
-  'projects.addDocs': '把已有文档加进这个项目',
+  'projects.addDocs': '把已有文档加入本项目',
   'projects.current': '当前',
   'projects.brief': '项目 brief',
   'projects.briefHint': '项目 brief 会作为默认值继承给每篇文档，文档自己的 brief 覆盖同名字段。',

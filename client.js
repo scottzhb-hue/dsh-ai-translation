@@ -492,7 +492,7 @@ var ZH_PROJECTS = {
   "projects.docCount": "{count} 篇",
   "projects.openDoc": "打开",
   "projects.moveHint": "改归属",
-  "projects.addDocs": "把已有文档加进这个项目",
+  "projects.addDocs": "把已有文档加入本项目",
   "projects.current": "当前",
   "projects.brief": "项目 brief",
   "projects.briefHint": "项目 brief 会作为默认值继承给每篇文档，文档自己的 brief 覆盖同名字段。",
@@ -982,6 +982,11 @@ var ZH = {
   "modal.import.submitMany": "导入 {count} 个文件",
   "modal.import.pickedMany": "已选 {count} 个文件",
   "modal.import.limits": "可多选，最多 20 个文件、合计 800 万字符；单文件超过 28 MB 或超长时会跳过。导入按顺序进行。",
+  "modal.import.importing": "正在导入 {done}/{total} · {name}",
+  "modal.import.cancel": "取消导入",
+  "toast.importCancelled": "已取消导入：成功 {done} 篇，剩余 {rest} 篇未导入",
+  "projects.assignedMany": "已加入项目（{count} 篇）",
+  "projects.pickMany": "把 {count} 篇文档放入：",
   "modal.import.skipped": "{count} 个文件已跳过：{names}",
   "modal.import.progress": "正在导入 {done}/{total}…",
   "modal.new.joinProject": "加入当前项目：{name}",
@@ -1410,6 +1415,11 @@ var EN = {
   "modal.import.submitMany": "Import {count} files",
   "modal.import.pickedMany": "{count} files selected",
   "modal.import.limits": "Select several files: up to 20 files and 8M characters per batch. Files over 28 MB or too long are skipped. Imports run one at a time.",
+  "modal.import.importing": "Importing {done}/{total} · {name}",
+  "modal.import.cancel": "Cancel import",
+  "toast.importCancelled": "Import cancelled: {done} added, {rest} skipped",
+  "projects.assignedMany": "Added to the project ({count} documents)",
+  "projects.pickMany": "Put {count} documents into:",
   "modal.import.skipped": "{count} file(s) skipped: {names}",
   "modal.import.progress": "Importing {done}/{total}…",
   "modal.new.joinProject": "Add to current project: {name}",
@@ -1838,6 +1848,11 @@ var JA = {
   "modal.import.submitMany": "{count} 件を取り込む",
   "modal.import.pickedMany": "{count} 件を選択済み",
   "modal.import.limits": "複数選択可：1 回あたり最大 20 件・合計 800 万文字。28 MB を超えるファイルや長すぎるファイルはスキップされます。取り込みは順番に実行します。",
+  "modal.import.importing": "取り込み中 {done}/{total} · {name}",
+  "modal.import.cancel": "取り込みを中止",
+  "toast.importCancelled": "取り込みを中止しました：{done} 件を追加、残り {rest} 件",
+  "projects.assignedMany": "プロジェクトに追加しました（{count} 件）",
+  "projects.pickMany": "{count} 件の文書の追加先：",
   "modal.import.skipped": "{count} 件をスキップしました：{names}",
   "modal.import.progress": "取り込み中 {done}/{total}…",
   "modal.new.joinProject": "現在のプロジェクトに追加：{name}",
@@ -3468,6 +3483,12 @@ var CSS = `
 .cait-modal-hint{margin:0;font-size:11px;line-height:1.6;color:var(--dsw-alias-label-secondary)}
 .cait-modal-project{display:inline-flex;align-items:center;gap:6px;margin:0 0 10px;padding:4px 8px;border:1px solid var(--dsw-alias-border-l1);border-radius:6px;background:var(--dsw-alias-bg-layer-1);color:var(--dsw-alias-label-primary)}
 .cait-dropzone{display:block}
+.cait-drop.is-disabled{opacity:.55;cursor:not-allowed}
+.cait-import-progress{margin-top:10px}
+.cait-import-bar{height:6px;border-radius:999px;background:var(--dsw-alias-bg-layer-2);overflow:hidden}
+.cait-import-bar i{display:block;height:100%;border-radius:999px;background:var(--dsw-alias-brand-primary);transition:width .18s ease}
+.cait-import-line{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:6px;font-size:11.5px;color:var(--dsw-alias-label-secondary)}
+.cait-linkbtn.is-danger{color:var(--dsw-alias-label-danger,#d9534f)}
 .cait-modal-hint.is-warn{color:var(--dsw-alias-label-warning, #c58a2a)}
 .cait-export-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:12px}
 .cait-export-item{display:flex;align-items:flex-start;gap:8px;padding:9px;border:1px solid var(--dsw-alias-border-l1);border-radius:8px;background:var(--dsw-alias-bg-layer-1);text-align:left;color:var(--dsw-alias-label-primary)}
@@ -4046,6 +4067,94 @@ function Toast({ toast }) {
 // client/components/forms.js
 var MAX_IMPORT_FILES = 20;
 var MAX_FILE_BYTES = 28 * 1024 * 1024;
+function filterImportFiles(list) {
+  const incoming = Array.from(list || []).filter((entry2) => entry2 && entry2.name);
+  const ok = [];
+  const skipped = [];
+  for (const entry2 of incoming) {
+    if (entry2.size > MAX_FILE_BYTES) skipped.push(entry2.name);
+    else if (ok.length >= MAX_IMPORT_FILES) skipped.push(entry2.name);
+    else ok.push(entry2);
+  }
+  return { ok, skipped };
+}
+function FileDropField({ t, files, skipped = [], onPick, disabled = false }) {
+  const inputRef = useRef(null);
+  return h(
+    "div",
+    { className: "cait-dropzone" },
+    h(
+      "label",
+      {
+        className: `cait-drop${disabled ? " is-disabled" : ""}`,
+        onDragOver: (event) => event.preventDefault(),
+        onDrop: (event) => {
+          event.preventDefault();
+          if (!disabled) onPick(event.dataTransfer?.files);
+        }
+      },
+      h("input", {
+        ref: inputRef,
+        type: "file",
+        multiple: true,
+        accept: ".txt,.md,.markdown,.tmx,.docx,.epub,.csv,.srt,.vtt,.po,.pot,.xliff,.xlf,.sdlxliff,.html,.htm,.json,.rtf,.xlsx,.pptx,.doc,.xls,.ppt,.strings,.stringsdict,.resx,.arb,.yaml,.yml,.properties",
+        hidden: true,
+        disabled,
+        onChange: (event) => {
+          onPick(event.target.files);
+          event.target.value = "";
+        }
+      }),
+      h(Icon, { name: files.length ? "file" : "upload", size: 22 }),
+      h(
+        "strong",
+        null,
+        files.length > 1 ? t("modal.import.pickedMany", { count: files.length }) : files.length === 1 ? files[0].name : t("empty.drop")
+      ),
+      h(
+        "span",
+        null,
+        files.length > 1 ? files.map((entry2) => entry2.name).slice(0, 3).join(" · ") : files.length === 1 ? formatBytes(files[0].size) : t("modal.new.dropHint")
+      )
+    ),
+    h("p", { className: "cait-modal-hint" }, t("modal.import.limits")),
+    skipped.length ? h(
+      "p",
+      { className: "cait-modal-hint is-warn" },
+      t("modal.import.skipped", {
+        count: skipped.length,
+        names: skipped.slice(0, 3).join(" · ")
+      })
+    ) : null
+  );
+}
+function ImportProgress({ t, progress, onCancel }) {
+  const total = Math.max(1, progress.total || 1);
+  const percent = Math.max(0, Math.min(100, Math.round(progress.done / total * 100)));
+  return h(
+    "div",
+    { className: "cait-import-progress" },
+    h("div", { className: "cait-import-bar" }, h("i", { style: { width: `${percent}%` } })),
+    h(
+      "div",
+      { className: "cait-import-line" },
+      h(
+        "span",
+        null,
+        progress.name ? t("modal.import.importing", {
+          done: progress.done,
+          total: progress.total,
+          name: progress.name
+        }) : t("modal.import.progress", { done: progress.done, total: progress.total })
+      ),
+      onCancel ? h(
+        "button",
+        { type: "button", className: "cait-linkbtn is-danger", onClick: onCancel },
+        t("modal.import.cancel")
+      ) : null
+    )
+  );
+}
 function DocumentSourceForm({
   t,
   settings,
@@ -4054,7 +4163,8 @@ function DocumentSourceForm({
   onSubmit,
   defaultMode = "text",
   fixedMode = "",
-  progress = null
+  progress = null,
+  onCancelImport = null
 }) {
   const [mode, setMode] = useState(fixedMode || defaultMode);
   const [name, setName] = useState("");
@@ -4065,7 +4175,6 @@ function DocumentSourceForm({
   const [targetLang, setTargetLang] = useState(settings.targetLang || "zh-CN");
   const [csvSourceColumn, setCsvSourceColumn] = useState("");
   const [csvTargetColumn, setCsvTargetColumn] = useState("");
-  const inputRef = useRef(null);
   useEffect(() => {
     if (settings.sourceLang) setSourceLang(settings.sourceLang);
     if (settings.targetLang) setTargetLang(settings.targetLang);
@@ -4074,15 +4183,7 @@ function DocumentSourceForm({
     if (fixedMode) setMode(fixedMode);
   }, [fixedMode]);
   const pickFiles = (list) => {
-    const incoming = Array.from(list || []).filter(Boolean);
-    if (!incoming.length) return;
-    const ok = [];
-    const rejected = [];
-    for (const entry2 of incoming) {
-      if (entry2.size > MAX_FILE_BYTES) rejected.push(entry2.name);
-      else if (ok.length >= MAX_IMPORT_FILES) rejected.push(entry2.name);
-      else ok.push(entry2);
-    }
+    const { ok, skipped: rejected } = filterImportFiles(list);
     if (!ok.length) {
       setSkipped(rejected);
       return;
@@ -4214,49 +4315,14 @@ function DocumentSourceForm({
       onChange: (event) => setText(event.target.value),
       placeholder: t("empty.textPlaceholder"),
       rows: 6
-    }) : h(
-      "div",
-      { className: "cait-dropzone" },
-      h(
-        "label",
-        {
-          className: "cait-drop",
-          onDragOver: (event) => event.preventDefault(),
-          onDrop: (event) => {
-            event.preventDefault();
-            pickFiles(event.dataTransfer?.files);
-          }
-        },
-        h("input", {
-          ref: inputRef,
-          type: "file",
-          multiple: true,
-          accept: ".txt,.md,.markdown,.tmx,.docx,.epub,.csv,.srt,.vtt,.po,.pot,.xliff,.xlf,.sdlxliff,.html,.htm,.json,.rtf,.xlsx,.pptx,.doc,.xls,.ppt,.strings,.stringsdict,.resx,.arb,.yaml,.yml,.properties",
-          hidden: true,
-          onChange: (event) => pickFiles(event.target.files)
-        }),
-        h(Icon, { name: files.length ? "file" : "upload", size: 22 }),
-        h(
-          "strong",
-          null,
-          files.length > 1 ? t("modal.import.pickedMany", { count: files.length }) : files.length === 1 ? files[0].name : t("empty.drop")
-        ),
-        h(
-          "span",
-          null,
-          files.length > 1 ? files.map((entry2) => entry2.name).slice(0, 3).join(" · ") : files.length === 1 ? formatBytes(files[0].size) : t("modal.new.dropHint")
-        )
-      ),
-      h("p", { className: "cait-modal-hint" }, t("modal.import.limits")),
-      skipped.length ? h(
-        "p",
-        { className: "cait-modal-hint is-warn" },
-        t("modal.import.skipped", {
-          count: skipped.length,
-          names: skipped.slice(0, 3).join(" · ")
-        })
-      ) : null
-    ),
+    }) : h(FileDropField, {
+      t,
+      files,
+      skipped,
+      onPick: pickFiles,
+      disabled: Boolean(busy)
+    }),
+    busy === "create" && progress ? h(ImportProgress, { t, progress, onCancel: onCancelImport }) : null,
     h(
       "div",
       { className: "cait-formfoot" },
@@ -4285,7 +4351,8 @@ function DocModalShell({
   onClose,
   onCreate,
   hint,
-  progress
+  progress,
+  onCancelImport
 }) {
   return h(
     Modal,
@@ -4304,7 +4371,8 @@ function DocModalShell({
       submitLabel,
       onSubmit: onCreate,
       fixedMode,
-      progress
+      progress,
+      onCancelImport
     }),
     fixedMode === "text" ? h(
       "div",
@@ -4335,7 +4403,16 @@ function NewDocModal({ t, settings, busy, projectName = "", onClose, onCreate })
     onCreate
   });
 }
-function ImportDocModal({ t, settings, busy, projectName = "", progress = null, onClose, onCreate }) {
+function ImportDocModal({
+  t,
+  settings,
+  busy,
+  projectName = "",
+  progress = null,
+  onCancelImport,
+  onClose,
+  onCreate
+}) {
   return h(DocModalShell, {
     t,
     settings,
@@ -4346,7 +4423,8 @@ function ImportDocModal({ t, settings, busy, projectName = "", progress = null, 
     fixedMode: "file",
     onClose,
     onCreate,
-    progress
+    progress,
+    onCancelImport
   });
 }
 
@@ -4766,11 +4844,13 @@ function Topbar({
   onReplace,
   view,
   onView,
-  onHome
+  onHome,
+  projectOpen = false
 }) {
   const progress = doc?.progress || { percent: 0, confirmed: 0, total: 0 };
   const documentsView = view === "documents";
   const projectsView = view === "projects";
+  const canCreateHere = projectsView && !projectOpen;
   const viewTabs = [
     { id: "projects", label: t("projects.title") },
     { id: "libraries", label: t("nav.libraries") },
@@ -4922,13 +5002,13 @@ function Topbar({
           }
         ]
       }) : null,
-      projectsView ? h(
+      canCreateHere ? h(
         "button",
         { className: "cait-btn", onClick: onNew, disabled: Boolean(busy), title: t("nav.new") },
         h(Icon, { name: "plus", size: 14 }),
         h("span", { className: "cait-btn-label" }, t("nav.new"))
       ) : null,
-      projectsView ? h(
+      canCreateHere ? h(
         "button",
         {
           className: "cait-btn",
@@ -6689,29 +6769,6 @@ function CatPanel({
 }
 
 // client/components/home.js
-var FILE_ACCEPT = [
-  ".txt",
-  ".md",
-  ".markdown",
-  ".docx",
-  ".doc",
-  ".epub",
-  ".tmx",
-  ".csv",
-  ".srt",
-  ".vtt",
-  ".po",
-  ".xlf",
-  ".xliff",
-  ".html",
-  ".htm",
-  ".json",
-  ".rtf",
-  ".xlsx",
-  ".xls",
-  ".pptx",
-  ".ppt"
-].join(",");
 function relativeStamp(t, iso) {
   const stamp = Date.parse(iso || "");
   if (!stamp) return "";
@@ -6739,9 +6796,8 @@ function HomePage({
   const [name, setName] = useState("");
   const [sourceLang, setSourceLang] = useState(settings.sourceLang || "en");
   const [targetLang, setTargetLang] = useState(settings.targetLang || "zh-CN");
-  const [file, setFile] = useState(null);
-  const [over, setOver] = useState(false);
-  const fileRef = useRef(null);
+  const [files, setFiles] = useState([]);
+  const [skipped, setSkipped] = useState([]);
   const projects = (data?.projects?.projects || []).filter((item) => !item.inbox);
   const openDocs = data?.openDocuments || [];
   const stats = data?.stats || {};
@@ -6771,7 +6827,7 @@ function HomePage({
     ];
     return rows.sort((a, b) => (Date.parse(b.updatedAt || "") || 0) - (Date.parse(a.updatedAt || "") || 0)).slice(0, 6);
   }, [projects, openDocs, t]);
-  const canCreate = mode === "text" ? Boolean(text.trim()) && !busy : Boolean(file) && !busy;
+  const canCreate = mode === "text" ? Boolean(text.trim()) && !busy : files.length > 0 && !busy;
   const resumeTarget = openDocs[0] || projects[0] || null;
   const showDemo = projects.length === 0 && openDocs.length === 0;
   const submit = (event) => {
@@ -6780,7 +6836,8 @@ function HomePage({
     if (mode === "file") {
       onPasteCreate({
         mode: "file",
-        file,
+        files,
+        file: files[0] || null,
         name: "",
         sourceLang,
         targetLang
@@ -6795,15 +6852,17 @@ function HomePage({
       targetLang
     });
   };
-  const pickFile = () => {
+  const pickFiles = (list) => {
     if (busy) return;
-    fileRef.current?.click();
-  };
-  const takeFile = (picked) => {
-    if (!picked) return;
-    setFile(picked);
+    const { ok, skipped: rejected } = filterImportFiles(list);
+    if (!ok.length) {
+      setSkipped(rejected);
+      return;
+    }
+    setFiles(ok);
+    setSkipped(rejected);
     setMode("file");
-    if (!name.trim()) setName(picked.name.replace(/\.[^.]+$/, ""));
+    if (!name.trim()) setName(ok.length === 1 ? ok[0].name.replace(/\.[^.]+$/, "") : "");
   };
   return h(
     "div",
@@ -6908,37 +6967,12 @@ function HomePage({
         value: text,
         placeholder: t("home.pastePlaceholder"),
         onChange: (event) => setText(event.target.value)
-      }) : h(
-        "button",
-        {
-          type: "button",
-          className: `cait-home-drop${over ? " is-over" : ""}`,
-          disabled: Boolean(busy),
-          onClick: pickFile,
-          onDragOver: (event) => {
-            event.preventDefault();
-            setOver(true);
-          },
-          onDragLeave: () => setOver(false),
-          onDrop: (event) => {
-            event.preventDefault();
-            setOver(false);
-            takeFile(event.dataTransfer?.files?.[0]);
-          }
-        },
-        h(Icon, { name: "upload", size: 20 }),
-        h("strong", null, file ? file.name : t("home.pickFile")),
-        h("span", { className: "cait-hint" }, t("home.fileHint"))
-      ),
-      h("input", {
-        ref: fileRef,
-        type: "file",
-        accept: FILE_ACCEPT,
-        style: { display: "none" },
-        onChange: (event) => {
-          takeFile(event.target.files?.[0]);
-          event.target.value = "";
-        }
+      }) : h(FileDropField, {
+        t,
+        files,
+        skipped,
+        onPick: pickFiles,
+        disabled: Boolean(busy)
       }),
       h(
         "div",
@@ -10942,14 +10976,15 @@ function ProjectDetail({
       )
     )
   );
-  const addMore = (documents ?? []).length ? h(
+  const candidates = (documents ?? []).filter((item) => item.projectId !== projectId);
+  const addMore = candidates.length ? h(
     "details",
     { className: "cait-proj-addmore" },
     h("summary", null, t("projects.addDocs")),
     h(
       "ul",
       { className: "cait-check-list" },
-      (documents ?? []).map(
+      candidates.map(
         (item) => h(
           "li",
           { key: item.id },
@@ -10958,7 +10993,7 @@ function ProjectDetail({
             { className: "cait-check" },
             h("input", {
               type: "checkbox",
-              checked: item.projectId === projectId,
+              checked: false,
               onChange: (event) => onToggleDoc(item.id, event.target.checked)
             }),
             h("span", null, `${item.name}${item.id === docId ? ` · ${t("projects.current")}` : ""}`)
@@ -11581,16 +11616,22 @@ function ProjectPicker({ t, busy, pick, onPick, onClose }) {
   const [projectId, setProjectId] = useState("");
   const [newName, setNewName] = useState("");
   const documentId = pick?.documentId ?? "";
+  const documentIds = pick?.documentIds ?? [];
   useEffect(() => {
     setProjectId("");
     setNewName("");
-  }, [documentId]);
+  }, [documentId, documentIds.join(",")]);
   if (!pick) return null;
   const projects = pick.projects ?? [];
+  const many = documentIds.length > 1;
   return h(
     Modal,
     { title: t("projects.assignTitle"), onClose },
-    h("p", { className: "cait-hint" }, t("projects.assignHint", { name: pick.name ?? "" })),
+    h(
+      "p",
+      { className: "cait-hint" },
+      many ? t("projects.pickMany", { count: documentIds.length }) : t("projects.assignHint", { name: pick.name ?? "" })
+    ),
     h(
       "ul",
       { className: "cait-proj-picklist" },
@@ -12340,12 +12381,19 @@ function useWorkbenchController({ i18n, translate }) {
     try {
       const batch = form.mode === "file" ? form.files || (form.file ? [form.file] : []) : [];
       if (batch.length > 1) {
+        const createdIds = [];
         const done = [];
         const failed = [];
+        let cancelled = false;
+        importCancelRef.current = false;
         try {
           for (let index2 = 0; index2 < batch.length; index2 += 1) {
-            setImportProgress({ done: index2, total: batch.length });
+            if (importCancelRef.current) {
+              cancelled = true;
+              break;
+            }
             const entry2 = batch[index2];
+            setImportProgress({ done: index2, total: batch.length, name: entry2.name });
             try {
               const payload = await filePayload(entry2);
               const imported = await rpc("importFile", {
@@ -12357,17 +12405,23 @@ function useWorkbenchController({ i18n, translate }) {
                 projectId: targetProject || void 0
               });
               if (imported.state) adoptState(imported.state);
+              if (imported.document?.id) createdIds.push(imported.document.id);
               done.push(imported.document?.name || entry2.name);
             } catch (error) {
               failed.push({ name: entry2.name, reason: describeError(error, t) });
             }
           }
         } finally {
-          setImportProgress({ done: batch.length, total: batch.length });
+          setImportProgress(null);
         }
         setModal(null);
         if (targetProject) void loadProjectDetail(targetProject, { stale: true }).catch(report);
-        if (done.length) {
+        if (cancelled) {
+          notify(
+            t("toast.importCancelled", { done: done.length, rest: batch.length - done.length }),
+            "error"
+          );
+        } else if (done.length) {
           notify(
             failed.length ? t("toast.importedManyPartial", { done: done.length, failed: failed.length }) : t("toast.importedMany", { count: done.length }),
             failed.length ? "error" : "success"
@@ -12377,7 +12431,17 @@ function useWorkbenchController({ i18n, translate }) {
           const summary = failed.map((item) => `${item.name}：${item.reason}`).join("；");
           notify(t("toast.importedManyFailed", { names: summary }), "error");
         }
-        if (targetProject && done.length) setView("projects");
+        if (targetProject) {
+          if (done.length) setView("projects");
+          return;
+        }
+        if (createdIds.length) {
+          await openProjectPicker({
+            documentIds: createdIds,
+            name: createdIds.length > 1 ? "" : done[0],
+            afterBrief: createdIds.length === 1
+          });
+        }
         return;
       }
       let result;
@@ -12904,6 +12968,7 @@ function useWorkbenchController({ i18n, translate }) {
   const [projectTab, setProjectTab] = useState("projects");
   const [projectDrafts, setProjectDrafts] = useState({});
   const [importProgress, setImportProgress] = useState(null);
+  const importCancelRef = useRef(false);
   const [projectEpoch, setProjectEpoch] = useState(0);
   const [pendingNav, setPendingNav] = useState(null);
   const [includePrefs, setIncludePrefs] = useState(() => {
@@ -13365,10 +13430,21 @@ function useWorkbenchController({ i18n, translate }) {
       setBusy("");
     }
   };
-  const openProjectPicker = async ({ documentId, name, afterBrief = false }) => {
+  const cancelImport = () => {
+    importCancelRef.current = true;
+    setImportProgress((current) => current ? { ...current, cancelling: true } : current);
+  };
+  const openProjectPicker = async ({ documentId, documentIds, name, afterBrief = false }) => {
     try {
       const list = await rpc("projectsList");
-      setProjectPick({ documentId, name, afterBrief, projects: list.projects, newName: "" });
+      setProjectPick({
+        documentId,
+        documentIds: documentIds || [],
+        name,
+        afterBrief,
+        projects: list.projects,
+        newName: ""
+      });
     } catch (error) {
       report(error);
     }
@@ -13385,22 +13461,35 @@ function useWorkbenchController({ i18n, translate }) {
         const created = await rpc("createProject", { name: String(newName).trim() });
         targetId = created.project.id;
       }
-      const result = await rpc("assignDocumentProject", {
-        documentId: pending.documentId,
-        projectId: targetId
-      });
-      applyDocumentSummary(result.document);
-      setProjectsState((current) => ({ ...current ?? {}, list: result.projects }));
-      setProjectPick(null);
-      notify(t("projects.assigned"));
+      const batch = pending.documentIds || [];
+      if (batch.length > 1) {
+        const result = await rpc("assignProjectDocuments", {
+          projectId: targetId,
+          documentIds: batch
+        });
+        for (const summary of result.documents || []) applyDocumentSummary(summary);
+        setProjectsState((current) => ({ ...current ?? {}, list: result.projects }));
+        setProjectPick(null);
+        notify(t("projects.assignedMany", { count: batch.length }));
+      } else {
+        const result = await rpc("assignDocumentProject", {
+          documentId: pending.documentId || batch[0],
+          projectId: targetId
+        });
+        applyDocumentSummary(result.document);
+        setProjectsState((current) => ({ ...current ?? {}, list: result.projects }));
+        setProjectPick(null);
+        notify(t("projects.assigned"));
+      }
     } catch (error) {
       report(error);
     } finally {
       setBusy("");
     }
-    if (!pending.documentId) return;
+    const openId = pending.documentId || (pending.documentIds || [])[0];
+    if (!openId) return;
     if (view === "projects" && targetId) await loadProjectDetail(targetId, { stale: true });
-    await openDocument(pending.documentId);
+    await openDocument(openId);
     setView("documents");
     if (pending.afterBrief) setModal({ type: "ai", mode: "brief" });
   };
@@ -14291,6 +14380,7 @@ function useWorkbenchController({ i18n, translate }) {
     closeDocumentTab,
     createFromForm,
     importProgress,
+    cancelImport,
     loadDemo,
     applyTm,
     applyTerm,
@@ -14586,6 +14676,7 @@ function Workbench({ i18n, translate }) {
     projectTab,
     projectDrafts,
     importProgress,
+    cancelImport,
     projectEpoch,
     includePrefs,
     rememberInclude,
@@ -14826,7 +14917,8 @@ function Workbench({ i18n, translate }) {
       onReplace: openReplace,
       view,
       onView: requestView,
-      onHome: openHome
+      onHome: openHome,
+      projectOpen: Boolean(projectsState?.project?.id)
     }),
     h(SaveBanner, { t, storage: data?.storage, stale, onRefresh: refreshState }),
     view === "home" ? h(HomePage, {
@@ -15082,6 +15174,7 @@ function Workbench({ i18n, translate }) {
       busy,
       projectName: newDocProjectName,
       progress: importProgress,
+      onCancelImport: cancelImport,
       onClose: () => setModal(null),
       onCreate: createFromForm
     }) : null,

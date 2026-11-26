@@ -7,6 +7,118 @@ import { Spinner, Icon, Modal } from './base.js'
 const MAX_IMPORT_FILES = 20
 const MAX_FILE_BYTES = 28 * 1024 * 1024
 
+/** 按文件数与大小筛一遍，返回可导入的与被跳过的（含文件名，用于提示）。 */
+function filterImportFiles(list) {
+  const incoming = Array.from(list || []).filter((entry) => entry && entry.name)
+  const ok = []
+  const skipped = []
+  for (const entry of incoming) {
+    if (entry.size > MAX_FILE_BYTES) skipped.push(entry.name)
+    else if (ok.length >= MAX_IMPORT_FILES) skipped.push(entry.name)
+    else ok.push(entry)
+  }
+  return { ok, skipped }
+}
+
+/**
+ * 拖放区：欢迎页与「导入文件」对话框共用，保证上限说明、多选与跳过提示完全一致。
+ * 文件列表状态留在调用方，这里只负责呈现与收集。
+ */
+function FileDropField({ t, files, skipped = [], onPick, disabled = false }) {
+  const inputRef = useRef(null)
+  return h(
+    'div',
+    { className: 'cait-dropzone' },
+    h(
+      'label',
+      {
+        className: `cait-drop${disabled ? ' is-disabled' : ''}`,
+        onDragOver: (event) => event.preventDefault(),
+        onDrop: (event) => {
+          event.preventDefault()
+          if (!disabled) onPick(event.dataTransfer?.files)
+        },
+      },
+      h('input', {
+        ref: inputRef,
+        type: 'file',
+        multiple: true,
+        accept:
+          '.txt,.md,.markdown,.tmx,.docx,.epub,.csv,.srt,.vtt,.po,.pot,.xliff,.xlf,.sdlxliff,.html,.htm,.json,.rtf,.xlsx,.pptx,.doc,.xls,.ppt,.strings,.stringsdict,.resx,.arb,.yaml,.yml,.properties',
+        hidden: true,
+        disabled,
+        onChange: (event) => {
+          onPick(event.target.files)
+          event.target.value = ''
+        },
+      }),
+      h(Icon, { name: files.length ? 'file' : 'upload', size: 22 }),
+      h(
+        'strong',
+        null,
+        files.length > 1
+          ? t('modal.import.pickedMany', { count: files.length })
+          : files.length === 1
+            ? files[0].name
+            : t('empty.drop'),
+      ),
+      h(
+        'span',
+        null,
+        files.length > 1
+          ? files.map((entry) => entry.name).slice(0, 3).join(' · ')
+          : files.length === 1
+            ? formatBytes(files[0].size)
+            : t('modal.new.dropHint'),
+      ),
+    ),
+    h('p', { className: 'cait-modal-hint' }, t('modal.import.limits')),
+    skipped.length
+      ? h(
+          'p',
+          { className: 'cait-modal-hint is-warn' },
+          t('modal.import.skipped', {
+            count: skipped.length,
+            names: skipped.slice(0, 3).join(' · '),
+          }),
+        )
+      : null,
+  )
+}
+
+/** 批量导入进行中的进度条 + 取消；导入完成后由控制器收起。 */
+function ImportProgress({ t, progress, onCancel }) {
+  const total = Math.max(1, progress.total || 1)
+  const percent = Math.max(0, Math.min(100, Math.round((progress.done / total) * 100)))
+  return h(
+    'div',
+    { className: 'cait-import-progress' },
+    h('div', { className: 'cait-import-bar' }, h('i', { style: { width: `${percent}%` } })),
+    h(
+      'div',
+      { className: 'cait-import-line' },
+      h(
+        'span',
+        null,
+        progress.name
+          ? t('modal.import.importing', {
+              done: progress.done,
+              total: progress.total,
+              name: progress.name,
+            })
+          : t('modal.import.progress', { done: progress.done, total: progress.total }),
+      ),
+      onCancel
+        ? h(
+            'button',
+            { type: 'button', className: 'cait-linkbtn is-danger', onClick: onCancel },
+            t('modal.import.cancel'),
+          )
+        : null,
+    ),
+  )
+}
+
 function DocumentSourceForm({
   t,
   settings,
@@ -16,6 +128,7 @@ function DocumentSourceForm({
   defaultMode = 'text',
   fixedMode = '',
   progress = null,
+  onCancelImport = null,
 }) {
   const [mode, setMode] = useState(fixedMode || defaultMode)
   const [name, setName] = useState('')
@@ -26,7 +139,6 @@ function DocumentSourceForm({
   const [targetLang, setTargetLang] = useState(settings.targetLang || 'zh-CN')
   const [csvSourceColumn, setCsvSourceColumn] = useState('')
   const [csvTargetColumn, setCsvTargetColumn] = useState('')
-  const inputRef = useRef(null)
 
   useEffect(() => {
     if (settings.sourceLang) setSourceLang(settings.sourceLang)
@@ -39,15 +151,7 @@ function DocumentSourceForm({
   }, [fixedMode])
 
   const pickFiles = (list) => {
-    const incoming = Array.from(list || []).filter(Boolean)
-    if (!incoming.length) return
-    const ok = []
-    const rejected = []
-    for (const entry of incoming) {
-      if (entry.size > MAX_FILE_BYTES) rejected.push(entry.name)
-      else if (ok.length >= MAX_IMPORT_FILES) rejected.push(entry.name)
-      else ok.push(entry)
-    }
+    const { ok, skipped: rejected } = filterImportFiles(list)
     if (!ok.length) {
       setSkipped(rejected)
       return
@@ -194,60 +298,16 @@ function DocumentSourceForm({
           placeholder: t('empty.textPlaceholder'),
           rows: 6,
         })
-      : h(
-          'div',
-          { className: 'cait-dropzone' },
-          h(
-            'label',
-            {
-              className: 'cait-drop',
-              onDragOver: (event) => event.preventDefault(),
-              onDrop: (event) => {
-                event.preventDefault()
-                pickFiles(event.dataTransfer?.files)
-              },
-            },
-            h('input', {
-              ref: inputRef,
-              type: 'file',
-              multiple: true,
-              accept:
-                '.txt,.md,.markdown,.tmx,.docx,.epub,.csv,.srt,.vtt,.po,.pot,.xliff,.xlf,.sdlxliff,.html,.htm,.json,.rtf,.xlsx,.pptx,.doc,.xls,.ppt,.strings,.stringsdict,.resx,.arb,.yaml,.yml,.properties',
-              hidden: true,
-              onChange: (event) => pickFiles(event.target.files),
-            }),
-            h(Icon, { name: files.length ? 'file' : 'upload', size: 22 }),
-            h(
-              'strong',
-              null,
-              files.length > 1
-                ? t('modal.import.pickedMany', { count: files.length })
-                : files.length === 1
-                  ? files[0].name
-                  : t('empty.drop'),
-            ),
-            h(
-              'span',
-              null,
-              files.length > 1
-                ? files.map((entry) => entry.name).slice(0, 3).join(' · ')
-                : files.length === 1
-                  ? formatBytes(files[0].size)
-                  : t('modal.new.dropHint'),
-            ),
-          ),
-          h('p', { className: 'cait-modal-hint' }, t('modal.import.limits')),
-          skipped.length
-            ? h(
-                'p',
-                { className: 'cait-modal-hint is-warn' },
-                t('modal.import.skipped', {
-                  count: skipped.length,
-                  names: skipped.slice(0, 3).join(' · '),
-                }),
-              )
-            : null,
-        ),
+      : h(FileDropField, {
+          t,
+          files,
+          skipped,
+          onPick: pickFiles,
+          disabled: Boolean(busy),
+        }),
+    busy === 'create' && progress
+      ? h(ImportProgress, { t, progress, onCancel: onCancelImport })
+      : null,
     h(
       'div',
       { className: 'cait-formfoot' },
@@ -282,6 +342,7 @@ function DocModalShell({
   onCreate,
   hint,
   progress,
+  onCancelImport,
 }) {
   return h(
     Modal,
@@ -303,6 +364,7 @@ function DocModalShell({
       onSubmit: onCreate,
       fixedMode,
       progress,
+      onCancelImport,
     }),
     fixedMode === 'text'
       ? h(
@@ -337,7 +399,16 @@ function NewDocModal({ t, settings, busy, projectName = '', onClose, onCreate })
   })
 }
 
-function ImportDocModal({ t, settings, busy, projectName = '', progress = null, onClose, onCreate }) {
+function ImportDocModal({
+  t,
+  settings,
+  busy,
+  projectName = '',
+  progress = null,
+  onCancelImport,
+  onClose,
+  onCreate,
+}) {
   return h(DocModalShell, {
     t,
     settings,
@@ -349,6 +420,7 @@ function ImportDocModal({ t, settings, busy, projectName = '', progress = null, 
     onClose,
     onCreate,
     progress,
+    onCancelImport,
   })
 }
 
@@ -359,4 +431,4 @@ function ImportDocModal({ t, settings, busy, projectName = '', progress = null, 
  * and this page is the only place that manages whole libraries.
  */
 
-export { DocumentSourceForm, NewDocModal, ImportDocModal }
+export { DocumentSourceForm, FileDropField, filterImportFiles, NewDocModal, ImportDocModal }

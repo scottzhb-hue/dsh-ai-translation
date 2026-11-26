@@ -242,10 +242,13 @@ function Topbar({
   view,
   onView,
   onHome,
+  projectOpen = false,
 }) {
   const progress = doc?.progress || { percent: 0, confirmed: 0, total: 0 }
   const documentsView = view === 'documents'
   const projectsView = view === 'projects'
+  // 选中某个项目时，「新建 / 导入」由项目详情里的文档卡提供，工具栏不再重复一套。
+  const canCreateHere = projectsView && !projectOpen
   const viewTabs = [
     { id: 'projects', label: t('projects.title') },
     { id: 'libraries', label: t('nav.libraries') },
@@ -411,7 +414,7 @@ function Topbar({
             ],
           })
         : null,
-      projectsView
+      canCreateHere
         ? h(
             'button',
             { className: 'cait-btn', onClick: onNew, disabled: Boolean(busy), title: t('nav.new') },
@@ -419,7 +422,7 @@ function Topbar({
             h('span', { className: 'cait-btn-label' }, t('nav.new')),
           )
         : null,
-      projectsView
+      canCreateHere
         ? h(
             'button',
             {

@@ -43,6 +43,7 @@
 | 23 | 项目详情重排：文档清单上提放大、行内操作收敛为「打开 + ⋯」、设置收进可折叠分区 | 已上线 | `client/components/projects.js`、`client/styles.js`、`client/locales-workflow.js` |
 | 24 | 项目详情崩溃修复：折叠状态 hook 移到提前 return 之前，并补「占位 → 详情」回归 | 已上线 | `client/components/projects.js` | `_dev/test-ui-projects.mjs` |
 | 25 | 新建/导入拆成两个独立对话框；项目内建文档直落当前项目；文档行支持上移/下移/移动，顺序按项目持久化；库条目详情改为独立对话框 | 已上线 | `client/components/forms.js`、`client/components/projects.js`、`client/components/pages.js`、`client/workbench/controller.js`、`lib/projects.js`、`lib/api.js`、`client/styles.js`、`client/locales-workflow.js` | `_dev/test-ui-projects.mjs`、`_dev/test-workbench-mount.mjs`、`_dev/test-report-contract.mjs` |
+| 26 | 统一导入器（欢迎页共用拖放区）、导入进度与取消、整批一次归属 |
 
 ## 明细
 
@@ -356,3 +357,21 @@
 验证：`_dev/test-ui-projects.mjs` 44 项（两个独立弹窗、表头「操作 / 报告」、上移/下移禁用态、移动一步直达）、`_dev/test-workbench-mount.mjs` 37 项（库对话框可开可关）、`_dev/test-report-contract.mjs` 29 项（排序契约含越界与错误码）；四套测试全过，`audit-workflow` 138/138，`check-locales` 916×3，`check-api` 127 handler / 78 写操作。
 
 边界：排序是项目内顺序，不跨项目共享；「移到其他项目」只支持单个文档，批量迁移走「所有文档」里的下拉；重排失败只提示，不改动本地已显示的顺序。
+
+### 26 统一导入器、导入进度与整批归属
+
+**动机**：1.2.8 把「新建文档 / 导入文件」拆成两个对话框并给导入加了多选、上限说明与批量循环，但欢迎页仍保留自己那份旧拖放区——只能选一个文件、没有上限提示、也不能取消；同一个功能在三个入口出现两套行为。
+
+**做法**：
+
+- `client/components/forms.js` 抽出 `FileDropField`（虚线区 + `input multiple` + 上限说明 + 跳过提示）与 `ImportProgress`（进度条 + `n/m · 文件名` + 取消），`DocumentSourceForm` / `ImportDocModal` / 欢迎页共用；`filterImportFiles` 统一「最多 20 个 / 单文件 28 MB」的筛选并返回被跳过的文件。
+- `accept` 保持**字面量字符串**：`scripts/check-formats.mjs` 用 `/accept:\s*'([^']+)'/` 读取它来核对导入扩展名，抽成常量会让检查退化成 19 种。
+- 控制器批量循环每轮检查 `importCancelRef`，并写 `importProgress {done,total,name}`；取消时 `break`，已导入的文档保留，收尾提示「已取消：成功 n 篇」。
+- 欢迎页批量导入后只弹一次归属：`openProjectPicker({documentIds})` → `pickProject` 走 `assignProjectDocuments`，用返回的 `documents` 逐个 `applyDocumentSummary`，只打开第一篇。
+- 「把已有文档加入本项目」先按 `item.projectId !== projectId` 过滤，过滤后为空就整块隐藏；勾选框固定为未选中，加入/移出各自只有一种动作（移出走行内「移动 → 未分类」）。
+- 顶栏的「新建 / 导入」改成 `projectsView && !projectOpen` 才渲染：选中项目时由项目详情的文档卡提供入口，避免同一屏两套按钮。
+
+**验证**：`_dev/test-ui-controller.mjs` 42 项（取消只留正在导入的一篇、批量两篇整批同项目）、`_dev/test-ui-projects.mjs` 49 项（上限文案、进度与取消、整批归属文案）、`_dev/test-workbench-mount.mjs` 39 项（欢迎页拖放区与上限说明）、`test-report-contract.mjs` 29 项；`audit-workflow.mjs` 138 项。
+
+**边界**：单批上限是前端软限制（20 个文件 / 800 万字符合计），服务端仍按单文档限制（`MAX_IMPORT_CHARS` 800 万、`MAX_SEGMENTS` 20000）拒绝；导入是串行同步 RPC，取消只在两个文件之间生效。
+

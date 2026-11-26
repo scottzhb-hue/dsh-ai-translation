@@ -390,6 +390,12 @@ const CSS = `
 .cait-modal-hint{margin:0;font-size:11px;line-height:1.6;color:var(--dsw-alias-label-secondary)}
 .cait-modal-project{display:inline-flex;align-items:center;gap:6px;margin:0 0 10px;padding:4px 8px;border:1px solid var(--dsw-alias-border-l1);border-radius:6px;background:var(--dsw-alias-bg-layer-1);color:var(--dsw-alias-label-primary)}
 .cait-dropzone{display:block}
+.cait-drop.is-disabled{opacity:.55;cursor:not-allowed}
+.cait-import-progress{margin-top:10px}
+.cait-import-bar{height:6px;border-radius:999px;background:var(--dsw-alias-bg-layer-2);overflow:hidden}
+.cait-import-bar i{display:block;height:100%;border-radius:999px;background:var(--dsw-alias-brand-primary);transition:width .18s ease}
+.cait-import-line{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:6px;font-size:11.5px;color:var(--dsw-alias-label-secondary)}
+.cait-linkbtn.is-danger{color:var(--dsw-alias-label-danger,#d9534f)}
 .cait-modal-hint.is-warn{color:var(--dsw-alias-label-warning, #c58a2a)}
 .cait-export-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:12px}
 .cait-export-item{display:flex;align-items:flex-start;gap:8px;padding:9px;border:1px solid var(--dsw-alias-border-l1);border-radius:8px;background:var(--dsw-alias-bg-layer-1);text-align:left;color:var(--dsw-alias-label-primary)}

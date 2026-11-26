@@ -718,7 +718,8 @@ function ProjectDetail({
     ),
   )
 
-  const addMore = (documents ?? []).length
+  const candidates = (documents ?? []).filter((item) => item.projectId !== projectId)
+  const addMore = candidates.length
     ? h(
         'details',
         { className: 'cait-proj-addmore' },
@@ -726,7 +727,7 @@ function ProjectDetail({
         h(
           'ul',
           { className: 'cait-check-list' },
-          (documents ?? []).map((item) =>
+          candidates.map((item) =>
             h(
               'li',
               { key: item.id },
@@ -735,7 +736,7 @@ function ProjectDetail({
                 { className: 'cait-check' },
                 h('input', {
                   type: 'checkbox',
-                  checked: item.projectId === projectId,
+                  checked: false,
                   onChange: (event) => onToggleDoc(item.id, event.target.checked),
                 }),
                 h('span', null, `${item.name}${item.id === docId ? ` · ${t('projects.current')}` : ''}`),
@@ -1380,16 +1381,22 @@ function ProjectPicker({ t, busy, pick, onPick, onClose }) {
   const [projectId, setProjectId] = useState('')
   const [newName, setNewName] = useState('')
   const documentId = pick?.documentId ?? ''
+  const documentIds = pick?.documentIds ?? []
   useEffect(() => {
     setProjectId('')
     setNewName('')
-  }, [documentId])
+  }, [documentId, documentIds.join(',')])
   if (!pick) return null
   const projects = pick.projects ?? []
+  const many = documentIds.length > 1
   return h(
     Modal,
     { title: t('projects.assignTitle'), onClose },
-    h('p', { className: 'cait-hint' }, t('projects.assignHint', { name: pick.name ?? '' })),
+    h(
+      'p',
+      { className: 'cait-hint' },
+      many ? t('projects.pickMany', { count: documentIds.length }) : t('projects.assignHint', { name: pick.name ?? '' }),
+    ),
     h(
       'ul',
       { className: 'cait-proj-picklist' },

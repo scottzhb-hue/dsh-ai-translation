@@ -73,6 +73,13 @@ manual reload.
 
 ## Features
 
+### New in 1.2.9
+
+- **One importer everywhere.** The welcome screen now uses the same drop zone as the project page: multi-select/multi-drop, the batch limits spelled out, and skipped files explained.
+- **Batch ownership.** Importing several files from the welcome screen asks for the project once and files the whole batch there.
+- **Progress with cancel.** Imports show a progress bar (n of m, current file) and can be cancelled; documents already imported are kept.
+- **One set of entry points.** Once a project is selected, the top bar no longer repeats "New / Import" — the document card in the project detail owns them; "Add existing documents to this project" lists only documents that are not in the project yet.
+
 ### New in 1.2.8
 
 - **Separate entry dialogs.** "New document" opens a text form with "Create document"; "Import file" opens a drop zone with "Import file". Neither shows the other's fields or tab.

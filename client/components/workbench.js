@@ -189,6 +189,7 @@ function Workbench({ i18n, translate }) {
     projectTab,
     projectDrafts,
   importProgress,
+  cancelImport,
     projectEpoch,
     includePrefs,
     rememberInclude,
@@ -443,6 +444,7 @@ function Workbench({ i18n, translate }) {
       view,
       onView: requestView,
       onHome: openHome,
+      projectOpen: Boolean(projectsState?.project?.id),
     }),
     h(SaveBanner, { t, storage: data?.storage, stale, onRefresh: refreshState }),
     view === 'home'
@@ -720,6 +722,7 @@ function Workbench({ i18n, translate }) {
             busy,
             projectName: newDocProjectName,
             progress: importProgress,
+            onCancelImport: cancelImport,
             onClose: () => setModal(null),
             onCreate: createFromForm,
           })
