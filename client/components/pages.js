@@ -484,14 +484,14 @@ function LibraryPage({
     const token = (loadToken.current += 1)
     setLoading(true)
     setLoadError(null)
-    // A stuck bridge must not leave an endless spinner: give up after 15s and
+    // A stuck bridge must not leave an endless spinner: give up after 8s and
     // hand the user a retry button.
     const timer = setTimeout(() => {
       if (loadToken.current !== token) return
       loadToken.current += 1
       setLoading(false)
       setLoadError({ code: 'TIMEOUT', message: 'request timed out' })
-    }, 15000)
+    }, 8000)
     try {
       const params =
         kind === 'tm'
@@ -522,7 +522,7 @@ function LibraryPage({
     return () => {
       alive = false
     }
-  }, [kind, scopeKey, debouncedQuery, lang, page, pageSize, data?.revision])
+  }, [kind, scopeKey, debouncedQuery, lang, page, pageSize])
 
   useEffect(() => {
     const entry = (rows?.entries || []).find((item) => item.id === selectedId)

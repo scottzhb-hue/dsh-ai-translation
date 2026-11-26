@@ -1,4 +1,4 @@
-import { h, useState } from '../react.js'
+import { h, useState, useEffect } from '../react.js'
 import { CSS_SCALED } from '../styles.js'
 import { Spinner, Icon, Toast } from './base.js'
 import { SaveBanner, RecentDocsModal, Topbar, EmptyState } from './shell.js'
@@ -238,12 +238,41 @@ function Workbench({ i18n, translate }) {
   const [libraryIo, setLibraryIo] = useState(null)
   const ioOptions = libraryIo ? libraryIoOptions(libraryIo.kind) : { libraries: [], libraryId: '' }
 
+  // A hung bootstrap must not look like a frozen plugin: after 12s offer a
+  // reload instead of an endless spinner.
+  const [bootStuck, setBootStuck] = useState(false)
+  useEffect(() => {
+    if (!loading) {
+      setBootStuck(false)
+      return undefined
+    }
+    const timer = setTimeout(() => setBootStuck(true), 12000)
+    return () => clearTimeout(timer)
+  }, [loading])
+
   if (loading) {
     return h(
       'div',
       { className: 'cait-root', ref: rootRef },
       h('style', null, CSS_SCALED),
-      h('div', { className: 'cait-center' }, h(Spinner), t('common.loading')),
+      bootStuck
+        ? h(
+            'div',
+            { className: 'cait-center' },
+            h(
+              'div',
+              { className: 'cait-errorcard' },
+              h('p', null, t('load.failed')),
+              h('p', { className: 'cait-hint' }, t('load.slow')),
+              h(
+                'button',
+                { className: 'cait-btn cait-btn-primary', onClick: () => window.location.reload() },
+                h(Icon, { name: 'refresh', size: 13 }),
+                t('common.retry'),
+              ),
+            ),
+          )
+        : h('div', { className: 'cait-center' }, h(Spinner), t('common.loading')),
     )
   }
 
@@ -258,7 +287,7 @@ function Workbench({ i18n, translate }) {
         h(
           'div',
           { className: 'cait-errorcard' },
-          h('p', null, `${t('error.load')}: ${loadError}`),
+          h('p', null, `${t('load.failed')}: ${loadError}`),
           h(
             'button',
             { className: 'cait-btn cait-btn-primary', onClick: () => window.location.reload() },
@@ -590,7 +619,15 @@ function Workbench({ i18n, translate }) {
                   qaRisk,
                   textareaRef,
                 })
-              : h(EmptyState, { t, settings, busy, onCreate: createFromForm, onDemo: loadDemo }),
+              : h(EmptyState, {
+                  t,
+                  settings,
+                  busy,
+                  onCreate: createFromForm,
+                  onDemo: loadDemo,
+                  onBackToProject: () => requestView('projects'),
+                  onOpenDocs: () => setModal({ type: 'recent' }),
+                }),
             doc
               ? h(CatPanel, {
                   t,

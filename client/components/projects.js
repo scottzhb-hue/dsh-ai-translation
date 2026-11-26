@@ -330,6 +330,17 @@ function ProjectDetail({
             type: 'button',
             className: 'cait-btn',
             disabled: Boolean(busy),
+            onClick: () => onRefreshAnalysis(),
+          },
+          h(Icon, { name: 'chart', size: 13 }),
+          h('span', null, t('projects.refreshAnalysis')),
+        ),
+        h(
+          'button',
+          {
+            type: 'button',
+            className: 'cait-btn',
+            disabled: Boolean(busy),
             onClick: () => onProjectReport(projectId, 'html'),
           },
           h(Icon, { name: 'file', size: 13 }),
@@ -407,33 +418,16 @@ function ProjectDetail({
           )
         : null,
     ),
-    h(
-      'div',
-      { className: 'cait-proj-analysis' },
-      analysis
-        ? h(
-            'p',
-            { className: 'cait-hint' },
-            `${t('projects.analysis')}：${t('projects.analysisValue', {
-              matched: Math.round(analysis.totals?.matchedPercent ?? 0),
-              fresh: analysis.totals?.buckets?.new ?? 0,
-            })}`,
-          )
-        : h('p', { className: 'cait-hint' }, t('projects.analysisNone')),
-      stale ? h('span', { className: 'cait-hint is-danger' }, t('projects.analysisStale')) : null,
-      h(
-        'button',
-        {
-          type: 'button',
-          className: 'cait-minibtn',
-          disabled: Boolean(busy),
-          title: t('projects.refreshAnalysis'),
-          onClick: () => onRefreshAnalysis(),
-        },
-        h(Icon, { name: 'refresh', size: 12 }),
-        h('span', null, t('projects.refreshAnalysis')),
-      ),
-    ),
+    analysis
+      ? h(
+          'p',
+          { className: 'cait-hint' },
+          `${t('projects.analysis')}：${t('projects.analysisValue', {
+            matched: Math.round(analysis.totals?.matchedPercent ?? 0),
+            fresh: analysis.totals?.buckets?.new ?? 0,
+          })}`,
+        )
+      : null,
     h(
       'div',
       { className: 'cait-proj-actions' },

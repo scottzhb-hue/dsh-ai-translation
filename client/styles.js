@@ -339,6 +339,7 @@ const CSS = `
 .cait-paneljump{display:flex;align-items:center;justify-content:flex-end;margin-top:1px}
 .cait-empty{display:grid;place-items:center;min-height:0;overflow-y:auto;padding:34px 28px}
 .cait-empty-inner{width:min(680px,100%);padding:6px 0 20px}
+.cait-empty-nav{display:flex;gap:7px;justify-content:flex-end;margin-bottom:12px}
 .cait-kicker{display:inline-flex;align-items:center;gap:6px;height:22px;padding:0 8px;border:1px solid color-mix(in srgb,var(--dsw-alias-brand-primary) 22%,var(--dsw-alias-border-l1));border-radius:999px;background:color-mix(in srgb,var(--dsw-alias-brand-primary) 7%,transparent);color:var(--dsw-alias-brand-primary);font-size:10px;font-weight:700;letter-spacing:.08em}
 .cait-empty h1{margin:13px 0 7px;font-size:25px;line-height:1.24;letter-spacing:-.025em;font-weight:680}
 .cait-empty .cait-lede{margin:0 0 16px;font-size:12.5px;line-height:1.65;color:var(--dsw-alias-label-secondary);max-width:590px}

@@ -901,6 +901,10 @@ var ZH = {
   "toast.preCancelled": "已停止预翻译",
   "toast.preFailed": "预翻译结束，{count} 段失败",
   "empty.title": "开始一次 CAT 翻译",
+  "load.failed": "加载工作台失败",
+  "load.slow": "插件的请求超过 12 秒没有返回，可能后台任务卡住或宿主未响应。",
+  "empty.backToProject": "← 返回项目",
+  "empty.openDocs": "打开已有文档",
   "empty.desc": "粘贴文本、拖入文件，或加载演示文档。AI辅助翻译会把源文切成句段，并同时查询翻译记忆与术语库；确认译文后自动入库。",
   "empty.paste": "粘贴文本",
   "empty.file": "导入文件",
@@ -1315,6 +1319,10 @@ var EN = {
   "toast.preCancelled": "Pre-translation stopped",
   "toast.preFailed": "Pre-translation finished, {count} segment(s) failed",
   "empty.title": "Start a CAT translation",
+  "load.failed": "Failed to load the workbench",
+  "load.slow": "The plugin request did not return within 12 seconds; a background task may be stuck.",
+  "empty.backToProject": "← Back to projects",
+  "empty.openDocs": "Open an existing document",
   "empty.desc": "Paste text, drop a file, or load the demo. AI Translation splits the source into segments, queries translation memory and glossary hits, and stores each confirmed pair in TM.",
   "empty.paste": "Paste text",
   "empty.file": "Import file",
@@ -1729,6 +1737,10 @@ var JA = {
   "toast.preCancelled": "事前翻訳を停止しました",
   "toast.preFailed": "事前翻訳が終了しました（{count} 文が失敗）",
   "empty.title": "CAT 翻訳を始める",
+  "load.failed": "ワークベンチの読み込みに失敗しました",
+  "load.slow": "プラグインの応答が 12 秒以内に返りませんでした。バックグラウンド処理が止まっている可能性があります。",
+  "empty.backToProject": "← プロジェクトに戻る",
+  "empty.openDocs": "既存の文書を開く",
   "empty.desc": "テキストを貼り付けるか、ファイルをドロップするか、デモ文書を読み込みます。AI翻訳は原文をセグメントに分割し、翻訳メモリと用語集を同時に検索します。確認した訳文は自動的に TM に保存されます。",
   "empty.paste": "テキストを貼り付け",
   "empty.file": "ファイルをインポート",
@@ -3317,6 +3329,7 @@ var CSS = `
 .cait-paneljump{display:flex;align-items:center;justify-content:flex-end;margin-top:1px}
 .cait-empty{display:grid;place-items:center;min-height:0;overflow-y:auto;padding:34px 28px}
 .cait-empty-inner{width:min(680px,100%);padding:6px 0 20px}
+.cait-empty-nav{display:flex;gap:7px;justify-content:flex-end;margin-bottom:12px}
 .cait-kicker{display:inline-flex;align-items:center;gap:6px;height:22px;padding:0 8px;border:1px solid color-mix(in srgb,var(--dsw-alias-brand-primary) 22%,var(--dsw-alias-border-l1));border-radius:999px;background:color-mix(in srgb,var(--dsw-alias-brand-primary) 7%,transparent);color:var(--dsw-alias-brand-primary);font-size:10px;font-weight:700;letter-spacing:.08em}
 .cait-empty h1{margin:13px 0 7px;font-size:25px;line-height:1.24;letter-spacing:-.025em;font-weight:680}
 .cait-empty .cait-lede{margin:0 0 16px;font-size:12.5px;line-height:1.65;color:var(--dsw-alias-label-secondary);max-width:590px}
@@ -4676,13 +4689,29 @@ function Topbar({
     )
   );
 }
-function EmptyState({ t, settings, busy, onCreate, onDemo }) {
+function EmptyState({ t, settings, busy, onCreate, onDemo, onBackToProject, onOpenDocs }) {
   return h(
     "div",
     { className: "cait-empty" },
     h(
       "div",
       { className: "cait-empty-inner" },
+      h(
+        "div",
+        { className: "cait-empty-nav" },
+        h(
+          "button",
+          { className: "cait-btn", onClick: onBackToProject, disabled: Boolean(busy) },
+          h(Icon, { name: "folder", size: 13 }),
+          t("empty.backToProject")
+        ),
+        h(
+          "button",
+          { className: "cait-btn", onClick: onOpenDocs, disabled: Boolean(busy) },
+          h(Icon, { name: "file", size: 13 }),
+          t("empty.openDocs")
+        )
+      ),
       h("span", { className: "cait-kicker" }, `${t("app.title")} · CAT WORKBENCH`),
       h("h1", null, t("empty.title")),
       h("p", { className: "cait-lede" }, t("empty.desc")),
@@ -7060,7 +7089,7 @@ function LibraryPage({
       loadToken.current += 1;
       setLoading(false);
       setLoadError({ code: "TIMEOUT", message: "request timed out" });
-    }, 15e3);
+    }, 8e3);
     try {
       const params = kind === "tm" ? { tmIds: scopeIds, query: debouncedQuery, page, pageSize } : { glossaryIds: scopeIds, query: debouncedQuery, page, pageSize };
       if (lang) params.sourceLang = lang;
@@ -7087,7 +7116,7 @@ function LibraryPage({
     return () => {
       alive = false;
     };
-  }, [kind, scopeKey, debouncedQuery, lang, page, pageSize, data?.revision]);
+  }, [kind, scopeKey, debouncedQuery, lang, page, pageSize]);
   useEffect(() => {
     const entry2 = (rows?.entries || []).find((item) => item.id === selectedId);
     setDraft(entry2 ? { ...entry2 } : null);
@@ -10166,6 +10195,17 @@ function ProjectDetail({
             type: "button",
             className: "cait-btn",
             disabled: Boolean(busy),
+            onClick: () => onRefreshAnalysis()
+          },
+          h(Icon, { name: "chart", size: 13 }),
+          h("span", null, t("projects.refreshAnalysis"))
+        ),
+        h(
+          "button",
+          {
+            type: "button",
+            className: "cait-btn",
+            disabled: Boolean(busy),
             onClick: () => onProjectReport(projectId, "html")
           },
           h(Icon, { name: "file", size: 13 }),
@@ -10239,31 +10279,14 @@ function ProjectDetail({
         `${t("projects.quote")} ${currency} ${Number(quoteTotal).toFixed(2)}`
       ) : null
     ),
-    h(
-      "div",
-      { className: "cait-proj-analysis" },
-      analysis ? h(
-        "p",
-        { className: "cait-hint" },
-        `${t("projects.analysis")}：${t("projects.analysisValue", {
-          matched: Math.round(analysis.totals?.matchedPercent ?? 0),
-          fresh: analysis.totals?.buckets?.new ?? 0
-        })}`
-      ) : h("p", { className: "cait-hint" }, t("projects.analysisNone")),
-      stale ? h("span", { className: "cait-hint is-danger" }, t("projects.analysisStale")) : null,
-      h(
-        "button",
-        {
-          type: "button",
-          className: "cait-minibtn",
-          disabled: Boolean(busy),
-          title: t("projects.refreshAnalysis"),
-          onClick: () => onRefreshAnalysis()
-        },
-        h(Icon, { name: "refresh", size: 12 }),
-        h("span", null, t("projects.refreshAnalysis"))
-      )
-    ),
+    analysis ? h(
+      "p",
+      { className: "cait-hint" },
+      `${t("projects.analysis")}：${t("projects.analysisValue", {
+        matched: Math.round(analysis.totals?.matchedPercent ?? 0),
+        fresh: analysis.totals?.buckets?.new ?? 0
+      })}`
+    ) : null,
     h(
       "div",
       { className: "cait-proj-actions" },
@@ -11626,8 +11649,10 @@ function useWorkbenchController({ i18n, translate }) {
       setBusy("");
     }
   };
-  const openDocument = async (documentId) => {
-    if (!documentId || documentId === doc?.id || busy) return;
+  const openDocument = async (documentId, { force = false } = {}) => {
+    if (!documentId) return false;
+    if (documentId === doc?.id) return true;
+    if (busy && !force) return false;
     setBusy("open");
     try {
       if (dirtyRef.current) {
@@ -11639,15 +11664,19 @@ function useWorkbenchController({ i18n, translate }) {
       }
       const result = await rpc("openDocument", { documentId });
       adoptState(result.state);
+      return true;
     } catch (error) {
       report(error);
+      return false;
     } finally {
       setBusy("");
     }
   };
   const closeDocumentTab = async (documentId) => {
     if (!documentId || busy) return;
+    const projectId = data?.activeDocument?.id === documentId ? data.activeDocument.projectId : "";
     setBusy("close");
+    let remaining = -1;
     try {
       if (dirtyRef.current) {
         const saved = await saveDraft(true);
@@ -11655,11 +11684,16 @@ function useWorkbenchController({ i18n, translate }) {
       }
       const result = await rpc("closeDocument", { documentId });
       adoptState(result.state);
+      remaining = Array.isArray(result.state?.openDocIds) ? result.state.openDocIds.length : 0;
       notify(t("toast.docClosed"));
     } catch (error) {
       report(error);
     } finally {
       setBusy("");
+    }
+    if (remaining === 0) {
+      setView("projects");
+      void openProjects(projectId || void 0);
     }
   };
   const createFromForm = async (form) => {
@@ -12266,8 +12300,8 @@ function useWorkbenchController({ i18n, translate }) {
   const requestOpenDocument = async (documentId) => {
     if (!documentId) return;
     if (view === "projects" && guardProjectNav({ kind: "doc", documentId })) return;
-    await openDocument(documentId);
-    setView("documents");
+    const opened = await openDocument(documentId, { force: true });
+    if (opened) setView("documents");
   };
   const flattenProjectDetail = (detail2) => ({
     ...detail2.project,
@@ -12290,18 +12324,15 @@ function useWorkbenchController({ i18n, translate }) {
     setProjectsState((current) => ({ ...current ?? {}, list }));
     return list;
   };
-  const loadProjectDetail = async (projectId, { analyze = false, stale: stale2 = false } = {}) => {
-    const [detail2, analysis2] = await Promise.all([
-      rpc("projectDetail", { projectId }),
-      analyze ? rpc("projectAnalysis", { projectId }) : Promise.resolve(null)
-    ]);
+  const loadProjectDetail = async (projectId, { stale: stale2 = false } = {}) => {
+    const detail2 = await rpc("projectDetail", { projectId });
     setProjectsState((current) => {
       const same = current?.project?.id === projectId;
       return {
         ...current ?? {},
         project: flattenProjectDetail(detail2),
-        analysis: analysis2 ?? (same ? current.analysis : null),
-        analysisStale: analyze ? false : same ? Boolean(current.analysisStale) || stale2 : false
+        analysis: same ? current.analysis : null,
+        analysisStale: same ? Boolean(current.analysisStale) || stale2 : Boolean(stale2)
       };
     });
     setProjectEpoch((value) => value + 1);
@@ -12318,7 +12349,7 @@ function useWorkbenchController({ i18n, translate }) {
       if (dirtyId && (!projectId || projectId === dirtyId)) return;
       const fallback = list.projects.find((item) => !item.inbox) ?? list.projects[0];
       const pick = target || fallback?.id;
-      if (pick) await loadProjectDetail(pick, { analyze: true });
+      if (pick) await loadProjectDetail(pick);
     } catch (error) {
       report(error);
     } finally {
@@ -12347,7 +12378,7 @@ function useWorkbenchController({ i18n, translate }) {
     if (!projectId) return;
     setBusy("projects");
     try {
-      await loadProjectDetail(projectId, { analyze: true });
+      await loadProjectDetail(projectId);
     } catch (error) {
       report(error);
     } finally {
@@ -12374,7 +12405,7 @@ function useWorkbenchController({ i18n, translate }) {
       const result = await rpc("createProject", { name });
       clearProjectDraft(result.project.id);
       await refreshProjectList();
-      await loadProjectDetail(result.project.id, { analyze: true });
+      await loadProjectDetail(result.project.id);
       notify(t("projects.created"));
       return result.project;
     } catch (error) {
@@ -12607,7 +12638,7 @@ function useWorkbenchController({ i18n, translate }) {
       const list = result.projects ?? await rpc("projectsList");
       setProjectsState({ list, project: null, analysis: null, analysisStale: false });
       const fallback = list.projects[0];
-      if (fallback) await loadProjectDetail(fallback.id, { analyze: true });
+      if (fallback) await loadProjectDetail(fallback.id);
     } catch (error) {
       report(error);
     } finally {
@@ -13879,12 +13910,36 @@ function Workbench({ i18n, translate }) {
   const [aiQuick, setAiQuick] = useState("");
   const [libraryIo, setLibraryIo] = useState(null);
   const ioOptions = libraryIo ? libraryIoOptions(libraryIo.kind) : { libraries: [], libraryId: "" };
+  const [bootStuck, setBootStuck] = useState(false);
+  useEffect(() => {
+    if (!loading) {
+      setBootStuck(false);
+      return void 0;
+    }
+    const timer = setTimeout(() => setBootStuck(true), 12e3);
+    return () => clearTimeout(timer);
+  }, [loading]);
   if (loading) {
     return h(
       "div",
       { className: "cait-root", ref: rootRef },
       h("style", null, CSS_SCALED),
-      h("div", { className: "cait-center" }, h(Spinner), t("common.loading"))
+      bootStuck ? h(
+        "div",
+        { className: "cait-center" },
+        h(
+          "div",
+          { className: "cait-errorcard" },
+          h("p", null, t("load.failed")),
+          h("p", { className: "cait-hint" }, t("load.slow")),
+          h(
+            "button",
+            { className: "cait-btn cait-btn-primary", onClick: () => window.location.reload() },
+            h(Icon, { name: "refresh", size: 13 }),
+            t("common.retry")
+          )
+        )
+      ) : h("div", { className: "cait-center" }, h(Spinner), t("common.loading"))
     );
   }
   if (loadError) {
@@ -13898,7 +13953,7 @@ function Workbench({ i18n, translate }) {
         h(
           "div",
           { className: "cait-errorcard" },
-          h("p", null, `${t("error.load")}: ${loadError}`),
+          h("p", null, `${t("load.failed")}: ${loadError}`),
           h(
             "button",
             { className: "cait-btn cait-btn-primary", onClick: () => window.location.reload() },
@@ -14211,7 +14266,15 @@ function Workbench({ i18n, translate }) {
           noteCount: segment?.notes?.length || 0,
           qaRisk,
           textareaRef
-        }) : h(EmptyState, { t, settings, busy, onCreate: createFromForm, onDemo: loadDemo }),
+        }) : h(EmptyState, {
+          t,
+          settings,
+          busy,
+          onCreate: createFromForm,
+          onDemo: loadDemo,
+          onBackToProject: () => requestView("projects"),
+          onOpenDocs: () => setModal({ type: "recent" })
+        }),
         doc ? h(CatPanel, {
           t,
           doc,

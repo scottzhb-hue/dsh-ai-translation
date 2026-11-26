@@ -93,6 +93,10 @@ const ZH = {
   'toast.preCancelled': '已停止预翻译',
   'toast.preFailed': '预翻译结束，{count} 段失败',
   'empty.title': '开始一次 CAT 翻译',
+  'load.failed': '加载工作台失败',
+  'load.slow': '插件的请求超过 12 秒没有返回，可能后台任务卡住或宿主未响应。',
+  'empty.backToProject': '← 返回项目',
+  'empty.openDocs': '打开已有文档',
   'empty.desc':
     '粘贴文本、拖入文件，或加载演示文档。AI辅助翻译会把源文切成句段，并同时查询翻译记忆与术语库；确认译文后自动入库。',
   'empty.paste': '粘贴文本',
@@ -523,6 +527,10 @@ const EN = {
   'toast.preCancelled': 'Pre-translation stopped',
   'toast.preFailed': 'Pre-translation finished, {count} segment(s) failed',
   'empty.title': 'Start a CAT translation',
+  'load.failed': 'Failed to load the workbench',
+  'load.slow': 'The plugin request did not return within 12 seconds; a background task may be stuck.',
+  'empty.backToProject': '← Back to projects',
+  'empty.openDocs': 'Open an existing document',
   'empty.desc':
     'Paste text, drop a file, or load the demo. AI Translation splits the source into segments, queries translation memory and glossary hits, and stores each confirmed pair in TM.',
   'empty.paste': 'Paste text',
@@ -970,6 +978,10 @@ const JA = {
   'toast.preCancelled': '事前翻訳を停止しました',
   'toast.preFailed': '事前翻訳が終了しました（{count} 文が失敗）',
   'empty.title': 'CAT 翻訳を始める',
+  'load.failed': 'ワークベンチの読み込みに失敗しました',
+  'load.slow': 'プラグインの応答が 12 秒以内に返りませんでした。バックグラウンド処理が止まっている可能性があります。',
+  'empty.backToProject': '← プロジェクトに戻る',
+  'empty.openDocs': '既存の文書を開く',
   'empty.desc':
     'テキストを貼り付けるか、ファイルをドロップするか、デモ文書を読み込みます。AI翻訳は原文をセグメントに分割し、翻訳メモリと用語集を同時に検索します。確認した訳文は自動的に TM に保存されます。',
   'empty.paste': 'テキストを貼り付け',

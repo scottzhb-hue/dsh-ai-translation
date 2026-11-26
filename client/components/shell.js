@@ -429,13 +429,29 @@ function Topbar({
   )
 }
 
-function EmptyState({ t, settings, busy, onCreate, onDemo }) {
+function EmptyState({ t, settings, busy, onCreate, onDemo, onBackToProject, onOpenDocs }) {
   return h(
     'div',
     { className: 'cait-empty' },
     h(
       'div',
       { className: 'cait-empty-inner' },
+      h(
+        'div',
+        { className: 'cait-empty-nav' },
+        h(
+          'button',
+          { className: 'cait-btn', onClick: onBackToProject, disabled: Boolean(busy) },
+          h(Icon, { name: 'folder', size: 13 }),
+          t('empty.backToProject'),
+        ),
+        h(
+          'button',
+          { className: 'cait-btn', onClick: onOpenDocs, disabled: Boolean(busy) },
+          h(Icon, { name: 'file', size: 13 }),
+          t('empty.openDocs'),
+        ),
+      ),
       h('span', { className: 'cait-kicker' }, `${t('app.title')} · CAT WORKBENCH`),
       h('h1', null, t('empty.title')),
       h('p', { className: 'cait-lede' }, t('empty.desc')),

@@ -618,8 +618,13 @@ export function useWorkbenchController({ i18n, translate }) {
     }
   }
 
-  const openDocument = async (documentId) => {
-    if (!documentId || documentId === doc?.id || busy) return
+  const openDocument = async (documentId, { force = false } = {}) => {
+    if (!documentId) return false
+    // Already active: the caller only needs to switch views.
+    if (documentId === doc?.id) return true
+    // A background refresh may still be in flight; an explicit click waits for
+    // it instead of silently doing nothing.
+    if (busy && !force) return false
     setBusy('open')
     try {
       if (dirtyRef.current) {
@@ -630,8 +635,10 @@ export function useWorkbenchController({ i18n, translate }) {
       }
       const result = await rpc('openDocument', { documentId })
       adoptState(result.state)
+      return true
     } catch (error) {
       report(error)
+      return false
     } finally {
       setBusy('')
     }
@@ -639,7 +646,9 @@ export function useWorkbenchController({ i18n, translate }) {
 
   const closeDocumentTab = async (documentId) => {
     if (!documentId || busy) return
+    const projectId = data?.activeDocument?.id === documentId ? data.activeDocument.projectId : ''
     setBusy('close')
+    let remaining = -1
     try {
       if (dirtyRef.current) {
         const saved = await saveDraft(true)
@@ -647,11 +656,18 @@ export function useWorkbenchController({ i18n, translate }) {
       }
       const result = await rpc('closeDocument', { documentId })
       adoptState(result.state)
+      remaining = Array.isArray(result.state?.openDocIds) ? result.state.openDocIds.length : 0
       notify(t('toast.docClosed'))
     } catch (error) {
       report(error)
     } finally {
       setBusy('')
+    }
+    // Closing the last tab must not leave the editor pointing at a closed
+    // document: return to the project the user was working in.
+    if (remaining === 0) {
+      setView('projects')
+      void openProjects(projectId || undefined)
     }
   }
 
@@ -1318,12 +1334,14 @@ export function useWorkbenchController({ i18n, translate }) {
     setModal({ type: 'new', defaultMode: mode, projectId: projectId || '' })
   }
 
-  /** 项目详情里的文档行：点开即进编辑器，有未保存设置时先拦一下。 */
+  /** 项目详情/所有文档里的文档行：点开即进编辑器，有未保存设置时先拦一下。 */
   const requestOpenDocument = async (documentId) => {
     if (!documentId) return
     if (view === 'projects' && guardProjectNav({ kind: 'doc', documentId })) return
-    await openDocument(documentId)
-    setView('documents')
+    // Only leave the project view once the document is really open, otherwise
+    // the editor shows its empty state and looks like a "new document" screen.
+    const opened = await openDocument(documentId, { force: true })
+    if (opened) setView('documents')
   }
 
   const flattenProjectDetail = (detail) => ({
@@ -1350,18 +1368,17 @@ export function useWorkbenchController({ i18n, translate }) {
     return list
   }
 
-  const loadProjectDetail = async (projectId, { analyze = false, stale = false } = {}) => {
-    const [detail, analysis] = await Promise.all([
-      rpc('projectDetail', { projectId }),
-      analyze ? rpc('projectAnalysis', { projectId }) : Promise.resolve(null),
-    ])
+  const loadProjectDetail = async (projectId, { stale = false } = {}) => {
+    // Detail first, analysis never on the critical path: a slow/failed analysis
+    // must not leave the right-hand panel blank.
+    const detail = await rpc('projectDetail', { projectId })
     setProjectsState((current) => {
       const same = current?.project?.id === projectId
       return {
         ...(current ?? {}),
         project: flattenProjectDetail(detail),
-        analysis: analysis ?? (same ? current.analysis : null),
-        analysisStale: analyze ? false : same ? Boolean(current.analysisStale) || stale : false,
+        analysis: same ? current.analysis : null,
+        analysisStale: same ? Boolean(current.analysisStale) || stale : Boolean(stale),
       }
     })
     setProjectEpoch((value) => value + 1)
@@ -1380,7 +1397,7 @@ export function useWorkbenchController({ i18n, translate }) {
       if (dirtyId && (!projectId || projectId === dirtyId)) return
       const fallback = list.projects.find((item) => !item.inbox) ?? list.projects[0]
       const pick = target || fallback?.id
-      if (pick) await loadProjectDetail(pick, { analyze: true })
+      if (pick) await loadProjectDetail(pick)
     } catch (error) {
       report(error)
     } finally {
@@ -1419,7 +1436,7 @@ export function useWorkbenchController({ i18n, translate }) {
   const selectProject = async (projectId) => {    if (!projectId) return
     setBusy('projects')
     try {
-      await loadProjectDetail(projectId, { analyze: true })
+      await loadProjectDetail(projectId)
     } catch (error) {
       report(error)
     } finally {
@@ -1451,7 +1468,7 @@ export function useWorkbenchController({ i18n, translate }) {
       const result = await rpc('createProject', { name })
       clearProjectDraft(result.project.id)
       await refreshProjectList()
-      await loadProjectDetail(result.project.id, { analyze: true })
+      await loadProjectDetail(result.project.id)
       notify(t('projects.created'))
       return result.project
     } catch (error) {
@@ -1704,7 +1721,7 @@ export function useWorkbenchController({ i18n, translate }) {
       const list = result.projects ?? (await rpc('projectsList'))
       setProjectsState({ list, project: null, analysis: null, analysisStale: false })
       const fallback = list.projects[0]
-      if (fallback) await loadProjectDetail(fallback.id, { analyze: true })
+      if (fallback) await loadProjectDetail(fallback.id)
     } catch (error) {
       report(error)
     } finally {

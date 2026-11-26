@@ -37,6 +37,7 @@
 | 17 | 报价单 + 译后编辑度量 + 项目/批次标签 | 已上线 | `lib/quote.js`（新增）、`lib/workflow.js`（新增）、`lib/segments.js`（记录 keepRatio）、`lib/settings.js`、`lib/document-view.js`、`lib/persistence.js` | `client/components/workflow.js`、`client/components/shell.js`、`client/workbench/controller.js` | 无（新模块） |
 | 18 | 项目（project）层：多文件共享 brief / TM / 术语库，项目级分析、报价、报告与交付，工时 | 已上线 | `lib/projects.js`（新增）、`lib/quote.js`、`lib/analysis.js`、`lib/libraries.js`、`lib/brief.js`、`lib/persistence.js`、`lib/limits.js`、`lib/api.js`、`lib/document-view.js`、`lib/ai-chat.js`、`lib/mt-translate.js`、`lib/review.js`、`lib/tools.js`、`lib/documents.js`、`lib/store.js`、`lib/store-mixins.js` | `client/components/projects.js`（新增）、`client/components/workbench.js`、`client/components/shell.js`、`client/components/workflow.js`、`client/locales-workflow.js`、`client/locales.js`、`client/workbench/controller.js`、`client/styles.js` |
 | 19 | 欢迎页、项目内建文档、可见失败（错误边界 + 库加载兜底） | 已上线 | `client/components/home.js`（新增）、`client/components/error-boundary.js`（新增）、`client/workbench/controller.js`、`client/components/projects.js`、`client/components/pages.js`、`client/index.js` |
+| 20 | 打开/关闭文档不再停在空编辑器；详情与分析解耦；分析改为手动；加载看门狗 | 已上线 | `client/workbench/controller.js`、`client/components/projects.js`、`client/components/workbench.js`、`client/components/shell.js`、`client/components/pages.js`、`client/locales.js`、`client/styles.js` |
 
 ## 明细
 
@@ -207,6 +208,21 @@
 - 首屏自动载入项目详情（挂载 effect），同一项目再次点击强制重载。
 
 **验证**：`_dev/test-workbench-mount.mjs`（18 项，完整 Workbench + 真实 store 副本）、`_dev/test-ui-controller.mjs`（24 项，controller 端到端）、`audit-workflow.mjs` 138 项全过。
+
+### 20 打开/关闭文档与加载兜底
+
+**动机**：1.2.2 验收反馈 4 条：切到「库」一直转圈；项目详情右侧空白；点「所有文档」里的文档却看到空态页（被误读成“新建文档”）；关闭当前文档直接崩溃。
+
+**做法**：
+
+- `openDocument(documentId, { force })` 返回布尔值：`documentId === doc?.id` 视为已打开；`busy` 时不静默失败，用户点击可用 `force` 越过；`requestOpenDocument` 只在返回 `true` 后 `setView('documents')`，否则留在项目视图。
+- `closeDocumentTab`：关闭后读 `state.openDocIds`，为空则回到该文档所属项目（`setView('projects')` + `openProjects(projectId)`），不再把编辑器留在空文档上。
+- `loadProjectDetail` 只请求 `projectDetail`，分析从关键路径移除；项目页操作区新增「刷新分析」按钮（`refreshProjectAnalysis`），按需计算并在 chips 下显示覆盖率与报价。
+- LibraryPage：`loadRows` 去掉 `data?.revision` 依赖，超时 8 秒、保留上一次的行、失败显示重试。
+- 加载看门狗：`workbench.js` 在 `loading` 超过 12 秒时给出错误说明与「重试」，并修正 `error.load` 原始键名问题（改为 `load.failed` / `load.slow` 三语文案）。
+- 空态页 `EmptyState` 增加「← 返回项目」「打开已有文档」两个入口。
+
+**验证**：`_dev/test-ui-controller.mjs` 新增「详情默认不带分析」「刷新后带分析报价」「关闭全部文档后回项目视图」三项；`npm run check`、四套 `_dev` 测试、`audit-workflow.mjs` 138 项全过。
 
 ## 维护与发布须知
 

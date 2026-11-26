@@ -73,6 +73,15 @@ manual reload.
 
 ## Features
 
+### Fixed in 1.2.3
+
+- **Opening a document no longer lands on an empty editor**: the view switches only after the document really opens.
+- **Closing a document returns to its project**: closing the last tab goes back to the owning project.
+- **Project detail renders first**: detail and analysis are decoupled, so a slow analysis cannot blank the panel.
+- **Library list stops reloading forever**: the loader no longer depends on the global revision, times out after 8s and keeps the last rows.
+- **Failures are readable**: load errors show a localized message with retry, including a 12s watchdog.
+- **Analysis is manual**: a "Refresh analysis" button computes coverage and quote on demand.
+
 ### New in 1.2.2
 
 - **Welcome page**: opening the panel lands on a start page — paste source text, import a file, load the demo document, or resume the last session. Recent projects and open documents are listed there, and the brand area in the top bar returns to it at any time.
