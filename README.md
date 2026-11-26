@@ -73,6 +73,13 @@ manual reload.
 
 ## Features
 
+### New in 1.2.6
+
+- Project detail is now a header + a documents card + collapsible sections: the document list is the first and largest block, with a 14px title, a document count badge and the new/import actions on the right.
+- Document rows use a "→ Open" button plus a "⋯" menu (HTML report / CSV report / move out) instead of four permanent icons.
+- Analysis, reports, export and delete moved into a "More ▾" menu in the header; saving stays the single primary action.
+- Project settings, brief, shared libraries and delivery/time are collapsed by default; the expanded/collapsed state is remembered in localStorage.
+
 ### New in 1.2.5
 
 - Welcome screen rebuilt around one card: paste text / import a file are two tabs of the same form, with drag-and-drop on the import tab.

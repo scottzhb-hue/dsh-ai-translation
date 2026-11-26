@@ -5,11 +5,11 @@ import { projectRoot, readAuthoredClient } from './lib/client-source.mjs'
 
 const strict = process.argv.includes('--strict')
 const { ZH, EN, JA } = await import(pathToFileURL(join(projectRoot, 'client', 'locales.js')).href)
-const { WORKFLOW_DICTS } = await import(pathToFileURL(join(projectRoot, 'client', 'locales-workflow.js')).href)
+const { PROJECT_DICTS, WORKFLOW_DICTS } = await import(pathToFileURL(join(projectRoot, 'client', 'locales-workflow.js')).href)
 const DICTS = {
-  zh: { ...ZH, ...WORKFLOW_DICTS.zh },
-  en: { ...EN, ...WORKFLOW_DICTS.en },
-  ja: { ...JA, ...WORKFLOW_DICTS.ja },
+  zh: { ...ZH, ...WORKFLOW_DICTS.zh, ...PROJECT_DICTS.zh },
+  en: { ...EN, ...WORKFLOW_DICTS.en, ...PROJECT_DICTS.en },
+  ja: { ...JA, ...WORKFLOW_DICTS.ja, ...PROJECT_DICTS.ja },
 }
 
 let failed = false

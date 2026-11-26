@@ -40,6 +40,7 @@
 | 20 | 打开/关闭文档不再停在空编辑器；详情与分析解耦；分析改为手动；加载看门狗 | 已上线 | `client/workbench/controller.js`、`client/components/projects.js`、`client/components/workbench.js`、`client/components/shell.js`、`client/components/pages.js`、`client/locales.js`、`client/styles.js` |
 | 21 | 顶栏按场景分组：新建/导入只留项目页；编辑器工具条收进「更多」；文档区去掉新开页面/打开已有文档 | 已上线 | `client/components/shell.js`、`client/components/workbench.js`、`client/styles.js`、`client/locales.js` |
 | 22 | 欢迎页重做为单入口：粘贴/导入合为一个主卡片的两个标签页，「继续工作」合并项目与文档列表 | 已上线 | `client/components/home.js`、`client/styles.js` |
+| 23 | 项目详情重排：文档清单上提放大、行内操作收敛为「打开 + ⋯」、设置收进可折叠分区 | 已上线 | `client/components/projects.js`、`client/styles.js`、`client/locales-workflow.js` |
 
 ## 明细
 
@@ -300,3 +301,19 @@
 - 文案：新增 `home.tabsPaste/tabsFile/fileHint/pickFile/startImport/workTitle/allProjects/kindProject/kindDoc/resumeShow/timeNow/timeMins/timeHours/timeDays`，删除不再使用的 `home.pasteTitle/import/importHint/demoHint/resumeEmpty/recentProjects/openDocs`（三语同步，`check-locales` 771 键）。
 
 验证：`_dev/test-workbench-mount.mjs` 增 5 项（一张主卡片 + 两个标签页、有项目时无演示入口、继续工作含项目/文档类型标签、标题与“全部项目”链接），32 项全过；`check-undef` 96 文件、`check-locales` 771×3、`audit-workflow` 138/138。
+
+### 23 项目详情页重排
+
+动机：项目详情把「项目设置」和「文档清单」平铺在同一个视觉平面，五个分区标题都是 10px 全大写灰字（`.cait-section-title`），比正文还小，用户看不清「文档」这一主内容。
+
+做法：
+
+- 结构改为「`cait-proj-hero` 项目头 + `cait-panel` 卡片」。项目头显示 17px 项目名、一行 meta（客户 / 截止 / 篇数 / 句段 / 进度 / 工时 / 报价）与说明，右侧只留「保存设置」主按钮和「更多 ▾」菜单。
+- 「更多」用新组件 `Menu`（点外部或 Esc 关闭，`item.keep` 支持点后不收起）承载 刷新分析 / HTML 报告 / CSV 报告 / 导出交付包 / 删除项目；删除仍需两步确认。
+- 文档卡片：14px 标题 + 篇数徽标，右侧「新建文档 / 导入文件」；表格行高 7px 上下内边距，文档名 13px 加粗，进度条与百分比并排。
+- 行内操作改为「→ 打开」加 `⋯` 菜单（HTML / CSV 报告、移出项目），菜单定位在 `.cait-menu-pop`，右对齐、`z-index:80`。
+- 四个分区用 `Panel` 组件（`cait-panel-toggle` 按钮 + `aria-expanded`），默认折叠，展开状态存 `localStorage['cait.project.sections']`。
+- 新文案：`projects.more / settings / note / rowMore / deliveryTime`（三语）。`交付内容` 分区改叫「交付与工时」，因为工时控件就在里面。
+- 顺带修 React 警告：`Panel` 标题数组补 `key`。
+
+验证：`_dev/test-ui-projects.mjs` 增加「项目设置默认折叠」并在展开后断言名称回填；`_dev/test-workbench-mount.mjs` 改为展开「更多」后断言导出交付包、展开「交付与工时」后断言计时控件；四套测试 32 + 17 项全过；`check-locales` 771×3、`check-undef` 96 文件、`audit-workflow` 138/138。

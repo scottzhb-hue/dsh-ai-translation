@@ -6,7 +6,7 @@
  * 顶部次级标签切到「所有文档」，跨项目按状态筛文档。
  */
 
-import { h, useState, useEffect } from '../react.js'
+import { h, useState, useEffect, useRef } from '../react.js'
 import { Spinner, Icon, Modal } from './base.js'
 
 const BRIEF_FIELDS = [
@@ -144,6 +144,129 @@ function ProjectList({ t, busy, state, projects: projectsProp, onSelect, onCreat
           ),
         )
       : h('p', { className: 'cait-hint' }, t('projects.empty')),
+  )
+}
+
+const SECTIONS_KEY = 'cait.project.sections'
+
+function readSections() {
+  try {
+    const raw = window.localStorage.getItem(SECTIONS_KEY)
+    const parsed = raw ? JSON.parse(raw) : null
+    return parsed && typeof parsed === 'object' ? parsed : {}
+  } catch {
+    return {}
+  }
+}
+
+/** 小菜单：点外部或按 Esc 关闭；item.keep 为真时点击后不收起。 */
+function Menu({ t, label, icon, items, disabled, align = 'right', compact = false }) {
+  const [open, setOpen] = useState(false)
+  const box = useRef(null)
+  useEffect(() => {
+    if (!open) return undefined
+    const onDoc = (event) => {
+      if (!box.current || box.current.contains(event.target)) return
+      setOpen(false)
+    }
+    const onKey = (event) => {
+      if (event.key === 'Escape') setOpen(false)
+    }
+    document.addEventListener('mousedown', onDoc)
+    document.addEventListener('keydown', onKey)
+    return () => {
+      document.removeEventListener('mousedown', onDoc)
+      document.removeEventListener('keydown', onKey)
+    }
+  }, [open])
+  return h(
+    'span',
+    { className: `cait-menu is-${align}${compact ? ' is-compact' : ''}`, ref: box },
+    h(
+      'button',
+      {
+        type: 'button',
+        className: compact ? 'cait-btn is-mini cait-menu-trigger' : 'cait-btn cait-menu-trigger',
+        disabled: Boolean(disabled),
+        'aria-haspopup': 'menu',
+        'aria-expanded': open ? 'true' : 'false',
+        'aria-label': compact ? label || t('projects.rowMore') : undefined,
+        title: compact ? label || t('projects.rowMore') : undefined,
+        onClick: () => setOpen((value) => !value),
+      },
+      compact
+        ? h('span', { className: 'cait-menu-dots' }, '⋯')
+        : [
+            icon ? h(Icon, { name: icon, size: 13, key: 'icon' }) : null,
+            h('span', { key: 'label' }, label),
+            h('span', { className: 'cait-menu-caret', key: 'caret' }, '▾'),
+          ],
+    ),
+    open
+      ? h(
+          'div',
+          { className: 'cait-menu-pop', role: 'menu' },
+          items.map((item) =>
+            h(
+              'button',
+              {
+                key: item.key,
+                type: 'button',
+                role: 'menuitem',
+                className: `cait-menu-item${item.danger ? ' is-danger' : ''}`,
+                disabled: Boolean(item.disabled),
+                onClick: () => {
+                  if (!item.keep) setOpen(false)
+                  item.onClick()
+                },
+              },
+              item.icon ? h(Icon, { name: item.icon, size: 12 }) : null,
+              h('span', null, item.label),
+            ),
+          ),
+        )
+      : null,
+  )
+}
+
+/** 分区卡片：可折叠（onToggle 缺省时标题不可点，用于文档区）。 */
+function Panel({ title, count, actions, open = true, onToggle, hint, children }) {
+  const collapsible = typeof onToggle === 'function'
+  const head = [
+    collapsible ? h('span', { className: 'cait-panel-caret', key: 'caret' }, open ? '▾' : '▸') : null,
+    h('span', { className: 'cait-panel-title', key: 'title' }, title),
+    count !== undefined && count !== null
+      ? h('span', { className: 'cait-panel-count', key: 'count' }, String(count))
+      : null,
+  ]
+  return h(
+    'section',
+    { className: `cait-panel${open ? ' is-open' : ''}` },
+    h(
+      'div',
+      { className: 'cait-panel-head' },
+      collapsible
+        ? h(
+            'button',
+            {
+              type: 'button',
+              className: 'cait-panel-toggle',
+              'aria-expanded': open ? 'true' : 'false',
+              onClick: onToggle,
+            },
+            head,
+          )
+        : h('div', { className: 'cait-panel-toggle is-static' }, head),
+      actions ? h('div', { className: 'cait-panel-actions' }, actions) : null,
+    ),
+    open
+      ? h(
+          'div',
+          { className: 'cait-panel-body' },
+          hint ? h('p', { className: 'cait-hint' }, hint) : null,
+          children,
+        )
+      : null,
   )
 }
 
@@ -304,547 +427,588 @@ function ProjectDetail({
     onInclude(next)
   }
 
+  const [openSections, setOpenSections] = useState(() => readSections())
+  const toggleSection = (key) =>
+    setOpenSections((prev) => {
+      const next = { ...prev, [key]: !prev[key] }
+      try {
+        window.localStorage.setItem(SECTIONS_KEY, JSON.stringify(next))
+      } catch {
+        // localStorage 不可用时只在本次会话生效
+      }
+      return next
+    })
+  const sectionOpen = (key) => Boolean(openSections[key])
+
+  const meta = [
+    [t('projects.client'), fields.client || '—'],
+    [t('projects.dueAt'), fields.dueAt || '—'],
+    [t('projects.documents'), String(project.documents ?? 0)],
+    [t('projects.segments'), String(project.segments ?? 0)],
+    [t('projects.percent'), `${project.percent ?? 0}%`],
+    [t('projects.minutes'), String(project.minutes ?? 0)],
+  ]
+  if (quoteTotal !== undefined) {
+    meta.push([t('projects.quote'), `${currency} ${Number(quoteTotal).toFixed(2)}`])
+  }
+
+  const headerItems = [
+    {
+      key: 'refresh',
+      label: t('projects.refreshAnalysis'),
+      icon: 'chart',
+      disabled: Boolean(busy),
+      onClick: () => onRefreshAnalysis(),
+    },
+    {
+      key: 'html',
+      label: t('projects.reportHtml'),
+      icon: 'file',
+      disabled: Boolean(busy),
+      onClick: () => onProjectReport(projectId, 'html'),
+    },
+    {
+      key: 'csv',
+      label: t('projects.reportCsv'),
+      icon: 'download',
+      disabled: Boolean(busy),
+      onClick: () => onProjectReport(projectId, 'csv'),
+    },
+    {
+      key: 'export',
+      label: t('projects.export'),
+      icon: 'download',
+      disabled: Boolean(busy),
+      onClick: () => onExport(include),
+    },
+  ]
+  if (!inbox) {
+    headerItems.push(
+      confirmDelete
+        ? {
+            key: 'confirm-delete',
+            label: t('projects.deleteConfirm'),
+            danger: true,
+            disabled: Boolean(busy),
+            onClick: () => onDelete(),
+          }
+        : {
+            key: 'delete',
+            label: t('projects.delete'),
+            icon: 'trash',
+            danger: true,
+            disabled: Boolean(busy),
+            keep: true,
+            onClick: () => setConfirmDelete(true),
+          },
+    )
+  }
+
+  const docActions = !inbox
+    ? [
+        h(
+          'button',
+          {
+            key: 'new',
+            type: 'button',
+            className: 'cait-btn cait-btn-primary',
+            disabled: Boolean(busy),
+            onClick: () => onNewDoc(projectId),
+          },
+          h(Icon, { name: 'plus', size: 13 }),
+          h('span', null, t('projects.newDoc')),
+        ),
+        h(
+          'button',
+          {
+            key: 'import',
+            type: 'button',
+            className: 'cait-btn',
+            disabled: Boolean(busy),
+            onClick: () => onImportDoc(projectId),
+          },
+          h(Icon, { name: 'upload', size: 13 }),
+          h('span', null, t('projects.importDoc')),
+        ),
+      ]
+    : null
+
+  const docTable = h(
+    'div',
+    { className: 'cait-proj-tablewrap' },
+    h(
+      'table',
+      { className: 'cait-table cait-proj-table' },
+      h(
+        'thead',
+        null,
+        h(
+          'tr',
+          null,
+          h('th', null, t('projects.colDocument')),
+          h('th', null, t('projects.colStatus')),
+          h('th', null, t('projects.colProgress')),
+          h('th', null, t('projects.colSegments')),
+          h('th', null, t('projects.colWords')),
+          h('th', null, t('projects.colUpdated')),
+          h('th', null, t('projects.colActions')),
+        ),
+      ),
+      h(
+        'tbody',
+        null,
+        rows.length
+          ? rows.map((doc) =>
+              h(
+                'tr',
+                {
+                  key: doc.id,
+                  className: `cait-proj-row${doc.id === docId ? ' is-current' : ''}`,
+                  title: t('projects.openDoc'),
+                  onClick: () => onOpenDoc(doc.id),
+                },
+                h(
+                  'td',
+                  null,
+                  h(
+                    'button',
+                    {
+                      type: 'button',
+                      className: 'cait-linkbtn cait-proj-docname',
+                      onClick: (event) => {
+                        event.stopPropagation()
+                        onOpenDoc(doc.id)
+                      },
+                    },
+                    doc.name,
+                  ),
+                ),
+                h('td', null, statusChip(t, doc)),
+                h(
+                  'td',
+                  null,
+                  h('div', { className: 'cait-proj-progress' },
+                    h(
+                      'div',
+                      { className: 'cait-proj-bar', title: `${doc.percent}%` },
+                      h('span', { style: { width: `${doc.percent}%` } }),
+                    ),
+                    h('span', { className: 'cait-proj-percent' }, `${doc.percent}%`),
+                  ),
+                ),
+                h('td', null, doc.segments),
+                h('td', null, doc.words),
+                h('td', { className: 'cait-proj-updated' }, formatStamp(doc.updatedAt)),
+                h(
+                  'td',
+                  null,
+                  h(
+                    'div',
+                    { className: 'cait-proj-rowactions', onClick: (event) => event.stopPropagation() },
+                    h(
+                      'button',
+                      {
+                        type: 'button',
+                        className: 'cait-btn is-mini',
+                        title: t('projects.openDoc'),
+                        onClick: () => onOpenDoc(doc.id),
+                      },
+                      h(Icon, { name: 'arrowRight', size: 12 }),
+                      h('span', null, t('projects.openDoc')),
+                    ),
+                    h(Menu, {
+                      t,
+                      compact: true,
+                      disabled: Boolean(busy),
+                      items: [
+                        {
+                          key: 'html',
+                          label: t('projects.reportHtml'),
+                          icon: 'file',
+                          onClick: () => onDocReport(doc.id, 'html'),
+                        },
+                        {
+                          key: 'csv',
+                          label: t('projects.reportCsv'),
+                          icon: 'download',
+                          onClick: () => onDocReport(doc.id, 'csv'),
+                        },
+                        inbox
+                          ? null
+                          : {
+                              key: 'move',
+                              label: t('projects.moveOut'),
+                              icon: 'close',
+                              danger: true,
+                              onClick: () => onToggleDoc(doc.id, false),
+                            },
+                      ].filter(Boolean),
+                    }),
+                  ),
+                ),
+              ),
+            )
+          : h(
+              'tr',
+              null,
+              h('td', { colSpan: 7 }, h('span', { className: 'cait-hint' }, t('projects.noDocs'))),
+            ),
+      ),
+    ),
+  )
+
+  const addMore = (documents ?? []).length
+    ? h(
+        'details',
+        { className: 'cait-proj-addmore' },
+        h('summary', null, t('projects.addDocs')),
+        h(
+          'ul',
+          { className: 'cait-check-list' },
+          (documents ?? []).map((item) =>
+            h(
+              'li',
+              { key: item.id },
+              h(
+                'label',
+                { className: 'cait-check' },
+                h('input', {
+                  type: 'checkbox',
+                  checked: item.projectId === projectId,
+                  onChange: (event) => onToggleDoc(item.id, event.target.checked),
+                }),
+                h('span', null, `${item.name}${item.id === docId ? ` · ${t('projects.current')}` : ''}`),
+              ),
+              item.projectId && item.projectId !== projectId
+                ? h('span', { className: 'cait-hint' }, `→ ${item.projectName ?? ''}`)
+                : null,
+            ),
+          ),
+        ),
+      )
+    : null
+
   return h(
     'div',
     { className: 'cait-proj-detail' },
     h(
-      'div',
-      { className: 'cait-proj-detail-head' },
+      'header',
+      { className: 'cait-proj-hero' },
       h(
         'div',
-        null,
+        { className: 'cait-proj-hero-main' },
         h(
           'h2',
           { className: 'cait-proj-title' },
           project.name,
           inbox ? h('span', { className: 'cait-proj-tag' }, t('projects.inboxTag')) : null,
         ),
+        h(
+          'div',
+          { className: 'cait-proj-meta' },
+          meta.map(([label, value]) =>
+            h('span', { key: label }, h('b', null, label), value),
+          ),
+        ),
         h('p', { className: 'cait-hint' }, inbox ? t('projects.inboxHint') : t('projects.detailHint')),
+        project.overdue
+          ? h('p', { className: 'cait-hint is-danger' }, t('projects.overdue', { dueAt: project.dueAt }))
+          : null,
+        analysis
+          ? h(
+              'p',
+              { className: 'cait-hint' },
+              `${t('projects.analysis')}：${t('projects.analysisValue', {
+                matched: Math.round(analysis.totals?.matchedPercent ?? 0),
+                fresh: analysis.totals?.buckets?.new ?? 0,
+              })}`,
+            )
+          : null,
+        dirty ? h('span', { className: 'cait-proj-dirty' }, t('projects.unsavedHint')) : null,
       ),
       h(
         'div',
-        { className: 'cait-proj-head-actions' },
+        { className: 'cait-proj-hero-actions' },
         h(
           'button',
           {
             type: 'button',
-            className: 'cait-btn',
-            disabled: Boolean(busy),
-            onClick: () => onRefreshAnalysis(),
+            className: 'cait-btn cait-btn-primary',
+            disabled: Boolean(busy) || !dirty,
+            onClick: () => onSave(),
           },
-          h(Icon, { name: 'chart', size: 13 }),
-          h('span', null, t('projects.refreshAnalysis')),
+          saving ? h(Spinner, { size: 13 }) : h(Icon, { name: 'save', size: 13 }),
+          h('span', null, t('projects.saveSettings')),
+        ),
+        h(Menu, { t, label: t('projects.more'), items: headerItems, disabled: Boolean(busy) }),
+      ),
+    ),
+    h(
+      Panel,
+      {
+        title: t('projects.docs'),
+        count: rows.length,
+        actions: docActions,
+        hint: t('projects.docsHint'),
+      },
+      docTable,
+      addMore,
+    ),
+    h(
+      Panel,
+      {
+        title: t('projects.settings'),
+        open: sectionOpen('settings'),
+        onToggle: () => toggleSection('settings'),
+      },
+      h(
+        'div',
+        { className: 'cait-formrow' },
+        h(
+          'label',
+          { className: 'cait-field' },
+          h('span', null, t('projects.fieldName')),
+          h('input', {
+            className: 'cait-input',
+            value: fields.name,
+            onChange: (event) => setField('name', event.target.value),
+          }),
         ),
         h(
-          'button',
-          {
-            type: 'button',
-            className: 'cait-btn',
-            disabled: Boolean(busy),
-            onClick: () => onProjectReport(projectId, 'html'),
-          },
-          h(Icon, { name: 'file', size: 13 }),
-          h('span', null, t('projects.reportHtml')),
+          'label',
+          { className: 'cait-field' },
+          h('span', null, t('projects.client')),
+          h('input', {
+            className: 'cait-input',
+            value: fields.client,
+            onChange: (event) => setField('client', event.target.value),
+          }),
         ),
         h(
-          'button',
-          {
-            type: 'button',
-            className: 'cait-btn',
-            disabled: Boolean(busy),
-            onClick: () => onProjectReport(projectId, 'csv'),
-          },
-          h(Icon, { name: 'download', size: 13 }),
-          h('span', null, t('projects.reportCsv')),
+          'label',
+          { className: 'cait-field' },
+          h('span', null, t('projects.dueAt')),
+          h('input', {
+            className: 'cait-input',
+            type: 'date',
+            value: fields.dueAt,
+            onChange: (event) => setField('dueAt', event.target.value),
+          }),
+        ),
+      ),
+      h(
+        'label',
+        { className: 'cait-field' },
+        h('span', null, t('projects.note')),
+        h('textarea', {
+          className: 'cait-input',
+          rows: 2,
+          value: fields.note,
+          onChange: (event) => setField('note', event.target.value),
+        }),
+      ),
+    ),
+    h(
+      Panel,
+      {
+        title: t('projects.brief'),
+        open: sectionOpen('brief'),
+        onToggle: () => toggleSection('brief'),
+        hint: t('projects.briefHint'),
+      },
+      h(
+        'div',
+        { className: 'cait-formrow' },
+        BRIEF_FIELDS.map(([field, label]) =>
+          h(
+            'label',
+            { key: field, className: 'cait-field' },
+            h('span', null, t(label)),
+            field === 'notes' || field === 'doNotTranslate' || field === 'styleSample'
+              ? h('textarea', {
+                  className: 'cait-input',
+                  rows: 2,
+                  value: brief[field] ?? '',
+                  onChange: (event) => setBriefField(field, event.target.value),
+                })
+              : h('input', {
+                  className: 'cait-input',
+                  value: brief[field] ?? '',
+                  onChange: (event) => setBriefField(field, event.target.value),
+                }),
+          ),
         ),
       ),
     ),
     h(
-      'div',
-      { className: 'cait-formrow' },
+      Panel,
+      {
+        title: t('projects.resources'),
+        open: sectionOpen('resources'),
+        onToggle: () => toggleSection('resources'),
+      },
       h(
-        'label',
-        { className: 'cait-field' },
-        h('span', null, t('projects.fieldName')),
-        h('input', {
-          className: 'cait-input',
-          value: fields.name,
-          onChange: (event) => setField('name', event.target.value),
-        }),
-      ),
-      h(
-        'label',
-        { className: 'cait-field' },
-        h('span', null, t('projects.client')),
-        h('input', {
-          className: 'cait-input',
-          value: fields.client,
-          onChange: (event) => setField('client', event.target.value),
-        }),
-      ),
-      h(
-        'label',
-        { className: 'cait-field' },
-        h('span', null, t('projects.dueAt')),
-        h('input', {
-          className: 'cait-input',
-          type: 'date',
-          value: fields.dueAt,
-          onChange: (event) => setField('dueAt', event.target.value),
-        }),
+        'div',
+        { className: 'cait-formrow' },
+        h(
+          'label',
+          { className: 'cait-field' },
+          h('span', null, t('projects.tm')),
+          h(
+            'select',
+            { className: 'cait-input', value: tmValue, onChange: (event) => chooseTm(event.target.value) },
+            h('option', { value: '' }, t('projects.inherit')),
+            tmLibraries.map((lib) => h('option', { key: lib.tmId, value: lib.tmId }, lib.name)),
+            h('option', { value: '__none__' }, t('projects.none')),
+          ),
+        ),
+        h(
+          'label',
+          { className: 'cait-field' },
+          h('span', null, t('projects.glossary')),
+          h(
+            'select',
+            {
+              className: 'cait-input',
+              value: glossaryValue,
+              onChange: (event) => chooseGlossary(event.target.value),
+            },
+            h('option', { value: '' }, t('projects.inherit')),
+            glossaryLibraries.map((lib) =>
+              h('option', { key: lib.glossaryId, value: lib.glossaryId }, lib.name),
+            ),
+            h('option', { value: '__none__' }, t('projects.none')),
+          ),
+        ),
+        h(
+          'label',
+          { className: 'cait-field' },
+          h('span', null, t('projects.defaultTm')),
+          h(
+            'select',
+            {
+              className: 'cait-input',
+              value: effectiveTm.includes(defaultTm) ? defaultTm : '',
+              onChange: (event) => chooseDefaultTm(event.target.value),
+            },
+            h('option', { value: '' }, t('projects.auto')),
+            effectiveTm.map((id) => {
+              const lib = tmLibraries.find((item) => item.tmId === id)
+              return h('option', { key: id, value: id }, lib?.name ?? id)
+            }),
+          ),
+        ),
       ),
     ),
-    project.overdue
-      ? h('p', { className: 'cait-hint is-danger' }, t('projects.overdue', { dueAt: project.dueAt }))
-      : null,
     h(
-      'div',
-      { className: 'cait-chips' },
-      h('span', { className: 'cait-chip' }, `${t('projects.documents')} ${project.documents}`),
-      h('span', { className: 'cait-chip' }, `${t('projects.segments')} ${project.segments}`),
-      h('span', { className: 'cait-chip' }, `${t('projects.words')} ${project.words}`),
-      h('span', { className: 'cait-chip' }, `${t('projects.percent')} ${project.percent ?? 0}%`),
-      h('span', { className: 'cait-chip' }, `${t('projects.minutes')} ${project.minutes ?? 0}`),
+      Panel,
+      {
+        title: t('projects.deliveryTime'),
+        open: sectionOpen('delivery'),
+        onToggle: () => toggleSection('delivery'),
+      },
       h(
-        'span',
-        { className: 'cait-chip' },
-        `${t('projects.completed')} ${project.statusCounts?.done ?? 0}/${project.documents}`,
+        'div',
+        { className: 'cait-checks' },
+        INCLUDE_KEYS.map(([key, label]) =>
+          h(
+            'label',
+            { key, className: 'cait-check' },
+            h('input', {
+              type: 'checkbox',
+              checked: include[key],
+              onChange: () => toggleInclude(key),
+            }),
+            h('span', null, t(label)),
+          ),
+        ),
       ),
-      quoteTotal !== undefined
+      h('h5', { className: 'cait-panel-sub' }, t('projects.time')),
+      h(
+        'div',
+        { className: 'cait-chips cait-proj-timer' },
+        h(
+          'button',
+          {
+            type: 'button',
+            className: 'cait-btn',
+            disabled: Boolean(busy) || project.running,
+            onClick: () => onStart(),
+          },
+          h(Icon, { name: 'play', size: 12 }),
+          h('span', null, t('projects.start')),
+        ),
+        h(
+          'button',
+          {
+            type: 'button',
+            className: 'cait-btn',
+            disabled: Boolean(busy) || !project.running,
+            onClick: () => onStop(),
+          },
+          h(Icon, { name: 'check', size: 12 }),
+          h('span', null, t('projects.stop')),
+        ),
+        h('span', { className: 'cait-hint' }, project.running ? t('projects.running') : ''),
+      ),
+      h(
+        'div',
+        { className: 'cait-formrow' },
+        h('input', {
+          className: 'cait-input',
+          style: { width: '80px' },
+          value: minutes,
+          onChange: (event) => editMinutes(event.target.value),
+        }),
+        h('input', {
+          className: 'cait-input',
+          placeholder: t('projects.timeNote'),
+          value: timeNote,
+          onChange: (event) => editTimeNote(event.target.value),
+        }),
+        h(
+          'button',
+          {
+            type: 'button',
+            className: 'cait-btn',
+            disabled: Boolean(busy),
+            onClick: async () => {
+              const ok = await onAddTime(Number(minutes), timeNote)
+              if (ok) {
+                setTimeNote('')
+                pushDraft({ ...base(), timeNote: '' }, false)
+              }
+            },
+          },
+          t('projects.addTime'),
+        ),
+      ),
+      (project.time?.entries ?? []).length
         ? h(
-            'span',
-            { className: 'cait-chip' },
-            `${t('projects.quote')} ${currency} ${Number(quoteTotal).toFixed(2)}`,
+            'ul',
+            { className: 'cait-time-list' },
+            project.time.entries.map((entry) =>
+              h(
+                'li',
+                { key: entry.id },
+                h(
+                  'span',
+                  null,
+                  `${entry.at.slice(0, 10)} · ${entry.minutes} ${t('projects.minutesUnit')}${entry.note ? ` · ${entry.note}` : ''}`,
+                ),
+                h(
+                  'button',
+                  { type: 'button', className: 'cait-linkbtn', onClick: () => onDeleteTime(entry.id) },
+                  h(Icon, { name: 'trash', size: 12 }),
+                ),
+              ),
+            ),
           )
         : null,
     ),
-    analysis
-      ? h(
-          'p',
-          { className: 'cait-hint' },
-          `${t('projects.analysis')}：${t('projects.analysisValue', {
-            matched: Math.round(analysis.totals?.matchedPercent ?? 0),
-            fresh: analysis.totals?.buckets?.new ?? 0,
-          })}`,
-        )
-      : null,
-    h(
-      'div',
-      { className: 'cait-proj-actions' },
-      h(
-        'button',
-        {
-          type: 'button',
-          className: 'cait-btn cait-btn-primary',
-          disabled: Boolean(busy) || !dirty,
-          onClick: () => onSave(),
-        },
-        saving ? h(Spinner, { size: 13 }) : h(Icon, { name: 'save', size: 13 }),
-        h('span', null, t('projects.saveSettings')),
-      ),
-      h(
-        'button',
-        {
-          type: 'button',
-          className: 'cait-btn',
-          disabled: Boolean(busy),
-          onClick: () => onExport(include),
-        },
-        h(Icon, { name: 'download', size: 13 }),
-        h('span', null, t('projects.export')),
-      ),
-      dirty ? h('span', { className: 'cait-proj-dirty' }, t('projects.unsavedHint')) : null,
-      inbox
-        ? null
-        : confirmDelete
-          ? h(
-              'button',
-              {
-                type: 'button',
-                className: 'cait-btn is-danger',
-                disabled: Boolean(busy),
-                onClick: () => onDelete(),
-              },
-              t('projects.deleteConfirm'),
-            )
-          : h(
-              'button',
-              {
-                type: 'button',
-                className: 'cait-btn',
-                disabled: Boolean(busy),
-                onClick: () => setConfirmDelete(true),
-              },
-              h(Icon, { name: 'trash', size: 13 }),
-              h('span', null, t('projects.delete')),
-            ),
-    ),
-    h('h4', { className: 'cait-section-title' }, t('projects.docs')),
-    h('p', { className: 'cait-hint' }, t('projects.docsHint')),
-    !inbox
-      ? h(
-          'div',
-          { className: 'cait-proj-docactions' },
-          h(
-            'button',
-            {
-              type: 'button',
-              className: 'cait-btn',
-              disabled: Boolean(busy),
-              onClick: () => onNewDoc(projectId),
-            },
-            h(Icon, { name: 'plus', size: 13 }),
-            h('span', null, t('projects.newDoc')),
-          ),
-          h(
-            'button',
-            {
-              type: 'button',
-              className: 'cait-btn',
-              disabled: Boolean(busy),
-              onClick: () => onImportDoc(projectId),
-            },
-            h(Icon, { name: 'upload', size: 13 }),
-            h('span', null, t('projects.importDoc')),
-          ),
-        )
-      : null,
-    h(
-      'div',
-      { className: 'cait-proj-tablewrap' },
-      h(
-        'table',
-        { className: 'cait-table cait-proj-table' },
-        h(
-          'thead',
-          null,
-          h(
-            'tr',
-            null,
-            h('th', null, t('projects.colDocument')),
-            h('th', null, t('projects.colStatus')),
-            h('th', null, t('projects.colProgress')),
-            h('th', null, t('projects.colSegments')),
-            h('th', null, t('projects.colWords')),
-            h('th', null, t('projects.colUpdated')),
-            h('th', null, t('projects.colActions')),
-          ),
-        ),
-        h(
-          'tbody',
-          null,
-          rows.length
-            ? rows.map((doc) =>
-                h(
-                  'tr',
-                  {
-                    key: doc.id,
-                    className: `cait-proj-row${doc.id === docId ? ' is-current' : ''}`,
-                    title: t('projects.openDoc'),
-                    onClick: () => onOpenDoc(doc.id),
-                  },
-                  h(
-                    'td',
-                    null,
-                    h(
-                      'button',
-                      {
-                        type: 'button',
-                        className: 'cait-linkbtn',
-                        onClick: (event) => {
-                          event.stopPropagation()
-                          onOpenDoc(doc.id)
-                        },
-                      },
-                      doc.name,
-                    ),
-                  ),
-                  h('td', null, statusChip(t, doc)),
-                  h(
-                    'td',
-                    null,
-                    h(
-                      'div',
-                      { className: 'cait-proj-bar', title: `${doc.percent}%` },
-                      h('span', { style: { width: `${doc.percent}%` } }),
-                    ),
-                    h('span', { className: 'cait-hint' }, `${doc.percent}%`),
-                  ),
-                  h('td', null, doc.segments),
-                  h('td', null, doc.words),
-                  h('td', { className: 'cait-proj-updated' }, formatStamp(doc.updatedAt)),
-                  h(
-                    'td',
-                    null,
-                    h(
-                      'span',
-                      {
-                        className: 'cait-proj-rowactions',
-                        onClick: (event) => event.stopPropagation(),
-                      },
-                      h(
-                        'button',
-                        {
-                          type: 'button',
-                          className: 'cait-minibtn',
-                          title: t('projects.openDoc'),
-                          onClick: () => onOpenDoc(doc.id),
-                        },
-                        h(Icon, { name: 'arrowRight', size: 12 }),
-                      ),
-                      h(
-                        'button',
-                        {
-                          type: 'button',
-                          className: 'cait-minibtn',
-                          title: t('projects.reportHtml'),
-                          onClick: () => onDocReport(doc.id, 'html'),
-                        },
-                        h(Icon, { name: 'chart', size: 12 }),
-                      ),
-                      h(
-                        'button',
-                        {
-                          type: 'button',
-                          className: 'cait-minibtn',
-                          title: t('projects.reportCsv'),
-                          onClick: () => onDocReport(doc.id, 'csv'),
-                        },
-                        h(Icon, { name: 'download', size: 12 }),
-                      ),
-                      inbox
-                        ? null
-                        : h(
-                            'button',
-                            {
-                              type: 'button',
-                              className: 'cait-minibtn',
-                              title: t('projects.moveOut'),
-                              onClick: () => onToggleDoc(doc.id, false),
-                            },
-                            h(Icon, { name: 'close', size: 12 }),
-                          ),
-                    ),
-                  ),
-                ),
-              )
-            : h(
-                'tr',
-                null,
-                h('td', { colSpan: 7 }, h('span', { className: 'cait-hint' }, t('projects.noDocs'))),
-              ),
-        ),
-      ),
-    ),
-    (documents ?? []).length
-      ? h(
-          'details',
-          { className: 'cait-proj-addmore' },
-          h('summary', null, t('projects.addDocs')),
-          h(
-            'ul',
-            { className: 'cait-check-list' },
-            (documents ?? []).map((item) =>
-              h(
-                'li',
-                { key: item.id },
-                h(
-                  'label',
-                  { className: 'cait-check' },
-                  h('input', {
-                    type: 'checkbox',
-                    checked: item.projectId === projectId,
-                    onChange: (event) => onToggleDoc(item.id, event.target.checked),
-                  }),
-                  h('span', null, `${item.name}${item.id === docId ? ` · ${t('projects.current')}` : ''}`),
-                ),
-                item.projectId && item.projectId !== projectId
-                  ? h('span', { className: 'cait-hint' }, `→ ${item.projectName ?? ''}`)
-                  : null,
-              ),
-            ),
-          ),
-        )
-      : null,
-    h('h4', { className: 'cait-section-title' }, t('projects.brief')),
-    h('p', { className: 'cait-hint' }, t('projects.briefHint')),
-    h(
-      'div',
-      { className: 'cait-formrow' },
-      BRIEF_FIELDS.map(([field, label]) =>
-        h(
-          'label',
-          { key: field, className: 'cait-field' },
-          h('span', null, t(label)),
-          field === 'notes' || field === 'doNotTranslate' || field === 'styleSample'
-            ? h('textarea', {
-                className: 'cait-input',
-                rows: 2,
-                value: brief[field] ?? '',
-                onChange: (event) => setBriefField(field, event.target.value),
-              })
-            : h('input', {
-                className: 'cait-input',
-                value: brief[field] ?? '',
-                onChange: (event) => setBriefField(field, event.target.value),
-              }),
-        ),
-      ),
-    ),
-    h('h4', { className: 'cait-section-title' }, t('projects.resources')),
-    h(
-      'div',
-      { className: 'cait-formrow' },
-      h(
-        'label',
-        { className: 'cait-field' },
-        h('span', null, t('projects.tm')),
-        h(
-          'select',
-          { className: 'cait-input', value: tmValue, onChange: (event) => chooseTm(event.target.value) },
-          h('option', { value: '' }, t('projects.inherit')),
-          tmLibraries.map((lib) => h('option', { key: lib.tmId, value: lib.tmId }, lib.name)),
-          h('option', { value: '__none__' }, t('projects.none')),
-        ),
-      ),
-      h(
-        'label',
-        { className: 'cait-field' },
-        h('span', null, t('projects.glossary')),
-        h(
-          'select',
-          {
-            className: 'cait-input',
-            value: glossaryValue,
-            onChange: (event) => chooseGlossary(event.target.value),
-          },
-          h('option', { value: '' }, t('projects.inherit')),
-          glossaryLibraries.map((lib) =>
-            h('option', { key: lib.glossaryId, value: lib.glossaryId }, lib.name),
-          ),
-          h('option', { value: '__none__' }, t('projects.none')),
-        ),
-      ),
-      h(
-        'label',
-        { className: 'cait-field' },
-        h('span', null, t('projects.defaultTm')),
-        h(
-          'select',
-          {
-            className: 'cait-input',
-            value: effectiveTm.includes(defaultTm) ? defaultTm : '',
-            onChange: (event) => chooseDefaultTm(event.target.value),
-          },
-          h('option', { value: '' }, t('projects.auto')),
-          effectiveTm.map((id) => {
-            const lib = tmLibraries.find((item) => item.tmId === id)
-            return h('option', { key: id, value: id }, lib?.name ?? id)
-          }),
-        ),
-      ),
-    ),
-    h('h4', { className: 'cait-section-title' }, t('projects.delivery')),
-    h(
-      'div',
-      { className: 'cait-checks' },
-      INCLUDE_KEYS.map(([key, label]) =>
-        h(
-          'label',
-          { key, className: 'cait-check' },
-          h('input', {
-            type: 'checkbox',
-            checked: include[key],
-            onChange: () => toggleInclude(key),
-          }),
-          h('span', null, t(label)),
-        ),
-      ),
-    ),
-    h('h4', { className: 'cait-section-title' }, t('projects.time')),
-    h(
-      'div',
-      { className: 'cait-chips cait-proj-timer' },
-      h(
-        'button',
-        {
-          type: 'button',
-          className: 'cait-btn',
-          disabled: Boolean(busy) || project.running,
-          onClick: () => onStart(),
-        },
-        h(Icon, { name: 'play', size: 12 }),
-        h('span', null, t('projects.start')),
-      ),
-      h(
-        'button',
-        {
-          type: 'button',
-          className: 'cait-btn',
-          disabled: Boolean(busy) || !project.running,
-          onClick: () => onStop(),
-        },
-        h(Icon, { name: 'check', size: 12 }),
-        h('span', null, t('projects.stop')),
-      ),
-      h('span', { className: 'cait-hint' }, project.running ? t('projects.running') : ''),
-    ),
-    h(
-      'div',
-      { className: 'cait-formrow' },
-      h('input', {
-        className: 'cait-input',
-        style: { width: '80px' },
-        value: minutes,
-        onChange: (event) => editMinutes(event.target.value),
-      }),
-      h('input', {
-        className: 'cait-input',
-        placeholder: t('projects.timeNote'),
-        value: timeNote,
-        onChange: (event) => editTimeNote(event.target.value),
-      }),
-      h(
-        'button',
-        {
-          type: 'button',
-          className: 'cait-btn',
-          disabled: Boolean(busy),
-          onClick: async () => {
-            const ok = await onAddTime(Number(minutes), timeNote)
-            if (ok) {
-              setTimeNote('')
-              pushDraft({ ...base(), timeNote: '' }, false)
-            }
-          },
-        },
-        t('projects.addTime'),
-      ),
-    ),
-    (project.time?.entries ?? []).length
-      ? h(
-          'ul',
-          { className: 'cait-time-list' },
-          project.time.entries.map((entry) =>
-            h(
-              'li',
-              { key: entry.id },
-              h(
-                'span',
-                null,
-                `${entry.at.slice(0, 10)} · ${entry.minutes} ${t('projects.minutesUnit')}${entry.note ? ` · ${entry.note}` : ''}`,
-              ),
-              h(
-                'button',
-                { type: 'button', className: 'cait-linkbtn', onClick: () => onDeleteTime(entry.id) },
-                h(Icon, { name: 'trash', size: 12 }),
-              ),
-            ),
-          ),
-        )
-      : null,
   )
 }
+
 
 function AllDocuments({
   t,
