@@ -11755,7 +11755,7 @@ function useWorkbenchController({ i18n, translate }) {
       return null;
     }
   });
-  const rememberInclude2 = (include) => {
+  const rememberInclude = (include) => {
     setIncludePrefs(include);
     try {
       window.localStorage.setItem("cait.project.include", JSON.stringify(include));
@@ -12066,7 +12066,7 @@ function useWorkbenchController({ i18n, translate }) {
   const exportProjectDeliveryAction = async (include) => {
     const projectId = currentProjectId();
     if (!projectId) return;
-    rememberInclude2(include);
+    rememberInclude(include);
     setBusy("project-export");
     try {
       const result = await rpc("exportProjectDelivery", { projectId, include });
@@ -13131,7 +13131,7 @@ function useWorkbenchController({ i18n, translate }) {
     requestOpenDocument,
     projectTab,
     includePrefs,
-    rememberInclude: rememberInclude2,
+    rememberInclude,
     updateProjectDraft,
     pendingNav,
     resolvePendingNav,
@@ -13337,6 +13337,7 @@ function Workbench({ i18n, translate }) {
     projectDrafts,
     projectEpoch,
     includePrefs,
+    rememberInclude,
     updateProjectDraft,
     pendingNav,
     resolvePendingNav,

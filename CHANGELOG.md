@@ -7,6 +7,16 @@ All notable changes to CAIT are documented here. The project follows
 > 以下 `1.1.8` 及更早的条目属于上游 CAIT（作者 Jovi Lecca，Apache-2.0），
 > 保留原文以便溯源。本分支 `dsh-ai-translation` 从 `1.0.1` 起独立编号。
 
+## [1.2.1] - 2026-11-26
+
+### Fixed
+
+- 修复 1.2.0 打开工作台白屏：`client/components/workbench.js` 解构 `useWorkbenchController()` 时漏了 `rememberInclude`，传给项目页的 `onInclude` 引用未定义变量，整个工作台渲染即抛 `ReferenceError`，表现成「点侧边栏的 AI辅助翻译没有任何反应」。
+
+### Added
+
+- 回归测试 `_dev/test-workbench-mount.mjs`：用完整 `Workbench` 挂载真实数据，覆盖项目列表、项目详情、所有文档、返回后重进等路径，专抓「解构漏字段 / 引用未定义变量」导致整窗白屏的问题。
+- 静态检查 `scripts/check-undef.mjs`（eslint `no-undef`，浏览器 + Node 全局），已接入 `npm run check`；没装 devDependencies 时自动跳过。
 ## [1.2.0] - 2026-11-26
 
 项目（project）层：把「一个客户、一批文件、一份 brief、一套术语库」变成真正的数据结构，插件打开后先进项目，批量的分析、交付、报价与报告也终于能一次做完。

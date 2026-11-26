@@ -185,6 +185,7 @@ function Workbench({ i18n, translate }) {
     projectDrafts,
     projectEpoch,
     includePrefs,
+    rememberInclude,
     updateProjectDraft,
     pendingNav,
     resolvePendingNav,
