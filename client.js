@@ -817,8 +817,7 @@ var ZH = {
   "nav.import": "导入",
   "nav.export": "导出",
   "nav.settings": "设置",
-  "doc.openExisting": "打开已有文档",
-  "doc.clean": "清理已关闭文档",
+  "nav.more": "更多",
   "doc.cleanTitle": "已关闭的文档",
   "doc.cleanHint": "这些文档已关闭但仍保存在 AI辅助翻译中。删除后文档及其句段会被永久移除。",
   "doc.cleanAll": "删除全部已关闭文档",
@@ -1235,8 +1234,7 @@ var EN = {
   "nav.import": "Import",
   "nav.export": "Export",
   "nav.settings": "Settings",
-  "doc.openExisting": "Open existing document",
-  "doc.clean": "Clean closed documents",
+  "nav.more": "More",
   "doc.cleanTitle": "Closed documents",
   "doc.cleanHint": "These documents are closed but still stored in AI Translation. Deleting one permanently removes the document and its segments.",
   "doc.cleanAll": "Delete all closed documents",
@@ -1653,8 +1651,7 @@ var JA = {
   "nav.import": "インポート",
   "nav.export": "エクスポート",
   "nav.settings": "設定",
-  "doc.openExisting": "既存の文書を開く",
-  "doc.clean": "閉じた文書を整理",
+  "nav.more": "その他",
   "doc.cleanTitle": "閉じた文書",
   "doc.cleanHint": "これらの文書は閉じていますが AI翻訳に保存されています。削除すると文書とセグメントは完全に削除されます。",
   "doc.cleanAll": "閉じた文書をすべて削除",
@@ -3034,6 +3031,13 @@ var CSS = `
 .cait-doc-name{max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:12px;font-weight:550}
 .cait-doc-progress{font-size:11px;color:var(--dsw-alias-label-secondary);font-variant-numeric:tabular-nums}
 .cait-actions{margin-left:auto;display:flex;align-items:center;gap:6px;flex:0 0 auto}
+.cait-more{position:relative;display:inline-flex}
+.cait-more-caret{display:inline-flex;transform:rotate(90deg);opacity:.62}
+.cait-more-menu{position:absolute;top:calc(100% + 6px);right:0;z-index:60;display:flex;flex-direction:column;gap:2px;min-width:172px;padding:5px;border:1px solid var(--dsw-alias-border-l1);border-radius:10px;background:var(--dsw-alias-bg-base);box-shadow:0 14px 34px rgba(0,0,0,.32)}
+.cait-more-item{display:flex;align-items:center;gap:8px;height:31px;padding:0 9px;border:0;border-radius:7px;background:transparent;color:var(--dsw-alias-label-primary);font:inherit;font-size:12px;text-align:left;cursor:pointer;white-space:nowrap}
+.cait-more-item:hover:not(:disabled){background:color-mix(in srgb,var(--dsw-alias-label-primary) 7%,transparent)}
+.cait-more-item:disabled{opacity:.42;cursor:not-allowed}
+.cait-doc-select-wrap span{white-space:nowrap}
 .cait-pre-status{display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 3px 0 8px;border:1px solid var(--dsw-alias-border-l1);border-radius:7px;background:var(--dsw-alias-bg-layer-1);color:var(--dsw-alias-label-secondary);font-size:11.5px;font-variant-numeric:tabular-nums;white-space:nowrap}
 .cait-btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;height:31px;padding:0 11px;border:1px solid var(--dsw-alias-border-l1);border-radius:7px;background:var(--dsw-alias-bg-layer-1);color:var(--dsw-alias-label-primary);font-size:12px;font-weight:500;white-space:nowrap;transition:background .12s,border-color .12s,transform .06s}
 .cait-btn:hover:not(:disabled){background:color-mix(in srgb,var(--dsw-alias-label-primary) 5%,var(--dsw-alias-bg-layer-1));border-color:var(--dsw-alias-border-l2)}
@@ -4364,7 +4368,7 @@ function DocTabs({ t, documents, activeId, busy, onOpen, onClose, onNew }) {
         )
       )
     ),
-    h(
+    onNew ? h(
       "button",
       {
         type: "button",
@@ -4376,30 +4380,66 @@ function DocTabs({ t, documents, activeId, busy, onOpen, onClose, onNew }) {
       },
       h(Icon, { name: "plus", size: 13 }),
       h("span", null, t("tabs.new"))
-    )
+    ) : null
   );
 }
-function ClosedDocPicker({ t, documents, busy, onOpen }) {
-  if (!documents?.length) return null;
+function MoreMenu({ t, items }) {
+  const [open, setOpen] = useState(false);
+  const wrapRef = useRef(null);
+  useEffect(() => {
+    if (!open) return void 0;
+    const onPointer = (event) => {
+      if (wrapRef.current && !wrapRef.current.contains(event.target)) setOpen(false);
+    };
+    const onKey = (event) => {
+      if (event.key === "Escape") setOpen(false);
+    };
+    document.addEventListener("mousedown", onPointer);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("mousedown", onPointer);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [open]);
   return h(
-    "label",
-    { className: "cait-doc-select-wrap cait-closed-docs" },
-    h("span", { className: "cait-muted cait-tiny" }, t("doc.openExisting")),
+    "div",
+    { className: "cait-more", ref: wrapRef },
     h(
-      "select",
+      "button",
       {
-        className: "cait-select cait-doc-select",
-        value: "",
-        disabled: Boolean(busy),
-        onChange: (event) => {
-          if (event.target.value) onOpen(event.target.value);
-        }
+        type: "button",
+        className: `cait-btn${open ? " active" : ""}`,
+        "aria-haspopup": "menu",
+        "aria-expanded": open,
+        title: t("nav.more"),
+        onClick: () => setOpen((value) => !value)
       },
-      h("option", { value: "" }, t("doc.openExisting")),
-      documents.map(
-        (doc) => h("option", { key: doc.id, value: doc.id }, `${doc.name} · ${doc.progress.percent}%`)
+      h("span", { className: "cait-btn-label" }, t("nav.more")),
+      h("span", { className: "cait-more-caret" }, h(Icon, { name: "arrowRight", size: 12 }))
+    ),
+    open ? h(
+      "div",
+      { className: "cait-more-menu", role: "menu" },
+      items.map(
+        (item) => h(
+          "button",
+          {
+            key: item.key,
+            type: "button",
+            role: "menuitem",
+            className: "cait-more-item",
+            disabled: Boolean(item.disabled),
+            title: item.title,
+            onClick: () => {
+              setOpen(false);
+              item.onSelect();
+            }
+          },
+          h(Icon, { name: item.icon, size: 14 }),
+          h("span", null, item.label)
+        )
       )
-    )
+    ) : null
   );
 }
 function RecentDocsModal({ t, documents, busy, onClose, onDelete, onClear }) {
@@ -4473,8 +4513,6 @@ function Topbar({
   onSettings,
   onOpenDoc,
   onCloseDoc,
-  onNewTab,
-  onCleanClosed,
   pre,
   onPreTranslate,
   onOpenDelivery,
@@ -4487,9 +4525,8 @@ function Topbar({
   onHome
 }) {
   const progress = doc?.progress || { percent: 0, confirmed: 0, total: 0 };
-  const openIds = new Set((data.openDocuments || []).map((item) => item.id));
-  const closedDocuments = (data.documents || []).filter((item) => !openIds.has(item.id));
   const documentsView = view === "documents";
+  const projectsView = view === "projects";
   const viewTabs = [
     { id: "projects", label: t("projects.title") },
     { id: "libraries", label: t("nav.libraries") },
@@ -4550,22 +4587,8 @@ function Topbar({
         activeId: doc?.id,
         busy,
         onOpen: onOpenDoc,
-        onClose: onCloseDoc,
-        onNew: onNewTab
+        onClose: onCloseDoc
       }),
-      h(ClosedDocPicker, { t, documents: closedDocuments, busy, onOpen: onOpenDoc }),
-      closedDocuments.length ? h(
-        "button",
-        {
-          type: "button",
-          className: "cait-doc-clean",
-          title: t("doc.clean"),
-          "aria-label": t("doc.clean"),
-          disabled: Boolean(busy),
-          onClick: onCleanClosed
-        },
-        h(Icon, { name: "trash", size: 13 })
-      ) : null,
       doc ? h(
         "span",
         { className: "cait-doc-progress" },
@@ -4608,39 +4631,6 @@ function Topbar({
         "button",
         {
           className: "cait-btn",
-          onClick: onOpenDelivery,
-          disabled: Boolean(busy) || !doc,
-          title: t("deliver.open")
-        },
-        h(Icon, { name: "upload", size: 14 }),
-        h("span", { className: "cait-btn-label" }, t("deliver.open"))
-      ) : null,
-      documentsView ? h(
-        "button",
-        {
-          className: "cait-btn",
-          onClick: onOpenBatch,
-          disabled: Boolean(busy) || !doc,
-          title: t("batch.open")
-        },
-        h(Icon, { name: "list", size: 14 }),
-        h("span", { className: "cait-btn-label" }, t("batch.open"))
-      ) : null,
-      documentsView ? h(
-        "button",
-        {
-          className: "cait-btn",
-          onClick: onOpenQuote,
-          disabled: Boolean(busy) || !doc,
-          title: t("quote.open")
-        },
-        h(Icon, { name: "coins", size: 14 }),
-        h("span", { className: "cait-btn-label" }, t("quote.open"))
-      ) : null,
-      documentsView ? h(
-        "button",
-        {
-          className: "cait-btn",
           onClick: onReplace,
           disabled: Boolean(busy) || !doc,
           title: t("replace.open")
@@ -4648,13 +4638,53 @@ function Topbar({
         h(Icon, { name: "search", size: 14 }),
         h("span", { className: "cait-btn-label" }, t("replace.open"))
       ) : null,
-      h(
+      documentsView ? h(
+        "button",
+        {
+          className: "cait-btn",
+          onClick: onOpenDelivery,
+          disabled: Boolean(busy) || !doc,
+          title: t("deliver.open")
+        },
+        h(Icon, { name: "upload", size: 14 }),
+        h("span", { className: "cait-btn-label" }, t("deliver.open"))
+      ) : null,
+      documentsView ? h(MoreMenu, {
+        t,
+        items: [
+          {
+            key: "batch",
+            icon: "list",
+            label: t("batch.open"),
+            title: t("batch.open"),
+            disabled: Boolean(busy) || !doc,
+            onSelect: onOpenBatch
+          },
+          {
+            key: "quote",
+            icon: "coins",
+            label: t("quote.open"),
+            title: t("quote.open"),
+            disabled: Boolean(busy) || !doc,
+            onSelect: onOpenQuote
+          },
+          {
+            key: "export",
+            icon: "upload",
+            label: t("nav.export"),
+            title: t("nav.export"),
+            disabled: Boolean(busy) || !doc,
+            onSelect: onExport
+          }
+        ]
+      }) : null,
+      projectsView ? h(
         "button",
         { className: "cait-btn", onClick: onNew, disabled: Boolean(busy), title: t("nav.new") },
         h(Icon, { name: "plus", size: 14 }),
         h("span", { className: "cait-btn-label" }, t("nav.new"))
-      ),
-      h(
+      ) : null,
+      projectsView ? h(
         "button",
         {
           className: "cait-btn",
@@ -4664,17 +4694,6 @@ function Topbar({
         },
         h(Icon, { name: "download", size: 14 }),
         h("span", { className: "cait-btn-label" }, t("nav.import"))
-      ),
-      documentsView ? h(
-        "button",
-        {
-          className: "cait-btn",
-          onClick: onExport,
-          disabled: Boolean(busy) || !doc,
-          title: t("nav.export")
-        },
-        h(Icon, { name: "upload", size: 14 }),
-        h("span", { className: "cait-btn-label" }, t("nav.export"))
       ) : null,
       h(
         "button",
@@ -14088,8 +14107,6 @@ function Workbench({ i18n, translate }) {
       onSettings: () => setModal({ type: "settings" }),
       onOpenDoc: requestOpenDocument,
       onCloseDoc: closeDocumentTab,
-      onNewTab: () => setModal({ type: "new", defaultMode: "file" }),
-      onCleanClosed: () => setModal({ type: "recent" }),
       pre,
       onPreTranslate: () => openAiChat("pretranslate"),
       onCancelPreTranslate: cancelPreTranslate,

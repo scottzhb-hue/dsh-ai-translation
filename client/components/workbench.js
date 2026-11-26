@@ -425,8 +425,6 @@ function Workbench({ i18n, translate }) {
       onSettings: () => setModal({ type: 'settings' }),
       onOpenDoc: requestOpenDocument,
       onCloseDoc: closeDocumentTab,
-      onNewTab: () => setModal({ type: 'new', defaultMode: 'file' }),
-      onCleanClosed: () => setModal({ type: 'recent' }),
       pre,
       onPreTranslate: () => openAiChat('pretranslate'),
       onCancelPreTranslate: cancelPreTranslate,

@@ -73,6 +73,11 @@ manual reload.
 
 ## Features
 
+### Changed in 1.2.4
+
+- **Top bar follows context**: "New" and "Import" only appear in the project view; the library, alignment, home and editor views no longer repeat them.
+- **Leaner editor toolbar**: the document view keeps Usage, Pre-translate, Find & replace, Deliver and a "More" menu, which holds Batch, Quote and Export.
+- **Cleaner document strip**: the "new tab" button and the closed-document picker are gone; back-to-project, open document tabs and the progress readout remain.
 ### Fixed in 1.2.3
 
 - **Opening a document no longer lands on an empty editor**: the view switches only after the document really opens.

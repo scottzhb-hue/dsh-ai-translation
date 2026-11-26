@@ -1,4 +1,4 @@
-import { h } from '../react.js'
+import { h, useEffect, useRef, useState } from '../react.js'
 import { Spinner, Icon, CaitMark, Modal } from './base.js'
 import { DocumentSourceForm } from './forms.js'
 import { UsageBadge } from './usage.js'
@@ -78,43 +78,83 @@ function DocTabs({ t, documents, activeId, busy, onOpen, onClose, onNew }) {
         ),
       ),
     ),
+    onNew
+      ? h(
+          'button',
+          {
+            type: 'button',
+            className: 'cait-doctab-new',
+            title: t('tabs.new'),
+            'aria-label': t('tabs.new'),
+            disabled: Boolean(busy),
+            onClick: onNew,
+          },
+          h(Icon, { name: 'plus', size: 13 }),
+          h('span', null, t('tabs.new')),
+        )
+      : null,
+  )
+}
+
+function MoreMenu({ t, items }) {
+  const [open, setOpen] = useState(false)
+  const wrapRef = useRef(null)
+  useEffect(() => {
+    if (!open) return undefined
+    const onPointer = (event) => {
+      if (wrapRef.current && !wrapRef.current.contains(event.target)) setOpen(false)
+    }
+    const onKey = (event) => {
+      if (event.key === 'Escape') setOpen(false)
+    }
+    document.addEventListener('mousedown', onPointer)
+    document.addEventListener('keydown', onKey)
+    return () => {
+      document.removeEventListener('mousedown', onPointer)
+      document.removeEventListener('keydown', onKey)
+    }
+  }, [open])
+  return h(
+    'div',
+    { className: 'cait-more', ref: wrapRef },
     h(
       'button',
       {
         type: 'button',
-        className: 'cait-doctab-new',
-        title: t('tabs.new'),
-        'aria-label': t('tabs.new'),
-        disabled: Boolean(busy),
-        onClick: onNew,
+        className: `cait-btn${open ? ' active' : ''}`,
+        'aria-haspopup': 'menu',
+        'aria-expanded': open,
+        title: t('nav.more'),
+        onClick: () => setOpen((value) => !value),
       },
-      h(Icon, { name: 'plus', size: 13 }),
-      h('span', null, t('tabs.new')),
+      h('span', { className: 'cait-btn-label' }, t('nav.more')),
+      h('span', { className: 'cait-more-caret' }, h(Icon, { name: 'arrowRight', size: 12 })),
     ),
-  )
-}
-
-function ClosedDocPicker({ t, documents, busy, onOpen }) {
-  if (!documents?.length) return null
-  return h(
-    'label',
-    { className: 'cait-doc-select-wrap cait-closed-docs' },
-    h('span', { className: 'cait-muted cait-tiny' }, t('doc.openExisting')),
-    h(
-      'select',
-      {
-        className: 'cait-select cait-doc-select',
-        value: '',
-        disabled: Boolean(busy),
-        onChange: (event) => {
-          if (event.target.value) onOpen(event.target.value)
-        },
-      },
-      h('option', { value: '' }, t('doc.openExisting')),
-      documents.map((doc) =>
-        h('option', { key: doc.id, value: doc.id }, `${doc.name} · ${doc.progress.percent}%`),
-      ),
-    ),
+    open
+      ? h(
+          'div',
+          { className: 'cait-more-menu', role: 'menu' },
+          items.map((item) =>
+            h(
+              'button',
+              {
+                key: item.key,
+                type: 'button',
+                role: 'menuitem',
+                className: 'cait-more-item',
+                disabled: Boolean(item.disabled),
+                title: item.title,
+                onClick: () => {
+                  setOpen(false)
+                  item.onSelect()
+                },
+              },
+              h(Icon, { name: item.icon, size: 14 }),
+              h('span', null, item.label),
+            ),
+          ),
+        )
+      : null,
   )
 }
 
@@ -192,8 +232,6 @@ function Topbar({
   onSettings,
   onOpenDoc,
   onCloseDoc,
-  onNewTab,
-  onCleanClosed,
   pre,
   onPreTranslate,
   onOpenDelivery,
@@ -206,9 +244,8 @@ function Topbar({
   onHome,
 }) {
   const progress = doc?.progress || { percent: 0, confirmed: 0, total: 0 }
-  const openIds = new Set((data.openDocuments || []).map((item) => item.id))
-  const closedDocuments = (data.documents || []).filter((item) => !openIds.has(item.id))
   const documentsView = view === 'documents'
+  const projectsView = view === 'projects'
   const viewTabs = [
     { id: 'projects', label: t('projects.title') },
     { id: 'libraries', label: t('nav.libraries') },
@@ -271,23 +308,7 @@ function Topbar({
             busy,
             onOpen: onOpenDoc,
             onClose: onCloseDoc,
-            onNew: onNewTab,
           }),
-          h(ClosedDocPicker, { t, documents: closedDocuments, busy, onOpen: onOpenDoc }),
-          closedDocuments.length
-            ? h(
-                'button',
-                {
-                  type: 'button',
-                  className: 'cait-doc-clean',
-                  title: t('doc.clean'),
-                  'aria-label': t('doc.clean'),
-                  disabled: Boolean(busy),
-                  onClick: onCleanClosed,
-                },
-                h(Icon, { name: 'trash', size: 13 }),
-              )
-            : null,
           doc
             ? h(
                 'span',
@@ -338,6 +359,19 @@ function Topbar({
             'button',
             {
               className: 'cait-btn',
+              onClick: onReplace,
+              disabled: Boolean(busy) || !doc,
+              title: t('replace.open'),
+            },
+            h(Icon, { name: 'search', size: 14 }),
+            h('span', { className: 'cait-btn-label' }, t('replace.open')),
+          )
+        : null,
+      documentsView
+        ? h(
+            'button',
+            {
+              className: 'cait-btn',
               onClick: onOpenDelivery,
               disabled: Boolean(busy) || !doc,
               title: t('deliver.open'),
@@ -347,72 +381,55 @@ function Topbar({
           )
         : null,
       documentsView
+        ? h(MoreMenu, {
+            t,
+            items: [
+              {
+                key: 'batch',
+                icon: 'list',
+                label: t('batch.open'),
+                title: t('batch.open'),
+                disabled: Boolean(busy) || !doc,
+                onSelect: onOpenBatch,
+              },
+              {
+                key: 'quote',
+                icon: 'coins',
+                label: t('quote.open'),
+                title: t('quote.open'),
+                disabled: Boolean(busy) || !doc,
+                onSelect: onOpenQuote,
+              },
+              {
+                key: 'export',
+                icon: 'upload',
+                label: t('nav.export'),
+                title: t('nav.export'),
+                disabled: Boolean(busy) || !doc,
+                onSelect: onExport,
+              },
+            ],
+          })
+        : null,
+      projectsView
         ? h(
             'button',
-            {
-              className: 'cait-btn',
-              onClick: onOpenBatch,
-              disabled: Boolean(busy) || !doc,
-              title: t('batch.open'),
-            },
-            h(Icon, { name: 'list', size: 14 }),
-            h('span', { className: 'cait-btn-label' }, t('batch.open')),
+            { className: 'cait-btn', onClick: onNew, disabled: Boolean(busy), title: t('nav.new') },
+            h(Icon, { name: 'plus', size: 14 }),
+            h('span', { className: 'cait-btn-label' }, t('nav.new')),
           )
         : null,
-      documentsView
+      projectsView
         ? h(
             'button',
             {
               className: 'cait-btn',
-              onClick: onOpenQuote,
-              disabled: Boolean(busy) || !doc,
-              title: t('quote.open'),
+              onClick: onImport,
+              disabled: Boolean(busy),
+              title: t('nav.import'),
             },
-            h(Icon, { name: 'coins', size: 14 }),
-            h('span', { className: 'cait-btn-label' }, t('quote.open')),
-          )
-        : null,
-      documentsView
-        ? h(
-            'button',
-            {
-              className: 'cait-btn',
-              onClick: onReplace,
-              disabled: Boolean(busy) || !doc,
-              title: t('replace.open'),
-            },
-            h(Icon, { name: 'search', size: 14 }),
-            h('span', { className: 'cait-btn-label' }, t('replace.open')),
-          )
-        : null,
-      h(
-        'button',
-        { className: 'cait-btn', onClick: onNew, disabled: Boolean(busy), title: t('nav.new') },
-        h(Icon, { name: 'plus', size: 14 }),
-        h('span', { className: 'cait-btn-label' }, t('nav.new')),
-      ),
-      h(
-        'button',
-        {
-          className: 'cait-btn',
-          onClick: onImport,
-          disabled: Boolean(busy),
-          title: t('nav.import'),
-        },
-        h(Icon, { name: 'download', size: 14 }),
-        h('span', { className: 'cait-btn-label' }, t('nav.import')),
-      ),
-      documentsView
-        ? h(
-            'button',
-            {
-              className: 'cait-btn',
-              onClick: onExport,
-              disabled: Boolean(busy) || !doc,
-              title: t('nav.export'),
-            },
-            h(Icon, { name: 'upload', size: 14 }),
-            h('span', { className: 'cait-btn-label' }, t('nav.export')),
+            h(Icon, { name: 'download', size: 14 }),
+            h('span', { className: 'cait-btn-label' }, t('nav.import')),
           )
         : null,
       h(
@@ -502,7 +519,6 @@ export {
   CaitSidebarIcon,
   SaveBanner,
   DocTabs,
-  ClosedDocPicker,
   RecentDocsModal,
   Topbar,
   EmptyState,

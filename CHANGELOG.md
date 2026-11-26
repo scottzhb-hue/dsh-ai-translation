@@ -7,6 +7,14 @@ All notable changes to CAIT are documented here. The project follows
 > 以下 `1.1.8` 及更早的条目属于上游 CAIT（作者 Jovi Lecca，Apache-2.0），
 > 保留原文以便溯源。本分支 `dsh-ai-translation` 从 `1.0.1` 起独立编号。
 
+## [1.2.4] - 2026-11-26
+
+### Changed
+- 顶栏按场景分组：「新建 / 导入」只在项目视图出现，首页、库、对齐、文档翻译都不再显示。
+- 文档翻译工具条精简为 用量 · 预翻译 · 查找替换 · 交付 · 更多；批量、报价、导出收进「更多」下拉菜单。
+- 文档区去掉「＋ 新开页面」与「打开已有文档」下拉，只留返回项目、已打开文档标签与进度；加文档回项目详情页。
+- 清理 doc.openExisting、doc.clean 两个不再使用的文案键。
+
 ## [1.2.3] - 2026-11-26
 
 ### Fixed

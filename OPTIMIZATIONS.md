@@ -38,6 +38,7 @@
 | 18 | 项目（project）层：多文件共享 brief / TM / 术语库，项目级分析、报价、报告与交付，工时 | 已上线 | `lib/projects.js`（新增）、`lib/quote.js`、`lib/analysis.js`、`lib/libraries.js`、`lib/brief.js`、`lib/persistence.js`、`lib/limits.js`、`lib/api.js`、`lib/document-view.js`、`lib/ai-chat.js`、`lib/mt-translate.js`、`lib/review.js`、`lib/tools.js`、`lib/documents.js`、`lib/store.js`、`lib/store-mixins.js` | `client/components/projects.js`（新增）、`client/components/workbench.js`、`client/components/shell.js`、`client/components/workflow.js`、`client/locales-workflow.js`、`client/locales.js`、`client/workbench/controller.js`、`client/styles.js` |
 | 19 | 欢迎页、项目内建文档、可见失败（错误边界 + 库加载兜底） | 已上线 | `client/components/home.js`（新增）、`client/components/error-boundary.js`（新增）、`client/workbench/controller.js`、`client/components/projects.js`、`client/components/pages.js`、`client/index.js` |
 | 20 | 打开/关闭文档不再停在空编辑器；详情与分析解耦；分析改为手动；加载看门狗 | 已上线 | `client/workbench/controller.js`、`client/components/projects.js`、`client/components/workbench.js`、`client/components/shell.js`、`client/components/pages.js`、`client/locales.js`、`client/styles.js` |
+| 21 | 顶栏按场景分组：新建/导入只留项目页；编辑器工具条收进「更多」；文档区去掉新开页面/打开已有文档 | 已上线 | `client/components/shell.js`、`client/components/workbench.js`、`client/styles.js`、`client/locales.js` |
 
 ## 明细
 
@@ -224,6 +225,18 @@
 
 **验证**：`_dev/test-ui-controller.mjs` 新增「详情默认不带分析」「刷新后带分析报价」「关闭全部文档后回项目视图」三项；`npm run check`、四套 `_dev` 测试、`audit-workflow.mjs` 138 项全过。
 
+### 21 顶栏分组与编辑器工具条精简
+
+**动机**：三个工作台（首页 / 项目 / 库 / 对齐）右上角都常驻「新建 / 导入」，与页面职责不符；文档翻译界面的右上角一行堆了 10 个控件（用量、预翻译、交付、批量、报价、查找替换、新建、导入、导出、设置），文档区还有「＋新开页面」「打开已有文档」两个重复入口，整行在窄宽度下换行，甚至把「打开已有文档」压成竖排。
+
+**做法**：
+
+- 顶栏动作按视图分组：`用量` 常驻；`新建 / 导入` 只在项目视图；文档视图常驻 `预翻译 / 查找替换 / 交付`，`批量 / 报价 / 导出` 收进新增的 `MoreMenu`（点击外部或 Esc 关闭，无打开文档时置灰）；`设置` 常驻。
+- 文档区精简：去掉 `DocTabs` 的「＋新开页面」与 `ClosedDocPicker`，只保留返回项目、已打开文档标签、`已确认/总数 · 百分比`。加文档改走项目详情的「新建文档 / 导入文件」。
+- 删除随之失效的 `ClosedDocPicker` 组件与 `doc.openExisting`、`doc.clean` 三语文案键；新增 `nav.more`（更多 / More / その他）。
+- 样式：`.cait-more` 相对定位 + `.cait-more-menu` 浮层（右对齐、`z-index:60`、最大宽度约束），并给 `.cait-doc-select-wrap span` 加 `nowrap` 防止再次被压成竖排。
+
+**验证**：`_dev/test-workbench-mount.mjs` 增加 6 项（项目页有新建/导入、文档页无新建/导入、文档页常驻预翻译/查找替换/交付、批量/报价默认不在、展开「更多」后三项可见、文档区无「新开页面/打开已有文档」且保留进度），共 28 项全过；`check-locales` 771 键 × 3 语、死键回到 5 个；`audit-workflow.mjs` 138 项全过。
 ## 维护与发布须知
 
 1. **客户端产物怎么来**：`client.js` 由 `node scripts/build-client.mjs` 从 `client/` 源码用 esbuild 打成一个 CommonJS 包、再套 `__ModuleLoader__.load` 外框生成，**不要手改 `client.js`**。改完 `client/` 后跑 `node scripts/check-client.mjs`，确认产物与源码一致。仓库副本里 `scripts/` 与 esbuild 都可用；在受限沙箱里 esbuild 启动子进程会被拒（`spawn EPERM`），构建/校验需要放开权限跑一次。
