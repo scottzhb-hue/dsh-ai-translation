@@ -39,6 +39,7 @@
 | 19 | 欢迎页、项目内建文档、可见失败（错误边界 + 库加载兜底） | 已上线 | `client/components/home.js`（新增）、`client/components/error-boundary.js`（新增）、`client/workbench/controller.js`、`client/components/projects.js`、`client/components/pages.js`、`client/index.js` |
 | 20 | 打开/关闭文档不再停在空编辑器；详情与分析解耦；分析改为手动；加载看门狗 | 已上线 | `client/workbench/controller.js`、`client/components/projects.js`、`client/components/workbench.js`、`client/components/shell.js`、`client/components/pages.js`、`client/locales.js`、`client/styles.js` |
 | 21 | 顶栏按场景分组：新建/导入只留项目页；编辑器工具条收进「更多」；文档区去掉新开页面/打开已有文档 | 已上线 | `client/components/shell.js`、`client/components/workbench.js`、`client/styles.js`、`client/locales.js` |
+| 22 | 欢迎页重做为单入口：粘贴/导入合为一个主卡片的两个标签页，「继续工作」合并项目与文档列表 | 已上线 | `client/components/home.js`、`client/styles.js` |
 
 ## 明细
 
@@ -284,3 +285,18 @@
 - pptx / xlsx 的拆分支持（需要"同单元多句段"的稳定锚点）。
 
 - 把手工补丁流程改成可复现脚本（含 esbuild 构建链），便于发布与回滚。
+
+### 22 欢迎页单入口与「继续工作」列表
+
+动机：1.2.4 的欢迎页下半部分有 4 个同权入口（粘贴卡、导入卡、演示卡、接着上次卡）和两列各只有一条的列表，新手不知道从哪开始，老手每次都要跳过演示入口。
+
+做法：
+
+- `HomePage` 只保留一张主卡片，`mode` 在 `text` / `file` 之间切换：文本页是 textarea，文件页是可拖放的虚线区（`onDrop` 取 `dataTransfer.files[0]`），两页共用名称/源语言/目标语言与同一个提交按钮。
+- 提交仍走 `createFromForm`，文件模式传 `{ mode:'file', file, name, sourceLang, targetLang }`，因此项目归属对话框、重复文件复用等逻辑与弹窗完全一致。
+- “接着上次”是 `cait-home-resume` 药丸，文案 `home.resumeShow` 带目标名；无目标时不渲染。
+- “继续工作”把 `projects`（排除未分类）与 `openDocuments` 合并，按 `updatedAt` 倒序取 6 行；每行 `52px | 1fr | 84px | 96px | 66px` 网格（类型标签、名称、进度条、meta、相对时间），≤700px 时隐藏进度条与 meta。
+- “加载演示文档”仅在 `projects.length === 0 && openDocs.length === 0` 时以 `cait-linkbtn` 出现。
+- 文案：新增 `home.tabsPaste/tabsFile/fileHint/pickFile/startImport/workTitle/allProjects/kindProject/kindDoc/resumeShow/timeNow/timeMins/timeHours/timeDays`，删除不再使用的 `home.pasteTitle/import/importHint/demoHint/resumeEmpty/recentProjects/openDocs`（三语同步，`check-locales` 771 键）。
+
+验证：`_dev/test-workbench-mount.mjs` 增 5 项（一张主卡片 + 两个标签页、有项目时无演示入口、继续工作含项目/文档类型标签、标题与“全部项目”链接），32 项全过；`check-undef` 96 文件、`check-locales` 771×3、`audit-workflow` 138/138。

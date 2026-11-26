@@ -73,6 +73,13 @@ manual reload.
 
 ## Features
 
+### New in 1.2.5
+
+- Welcome screen rebuilt around one card: paste text / import a file are two tabs of the same form, with drag-and-drop on the import tab.
+- "Resume last" is now a compact pill in the header that names the document or project it will reopen.
+- Recent projects and open documents merged into one "Continue working" list (type chip, mini progress bar, relative time, up to 6 rows).
+- The demo document link only appears for brand-new users.
+
 ### Changed in 1.2.4
 
 - **Top bar follows context**: "New" and "Import" only appear in the project view; the library, alignment, home and editor views no longer repeat them.

@@ -534,19 +534,26 @@ var ZH_PROJECTS = {
   "home.statsDocs": "{n} 篇文档",
   "home.statsSegments": "{n} 个句段",
   "home.statsTm": "{n} 条记忆",
-  "home.pasteTitle": "粘贴文本开始翻译",
+  "home.tabsPaste": "粘贴文本",
+  "home.tabsFile": "导入文件",
+  "home.fileHint": "把文件拖到这里，或点击选择；支持 DOCX / TMX / SRT / XLIFF / CSV 等",
+  "home.pickFile": "选择文件",
+  "home.startImport": "导入并开始",
+  "home.workTitle": "继续工作",
+  "home.allProjects": "全部项目",
+  "home.kindProject": "项目",
+  "home.kindDoc": "文档",
+  "home.resumeShow": "继续上次：{name}",
+  "home.timeNow": "刚刚",
+  "home.timeMins": "{n} 分钟前",
+  "home.timeHours": "{n} 小时前",
+  "home.timeDays": "{n} 天前",
   "home.pasteHint": "源文会按空行/换行切分成句段；创建后在弹窗里选择归属项目。",
   "home.pastePlaceholder": "在此粘贴源文…",
   "home.pasteNote": "创建后会先让你确认项目归属。",
   "home.create": "创建并开始翻译",
-  "home.import": "导入文件",
-  "home.importHint": "DOCX / TMX / SRT / XLIFF / CSV 等",
   "home.demo": "加载演示文档",
-  "home.demoHint": "先看看工作台长什么样",
   "home.resume": "接着上次继续",
-  "home.resumeEmpty": "还没有可以继续的内容",
-  "home.recentProjects": "最近项目",
-  "home.openDocs": "已打开文档",
   "home.projectMeta": "{docs} 篇 · {percent}%",
   "home.docMeta": "{segments} 段 · {percent}%"
 };
@@ -661,19 +668,26 @@ var EN_PROJECTS = {
   "home.statsDocs": "{n} documents",
   "home.statsSegments": "{n} segments",
   "home.statsTm": "{n} TM entries",
-  "home.pasteTitle": "Paste source text",
+  "home.tabsPaste": "Paste text",
+  "home.tabsFile": "Import file",
+  "home.fileHint": "Drop a file here or click to choose — DOCX / TMX / SRT / XLIFF / CSV and more",
+  "home.pickFile": "Choose a file",
+  "home.startImport": "Import and start",
+  "home.workTitle": "Continue working",
+  "home.allProjects": "All projects",
+  "home.kindProject": "Project",
+  "home.kindDoc": "Document",
+  "home.resumeShow": "Resume: {name}",
+  "home.timeNow": "just now",
+  "home.timeMins": "{n} min ago",
+  "home.timeHours": "{n} h ago",
+  "home.timeDays": "{n} d ago",
   "home.pasteHint": "The source is split into segments at line breaks; pick a project right after creating it.",
   "home.pastePlaceholder": "Paste the source text here…",
   "home.pasteNote": "You will be asked to choose a project after creating.",
   "home.create": "Create and start",
-  "home.import": "Import a file",
-  "home.importHint": "DOCX / TMX / SRT / XLIFF / CSV and more",
   "home.demo": "Load demo document",
-  "home.demoHint": "See what the workbench looks like",
   "home.resume": "Resume last session",
-  "home.resumeEmpty": "Nothing to resume yet",
-  "home.recentProjects": "Recent projects",
-  "home.openDocs": "Open documents",
   "home.projectMeta": "{docs} docs · {percent}%",
   "home.docMeta": "{segments} segments · {percent}%"
 };
@@ -787,19 +801,26 @@ var JA_PROJECTS = {
   "home.statsDocs": "{n} 文書",
   "home.statsSegments": "{n} セグメント",
   "home.statsTm": "{n} 件のメモリ",
-  "home.pasteTitle": "テキストを貼り付けて開始",
+  "home.tabsPaste": "テキストを貼り付け",
+  "home.tabsFile": "ファイルを取り込む",
+  "home.fileHint": "ここにドロップ、またはクリックして選択 — DOCX / TMX / SRT / XLIFF / CSV など",
+  "home.pickFile": "ファイルを選択",
+  "home.startImport": "取り込んで開始",
+  "home.workTitle": "作業を続ける",
+  "home.allProjects": "すべてのプロジェクト",
+  "home.kindProject": "プロジェクト",
+  "home.kindDoc": "文書",
+  "home.resumeShow": "前回の続き：{name}",
+  "home.timeNow": "たった今",
+  "home.timeMins": "{n} 分前",
+  "home.timeHours": "{n} 時間前",
+  "home.timeDays": "{n} 日前",
   "home.pasteHint": "原文は改行でセグメントに分割されます。作成後にプロジェクトを選択します。",
   "home.pastePlaceholder": "ここに原文を貼り付けてください…",
   "home.pasteNote": "作成後にプロジェクトの所属先を確認します。",
   "home.create": "作成して開始",
-  "home.import": "ファイルを取り込む",
-  "home.importHint": "DOCX / TMX / SRT / XLIFF / CSV など",
   "home.demo": "デモ文書を読み込む",
-  "home.demoHint": "ワークベンチの雰囲気を確認",
   "home.resume": "前回の続きから",
-  "home.resumeEmpty": "続きになるものがありません",
-  "home.recentProjects": "最近のプロジェクト",
-  "home.openDocs": "開いている文書",
   "home.projectMeta": "{docs} 文書 · {percent}%",
   "home.docMeta": "{segments} セグメント · {percent}%"
 };
@@ -3576,25 +3597,40 @@ button.cait-brand{background:none;border:0;padding:0;cursor:pointer;text-align:l
 button.cait-brand:hover .cait-brand-text strong{color:var(--dsw-alias-state-info-primary)}
 button.cait-brand.active .cait-brand-text strong{color:var(--dsw-alias-state-info-primary)}
 .cait-home{flex:1 1 auto;min-height:0;overflow:auto;padding:22px 26px 30px;display:flex;flex-direction:column;gap:14px;max-width:1080px;width:100%;margin:0 auto}
-.cait-home-hero{display:flex;flex-direction:column;gap:4px}
+.cait-home-hero{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.cait-home-herotext{display:flex;flex-direction:column;gap:4px;min-width:0}
 .cait-home-title{margin:0;font-size:19px;font-weight:700}
 .cait-home-sub{margin:0;font-size:12px;color:var(--dsw-alias-label-secondary)}
 .cait-home-stats{display:flex;gap:14px;margin-top:4px;font-size:11px;color:var(--dsw-alias-label-secondary)}
-.cait-home-card{border:1px solid var(--dsw-alias-border-secondary);border-radius:9px;background:var(--dsw-alias-bg-secondary);padding:13px 14px;display:flex;flex-direction:column;gap:8px}
+.cait-home-resume{display:inline-flex;align-items:center;gap:6px;max-width:340px;height:30px;padding:0 11px;border:1px solid var(--dsw-alias-border-l1);border-radius:999px;background:var(--dsw-alias-bg-layer-1);color:var(--dsw-alias-label-primary);font:inherit;font-size:11.5px;font-weight:600;cursor:pointer}
+.cait-home-resume span{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cait-home-resume:hover:not(:disabled){border-color:var(--dsw-alias-state-info-primary)}
+.cait-home-resume:disabled{opacity:.55;cursor:default}
+.cait-home-card{border:1px solid var(--dsw-alias-border-l1);border-radius:10px;background:var(--dsw-alias-bg-layer-1);padding:14px 15px;display:flex;flex-direction:column;gap:9px}
 .cait-home-cardhead{margin:0;font-size:12.5px;font-weight:600}
-.cait-home-textarea{height:140px;resize:vertical;font-family:var(--cait-mono,ui-monospace,monospace);font-size:12px}
+.cait-home-starthead{display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:space-between}
+.cait-home-textarea{height:132px;resize:vertical;font-family:var(--cait-mono,ui-monospace,monospace);font-size:12px}
+.cait-home-drop{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;height:132px;border:1px dashed var(--dsw-alias-border-l1);border-radius:9px;background:var(--dsw-alias-bg-secondary);color:inherit;font:inherit;cursor:pointer}
+.cait-home-drop.is-over,.cait-home-drop:hover:not(:disabled){border-color:var(--dsw-alias-state-info-primary);background:var(--dsw-alias-bg-tertiary)}
+.cait-home-drop strong{font-size:12.5px;max-width:84%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .cait-home-actions{justify-content:space-between;align-items:center;gap:10px}
-.cait-home-cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}
-.cait-home-lists{grid-template-columns:repeat(auto-fit,minmax(280px,1fr))}
-.cait-home-action{align-items:flex-start;text-align:left;cursor:pointer;color:inherit;font:inherit}
-.cait-home-action:disabled{opacity:.55;cursor:default}
-.cait-home-action strong{font-size:12.5px}
-.cait-home-action:hover:not(:disabled){border-color:var(--dsw-alias-state-info-primary)}
-.cait-home-list{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:2px;max-height:240px;overflow:auto}
-.cait-home-item{display:flex;align-items:baseline;justify-content:space-between;gap:10px;width:100%;background:none;border:0;border-radius:6px;padding:5px 6px;cursor:pointer;color:inherit;font:inherit;text-align:left}
-.cait-home-item:hover{background:var(--dsw-alias-bg-tertiary)}
-.cait-home-itemname{font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.cait-home-itemmeta{font-size:10.5px;color:var(--dsw-alias-label-secondary);flex:0 0 auto}
+.cait-home-extras{display:flex;align-items:center;gap:12px}
+.cait-home-work{gap:6px}
+.cait-home-workhead{display:flex;align-items:center;gap:8px}
+.cait-home-workhead .cait-linkbtn{margin-left:auto}
+.cait-home-count{font-size:10.5px;color:var(--dsw-alias-label-secondary);font-variant-numeric:tabular-nums}
+.cait-home-worklist{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:1px}
+.cait-home-workrow{display:grid;grid-template-columns:52px minmax(0,1fr) 84px 96px 66px;align-items:center;gap:10px;width:100%;padding:7px 8px;border:0;border-radius:7px;background:none;color:inherit;font:inherit;text-align:left;cursor:pointer}
+.cait-home-workrow:hover{background:var(--dsw-alias-bg-tertiary)}
+.cait-home-kind{display:inline-flex;align-items:center;justify-content:center;height:19px;border-radius:5px;font-size:10px;font-weight:600}
+.cait-home-kind.is-project{background:color-mix(in srgb,var(--dsw-alias-brand-primary) 15%,transparent);color:var(--dsw-alias-brand-primary)}
+.cait-home-kind.is-doc{background:color-mix(in srgb,var(--dsw-alias-state-info-primary) 15%,transparent);color:var(--dsw-alias-state-info-primary)}
+.cait-home-workname{font-size:12.5px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cait-home-bar{height:4px;border-radius:999px;background:var(--dsw-alias-bg-tertiary);overflow:hidden}
+.cait-home-bar i{display:block;height:100%;border-radius:999px;background:var(--dsw-alias-brand-primary)}
+.cait-home-workmeta{font-size:10.5px;color:var(--dsw-alias-label-secondary);text-align:right;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.cait-home-worktime{font-size:10px;color:var(--dsw-alias-label-secondary);text-align:right;white-space:nowrap}
+.cait-field-sm{flex:0 1 108px}
 .cait-proj-docactions{display:flex;gap:6px;margin:0 0 6px}
 .cait-proj-row{cursor:pointer}
 .cait-proj-row:hover{background:var(--dsw-alias-bg-tertiary)}
@@ -3607,7 +3643,7 @@ button.cait-brand.active .cait-brand-text strong{color:var(--dsw-alias-state-inf
 .cait-crash-detail{margin:0;padding:10px;max-height:46vh;overflow:auto;font-family:var(--cait-mono,ui-monospace,monospace);font-size:10.5px;line-height:1.5;white-space:pre-wrap;border:1px solid var(--dsw-alias-border-secondary);border-radius:8px;background:var(--dsw-alias-bg-secondary)}
 @media(max-width:1180px){.cait-main{grid-template-columns:minmax(0,1fr) 308px}.cait-body{grid-template-columns:218px minmax(0,1fr)}.cait-editor-col{padding:18px 20px 34px}.cait-actions .cait-btn-label{display:none}.cait-actions .cait-btn{padding:0 8px}.cait-libpage-body{grid-template-columns:196px minmax(0,1fr) 264px}}
 @media(max-width:940px){.cait-topbar{flex-wrap:wrap}.cait-body{grid-template-columns:190px minmax(0,1fr)}.cait-main{grid-template-columns:minmax(0,1fr)}.cait-cat{border-left:0;border-top:1px solid var(--dsw-alias-border-l1);max-height:43%;min-height:210px}.cait-features{grid-template-columns:1fr}.cait-docbar{display:flex;order:3;flex:1 1 100%;padding:7px 0 0;border-left:0;border-top:1px solid var(--dsw-alias-border-l1)}}
-@media(max-width:700px){.cait-body{grid-template-columns:minmax(0,1fr)}.cait-rail{display:none}.cait-editor-col{padding:14px}.cait-topbar{padding:9px 10px}.cait-export-grid{grid-template-columns:1fr}}
+@media(max-width:700px){.cait-body{grid-template-columns:minmax(0,1fr)}.cait-rail{display:none}.cait-editor-col{padding:14px}.cait-topbar{padding:9px 10px}.cait-export-grid{grid-template-columns:1fr}.cait-home-workrow{grid-template-columns:52px minmax(0,1fr) 66px}.cait-home-bar,.cait-home-workmeta{display:none}}
 `;
 var CSS_SCALED = scaleCssLengths(CSS, CAIT_UNIT_VAR);
 
@@ -6445,29 +6481,104 @@ function CatPanel({
 }
 
 // client/components/home.js
+var FILE_ACCEPT = [
+  ".txt",
+  ".md",
+  ".markdown",
+  ".docx",
+  ".doc",
+  ".epub",
+  ".tmx",
+  ".csv",
+  ".srt",
+  ".vtt",
+  ".po",
+  ".xlf",
+  ".xliff",
+  ".html",
+  ".htm",
+  ".json",
+  ".rtf",
+  ".xlsx",
+  ".xls",
+  ".pptx",
+  ".ppt"
+].join(",");
+function relativeStamp(t, iso) {
+  const stamp = Date.parse(iso || "");
+  if (!stamp) return "";
+  const minutes = Math.max(0, Math.round((Date.now() - stamp) / 6e4));
+  if (minutes < 1) return t("home.timeNow");
+  if (minutes < 60) return t("home.timeMins", { n: minutes });
+  const hours = Math.round(minutes / 60);
+  if (hours < 24) return t("home.timeHours", { n: hours });
+  return t("home.timeDays", { n: Math.round(hours / 24) });
+}
 function HomePage({
   t,
   busy,
   data,
   onPasteCreate,
-  onImport,
   onDemo,
   onOpenProject,
   onOpenDoc,
+  onOpenProjects,
   onResume
 }) {
   const settings = data?.settings || {};
+  const [mode, setMode] = useState("text");
   const [text, setText] = useState("");
   const [name, setName] = useState("");
   const [sourceLang, setSourceLang] = useState(settings.sourceLang || "en");
   const [targetLang, setTargetLang] = useState(settings.targetLang || "zh-CN");
-  const projects = (data?.projects?.projects || []).filter((item) => !item.inbox).slice(0, 6);
-  const openDocs = (data?.openDocuments || []).slice(0, 6);
+  const [file, setFile] = useState(null);
+  const [over, setOver] = useState(false);
+  const fileRef = useRef(null);
+  const projects = (data?.projects?.projects || []).filter((item) => !item.inbox);
+  const openDocs = data?.openDocuments || [];
   const stats = data?.stats || {};
-  const canCreate = Boolean(text.trim()) && !busy;
+  const work = useMemo(() => {
+    const rows = [
+      ...projects.map((project) => ({
+        key: `p:${project.id}`,
+        kind: "project",
+        id: project.id,
+        name: project.name,
+        percent: project.percent ?? 0,
+        meta: t("home.projectMeta", { docs: project.documents ?? 0, percent: project.percent ?? 0 }),
+        updatedAt: project.updatedAt
+      })),
+      ...openDocs.map((item) => ({
+        key: `d:${item.id}`,
+        kind: "doc",
+        id: item.id,
+        name: item.name,
+        percent: item.progress?.percent ?? 0,
+        meta: t("home.docMeta", {
+          segments: item.progress?.total ?? 0,
+          percent: item.progress?.percent ?? 0
+        }),
+        updatedAt: item.updatedAt
+      }))
+    ];
+    return rows.sort((a, b) => (Date.parse(b.updatedAt || "") || 0) - (Date.parse(a.updatedAt || "") || 0)).slice(0, 6);
+  }, [projects, openDocs, t]);
+  const canCreate = mode === "text" ? Boolean(text.trim()) && !busy : Boolean(file) && !busy;
+  const resumeTarget = openDocs[0] || projects[0] || null;
+  const showDemo = projects.length === 0 && openDocs.length === 0;
   const submit = (event) => {
     event?.preventDefault?.();
     if (!canCreate) return;
+    if (mode === "file") {
+      onPasteCreate({
+        mode: "file",
+        file,
+        name: "",
+        sourceLang,
+        targetLang
+      });
+      return;
+    }
     onPasteCreate({
       mode: "text",
       name: name.trim() || text.trim().slice(0, 40),
@@ -6476,27 +6587,79 @@ function HomePage({
       targetLang
     });
   };
+  const pickFile = () => {
+    if (busy) return;
+    fileRef.current?.click();
+  };
+  const takeFile = (picked) => {
+    if (!picked) return;
+    setFile(picked);
+    setMode("file");
+    if (!name.trim()) setName(picked.name.replace(/\.[^.]+$/, ""));
+  };
   return h(
     "div",
-    { className: "cait-home" },
+    {
+      className: "cait-home",
+      // Dropping anywhere else on the page must not make the webview navigate to the file.
+      onDragOver: (event) => event.preventDefault(),
+      onDrop: (event) => event.preventDefault()
+    },
     h(
       "div",
       { className: "cait-home-hero" },
-      h("h1", { className: "cait-home-title" }, t("home.title")),
-      h("p", { className: "cait-home-sub" }, t("home.subtitle")),
       h(
         "div",
-        { className: "cait-home-stats" },
-        h("span", null, t("home.statsDocs", { n: stats.documents ?? 0 })),
-        h("span", null, t("home.statsSegments", { n: stats.segments ?? 0 })),
-        h("span", null, t("home.statsTm", { n: stats.tm ?? 0 }))
-      )
+        { className: "cait-home-herotext" },
+        h("h1", { className: "cait-home-title" }, t("home.title")),
+        h("p", { className: "cait-home-sub" }, t("home.subtitle")),
+        h(
+          "div",
+          { className: "cait-home-stats" },
+          h("span", null, t("home.statsDocs", { n: stats.documents ?? 0 })),
+          h("span", null, t("home.statsSegments", { n: stats.segments ?? 0 })),
+          h("span", null, t("home.statsTm", { n: stats.tm ?? 0 }))
+        )
+      ),
+      resumeTarget ? h(
+        "button",
+        {
+          type: "button",
+          className: "cait-home-resume",
+          disabled: Boolean(busy),
+          title: t("home.resume"),
+          onClick: onResume
+        },
+        h(Icon, { name: "play", size: 13 }),
+        h("span", null, t("home.resumeShow", { name: resumeTarget.name }))
+      ) : null
     ),
     h(
       "form",
-      { className: "cait-home-card cait-home-paste", onSubmit: submit },
-      h("h2", { className: "cait-home-cardhead" }, t("home.pasteTitle")),
-      h("p", { className: "cait-hint" }, t("home.pasteHint")),
+      { className: "cait-home-card cait-home-start", onSubmit: submit },
+      h(
+        "div",
+        { className: "cait-home-starthead" },
+        h(
+          "div",
+          { className: "cait-libtabs", role: "tablist" },
+          [["text", "home.tabsPaste"], ["file", "home.tabsFile"]].map(
+            ([id, key]) => h(
+              "button",
+              {
+                key: id,
+                type: "button",
+                role: "tab",
+                "aria-selected": mode === id,
+                className: `cait-libtabs-item${mode === id ? " active" : ""}`,
+                onClick: () => setMode(id)
+              },
+              t(key)
+            )
+          )
+        ),
+        h("span", { className: "cait-hint" }, t("home.pasteHint"))
+      ),
       h(
         "div",
         { className: "cait-formrow" },
@@ -6513,7 +6676,7 @@ function HomePage({
         ),
         h(
           "label",
-          { className: "cait-field" },
+          { className: "cait-field cait-field-sm" },
           h("span", null, t("modal.new.sourceLang")),
           h("input", {
             className: "cait-input",
@@ -6523,7 +6686,7 @@ function HomePage({
         ),
         h(
           "label",
-          { className: "cait-field" },
+          { className: "cait-field cait-field-sm" },
           h("span", null, t("modal.new.targetLang")),
           h("input", {
             className: "cait-input",
@@ -6532,11 +6695,42 @@ function HomePage({
           })
         )
       ),
-      h("textarea", {
+      mode === "text" ? h("textarea", {
         className: "cait-input cait-home-textarea",
         value: text,
         placeholder: t("home.pastePlaceholder"),
         onChange: (event) => setText(event.target.value)
+      }) : h(
+        "button",
+        {
+          type: "button",
+          className: `cait-home-drop${over ? " is-over" : ""}`,
+          disabled: Boolean(busy),
+          onClick: pickFile,
+          onDragOver: (event) => {
+            event.preventDefault();
+            setOver(true);
+          },
+          onDragLeave: () => setOver(false),
+          onDrop: (event) => {
+            event.preventDefault();
+            setOver(false);
+            takeFile(event.dataTransfer?.files?.[0]);
+          }
+        },
+        h(Icon, { name: "upload", size: 20 }),
+        h("strong", null, file ? file.name : t("home.pickFile")),
+        h("span", { className: "cait-hint" }, t("home.fileHint"))
+      ),
+      h("input", {
+        ref: fileRef,
+        type: "file",
+        accept: FILE_ACCEPT,
+        style: { display: "none" },
+        onChange: (event) => {
+          takeFile(event.target.files?.[0]);
+          event.target.value = "";
+        }
       }),
       h(
         "div",
@@ -6546,121 +6740,66 @@ function HomePage({
           "button",
           { type: "submit", className: "cait-btn primary", disabled: !canCreate },
           busy === "create" ? h(Spinner, { size: 13 }) : h(Icon, { name: "plus", size: 14 }),
-          t("home.create")
+          mode === "file" ? t("home.startImport") : t("home.create")
         )
       )
     ),
-    h(
+    showDemo ? h(
       "div",
-      { className: "cait-home-cards" },
+      { className: "cait-home-extras" },
       h(
         "button",
-        {
-          type: "button",
-          className: "cait-home-card cait-home-action",
-          disabled: Boolean(busy),
-          onClick: onImport
-        },
-        h(Icon, { name: "upload", size: 18 }),
-        h("strong", null, t("home.import")),
-        h("span", { className: "cait-hint" }, t("home.importHint"))
-      ),
+        { type: "button", className: "cait-linkbtn", disabled: Boolean(busy), onClick: onDemo },
+        h(Icon, { name: "sparkles", size: 13 }),
+        t("home.demo")
+      )
+    ) : null,
+    work.length ? h(
+      "section",
+      { className: "cait-home-card cait-home-work" },
       h(
-        "button",
-        {
-          type: "button",
-          className: "cait-home-card cait-home-action",
-          disabled: Boolean(busy),
-          onClick: onDemo
-        },
-        h(Icon, { name: "sparkles", size: 18 }),
-        h("strong", null, t("home.demo")),
-        h("span", { className: "cait-hint" }, t("home.demoHint"))
-      ),
-      h(
-        "button",
-        {
-          type: "button",
-          className: "cait-home-card cait-home-action",
-          disabled: Boolean(busy) || !openDocs.length && !projects.length,
-          onClick: onResume
-        },
-        h(Icon, { name: "play", size: 18 }),
-        h("strong", null, t("home.resume")),
+        "header",
+        { className: "cait-home-workhead" },
+        h("h2", { className: "cait-home-cardhead" }, t("home.workTitle")),
+        h("span", { className: "cait-home-count" }, work.length),
         h(
-          "span",
-          { className: "cait-hint" },
-          openDocs[0]?.name || projects[0]?.name || t("home.resumeEmpty")
+          "button",
+          { type: "button", className: "cait-linkbtn", onClick: onOpenProjects },
+          t("home.allProjects"),
+          h(Icon, { name: "arrowRight", size: 12 })
+        )
+      ),
+      h(
+        "ul",
+        { className: "cait-home-worklist" },
+        work.map(
+          (row) => h(
+            "li",
+            { key: row.key },
+            h(
+              "button",
+              {
+                type: "button",
+                className: "cait-home-workrow",
+                onClick: () => row.kind === "project" ? onOpenProject(row.id) : onOpenDoc(row.id)
+              },
+              h(
+                "span",
+                { className: `cait-home-kind is-${row.kind}` },
+                row.kind === "project" ? t("home.kindProject") : t("home.kindDoc")
+              ),
+              h("span", { className: "cait-home-workname" }, row.name),
+              h(
+                "span",
+                { className: "cait-home-bar" },
+                h("i", { style: { width: `${Math.max(0, Math.min(100, row.percent))}%` } })
+              ),
+              h("span", { className: "cait-home-workmeta" }, row.meta),
+              h("span", { className: "cait-home-worktime" }, relativeStamp(t, row.updatedAt))
+            )
+          )
         )
       )
-    ),
-    projects.length || openDocs.length ? h(
-      "div",
-      { className: "cait-home-cards cait-home-lists" },
-      projects.length ? h(
-        "div",
-        { className: "cait-home-card" },
-        h("h2", { className: "cait-home-cardhead" }, t("home.recentProjects")),
-        h(
-          "ul",
-          { className: "cait-home-list" },
-          projects.map(
-            (project) => h(
-              "li",
-              { key: project.id },
-              h(
-                "button",
-                {
-                  type: "button",
-                  className: "cait-home-item",
-                  onClick: () => onOpenProject(project.id)
-                },
-                h("span", { className: "cait-home-itemname" }, project.name),
-                h(
-                  "span",
-                  { className: "cait-home-itemmeta" },
-                  t("home.projectMeta", {
-                    docs: project.documents ?? 0,
-                    percent: project.percent ?? 0
-                  })
-                )
-              )
-            )
-          )
-        )
-      ) : null,
-      openDocs.length ? h(
-        "div",
-        { className: "cait-home-card" },
-        h("h2", { className: "cait-home-cardhead" }, t("home.openDocs")),
-        h(
-          "ul",
-          { className: "cait-home-list" },
-          openDocs.map(
-            (item) => h(
-              "li",
-              { key: item.id },
-              h(
-                "button",
-                {
-                  type: "button",
-                  className: "cait-home-item",
-                  onClick: () => onOpenDoc(item.id)
-                },
-                h("span", { className: "cait-home-itemname" }, item.name),
-                h(
-                  "span",
-                  { className: "cait-home-itemmeta" },
-                  t("home.docMeta", {
-                    segments: item.progress?.total ?? 0,
-                    percent: item.progress?.percent ?? 0
-                  })
-                )
-              )
-            )
-          )
-        )
-      ) : null
     ) : null
   );
 }
@@ -14124,10 +14263,10 @@ function Workbench({ i18n, translate }) {
       busy,
       data,
       onPasteCreate: createFromForm,
-      onImport: () => setModal({ type: "new", defaultMode: "file" }),
       onDemo: () => createFromForm({ demo: true }),
       onOpenProject: openProjectFromHome,
       onOpenDoc: requestOpenDocument,
+      onOpenProjects: () => requestView("projects"),
       onResume: resumeLast
     }) : null,
     view === "projects" ? h(ProjectsPage, {

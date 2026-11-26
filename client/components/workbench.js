@@ -443,10 +443,10 @@ function Workbench({ i18n, translate }) {
           busy,
           data,
           onPasteCreate: createFromForm,
-          onImport: () => setModal({ type: 'new', defaultMode: 'file' }),
           onDemo: () => createFromForm({ demo: true }),
           onOpenProject: openProjectFromHome,
           onOpenDoc: requestOpenDocument,
+          onOpenProjects: () => requestView('projects'),
           onResume: resumeLast,
         })
       : null,
