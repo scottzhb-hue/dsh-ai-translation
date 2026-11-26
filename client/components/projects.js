@@ -162,6 +162,8 @@ function readSections() {
 /** 小菜单：点外部或按 Esc 关闭；item.keep 为真时点击后不收起。 */
 function Menu({ t, label, icon, items, disabled, align = 'right', compact = false }) {
   const [open, setOpen] = useState(false)
+  // 弹层用 fixed 定位：表格容器是 overflow:auto，绝对定位会被裁掉。
+  const [pos, setPos] = useState(null)
   const box = useRef(null)
   useEffect(() => {
     if (!open) return undefined
@@ -192,7 +194,20 @@ function Menu({ t, label, icon, items, disabled, align = 'right', compact = fals
         'aria-expanded': open ? 'true' : 'false',
         'aria-label': compact ? label || t('projects.rowMore') : undefined,
         title: compact ? label || t('projects.rowMore') : undefined,
-        onClick: () => setOpen((value) => !value),
+        onClick: () => {
+          if (!open && box.current) {
+            const rect = box.current.getBoundingClientRect()
+            const width = 184
+            const left =
+              align === 'right'
+                ? Math.max(8, rect.right - width)
+                : Math.min(Math.max(8, rect.left), window.innerWidth - width - 8)
+            const below = rect.bottom + 4
+            const flip = below + 220 > window.innerHeight && rect.top > 240
+            setPos({ top: flip ? Math.max(8, rect.top - 224) : below, left })
+          }
+          setOpen((value) => !value)
+        },
       },
       compact
         ? h('span', { className: 'cait-menu-dots' }, '⋯')
@@ -205,7 +220,13 @@ function Menu({ t, label, icon, items, disabled, align = 'right', compact = fals
     open
       ? h(
           'div',
-          { className: 'cait-menu-pop', role: 'menu' },
+          {
+            className: 'cait-menu-pop',
+            role: 'menu',
+            style: pos
+              ? { position: 'fixed', top: `${pos.top}px`, left: `${pos.left}px`, right: 'auto' }
+              : undefined,
+          },
           items.map((item) =>
             h(
               'button',
@@ -295,6 +316,8 @@ function ProjectDetail({
   onOpenDoc,
   onNewDoc,
   onImportDoc,
+  onReorderDoc,
+  onMoveDocToProject,
   onDocReport,
   onProjectReport,
   onRefreshAnalysis,
@@ -554,13 +577,14 @@ function ProjectDetail({
           h('th', null, t('projects.colWords')),
           h('th', null, t('projects.colUpdated')),
           h('th', null, t('projects.colActions')),
+          h('th', null, t('projects.colReports')),
         ),
       ),
       h(
         'tbody',
         null,
         rows.length
-          ? rows.map((doc) =>
+          ? rows.map((doc, rowIndex) =>
               h(
                 'tr',
                 {
@@ -618,6 +642,50 @@ function ProjectDetail({
                       h(Icon, { name: 'arrowRight', size: 12 }),
                       h('span', null, t('projects.openDoc')),
                     ),
+                    h(
+                      'button',
+                      {
+                        type: 'button',
+                        className: 'cait-btn is-mini is-icon',
+                        title: t('projects.moveUp'),
+                        'aria-label': t('projects.moveUp'),
+                        disabled: Boolean(busy) || rowIndex === 0,
+                        onClick: () => onReorderDoc(doc.id, 'up'),
+                      },
+                      h(Icon, { name: 'arrowUp', size: 13 }),
+                    ),
+                    h(
+                      'button',
+                      {
+                        type: 'button',
+                        className: 'cait-btn is-mini is-icon',
+                        title: t('projects.moveDown'),
+                        'aria-label': t('projects.moveDown'),
+                        disabled: Boolean(busy) || rowIndex === rows.length - 1,
+                        onClick: () => onReorderDoc(doc.id, 'down'),
+                      },
+                      h(Icon, { name: 'arrowDown', size: 13 }),
+                    ),
+                    h(
+                      'button',
+                      {
+                        type: 'button',
+                        className: 'cait-btn is-mini',
+                        title: t('projects.moveToProject'),
+                        disabled: Boolean(busy),
+                        onClick: () => onMoveDocToProject(doc.id),
+                      },
+                      h(Icon, { name: 'folder', size: 12 }),
+                      h('span', null, t('projects.moveToProject')),
+                    ),
+                  ),
+                ),
+                h(
+                  'td',
+                  null,
+                  h(
+                    'div',
+                    { className: 'cait-proj-rowactions', onClick: (event) => event.stopPropagation() },
                     h(Menu, {
                       t,
                       compact: true,
@@ -635,16 +703,7 @@ function ProjectDetail({
                           icon: 'download',
                           onClick: () => onDocReport(doc.id, 'csv'),
                         },
-                        inbox
-                          ? null
-                          : {
-                              key: 'move',
-                              label: t('projects.moveOut'),
-                              icon: 'close',
-                              danger: true,
-                              onClick: () => onToggleDoc(doc.id, false),
-                            },
-                      ].filter(Boolean),
+                      ],
                     }),
                   ),
                 ),
@@ -653,7 +712,7 @@ function ProjectDetail({
           : h(
               'tr',
               null,
-              h('td', { colSpan: 7 }, h('span', { className: 'cait-hint' }, t('projects.noDocs'))),
+              h('td', { colSpan: 8 }, h('span', { className: 'cait-hint' }, t('projects.noDocs'))),
             ),
       ),
     ),
@@ -1219,6 +1278,8 @@ function ProjectsPage({
   onReport,
   onDocReport,
   onMoveDoc,
+  onReorderDoc,
+  onMoveDocToProject,
   onRefreshAnalysis,
 }) {
   const list = state?.list?.projects ?? projects ?? []
@@ -1304,6 +1365,8 @@ function ProjectsPage({
             onOpenDoc,
             onNewDoc,
             onImportDoc,
+            onReorderDoc,
+            onMoveDocToProject,
             onDocReport,
             onProjectReport: onReport,
             onRefreshAnalysis,
@@ -1432,4 +1495,44 @@ function ProjectUnsaved({ t, onChoose }) {
   )
 }
 
-export { ProjectsPage, ProjectPicker, ProjectUnsaved }
+/** 选择目标项目（排除当前项目，含未分类）。 */
+function MoveDocModal({ t, busy, docName, projects, currentProjectId, onPick, onClose }) {
+  const options = (projects ?? []).filter((project) => project.id !== currentProjectId)
+  return h(
+    Modal,
+    { title: t('projects.moveTitle'), onClose },
+    h('p', { className: 'cait-modal-hint' }, t('projects.moveHint', { name: docName || '' })),
+    options.length
+      ? h(
+          'div',
+          { className: 'cait-picklist' },
+          options.map((project) =>
+            h(
+              'button',
+              {
+                key: project.id,
+                type: 'button',
+                className: 'cait-pickitem',
+                disabled: Boolean(busy),
+                onClick: () => onPick(project.id),
+              },
+              h(Icon, { name: 'folder', size: 13 }),
+              h('span', { className: 'cait-pickname' }, project.name),
+              h(
+                'span',
+                { className: 'cait-pickmeta' },
+                t('projects.docCount', { count: project.documents ?? 0 }),
+              ),
+            ),
+          ),
+        )
+      : h('p', { className: 'cait-muted' }, t('projects.moveEmpty')),
+    h(
+      'div',
+      { className: 'cait-modal-actions' },
+      h('button', { type: 'button', className: 'cait-btn', onClick: onClose }, t('panel.cancel')),
+    ),
+  )
+}
+
+export { ProjectsPage, ProjectPicker, ProjectUnsaved, MoveDocModal }

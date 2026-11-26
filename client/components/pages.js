@@ -1,7 +1,7 @@
 import { h, useState, useEffect, useRef } from '../react.js'
 import { PAGE_SIZE_OPTIONS, readPageSize, writePageSize, pageBounds } from '../helpers.js'
 import { rpc, downloadFile } from '../rpc.js'
-import { Spinner, Icon } from './base.js'
+import { Spinner, Icon, Modal } from './base.js'
 
 function AlignPage({ t, data, notify, report, onConfirm }) {
   const [sourceFile, setSourceFile] = useState(null)
@@ -645,6 +645,8 @@ function LibraryPage({
       if (result?.state) onApplyState(result.state)
       notify(t('library.entrySaved'))
       setAdding(false)
+      setDraft(null)
+      setSelectedId('')
       await loadRows()
     } catch (error) {
       report(error)
@@ -854,6 +856,27 @@ function LibraryPage({
           },
     )
   }
+
+  // 详情面板统一的出口：清空草稿与选中，新增/编辑两种状态都能收起。
+  const closeDetail = () => {
+    setAdding(false)
+    setDraft(null)
+    setSelectedId('')
+  }
+
+  // Esc 也能关掉详情面板，避免“打开后没有出口”。
+  useEffect(() => {
+    if (!draft) return undefined
+    const onKeyDown = (event) => {
+      if (event.key !== 'Escape') return
+      event.stopPropagation()
+      setAdding(false)
+      setDraft(null)
+      setSelectedId('')
+    }
+    window.addEventListener('keydown', onKeyDown)
+    return () => window.removeEventListener('keydown', onKeyDown)
+  }, [draft])
 
   const bounds = pageBounds(rows?.page || 1, rows?.total || 0, rows?.pageSize || pageSize)
   const contextLabel = (entry) =>
@@ -1322,14 +1345,16 @@ function LibraryPage({
           ),
         ),
       ),
-      h(
-        'aside',
-        { className: 'cait-libdetail' },
-        h('div', { className: 'cait-libdetail-title' }, t('library.detail')),
-        draft
-          ? h(
+      draft
+        ? h(
+            Modal,
+            { title: t('library.detail'), onClose: closeDetail },
+            h(
               'div',
-              { className: 'cait-libform' },
+              { className: 'cait-libdetail-body' },
+              h(
+                'div',
+                { className: 'cait-libform' },
               h('label', null, t('library.colSource')),
               h('textarea', {
                 className: 'cait-libinput',
@@ -1386,7 +1411,7 @@ function LibraryPage({
                       !draft.source.trim() ||
                       !draft.target.trim(),
                   },
-                  adding ? t('library.add') : t('library.save'),
+                  adding ? t('library.add') : t('library.saveAndClose'),
                 ),
                 adding
                   ? h(
@@ -1394,13 +1419,21 @@ function LibraryPage({
                       {
                         type: 'button',
                         className: 'cait-btn',
-                        onClick: () => {
-                          setAdding(false)
-                          setDraft(null)
-                        },
+                        onClick: closeDetail,
                       },
                       t('panel.cancel'),
                     )
+                  : h(
+                      'button',
+                      {
+                        type: 'button',
+                        className: 'cait-btn',
+                        onClick: closeDetail,
+                      },
+                      t('library.closePanel'),
+                    ),
+                adding
+                  ? null
                   : h(
                       'button',
                       {
@@ -1414,9 +1447,10 @@ function LibraryPage({
                     ),
               ),
               dirty ? h('p', { className: 'cait-libnote' }, t('editor.unsaved')) : null,
-            )
-          : h('div', { className: 'cait-empty-note' }, t('library.detailEmpty')),
-      ),
+            ),
+            ),
+          )
+        : null,
     ),
     terms
       ? h(

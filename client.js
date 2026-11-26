@@ -477,12 +477,19 @@ var ZH_PROJECTS = {
   "projects.colSegments": "句段",
   "projects.colWords": "字数",
   "projects.colUpdated": "更新时间",
-  "projects.colActions": "报告 / 移动",
+  "projects.colActions": "操作",
+  "projects.colReports": "报告",
   "projects.newDoc": "新建文档",
   "projects.importDoc": "导入文件",
   "projects.noDocs": "这个项目还没有文档。导入文档时选它，或在下面把已有文档勾进来。",
   "projects.noMatch": "没有符合条件的文档。",
-  "projects.moveOut": "移到未分类",
+  "projects.moveUp": "上移",
+  "projects.moveDown": "下移",
+  "projects.moveToProject": "移动",
+  "projects.moveTitle": "移到其他项目",
+  "projects.moveHint": "选择要接收「{name}」的项目：",
+  "projects.moveEmpty": "没有其他项目可移动。",
+  "projects.docCount": "{count} 篇",
   "projects.openDoc": "打开",
   "projects.moveHint": "改归属",
   "projects.addDocs": "把已有文档加进这个项目",
@@ -618,10 +625,17 @@ var EN_PROJECTS = {
   "projects.colProgress": "Progress",
   "projects.colSegments": "Segments",
   "projects.colWords": "Words",
-  "projects.colActions": "Report / move",
+  "projects.colActions": "Actions",
+  "projects.colReports": "Reports",
   "projects.noDocs": "No documents yet. Pick this project when importing, or tick existing documents below.",
   "projects.noMatch": "No documents match.",
-  "projects.moveOut": "Move to Unfiled",
+  "projects.moveUp": "Move up",
+  "projects.moveDown": "Move down",
+  "projects.moveToProject": "Move",
+  "projects.moveTitle": "Move to another project",
+  "projects.moveHint": "Pick the project that should receive “{name}”:",
+  "projects.moveEmpty": "No other project to move into.",
+  "projects.docCount": "{count} docs",
   "projects.openDoc": "Open",
   "projects.moveHint": "Move to",
   "projects.addDocs": "Add existing documents to this project",
@@ -757,10 +771,17 @@ var JA_PROJECTS = {
   "projects.colProgress": "進捗",
   "projects.colSegments": "セグメント",
   "projects.colWords": "文字数",
-  "projects.colActions": "レポート / 移動",
+  "projects.colActions": "操作",
+  "projects.colReports": "レポート",
   "projects.noDocs": "文書がありません。取り込み時にこのプロジェクトを選ぶか、下の一覧から追加してください。",
   "projects.noMatch": "条件に合う文書がありません。",
-  "projects.moveOut": "未分類へ移動",
+  "projects.moveUp": "上へ",
+  "projects.moveDown": "下へ",
+  "projects.moveToProject": "移動",
+  "projects.moveTitle": "別のプロジェクトへ移動",
+  "projects.moveHint": "「{name}」を受け取るプロジェクトを選んでください：",
+  "projects.moveEmpty": "移動先のプロジェクトがありません。",
+  "projects.docCount": "{count} 件",
   "projects.openDoc": "開く",
   "projects.moveHint": "移動先",
   "projects.addDocs": "既存の文書をこのプロジェクトに追加",
@@ -956,6 +977,14 @@ var ZH = {
   "empty.features.glossaryDesc": "命中高亮与提示",
   "empty.features.mt": "AI 翻译",
   "empty.features.mtDesc": "可配置兼容接口",
+  "modal.import.title": "导入文件",
+  "modal.import.submit": "导入文件",
+  "modal.import.submitMany": "导入 {count} 个文件",
+  "modal.import.pickedMany": "已选 {count} 个文件",
+  "modal.import.limits": "可多选，最多 20 个文件、合计 800 万字符；单文件超过 28 MB 或超长时会跳过。导入按顺序进行。",
+  "modal.import.skipped": "{count} 个文件已跳过：{names}",
+  "modal.import.progress": "正在导入 {done}/{total}…",
+  "modal.new.joinProject": "加入当前项目：{name}",
   "modal.new.title": "新建文档",
   "modal.new.name": "文档名称",
   "modal.new.namePlaceholder": "例如：产品手册",
@@ -1114,6 +1143,9 @@ var ZH = {
   "toast.docsCleared": "已清理 {count} 个已关闭文档",
   "toast.docAlreadyOpen": "该文档已在工作台打开",
   "toast.imported": "导入完成",
+  "toast.importedMany": "已导入 {count} 个文件",
+  "toast.importedManyPartial": "已导入 {done} 个，{failed} 个失败",
+  "toast.importedManyFailed": "导入失败：{names}",
   "toast.draftSaved": "草稿已保存",
   "toast.draftRestored": "已恢复未确认的草稿",
   "toast.termSaved": "术语已保存",
@@ -1164,8 +1196,8 @@ var ZH = {
   "library.colCase": "区分大小写",
   "library.colUpdated": "更新时间",
   "library.detail": "条目详情",
-  "library.detailEmpty": "点一行查看和编辑。",
-  "library.save": "保存",
+  "library.closePanel": "关闭",
+  "library.saveAndClose": "保存并关闭",
   "library.deleteEntry": "删除条目",
   "library.entryCreated": "已新增条目",
   "library.entrySaved": "已保存",
@@ -1373,6 +1405,14 @@ var EN = {
   "empty.features.glossaryDesc": "Highlighted term hits",
   "empty.features.mt": "AI translation",
   "empty.features.mtDesc": "Configurable endpoint",
+  "modal.import.title": "Import file",
+  "modal.import.submit": "Import file",
+  "modal.import.submitMany": "Import {count} files",
+  "modal.import.pickedMany": "{count} files selected",
+  "modal.import.limits": "Select several files: up to 20 files and 8M characters per batch. Files over 28 MB or too long are skipped. Imports run one at a time.",
+  "modal.import.skipped": "{count} file(s) skipped: {names}",
+  "modal.import.progress": "Importing {done}/{total}…",
+  "modal.new.joinProject": "Add to current project: {name}",
   "modal.new.title": "New document",
   "modal.new.name": "Document name",
   "modal.new.namePlaceholder": "e.g. Product handbook",
@@ -1531,6 +1571,9 @@ var EN = {
   "toast.docsCleared": "Cleared {count} closed documents",
   "toast.docAlreadyOpen": "This document is already open in the workbench",
   "toast.imported": "Import complete",
+  "toast.importedMany": "Imported {count} files",
+  "toast.importedManyPartial": "Imported {done}, {failed} failed",
+  "toast.importedManyFailed": "Import failed: {names}",
   "toast.draftSaved": "Draft saved",
   "toast.draftRestored": "Restored your unsaved draft",
   "toast.termSaved": "Term saved",
@@ -1580,9 +1623,9 @@ var EN = {
   "library.colLang": "Language",
   "library.colCase": "Case-sensitive",
   "library.colUpdated": "Updated",
-  "library.detail": "Entry",
-  "library.detailEmpty": "Select a row to view and edit it.",
-  "library.save": "Save",
+  "library.detail": "Entry detail",
+  "library.closePanel": "Close",
+  "library.saveAndClose": "Save and close",
   "library.deleteEntry": "Delete entry",
   "library.entryCreated": "Entry added",
   "library.entrySaved": "Saved",
@@ -1790,6 +1833,14 @@ var JA = {
   "empty.features.glossaryDesc": "ヒットを強調表示",
   "empty.features.mt": "AI 翻訳",
   "empty.features.mtDesc": "互換エンドポイントを設定可能",
+  "modal.import.title": "ファイルを取り込む",
+  "modal.import.submit": "取り込む",
+  "modal.import.submitMany": "{count} 件を取り込む",
+  "modal.import.pickedMany": "{count} 件を選択済み",
+  "modal.import.limits": "複数選択可：1 回あたり最大 20 件・合計 800 万文字。28 MB を超えるファイルや長すぎるファイルはスキップされます。取り込みは順番に実行します。",
+  "modal.import.skipped": "{count} 件をスキップしました：{names}",
+  "modal.import.progress": "取り込み中 {done}/{total}…",
+  "modal.new.joinProject": "現在のプロジェクトに追加：{name}",
   "modal.new.title": "新規文書",
   "modal.new.name": "文書名",
   "modal.new.namePlaceholder": "例：製品マニュアル",
@@ -1948,6 +1999,9 @@ var JA = {
   "toast.docsCleared": "閉じた {count} 件の文書を整理しました",
   "toast.docAlreadyOpen": "この文書はすでにワークベンチで開いています",
   "toast.imported": "インポートが完了しました",
+  "toast.importedMany": "{count} 件を取り込みました",
+  "toast.importedManyPartial": "{done} 件を取り込み、{failed} 件失敗しました",
+  "toast.importedManyFailed": "取り込みに失敗しました：{names}",
   "toast.draftSaved": "下書きを保存しました",
   "toast.draftRestored": "未確定の下書きを復元しました",
   "toast.termSaved": "用語を保存しました",
@@ -1997,9 +2051,9 @@ var JA = {
   "library.colLang": "言語",
   "library.colCase": "大文字小文字を区別",
   "library.colUpdated": "更新日時",
-  "library.detail": "エントリ詳細",
-  "library.detailEmpty": "行を選択すると表示・編集できます。",
-  "library.save": "保存",
+  "library.detail": "項目の詳細",
+  "library.closePanel": "閉じる",
+  "library.saveAndClose": "保存して閉じる",
   "library.deleteEntry": "エントリを削除",
   "library.entryCreated": "エントリを追加しました",
   "library.entrySaved": "保存しました",
@@ -3412,6 +3466,9 @@ var CSS = `
 .cait-modal-actions{display:flex;align-items:center;justify-content:flex-end;gap:7px;margin-top:14px}
 .cait-confirm-text{margin:0;font-size:12px;line-height:1.65;color:var(--dsw-alias-label-secondary)}
 .cait-modal-hint{margin:0;font-size:11px;line-height:1.6;color:var(--dsw-alias-label-secondary)}
+.cait-modal-project{display:inline-flex;align-items:center;gap:6px;margin:0 0 10px;padding:4px 8px;border:1px solid var(--dsw-alias-border-l1);border-radius:6px;background:var(--dsw-alias-bg-layer-1);color:var(--dsw-alias-label-primary)}
+.cait-dropzone{display:block}
+.cait-modal-hint.is-warn{color:var(--dsw-alias-label-warning, #c58a2a)}
 .cait-export-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:12px}
 .cait-export-item{display:flex;align-items:flex-start;gap:8px;padding:9px;border:1px solid var(--dsw-alias-border-l1);border-radius:8px;background:var(--dsw-alias-bg-layer-1);text-align:left;color:var(--dsw-alias-label-primary)}
 .cait-export-item:hover{border-color:color-mix(in srgb,var(--dsw-alias-brand-primary) 45%,var(--dsw-alias-border-l1));background:color-mix(in srgb,var(--dsw-alias-brand-primary) 5%,var(--dsw-alias-bg-layer-1))}
@@ -3456,7 +3513,7 @@ var CSS = `
 .cait-libtabs-item.active{background:var(--dsw-alias-bg-base);color:var(--dsw-alias-label-primary);box-shadow:0 0 0 1px var(--dsw-alias-border-l1) inset}
 .cait-libtabs-count{font-size:10px;color:var(--dsw-alias-label-secondary);font-variant-numeric:tabular-nums}
 .cait-libhint{margin-left:auto;font-size:10.5px;color:var(--dsw-alias-label-secondary)}
-.cait-libpage-body{flex:1;min-height:0;display:grid;grid-template-columns:224px minmax(0,1fr) 300px;overflow:hidden}
+.cait-libpage-body{flex:1;min-height:0;display:grid;grid-template-columns:224px minmax(0,1fr);overflow:hidden}
 .cait-liblist{display:flex;flex-direction:column;min-height:0;overflow-y:auto;padding:8px;gap:2px;border-right:1px solid var(--dsw-alias-border-l1);background:color-mix(in srgb,var(--dsw-alias-bg-layer-1) 45%,var(--dsw-alias-bg-base))}
 .cait-liblist-head{padding:3px 5px 7px;font-size:10px;font-weight:650;letter-spacing:.06em;text-transform:uppercase;color:var(--dsw-alias-label-secondary)}
 .cait-librow{display:flex;align-items:center;gap:6px;padding:5px 5px;border-radius:6px}
@@ -3492,15 +3549,17 @@ var CSS = `
 .cait-libtable th:nth-child(1),.cait-libtable td:nth-child(1){width:30%}
 .cait-libtable th:nth-child(2),.cait-libtable td:nth-child(2){width:28%}
 .cait-libpage-bar{border-top:1px solid var(--dsw-alias-border-l1);padding:7px 12px}
-.cait-libdetail{display:flex;flex-direction:column;min-height:0;overflow-y:auto;padding:10px 12px 14px;border-left:1px solid var(--dsw-alias-border-l1);background:color-mix(in srgb,var(--dsw-alias-bg-layer-1) 45%,var(--dsw-alias-bg-base))}
-.cait-libdetail-title{padding:2px 0 8px;font-size:10px;font-weight:650;letter-spacing:.06em;text-transform:uppercase;color:var(--dsw-alias-label-secondary)}
+.cait-libdetail-body{display:block;max-height:min(62vh,520px);overflow-y:auto}
+.cait-libdetail-title{display:flex;align-items:center;justify-content:space-between;gap:8px;position:sticky;top:0;z-index:2;padding:2px 0 8px;font-size:10px;font-weight:650;letter-spacing:.06em;text-transform:uppercase;color:var(--dsw-alias-label-secondary);background:color-mix(in srgb,var(--dsw-alias-bg-layer-1) 45%,var(--dsw-alias-bg-base))}
+.cait-libdetail-close{display:inline-flex;align-items:center;justify-content:center;width:20px;height:20px;padding:0;border:1px solid transparent;border-radius:5px;background:transparent;color:var(--dsw-alias-label-secondary);cursor:pointer}
+.cait-libdetail-close:hover{background:var(--dsw-alias-bg-layer-2);color:var(--dsw-alias-label-primary)}
 .cait-libform{display:flex;flex-direction:column;gap:4px}
 .cait-libform label{font-size:10.5px;color:var(--dsw-alias-label-secondary);margin-top:5px}
 .cait-libinput{width:100%;min-height:28px;padding:6px 8px;border:1px solid var(--dsw-alias-border-l1);border-radius:6px;outline:0;background:var(--dsw-alias-bg-base);font-size:11.5px;line-height:1.5;resize:vertical}
 .cait-libinput:focus{border-color:color-mix(in srgb,var(--dsw-alias-brand-primary) 55%,var(--dsw-alias-border-l1))}
 .cait-libcheck{display:flex;align-items:center;gap:6px;margin-top:8px;font-size:11px;color:var(--dsw-alias-label-primary)}
 .cait-libnote{margin:6px 0 0;font-size:10px;line-height:1.5;color:var(--dsw-alias-label-secondary)}
-.cait-libform-actions{display:flex;align-items:center;gap:6px;margin-top:11px}
+.cait-libform-actions{display:flex;align-items:center;gap:6px;position:sticky;bottom:0;margin:11px -12px -14px;padding:9px 12px 12px;background:color-mix(in srgb,var(--dsw-alias-bg-layer-1) 45%,var(--dsw-alias-bg-base));border-top:1px solid var(--dsw-alias-border-l1)}
 .cait-libform-actions .cait-btn{flex:1}
 .cait-batchbtn-plain{border-style:dashed}
 .cait-batchbtn-danger{color:var(--dsw-alias-state-error-primary);border-color:color-mix(in srgb,var(--dsw-alias-state-error-primary) 35%,var(--dsw-alias-border-l1))}
@@ -3586,7 +3645,8 @@ var CSS = `
 .cait-panel-body{display:flex;flex-direction:column;gap:8px}
 .cait-panel-sub{margin:6px 0 0;font-size:12px;font-weight:600;color:var(--dsw-alias-label-secondary)}
 .cait-menu{position:relative;display:inline-flex}
-.cait-menu-pop{position:absolute;right:0;top:calc(100% + 4px);z-index:80;min-width:170px;padding:4px;border:1px solid var(--dsw-alias-border-l1);border-radius:8px;background:var(--dsw-alias-bg-layer-2);box-shadow:0 10px 26px rgba(0,0,0,.3)}
+.cait-btn.is-mini.is-icon{width:24px;padding:0;justify-content:center}
+.cait-menu-pop{width:184px;position:absolute;right:0;top:calc(100% + 4px);z-index:80;min-width:170px;padding:4px;border:1px solid var(--dsw-alias-border-l1);border-radius:8px;background:var(--dsw-alias-bg-layer-2);box-shadow:0 10px 26px rgba(0,0,0,.3)}
 .cait-menu-item{display:flex;align-items:center;gap:7px;width:100%;padding:6px 8px;border:0;border-radius:6px;background:transparent;color:var(--dsw-alias-label-primary);font-size:12px;text-align:left;cursor:pointer}
 .cait-menu-item:hover{background:var(--dsw-alias-bg-layer-3)}
 .cait-menu-item.is-danger{color:var(--dsw-alias-state-error-primary)}
@@ -3688,7 +3748,7 @@ button.cait-brand.active .cait-brand-text strong{color:var(--dsw-alias-state-inf
 .cait-crash-title{margin:0;font-size:14px;font-weight:700;color:var(--dsw-alias-state-error-primary)}
 .cait-crash-hint{margin:0;color:var(--dsw-alias-label-secondary)}
 .cait-crash-detail{margin:0;padding:10px;max-height:46vh;overflow:auto;font-family:var(--cait-mono,ui-monospace,monospace);font-size:10.5px;line-height:1.5;white-space:pre-wrap;border:1px solid var(--dsw-alias-border-secondary);border-radius:8px;background:var(--dsw-alias-bg-secondary)}
-@media(max-width:1180px){.cait-main{grid-template-columns:minmax(0,1fr) 308px}.cait-body{grid-template-columns:218px minmax(0,1fr)}.cait-editor-col{padding:18px 20px 34px}.cait-actions .cait-btn-label{display:none}.cait-actions .cait-btn{padding:0 8px}.cait-libpage-body{grid-template-columns:196px minmax(0,1fr) 264px}}
+@media(max-width:1180px){.cait-main{grid-template-columns:minmax(0,1fr) 308px}.cait-body{grid-template-columns:218px minmax(0,1fr)}.cait-editor-col{padding:18px 20px 34px}.cait-actions .cait-btn-label{display:none}.cait-actions .cait-btn{padding:0 8px}.cait-libpage-body{grid-template-columns:196px minmax(0,1fr)}}
 @media(max-width:940px){.cait-topbar{flex-wrap:wrap}.cait-body{grid-template-columns:190px minmax(0,1fr)}.cait-main{grid-template-columns:minmax(0,1fr)}.cait-cat{border-left:0;border-top:1px solid var(--dsw-alias-border-l1);max-height:43%;min-height:210px}.cait-features{grid-template-columns:1fr}.cait-docbar{display:flex;order:3;flex:1 1 100%;padding:7px 0 0;border-left:0;border-top:1px solid var(--dsw-alias-border-l1)}}
 @media(max-width:700px){.cait-body{grid-template-columns:minmax(0,1fr)}.cait-rail{display:none}.cait-editor-col{padding:14px}.cait-topbar{padding:9px 10px}.cait-export-grid{grid-template-columns:1fr}.cait-home-workrow{grid-template-columns:52px minmax(0,1fr) 66px}.cait-home-bar,.cait-home-workmeta{display:none}}
 `;
@@ -3825,6 +3885,8 @@ function Icon({ name, size = 16 }) {
     file: ["M4 1.5h5L13 5v9.5H4z", "M9 1.5V5h4"],
     refresh: ["M13 8a5 5 0 1 1-1.5-3.6", "M13 2v3h-3"],
     arrowRight: ["M2 8h11", "M9 4l4 4-4 4"],
+    arrowUp: ["M8 13V3", "M4 7l4-4 4 4"],
+    arrowDown: ["M8 3v10", "M4 9l4 4 4-4"],
     play: ["M4 2l9 6-9 6z"],
     globe: [
       "M8 14A6 6 0 1 0 8 2a6 6 0 0 0 0 12Z",
@@ -3982,11 +4044,23 @@ function Toast({ toast }) {
 }
 
 // client/components/forms.js
-function DocumentSourceForm({ t, settings, busy, submitLabel, onSubmit, defaultMode = "text" }) {
-  const [mode, setMode] = useState(defaultMode);
+var MAX_IMPORT_FILES = 20;
+var MAX_FILE_BYTES = 28 * 1024 * 1024;
+function DocumentSourceForm({
+  t,
+  settings,
+  busy,
+  submitLabel,
+  onSubmit,
+  defaultMode = "text",
+  fixedMode = "",
+  progress = null
+}) {
+  const [mode, setMode] = useState(fixedMode || defaultMode);
   const [name, setName] = useState("");
   const [text, setText] = useState("");
-  const [file, setFile] = useState(null);
+  const [files, setFiles] = useState([]);
+  const [skipped, setSkipped] = useState([]);
   const [sourceLang, setSourceLang] = useState(settings.sourceLang || "en");
   const [targetLang, setTargetLang] = useState(settings.targetLang || "zh-CN");
   const [csvSourceColumn, setCsvSourceColumn] = useState("");
@@ -3996,11 +4070,27 @@ function DocumentSourceForm({ t, settings, busy, submitLabel, onSubmit, defaultM
     if (settings.sourceLang) setSourceLang(settings.sourceLang);
     if (settings.targetLang) setTargetLang(settings.targetLang);
   }, [settings.sourceLang, settings.targetLang]);
-  const pickFile = (nextFile) => {
-    if (!nextFile) return;
-    setFile(nextFile);
+  useEffect(() => {
+    if (fixedMode) setMode(fixedMode);
+  }, [fixedMode]);
+  const pickFiles = (list) => {
+    const incoming = Array.from(list || []).filter(Boolean);
+    if (!incoming.length) return;
+    const ok = [];
+    const rejected = [];
+    for (const entry2 of incoming) {
+      if (entry2.size > MAX_FILE_BYTES) rejected.push(entry2.name);
+      else if (ok.length >= MAX_IMPORT_FILES) rejected.push(entry2.name);
+      else ok.push(entry2);
+    }
+    if (!ok.length) {
+      setSkipped(rejected);
+      return;
+    }
+    setFiles(ok);
+    setSkipped(rejected);
     setMode("file");
-    if (!name.trim()) setName(stripExtension(nextFile.name));
+    if (!name.trim()) setName(ok.length === 1 ? stripExtension(ok[0].name) : "");
   };
   const submit = (event) => {
     event.preventDefault();
@@ -4008,19 +4098,21 @@ function DocumentSourceForm({ t, settings, busy, submitLabel, onSubmit, defaultM
       mode,
       name,
       text,
-      file,
+      files,
+      file: files[0] || null,
       sourceLang,
       targetLang,
       csvSourceColumn,
       csvTargetColumn
     });
   };
-  const canSubmit = mode === "file" ? Boolean(file) : Boolean(text.trim());
-  const isCsv = mode === "file" && /\.csv$/i.test(file?.name || "");
+  const canSubmit = mode === "file" ? files.length > 0 : Boolean(text.trim());
+  const isCsv = mode === "file" && files.length === 1 && /\.csv$/i.test(files[0]?.name || "");
+  const actionLabel = mode === "file" ? files.length > 1 ? t("modal.import.submitMany", { count: files.length }) : t("modal.import.submit") : submitLabel;
   return h(
     "form",
     { className: "cait-docform", onSubmit: submit },
-    h(
+    fixedMode ? null : h(
       "div",
       { className: "cait-segmented" },
       h(
@@ -4123,25 +4215,47 @@ function DocumentSourceForm({ t, settings, busy, submitLabel, onSubmit, defaultM
       placeholder: t("empty.textPlaceholder"),
       rows: 6
     }) : h(
-      "label",
-      {
-        className: "cait-drop",
-        onDragOver: (event) => event.preventDefault(),
-        onDrop: (event) => {
-          event.preventDefault();
-          pickFile(event.dataTransfer?.files?.[0]);
-        }
-      },
-      h("input", {
-        ref: inputRef,
-        type: "file",
-        accept: ".txt,.md,.markdown,.tmx,.docx,.epub,.csv,.srt,.vtt,.po,.pot,.xliff,.xlf,.sdlxliff,.html,.htm,.json,.rtf,.xlsx,.pptx,.doc,.xls,.ppt,.strings,.stringsdict,.resx,.arb,.yaml,.yml,.properties",
-        hidden: true,
-        onChange: (event) => pickFile(event.target.files?.[0])
-      }),
-      h(Icon, { name: file ? "file" : "upload", size: 22 }),
-      h("strong", null, file ? file.name : t("empty.drop")),
-      h("span", null, file ? formatBytes(file.size) : t("modal.new.dropHint"))
+      "div",
+      { className: "cait-dropzone" },
+      h(
+        "label",
+        {
+          className: "cait-drop",
+          onDragOver: (event) => event.preventDefault(),
+          onDrop: (event) => {
+            event.preventDefault();
+            pickFiles(event.dataTransfer?.files);
+          }
+        },
+        h("input", {
+          ref: inputRef,
+          type: "file",
+          multiple: true,
+          accept: ".txt,.md,.markdown,.tmx,.docx,.epub,.csv,.srt,.vtt,.po,.pot,.xliff,.xlf,.sdlxliff,.html,.htm,.json,.rtf,.xlsx,.pptx,.doc,.xls,.ppt,.strings,.stringsdict,.resx,.arb,.yaml,.yml,.properties",
+          hidden: true,
+          onChange: (event) => pickFiles(event.target.files)
+        }),
+        h(Icon, { name: files.length ? "file" : "upload", size: 22 }),
+        h(
+          "strong",
+          null,
+          files.length > 1 ? t("modal.import.pickedMany", { count: files.length }) : files.length === 1 ? files[0].name : t("empty.drop")
+        ),
+        h(
+          "span",
+          null,
+          files.length > 1 ? files.map((entry2) => entry2.name).slice(0, 3).join(" · ") : files.length === 1 ? formatBytes(files[0].size) : t("modal.new.dropHint")
+        )
+      ),
+      h("p", { className: "cait-modal-hint" }, t("modal.import.limits")),
+      skipped.length ? h(
+        "p",
+        { className: "cait-modal-hint is-warn" },
+        t("modal.import.skipped", {
+          count: skipped.length,
+          names: skipped.slice(0, 3).join(" · ")
+        })
+      ) : null
     ),
     h(
       "div",
@@ -4155,24 +4269,44 @@ function DocumentSourceForm({ t, settings, busy, submitLabel, onSubmit, defaultM
           disabled: Boolean(busy) || !canSubmit
         },
         busy === "create" ? h(Spinner) : h(Icon, { name: "plus", size: 13 }),
-        busy === "create" ? t("modal.new.importing") : submitLabel
+        busy === "create" ? progress ? t("modal.import.progress", { done: progress.done, total: progress.total }) : t("modal.new.importing") : actionLabel
       )
     )
   );
 }
-function NewDocModal({ t, settings, busy, defaultMode, onClose, onCreate }) {
+function DocModalShell({
+  t,
+  settings,
+  busy,
+  title,
+  projectName,
+  submitLabel,
+  fixedMode,
+  onClose,
+  onCreate,
+  hint,
+  progress
+}) {
   return h(
     Modal,
-    { title: t("modal.new.title"), onClose },
+    { title, onClose },
+    projectName ? h(
+      "p",
+      { className: "cait-modal-hint cait-modal-project" },
+      h(Icon, { name: "folder", size: 12 }),
+      h("span", null, t("modal.new.joinProject", { name: projectName }))
+    ) : null,
+    hint ? h("p", { className: "cait-modal-hint" }, hint) : null,
     h(DocumentSourceForm, {
       t,
       settings,
       busy,
-      submitLabel: t("modal.new.create"),
+      submitLabel,
       onSubmit: onCreate,
-      defaultMode
+      fixedMode,
+      progress
     }),
-    h(
+    fixedMode === "text" ? h(
       "div",
       { className: "cait-demo-row" },
       h("span", null, t("modal.new.sample")),
@@ -4185,8 +4319,35 @@ function NewDocModal({ t, settings, busy, defaultMode, onClose, onCreate }) {
         },
         t("modal.new.demo")
       )
-    )
+    ) : null
   );
+}
+function NewDocModal({ t, settings, busy, projectName = "", onClose, onCreate }) {
+  return h(DocModalShell, {
+    t,
+    settings,
+    busy,
+    title: t("modal.new.title"),
+    projectName,
+    submitLabel: t("modal.new.create"),
+    fixedMode: "text",
+    onClose,
+    onCreate
+  });
+}
+function ImportDocModal({ t, settings, busy, projectName = "", progress = null, onClose, onCreate }) {
+  return h(DocModalShell, {
+    t,
+    settings,
+    busy,
+    title: t("modal.import.title"),
+    projectName,
+    submitLabel: t("modal.import.submit"),
+    fixedMode: "file",
+    onClose,
+    onCreate,
+    progress
+  });
 }
 
 // client/components/usage.js
@@ -7419,6 +7580,8 @@ function LibraryPage({
       if (result?.state) onApplyState(result.state);
       notify(t("library.entrySaved"));
       setAdding(false);
+      setDraft(null);
+      setSelectedId("");
       await loadRows();
     } catch (error) {
       report(error);
@@ -7606,6 +7769,23 @@ function LibraryPage({
       }
     );
   };
+  const closeDetail = () => {
+    setAdding(false);
+    setDraft(null);
+    setSelectedId("");
+  };
+  useEffect(() => {
+    if (!draft) return void 0;
+    const onKeyDown = (event) => {
+      if (event.key !== "Escape") return;
+      event.stopPropagation();
+      setAdding(false);
+      setDraft(null);
+      setSelectedId("");
+    };
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [draft]);
   const bounds = pageBounds(rows?.page || 1, rows?.total || 0, rows?.pageSize || pageSize);
   const contextLabel = (entry2) => entry2.context ? `${entry2.context.prev || "—"} · ${entry2.context.next || "—"}` : "—";
   const columns = kind === "tm" ? [
@@ -8048,88 +8228,97 @@ function LibraryPage({
           )
         )
       ),
-      h(
-        "aside",
-        { className: "cait-libdetail" },
-        h("div", { className: "cait-libdetail-title" }, t("library.detail")),
-        draft ? h(
+      draft ? h(
+        Modal,
+        { title: t("library.detail"), onClose: closeDetail },
+        h(
           "div",
-          { className: "cait-libform" },
-          h("label", null, t("library.colSource")),
-          h("textarea", {
-            className: "cait-libinput",
-            value: draft.source,
-            onChange: (event) => setDraft({ ...draft, source: event.target.value })
-          }),
-          h("label", null, t("library.colTarget")),
-          h("textarea", {
-            className: "cait-libinput",
-            value: draft.target,
-            onChange: (event) => setDraft({ ...draft, target: event.target.value })
-          }),
-          h("label", null, t("library.colNote")),
-          h("input", {
-            className: "cait-libinput",
-            value: draft.note || "",
-            onChange: (event) => setDraft({ ...draft, note: event.target.value })
-          }),
-          h("label", null, t("library.colLang")),
-          h("input", {
-            className: "cait-libinput",
-            value: draft.sourceLang || "",
-            disabled: adding,
-            onChange: (event) => setDraft({ ...draft, sourceLang: event.target.value })
-          }),
-          kind === "glossary" ? h(
-            "label",
-            { className: "cait-libcheck" },
-            h("input", {
-              type: "checkbox",
-              checked: Boolean(draft.caseSensitive),
-              onChange: (event) => setDraft({ ...draft, caseSensitive: event.target.checked })
-            }),
-            h("span", null, t("library.colCase"))
-          ) : null,
-          kind === "glossary" ? h("p", { className: "cait-libnote" }, t("library.caseSensitiveHint")) : null,
+          { className: "cait-libdetail-body" },
           h(
             "div",
-            { className: "cait-libform-actions" },
+            { className: "cait-libform" },
+            h("label", null, t("library.colSource")),
+            h("textarea", {
+              className: "cait-libinput",
+              value: draft.source,
+              onChange: (event) => setDraft({ ...draft, source: event.target.value })
+            }),
+            h("label", null, t("library.colTarget")),
+            h("textarea", {
+              className: "cait-libinput",
+              value: draft.target,
+              onChange: (event) => setDraft({ ...draft, target: event.target.value })
+            }),
+            h("label", null, t("library.colNote")),
+            h("input", {
+              className: "cait-libinput",
+              value: draft.note || "",
+              onChange: (event) => setDraft({ ...draft, note: event.target.value })
+            }),
+            h("label", null, t("library.colLang")),
+            h("input", {
+              className: "cait-libinput",
+              value: draft.sourceLang || "",
+              disabled: adding,
+              onChange: (event) => setDraft({ ...draft, sourceLang: event.target.value })
+            }),
+            kind === "glossary" ? h(
+              "label",
+              { className: "cait-libcheck" },
+              h("input", {
+                type: "checkbox",
+                checked: Boolean(draft.caseSensitive),
+                onChange: (event) => setDraft({ ...draft, caseSensitive: event.target.checked })
+              }),
+              h("span", null, t("library.colCase"))
+            ) : null,
+            kind === "glossary" ? h("p", { className: "cait-libnote" }, t("library.caseSensitiveHint")) : null,
             h(
-              "button",
-              {
-                type: "button",
-                className: "cait-btn cait-btn-primary",
-                onClick: adding ? addEntry : saveEntry,
-                disabled: Boolean(busy) || working !== "" || !draft.source.trim() || !draft.target.trim()
-              },
-              adding ? t("library.add") : t("library.save")
+              "div",
+              { className: "cait-libform-actions" },
+              h(
+                "button",
+                {
+                  type: "button",
+                  className: "cait-btn cait-btn-primary",
+                  onClick: adding ? addEntry : saveEntry,
+                  disabled: Boolean(busy) || working !== "" || !draft.source.trim() || !draft.target.trim()
+                },
+                adding ? t("library.add") : t("library.saveAndClose")
+              ),
+              adding ? h(
+                "button",
+                {
+                  type: "button",
+                  className: "cait-btn",
+                  onClick: closeDetail
+                },
+                t("panel.cancel")
+              ) : h(
+                "button",
+                {
+                  type: "button",
+                  className: "cait-btn",
+                  onClick: closeDetail
+                },
+                t("library.closePanel")
+              ),
+              adding ? null : h(
+                "button",
+                {
+                  type: "button",
+                  className: "cait-btn",
+                  onClick: deleteEntry,
+                  disabled: Boolean(busy) || working !== ""
+                },
+                h(Icon, { name: "trash", size: 13 }),
+                t("library.deleteEntry")
+              )
             ),
-            adding ? h(
-              "button",
-              {
-                type: "button",
-                className: "cait-btn",
-                onClick: () => {
-                  setAdding(false);
-                  setDraft(null);
-                }
-              },
-              t("panel.cancel")
-            ) : h(
-              "button",
-              {
-                type: "button",
-                className: "cait-btn",
-                onClick: deleteEntry,
-                disabled: Boolean(busy) || working !== ""
-              },
-              h(Icon, { name: "trash", size: 13 }),
-              t("library.deleteEntry")
-            )
-          ),
-          dirty ? h("p", { className: "cait-libnote" }, t("editor.unsaved")) : null
-        ) : h("div", { className: "cait-empty-note" }, t("library.detailEmpty"))
-      )
+            dirty ? h("p", { className: "cait-libnote" }, t("editor.unsaved")) : null
+          )
+        )
+      ) : null
     ),
     terms ? h(
       "div",
@@ -10247,6 +10436,7 @@ function readSections() {
 }
 function Menu({ t, label, icon, items, disabled, align = "right", compact = false }) {
   const [open, setOpen] = useState(false);
+  const [pos, setPos] = useState(null);
   const box = useRef(null);
   useEffect(() => {
     if (!open) return void 0;
@@ -10277,7 +10467,17 @@ function Menu({ t, label, icon, items, disabled, align = "right", compact = fals
         "aria-expanded": open ? "true" : "false",
         "aria-label": compact ? label || t("projects.rowMore") : void 0,
         title: compact ? label || t("projects.rowMore") : void 0,
-        onClick: () => setOpen((value) => !value)
+        onClick: () => {
+          if (!open && box.current) {
+            const rect = box.current.getBoundingClientRect();
+            const width = 184;
+            const left = align === "right" ? Math.max(8, rect.right - width) : Math.min(Math.max(8, rect.left), window.innerWidth - width - 8);
+            const below = rect.bottom + 4;
+            const flip = below + 220 > window.innerHeight && rect.top > 240;
+            setPos({ top: flip ? Math.max(8, rect.top - 224) : below, left });
+          }
+          setOpen((value) => !value);
+        }
       },
       compact ? h("span", { className: "cait-menu-dots" }, "⋯") : [
         icon ? h(Icon, { name: icon, size: 13, key: "icon" }) : null,
@@ -10287,7 +10487,11 @@ function Menu({ t, label, icon, items, disabled, align = "right", compact = fals
     ),
     open ? h(
       "div",
-      { className: "cait-menu-pop", role: "menu" },
+      {
+        className: "cait-menu-pop",
+        role: "menu",
+        style: pos ? { position: "fixed", top: `${pos.top}px`, left: `${pos.left}px`, right: "auto" } : void 0
+      },
       items.map(
         (item) => h(
           "button",
@@ -10367,6 +10571,8 @@ function ProjectDetail({
   onOpenDoc,
   onNewDoc,
   onImportDoc,
+  onReorderDoc,
+  onMoveDocToProject,
   onDocReport,
   onProjectReport,
   onRefreshAnalysis
@@ -10595,14 +10801,15 @@ function ProjectDetail({
           h("th", null, t("projects.colSegments")),
           h("th", null, t("projects.colWords")),
           h("th", null, t("projects.colUpdated")),
-          h("th", null, t("projects.colActions"))
+          h("th", null, t("projects.colActions")),
+          h("th", null, t("projects.colReports"))
         )
       ),
       h(
         "tbody",
         null,
         rows.length ? rows.map(
-          (doc) => h(
+          (doc, rowIndex) => h(
             "tr",
             {
               key: doc.id,
@@ -10661,6 +10868,50 @@ function ProjectDetail({
                   h(Icon, { name: "arrowRight", size: 12 }),
                   h("span", null, t("projects.openDoc"))
                 ),
+                h(
+                  "button",
+                  {
+                    type: "button",
+                    className: "cait-btn is-mini is-icon",
+                    title: t("projects.moveUp"),
+                    "aria-label": t("projects.moveUp"),
+                    disabled: Boolean(busy) || rowIndex === 0,
+                    onClick: () => onReorderDoc(doc.id, "up")
+                  },
+                  h(Icon, { name: "arrowUp", size: 13 })
+                ),
+                h(
+                  "button",
+                  {
+                    type: "button",
+                    className: "cait-btn is-mini is-icon",
+                    title: t("projects.moveDown"),
+                    "aria-label": t("projects.moveDown"),
+                    disabled: Boolean(busy) || rowIndex === rows.length - 1,
+                    onClick: () => onReorderDoc(doc.id, "down")
+                  },
+                  h(Icon, { name: "arrowDown", size: 13 })
+                ),
+                h(
+                  "button",
+                  {
+                    type: "button",
+                    className: "cait-btn is-mini",
+                    title: t("projects.moveToProject"),
+                    disabled: Boolean(busy),
+                    onClick: () => onMoveDocToProject(doc.id)
+                  },
+                  h(Icon, { name: "folder", size: 12 }),
+                  h("span", null, t("projects.moveToProject"))
+                )
+              )
+            ),
+            h(
+              "td",
+              null,
+              h(
+                "div",
+                { className: "cait-proj-rowactions", onClick: (event) => event.stopPropagation() },
                 h(Menu, {
                   t,
                   compact: true,
@@ -10677,15 +10928,8 @@ function ProjectDetail({
                       label: t("projects.reportCsv"),
                       icon: "download",
                       onClick: () => onDocReport(doc.id, "csv")
-                    },
-                    inbox ? null : {
-                      key: "move",
-                      label: t("projects.moveOut"),
-                      icon: "close",
-                      danger: true,
-                      onClick: () => onToggleDoc(doc.id, false)
                     }
-                  ].filter(Boolean)
+                  ]
                 })
               )
             )
@@ -10693,7 +10937,7 @@ function ProjectDetail({
         ) : h(
           "tr",
           null,
-          h("td", { colSpan: 7 }, h("span", { className: "cait-hint" }, t("projects.noDocs")))
+          h("td", { colSpan: 8 }, h("span", { className: "cait-hint" }, t("projects.noDocs")))
         )
       )
     )
@@ -11239,6 +11483,8 @@ function ProjectsPage({
   onReport,
   onDocReport,
   onMoveDoc,
+  onReorderDoc,
+  onMoveDocToProject,
   onRefreshAnalysis
 }) {
   const list = state?.list?.projects ?? projects ?? [];
@@ -11322,6 +11568,8 @@ function ProjectsPage({
         onOpenDoc,
         onNewDoc,
         onImportDoc,
+        onReorderDoc,
+        onMoveDocToProject,
         onDocReport,
         onProjectReport: onReport,
         onRefreshAnalysis
@@ -11440,6 +11688,42 @@ function ProjectUnsaved({ t, onChoose }) {
         h(Icon, { name: "save", size: 13 }),
         h("span", null, t("projects.unsavedSave"))
       )
+    )
+  );
+}
+function MoveDocModal({ t, busy, docName, projects, currentProjectId, onPick, onClose }) {
+  const options = (projects ?? []).filter((project) => project.id !== currentProjectId);
+  return h(
+    Modal,
+    { title: t("projects.moveTitle"), onClose },
+    h("p", { className: "cait-modal-hint" }, t("projects.moveHint", { name: docName || "" })),
+    options.length ? h(
+      "div",
+      { className: "cait-picklist" },
+      options.map(
+        (project) => h(
+          "button",
+          {
+            key: project.id,
+            type: "button",
+            className: "cait-pickitem",
+            disabled: Boolean(busy),
+            onClick: () => onPick(project.id)
+          },
+          h(Icon, { name: "folder", size: 13 }),
+          h("span", { className: "cait-pickname" }, project.name),
+          h(
+            "span",
+            { className: "cait-pickmeta" },
+            t("projects.docCount", { count: project.documents ?? 0 })
+          )
+        )
+      )
+    ) : h("p", { className: "cait-muted" }, t("projects.moveEmpty")),
+    h(
+      "div",
+      { className: "cait-modal-actions" },
+      h("button", { type: "button", className: "cait-btn", onClick: onClose }, t("panel.cancel"))
     )
   );
 }
@@ -12054,6 +12338,48 @@ function useWorkbenchController({ i18n, translate }) {
     const targetProject = modal?.projectId || "";
     setBusy("create");
     try {
+      const batch = form.mode === "file" ? form.files || (form.file ? [form.file] : []) : [];
+      if (batch.length > 1) {
+        const done = [];
+        const failed = [];
+        try {
+          for (let index2 = 0; index2 < batch.length; index2 += 1) {
+            setImportProgress({ done: index2, total: batch.length });
+            const entry2 = batch[index2];
+            try {
+              const payload = await filePayload(entry2);
+              const imported = await rpc("importFile", {
+                ...payload,
+                name: entry2.name,
+                fileName: entry2.name,
+                sourceLang: form.sourceLang,
+                targetLang: form.targetLang,
+                projectId: targetProject || void 0
+              });
+              if (imported.state) adoptState(imported.state);
+              done.push(imported.document?.name || entry2.name);
+            } catch (error) {
+              failed.push({ name: entry2.name, reason: describeError(error, t) });
+            }
+          }
+        } finally {
+          setImportProgress({ done: batch.length, total: batch.length });
+        }
+        setModal(null);
+        if (targetProject) void loadProjectDetail(targetProject, { stale: true }).catch(report);
+        if (done.length) {
+          notify(
+            failed.length ? t("toast.importedManyPartial", { done: done.length, failed: failed.length }) : t("toast.importedMany", { count: done.length }),
+            failed.length ? "error" : "success"
+          );
+        }
+        if (failed.length) {
+          const summary = failed.map((item) => `${item.name}：${item.reason}`).join("；");
+          notify(t("toast.importedManyFailed", { names: summary }), "error");
+        }
+        if (targetProject && done.length) setView("projects");
+        return;
+      }
       let result;
       if (form.mode === "file" && form.file) {
         const payload = await filePayload(form.file);
@@ -12102,6 +12428,7 @@ function useWorkbenchController({ i18n, translate }) {
     } catch (error) {
       report(error);
     } finally {
+      setImportProgress(null);
       setBusy("");
     }
   };
@@ -12576,6 +12903,7 @@ function useWorkbenchController({ i18n, translate }) {
   const [projectPick, setProjectPick] = useState(null);
   const [projectTab, setProjectTab] = useState("projects");
   const [projectDrafts, setProjectDrafts] = useState({});
+  const [importProgress, setImportProgress] = useState(null);
   const [projectEpoch, setProjectEpoch] = useState(0);
   const [pendingNav, setPendingNav] = useState(null);
   const [includePrefs, setIncludePrefs] = useState(() => {
@@ -12645,7 +12973,7 @@ function useWorkbenchController({ i18n, translate }) {
   };
   const newDocumentInProject = (projectId, mode = "text") => {
     if (guardProjectNav({ kind: "new", mode, projectId: projectId || "" })) return;
-    setModal({ type: "new", defaultMode: mode, projectId: projectId || "" });
+    setModal({ type: mode === "file" ? "import" : "new", projectId: projectId || "" });
   };
   const requestOpenDocument = async (documentId) => {
     if (!documentId) return;
@@ -12788,6 +13116,47 @@ function useWorkbenchController({ i18n, translate }) {
       setBusy("");
     }
   };
+  const reorderDocument = async (documentId, direction) => {
+    const projectId = currentProjectId();
+    if (!projectId || !documentId) return;
+    setBusy("project-save");
+    try {
+      const result = await rpc("moveProjectDocument", { projectId, documentId, direction });
+      if (result?.order) {
+        setProjectsState((current) => {
+          if (!current?.project) return current;
+          const byId = new Map((current.project.documentRows ?? []).map((row) => [row.id, row]));
+          const rows = result.order.map((id) => byId.get(id)).filter(Boolean);
+          return { ...current, project: { ...current.project, documentRows: rows } };
+        });
+      }
+    } catch (error) {
+      report(error);
+    } finally {
+      setBusy("");
+    }
+  };
+  const openMoveDocPicker = (documentId) => {
+    if (!documentId) return;
+    setModal({ type: "moveDoc", documentId });
+  };
+  const pickMoveTarget = async (projectId) => {
+    const documentId = modal?.documentId;
+    if (!documentId || !projectId) return;
+    setBusy("project-save");
+    try {
+      const result = await rpc("assignDocumentProject", { documentId, projectId });
+      if (result?.document) applyDocumentSummary(result.document);
+      if (result?.projects) setProjectsState((current2) => ({ ...current2 ?? {}, list: result.projects }));
+      setModal(null);
+      const current = currentProjectId();
+      if (current) await loadProjectDetail(current, { stale: true });
+    } catch (error) {
+      report(error);
+    } finally {
+      setBusy("");
+    }
+  };
   const refreshProjectAnalysis = async () => {
     const projectId = currentProjectId();
     if (!projectId) return;
@@ -12816,7 +13185,8 @@ function useWorkbenchController({ i18n, translate }) {
     }
     if (nav.kind === "view") setView(nav.view);
     else if (nav.kind === "home") setView("home");
-    else if (nav.kind === "new") setModal({ type: "new", defaultMode: nav.mode, projectId: nav.projectId });
+    else if (nav.kind === "new")
+      setModal({ type: nav.mode === "file" ? "import" : "new", projectId: nav.projectId });
     else if (nav.kind === "tab") setProjectTab(nav.tab);
     else if (nav.kind === "project") await selectProject(nav.projectId);
     else if (nav.kind === "doc") {
@@ -13920,6 +14290,7 @@ function useWorkbenchController({ i18n, translate }) {
     openDocument,
     closeDocumentTab,
     createFromForm,
+    importProgress,
     loadDemo,
     applyTm,
     applyTerm,
@@ -14000,6 +14371,9 @@ function useWorkbenchController({ i18n, translate }) {
     openHome,
     openProjectFromHome,
     newDocumentInProject,
+    reorderDocument,
+    openMoveDocPicker,
+    pickMoveTarget,
     resumeLast,
     projectTab,
     includePrefs,
@@ -14211,6 +14585,7 @@ function Workbench({ i18n, translate }) {
     resumeLast,
     projectTab,
     projectDrafts,
+    importProgress,
     projectEpoch,
     includePrefs,
     rememberInclude,
@@ -14231,6 +14606,9 @@ function Workbench({ i18n, translate }) {
     openProjectPicker,
     closeProjectPicker,
     pickProject,
+    reorderDocument,
+    openMoveDocPicker,
+    pickMoveTarget,
     libraryIoOptions,
     exportLibraryTo,
     importLibraryTo,
@@ -14260,6 +14638,7 @@ function Workbench({ i18n, translate }) {
   const [aiQuick, setAiQuick] = useState("");
   const [libraryIo, setLibraryIo] = useState(null);
   const ioOptions = libraryIo ? libraryIoOptions(libraryIo.kind) : { libraries: [], libraryId: "" };
+  const newDocProjectName = modal?.projectId ? (data?.projects?.projects ?? []).find((item) => item.id === modal.projectId)?.name ?? "" : "";
   const [bootStuck, setBootStuck] = useState(false);
   useEffect(() => {
     if (!loading) {
@@ -14319,13 +14698,13 @@ function Workbench({ i18n, translate }) {
       id: "new",
       title: t("cmd.new"),
       hint: t("cmd.newHint"),
-      run: () => setModal({ type: "new", defaultMode: "text" })
+      run: () => setModal({ type: "new" })
     },
     {
       id: "import",
       title: t("cmd.import"),
       hint: "",
-      run: () => setModal({ type: "new", defaultMode: "file" })
+      run: () => setModal({ type: "import" })
     },
     {
       id: "export",
@@ -14432,8 +14811,8 @@ function Workbench({ i18n, translate }) {
       usage,
       onUsage: () => setModal({ type: "usage" }),
       busy,
-      onNew: () => setModal({ type: "new", defaultMode: "text" }),
-      onImport: () => setModal({ type: "new", defaultMode: "file" }),
+      onNew: () => setModal({ type: "new" }),
+      onImport: () => setModal({ type: "import" }),
       onExport: () => setModal({ type: "export" }),
       onSettings: () => setModal({ type: "settings" }),
       onOpenDoc: requestOpenDocument,
@@ -14494,6 +14873,8 @@ function Workbench({ i18n, translate }) {
       onReport: downloadProjectReport,
       onDocReport: downloadDocumentReport,
       onMoveDoc: assignDocToProject,
+      onReorderDoc: reorderDocument,
+      onMoveDocToProject: openMoveDocPicker,
       onRefreshAnalysis: refreshProjectAnalysis
     }) : null,
     view === "libraries" ? h(LibraryPage, {
@@ -14692,7 +15073,15 @@ function Workbench({ i18n, translate }) {
       t,
       settings,
       busy,
-      defaultMode: modal.defaultMode,
+      projectName: newDocProjectName,
+      onClose: () => setModal(null),
+      onCreate: createFromForm
+    }) : modal?.type === "import" ? h(ImportDocModal, {
+      t,
+      settings,
+      busy,
+      projectName: newDocProjectName,
+      progress: importProgress,
       onClose: () => setModal(null),
       onCreate: createFromForm
     }) : null,
@@ -14861,6 +15250,15 @@ function Workbench({ i18n, translate }) {
       onClose: closeProjectPicker
     }),
     pendingNav ? h(ProjectUnsaved, { t, onChoose: resolvePendingNav }) : null,
+    modal?.type === "moveDoc" ? h(MoveDocModal, {
+      t,
+      busy,
+      docName: (data?.documents ?? []).find((item) => item.id === modal.documentId)?.name ?? "",
+      projects: data?.projects?.projects ?? [],
+      currentProjectId: (data?.documents ?? []).find((item) => item.id === modal.documentId)?.projectId ?? "",
+      onPick: pickMoveTarget,
+      onClose: () => setModal(null)
+    }) : null,
     toast ? h(Toast, { toast }) : null
   );
 }

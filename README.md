@@ -73,6 +73,14 @@ manual reload.
 
 ## Features
 
+### New in 1.2.8
+
+- **Separate entry dialogs.** "New document" opens a text form with "Create document"; "Import file" opens a drop zone with "Import file". Neither shows the other's fields or tab.
+- **Project-scoped creation.** Opening either entry from a project detail shows "Add to current project: <name>" and the document lands in that project directly — no ownership prompt, no project picker.
+- **Ordered document list.** Each project keeps its own document order. Rows expose "Open", up/down and "Move" (one click to the project picker — Unfiled means removing it); reports sit in their own "Reports" column behind "⋯".
+- **Batch import.** "Import file" accepts several files at once (up to 20 per batch, 8M characters total). Files are imported one by one with a "Importing 3/8…" progress label, and the dialog spells out the limits; oversized files are skipped with a reason.
+- **Library detail as a dialog.** The entry detail opens in a dialog with a pinned Close button (Esc works), a sticky action row, and "Save and close"; the main pane stays two columns.
+
 ### Fixed in 1.2.7
 
 - Opening the project view no longer crashes (React #310: the collapse-state hook sat after an early return in the project detail).

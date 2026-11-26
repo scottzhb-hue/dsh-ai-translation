@@ -5,7 +5,7 @@ import { SaveBanner, RecentDocsModal, Topbar, EmptyState } from './shell.js'
 import { SegmentRail } from './rail.js'
 import { EditorPane } from './editor.js'
 import { CatPanel } from './panels.js'
-import { NewDocModal } from './forms.js'
+import { ImportDocModal, NewDocModal } from './forms.js'
 import { HomePage } from './home.js'
 import { AlignPage, LibraryPage } from './pages.js'
 import {
@@ -23,7 +23,7 @@ import {
   AnalysisModal,
 } from './dialogs.js'
 import { DeliveryModal, BatchModal, QuoteModal, LocalMtModal } from './workflow.js'
-import { ProjectsPage, ProjectPicker, ProjectUnsaved } from './projects.js'
+import { MoveDocModal, ProjectsPage, ProjectPicker, ProjectUnsaved } from './projects.js'
 import { useWorkbenchController } from '../workbench/controller.js'
 import { UsageModal } from './usage.js'
 
@@ -188,6 +188,7 @@ function Workbench({ i18n, translate }) {
     resumeLast,
     projectTab,
     projectDrafts,
+  importProgress,
     projectEpoch,
     includePrefs,
     rememberInclude,
@@ -208,6 +209,9 @@ function Workbench({ i18n, translate }) {
     openProjectPicker,
     closeProjectPicker,
     pickProject,
+    reorderDocument,
+    openMoveDocPicker,
+    pickMoveTarget,
     libraryIoOptions,
     exportLibraryTo,
     importLibraryTo,
@@ -237,6 +241,10 @@ function Workbench({ i18n, translate }) {
   const [aiQuick, setAiQuick] = useState('')
   const [libraryIo, setLibraryIo] = useState(null)
   const ioOptions = libraryIo ? libraryIoOptions(libraryIo.kind) : { libraries: [], libraryId: '' }
+  // 从项目详情打开新建/导入时，弹窗要标明“会进入哪个项目”。
+  const newDocProjectName = modal?.projectId
+    ? ((data?.projects?.projects ?? []).find((item) => item.id === modal.projectId)?.name ?? '')
+    : ''
 
   // A hung bootstrap must not look like a frozen plugin: after 12s offer a
   // reload instead of an endless spinner.
@@ -304,13 +312,13 @@ function Workbench({ i18n, translate }) {
       id: 'new',
       title: t('cmd.new'),
       hint: t('cmd.newHint'),
-      run: () => setModal({ type: 'new', defaultMode: 'text' }),
+      run: () => setModal({ type: 'new' }),
     },
     {
       id: 'import',
       title: t('cmd.import'),
       hint: '',
-      run: () => setModal({ type: 'new', defaultMode: 'file' }),
+      run: () => setModal({ type: 'import' }),
     },
     {
       id: 'export',
@@ -419,8 +427,8 @@ function Workbench({ i18n, translate }) {
       usage,
       onUsage: () => setModal({ type: 'usage' }),
       busy,
-      onNew: () => setModal({ type: 'new', defaultMode: 'text' }),
-      onImport: () => setModal({ type: 'new', defaultMode: 'file' }),
+      onNew: () => setModal({ type: 'new' }),
+      onImport: () => setModal({ type: 'import' }),
       onExport: () => setModal({ type: 'export' }),
       onSettings: () => setModal({ type: 'settings' }),
       onOpenDoc: requestOpenDocument,
@@ -484,6 +492,8 @@ function Workbench({ i18n, translate }) {
           onReport: downloadProjectReport,
           onDocReport: downloadDocumentReport,
           onMoveDoc: assignDocToProject,
+          onReorderDoc: reorderDocument,
+          onMoveDocToProject: openMoveDocPicker,
           onRefreshAnalysis: refreshProjectAnalysis,
         })
       : null,
@@ -699,11 +709,21 @@ function Workbench({ i18n, translate }) {
           t,
           settings,
           busy,
-          defaultMode: modal.defaultMode,
+          projectName: newDocProjectName,
           onClose: () => setModal(null),
           onCreate: createFromForm,
         })
-      : null,
+      : modal?.type === 'import'
+        ? h(ImportDocModal, {
+            t,
+            settings,
+            busy,
+            projectName: newDocProjectName,
+            progress: importProgress,
+            onClose: () => setModal(null),
+            onCreate: createFromForm,
+          })
+        : null,
     modal?.type === 'export'
       ? h(ExportModal, {
           t,
@@ -906,6 +926,18 @@ function Workbench({ i18n, translate }) {
     }),
     pendingNav
       ? h(ProjectUnsaved, { t, onChoose: resolvePendingNav })
+      : null,
+    modal?.type === 'moveDoc'
+      ? h(MoveDocModal, {
+          t,
+          busy,
+          docName: (data?.documents ?? []).find((item) => item.id === modal.documentId)?.name ?? '',
+          projects: data?.projects?.projects ?? [],
+          currentProjectId:
+            (data?.documents ?? []).find((item) => item.id === modal.documentId)?.projectId ?? '',
+          onPick: pickMoveTarget,
+          onClose: () => setModal(null),
+        })
       : null,
     toast ? h(Toast, { toast }) : null,
   )

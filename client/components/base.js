@@ -42,6 +42,8 @@ function Icon({ name, size = 16 }) {
     file: ['M4 1.5h5L13 5v9.5H4z', 'M9 1.5V5h4'],
     refresh: ['M13 8a5 5 0 1 1-1.5-3.6', 'M13 2v3h-3'],
     arrowRight: ['M2 8h11', 'M9 4l4 4-4 4'],
+  arrowUp: ['M8 13V3', 'M4 7l4-4 4 4'],
+  arrowDown: ['M8 3v10', 'M4 9l4 4 4-4'],
     play: ['M4 2l9 6-9 6z'],
     globe: [
       'M8 14A6 6 0 1 0 8 2a6 6 0 0 0 0 12Z',

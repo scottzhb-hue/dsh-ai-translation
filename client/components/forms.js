@@ -3,11 +3,25 @@ import { LANGUAGES } from '../helpers.js'
 import { formatBytes, stripExtension } from '../rpc.js'
 import { Spinner, Icon, Modal } from './base.js'
 
-function DocumentSourceForm({ t, settings, busy, submitLabel, onSubmit, defaultMode = 'text' }) {
-  const [mode, setMode] = useState(defaultMode)
+// 一次批量导入的软上限：文件数与单文件大小都在这里，服务端还有字符数与段数上限。
+const MAX_IMPORT_FILES = 20
+const MAX_FILE_BYTES = 28 * 1024 * 1024
+
+function DocumentSourceForm({
+  t,
+  settings,
+  busy,
+  submitLabel,
+  onSubmit,
+  defaultMode = 'text',
+  fixedMode = '',
+  progress = null,
+}) {
+  const [mode, setMode] = useState(fixedMode || defaultMode)
   const [name, setName] = useState('')
   const [text, setText] = useState('')
-  const [file, setFile] = useState(null)
+  const [files, setFiles] = useState([])
+  const [skipped, setSkipped] = useState([])
   const [sourceLang, setSourceLang] = useState(settings.sourceLang || 'en')
   const [targetLang, setTargetLang] = useState(settings.targetLang || 'zh-CN')
   const [csvSourceColumn, setCsvSourceColumn] = useState('')
@@ -19,11 +33,29 @@ function DocumentSourceForm({ t, settings, busy, submitLabel, onSubmit, defaultM
     if (settings.targetLang) setTargetLang(settings.targetLang)
   }, [settings.sourceLang, settings.targetLang])
 
-  const pickFile = (nextFile) => {
-    if (!nextFile) return
-    setFile(nextFile)
+  // 独立入口（新建 / 导入）没有标签页，模式由调用方固定。
+  useEffect(() => {
+    if (fixedMode) setMode(fixedMode)
+  }, [fixedMode])
+
+  const pickFiles = (list) => {
+    const incoming = Array.from(list || []).filter(Boolean)
+    if (!incoming.length) return
+    const ok = []
+    const rejected = []
+    for (const entry of incoming) {
+      if (entry.size > MAX_FILE_BYTES) rejected.push(entry.name)
+      else if (ok.length >= MAX_IMPORT_FILES) rejected.push(entry.name)
+      else ok.push(entry)
+    }
+    if (!ok.length) {
+      setSkipped(rejected)
+      return
+    }
+    setFiles(ok)
+    setSkipped(rejected)
     setMode('file')
-    if (!name.trim()) setName(stripExtension(nextFile.name))
+    if (!name.trim()) setName(ok.length === 1 ? stripExtension(ok[0].name) : '')
   }
 
   const submit = (event) => {
@@ -32,7 +64,8 @@ function DocumentSourceForm({ t, settings, busy, submitLabel, onSubmit, defaultM
       mode,
       name,
       text,
-      file,
+      files,
+      file: files[0] || null,
       sourceLang,
       targetLang,
       csvSourceColumn,
@@ -40,13 +73,22 @@ function DocumentSourceForm({ t, settings, busy, submitLabel, onSubmit, defaultM
     })
   }
 
-  const canSubmit = mode === 'file' ? Boolean(file) : Boolean(text.trim())
-  const isCsv = mode === 'file' && /\.csv$/i.test(file?.name || '')
+  const canSubmit = mode === 'file' ? files.length > 0 : Boolean(text.trim())
+  const isCsv = mode === 'file' && files.length === 1 && /\.csv$/i.test(files[0]?.name || '')
+  // 主按钮跟着当前标签走：导入页不该再写「创建文档」。
+  const actionLabel =
+    mode === 'file'
+      ? files.length > 1
+        ? t('modal.import.submitMany', { count: files.length })
+        : t('modal.import.submit')
+      : submitLabel
 
   return h(
     'form',
     { className: 'cait-docform', onSubmit: submit },
-    h(
+    fixedMode
+      ? null
+      : h(
       'div',
       { className: 'cait-segmented' },
       h(
@@ -153,26 +195,58 @@ function DocumentSourceForm({ t, settings, busy, submitLabel, onSubmit, defaultM
           rows: 6,
         })
       : h(
-          'label',
-          {
-            className: 'cait-drop',
-            onDragOver: (event) => event.preventDefault(),
-            onDrop: (event) => {
-              event.preventDefault()
-              pickFile(event.dataTransfer?.files?.[0])
+          'div',
+          { className: 'cait-dropzone' },
+          h(
+            'label',
+            {
+              className: 'cait-drop',
+              onDragOver: (event) => event.preventDefault(),
+              onDrop: (event) => {
+                event.preventDefault()
+                pickFiles(event.dataTransfer?.files)
+              },
             },
-          },
-          h('input', {
-            ref: inputRef,
-            type: 'file',
-            accept:
-              '.txt,.md,.markdown,.tmx,.docx,.epub,.csv,.srt,.vtt,.po,.pot,.xliff,.xlf,.sdlxliff,.html,.htm,.json,.rtf,.xlsx,.pptx,.doc,.xls,.ppt,.strings,.stringsdict,.resx,.arb,.yaml,.yml,.properties',
-            hidden: true,
-            onChange: (event) => pickFile(event.target.files?.[0]),
-          }),
-          h(Icon, { name: file ? 'file' : 'upload', size: 22 }),
-          h('strong', null, file ? file.name : t('empty.drop')),
-          h('span', null, file ? formatBytes(file.size) : t('modal.new.dropHint')),
+            h('input', {
+              ref: inputRef,
+              type: 'file',
+              multiple: true,
+              accept:
+                '.txt,.md,.markdown,.tmx,.docx,.epub,.csv,.srt,.vtt,.po,.pot,.xliff,.xlf,.sdlxliff,.html,.htm,.json,.rtf,.xlsx,.pptx,.doc,.xls,.ppt,.strings,.stringsdict,.resx,.arb,.yaml,.yml,.properties',
+              hidden: true,
+              onChange: (event) => pickFiles(event.target.files),
+            }),
+            h(Icon, { name: files.length ? 'file' : 'upload', size: 22 }),
+            h(
+              'strong',
+              null,
+              files.length > 1
+                ? t('modal.import.pickedMany', { count: files.length })
+                : files.length === 1
+                  ? files[0].name
+                  : t('empty.drop'),
+            ),
+            h(
+              'span',
+              null,
+              files.length > 1
+                ? files.map((entry) => entry.name).slice(0, 3).join(' · ')
+                : files.length === 1
+                  ? formatBytes(files[0].size)
+                  : t('modal.new.dropHint'),
+            ),
+          ),
+          h('p', { className: 'cait-modal-hint' }, t('modal.import.limits')),
+          skipped.length
+            ? h(
+                'p',
+                { className: 'cait-modal-hint is-warn' },
+                t('modal.import.skipped', {
+                  count: skipped.length,
+                  names: skipped.slice(0, 3).join(' · '),
+                }),
+              )
+            : null,
         ),
     h(
       'div',
@@ -186,39 +260,96 @@ function DocumentSourceForm({ t, settings, busy, submitLabel, onSubmit, defaultM
           disabled: Boolean(busy) || !canSubmit,
         },
         busy === 'create' ? h(Spinner) : h(Icon, { name: 'plus', size: 13 }),
-        busy === 'create' ? t('modal.new.importing') : submitLabel,
+        busy === 'create'
+          ? progress
+            ? t('modal.import.progress', { done: progress.done, total: progress.total })
+            : t('modal.new.importing')
+          : actionLabel,
       ),
     ),
   )
 }
 
-function NewDocModal({ t, settings, busy, defaultMode, onClose, onCreate }) {
+function DocModalShell({
+  t,
+  settings,
+  busy,
+  title,
+  projectName,
+  submitLabel,
+  fixedMode,
+  onClose,
+  onCreate,
+  hint,
+  progress,
+}) {
   return h(
     Modal,
-    { title: t('modal.new.title'), onClose },
+    { title, onClose },
+    projectName
+      ? h(
+          'p',
+          { className: 'cait-modal-hint cait-modal-project' },
+          h(Icon, { name: 'folder', size: 12 }),
+          h('span', null, t('modal.new.joinProject', { name: projectName })),
+        )
+      : null,
+    hint ? h('p', { className: 'cait-modal-hint' }, hint) : null,
     h(DocumentSourceForm, {
       t,
       settings,
       busy,
-      submitLabel: t('modal.new.create'),
+      submitLabel,
       onSubmit: onCreate,
-      defaultMode,
+      fixedMode,
+      progress,
     }),
-    h(
-      'div',
-      { className: 'cait-demo-row' },
-      h('span', null, t('modal.new.sample')),
-      h(
-        'button',
-        {
-          className: 'cait-linkbtn',
-          onClick: () => onCreate({ demo: true }),
-          disabled: Boolean(busy),
-        },
-        t('modal.new.demo'),
-      ),
-    ),
+    fixedMode === 'text'
+      ? h(
+          'div',
+          { className: 'cait-demo-row' },
+          h('span', null, t('modal.new.sample')),
+          h(
+            'button',
+            {
+              className: 'cait-linkbtn',
+              onClick: () => onCreate({ demo: true }),
+              disabled: Boolean(busy),
+            },
+            t('modal.new.demo'),
+          ),
+        )
+      : null,
   )
+}
+
+function NewDocModal({ t, settings, busy, projectName = '', onClose, onCreate }) {
+  return h(DocModalShell, {
+    t,
+    settings,
+    busy,
+    title: t('modal.new.title'),
+    projectName,
+    submitLabel: t('modal.new.create'),
+    fixedMode: 'text',
+    onClose,
+    onCreate,
+  })
+}
+
+function ImportDocModal({ t, settings, busy, projectName = '', progress = null, onClose, onCreate }) {
+  return h(DocModalShell, {
+    t,
+    settings,
+    busy,
+    title: t('modal.import.title'),
+    projectName,
+    submitLabel: t('modal.import.submit'),
+    fixedMode: 'file',
+    onClose,
+    onCreate,
+    progress,
+  })
 }
 
 /**
@@ -228,4 +359,4 @@ function NewDocModal({ t, settings, busy, defaultMode, onClose, onCreate }) {
  * and this page is the only place that manages whole libraries.
  */
 
-export { DocumentSourceForm, NewDocModal }
+export { DocumentSourceForm, NewDocModal, ImportDocModal }

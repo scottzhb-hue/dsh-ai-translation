@@ -42,6 +42,7 @@
 | 22 | 欢迎页重做为单入口：粘贴/导入合为一个主卡片的两个标签页，「继续工作」合并项目与文档列表 | 已上线 | `client/components/home.js`、`client/styles.js` |
 | 23 | 项目详情重排：文档清单上提放大、行内操作收敛为「打开 + ⋯」、设置收进可折叠分区 | 已上线 | `client/components/projects.js`、`client/styles.js`、`client/locales-workflow.js` |
 | 24 | 项目详情崩溃修复：折叠状态 hook 移到提前 return 之前，并补「占位 → 详情」回归 | 已上线 | `client/components/projects.js` | `_dev/test-ui-projects.mjs` |
+| 25 | 新建/导入拆成两个独立对话框；项目内建文档直落当前项目；文档行支持上移/下移/移动，顺序按项目持久化；库条目详情改为独立对话框 | 已上线 | `client/components/forms.js`、`client/components/projects.js`、`client/components/pages.js`、`client/workbench/controller.js`、`lib/projects.js`、`lib/api.js`、`client/styles.js`、`client/locales-workflow.js` | `_dev/test-ui-projects.mjs`、`_dev/test-workbench-mount.mjs`、`_dev/test-report-contract.mjs` |
 
 ## 明细
 
@@ -332,3 +333,26 @@
 教训：**组件里任何 hook 都必须在第一个提前 return 之前**；对一个会从“空态”切到“有数据”的组件，测试必须覆盖这次切换，而不是只测终点状态。
 
 验证：四套测试全过（项目详情 23 项）、`audit-workflow` 138/138、`check-locales` 908×3（本轮顺手补上 `check-locales` 对 `PROJECT_DICTS` 的漏检）。
+
+### 25 独立弹窗、文档排序与库详情对话框
+
+问题（用户 1.2.7 / 1.2.8 两轮验收反馈）：
+
+1. 项目详情里「新增文档」与「导入文件」仍共用一个对话框，只有一个标签页的区别，用户分不清在建还是导。
+2. 文档表头写「报告 / 移动」，行内却是「→ 打开 ⋯」；点「⋯」没有反应，菜单浮层被表格容器的 `overflow:auto` 裁掉。
+3. 库「条目详情」是常驻第三栏，点关闭只清草稿，界面回不到两栏。
+
+修法：
+
+- 表单聚焦：`DocumentSourceForm` 增加 `fixedMode`（`'text'` | `'file'`），为真时不渲染标签页、只显示该模式需要的字段；`DocModalShell` 负责标题、项目标签（`modal.new.joinProject`）与提交按钮。对外只有两个薄组件：`NewDocModal`（文本域 + 「创建文档」）与 `ImportDocModal`（拖放区 + 「导入文件」）。
+- 项目归属：`newDocumentInProject(projectId, mode)` 直接开对应弹窗并带上 `projectId`，创建成功后用该 id 落库、直接进编辑器，不再弹归属对话框；无项目上下文时仍走原来的归属对话框。
+- 排序：项目新增 `docOrder` 数组，`projectDocuments()` 按它排序（未列入的殿后），`assignDocumentProject` 在移出/移入两侧同步维护，新增 `moveProjectDocument({ projectId, documentId, direction })` 做相邻交换（`DOCUMENT_NOT_IN_PROJECT` 409 / `INVALID_DIRECTION` 422，越界返回 `{ changed:false }`）。同时删掉 `projectDetail` 里多余的按名排序——这是「排序无效」的真正原因。
+- 行内操作：`→ 打开` / `↑` / `↓`（首末行禁用）/ `移动`（唯一项「移到其他项目…」，未分类等价于移出）/ `更多`（HTML、CSV 报告）。`Menu` 浮层由 `absolute` 改为 `fixed`，按按钮矩形定位，空间不足向上翻。
+- 库详情：第三栏换成 `Modal`，关闭时清 `adding` / `draft` / `selectedId`，主区恢复两栏；按钮区吸底、`Esc` 可关。
+- 批量导入：`DocumentSourceForm` 的 `files` 改为数组，input 加 `multiple`，拖放取 `dataTransfer.files`；前端软上限 20 个文件 / 单文件 28 MB，超出即跳过并在对话框列出文件名。控制器按顺序逐个 `importFile`，用 `importProgress` 显示「正在导入 3/8…」，结束后 toast 汇总成功与失败，失败带具体原因。
+- 顺带修掉一个归属 bug：`importFile` 之前不接收 `projectId`，从项目里导入的文件会落到「未分类」；现在 `context.projectId` 一路传到各解析器的 `createDocument`。
+- 行内交互：`移动` 由「只有一项的菜单」改成直接按钮（一次点击进项目选择器）；表头拆成「操作」与「报告」，报告列的 `⋯` 只放 HTML / CSV。
+
+验证：`_dev/test-ui-projects.mjs` 44 项（两个独立弹窗、表头「操作 / 报告」、上移/下移禁用态、移动一步直达）、`_dev/test-workbench-mount.mjs` 37 项（库对话框可开可关）、`_dev/test-report-contract.mjs` 29 项（排序契约含越界与错误码）；四套测试全过，`audit-workflow` 138/138，`check-locales` 916×3，`check-api` 127 handler / 78 写操作。
+
+边界：排序是项目内顺序，不跨项目共享；「移到其他项目」只支持单个文档，批量迁移走「所有文档」里的下拉；重排失败只提示，不改动本地已显示的顺序。

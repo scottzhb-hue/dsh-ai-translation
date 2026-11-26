@@ -681,6 +681,50 @@ export function useWorkbenchController({ i18n, translate }) {
     const targetProject = modal?.projectId || ''
     setBusy('create')
     try {
+      const batch = form.mode === 'file' ? form.files || (form.file ? [form.file] : []) : []
+      if (batch.length > 1) {
+        const done = []
+        const failed = []
+        try {
+          for (let index = 0; index < batch.length; index += 1) {
+            setImportProgress({ done: index, total: batch.length })
+            const entry = batch[index]
+            try {
+              const payload = await filePayload(entry)
+              const imported = await rpc('importFile', {
+                ...payload,
+                name: entry.name,
+                fileName: entry.name,
+                sourceLang: form.sourceLang,
+                targetLang: form.targetLang,
+                projectId: targetProject || undefined,
+              })
+              if (imported.state) adoptState(imported.state)
+              done.push(imported.document?.name || entry.name)
+            } catch (error) {
+              failed.push({ name: entry.name, reason: describeError(error, t) })
+            }
+          }
+        } finally {
+          setImportProgress({ done: batch.length, total: batch.length })
+        }
+        setModal(null)
+        if (targetProject) void loadProjectDetail(targetProject, { stale: true }).catch(report)
+        if (done.length) {
+          notify(
+            failed.length
+              ? t('toast.importedManyPartial', { done: done.length, failed: failed.length })
+              : t('toast.importedMany', { count: done.length }),
+            failed.length ? 'error' : 'success',
+          )
+        }
+        if (failed.length) {
+          const summary = failed.map((item) => `${item.name}：${item.reason}`).join('；')
+          notify(t('toast.importedManyFailed', { names: summary }), 'error')
+        }
+        if (targetProject && done.length) setView('projects')
+        return
+      }
       let result
       if (form.mode === 'file' && form.file) {
         const payload = await filePayload(form.file)
@@ -732,6 +776,7 @@ export function useWorkbenchController({ i18n, translate }) {
     } catch (error) {
       report(error)
     } finally {
+      setImportProgress(null)
       setBusy('')
     }
   }
@@ -1247,6 +1292,8 @@ export function useWorkbenchController({ i18n, translate }) {
   const [projectPick, setProjectPick] = useState(null)
   const [projectTab, setProjectTab] = useState('projects')
   const [projectDrafts, setProjectDrafts] = useState({})
+  // 批量导入的进度：`{ done, total }`，只在文件页显示。
+  const [importProgress, setImportProgress] = useState(null)
   const [projectEpoch, setProjectEpoch] = useState(0)
   const [pendingNav, setPendingNav] = useState(null)
   const [includePrefs, setIncludePrefs] = useState(() => {
@@ -1331,7 +1378,7 @@ export function useWorkbenchController({ i18n, translate }) {
   /** 项目详情里的「新建文档 / 导入文件」：预置当前项目，不再弹归属对话框。 */
   const newDocumentInProject = (projectId, mode = 'text') => {
     if (guardProjectNav({ kind: 'new', mode, projectId: projectId || '' })) return
-    setModal({ type: 'new', defaultMode: mode, projectId: projectId || '' })
+    setModal({ type: mode === 'file' ? 'import' : 'new', projectId: projectId || '' })
   }
 
   /** 项目详情/所有文档里的文档行：点开即进编辑器，有未保存设置时先拦一下。 */
@@ -1508,6 +1555,53 @@ export function useWorkbenchController({ i18n, translate }) {
     }
   }
 
+  /** 项目内上移 / 下移：只重排本地行，避免再拉一次详情与分析。 */
+  const reorderDocument = async (documentId, direction) => {
+    const projectId = currentProjectId()
+    if (!projectId || !documentId) return
+    setBusy('project-save')
+    try {
+      const result = await rpc('moveProjectDocument', { projectId, documentId, direction })
+      if (result?.order) {
+        setProjectsState((current) => {
+          if (!current?.project) return current
+          const byId = new Map((current.project.documentRows ?? []).map((row) => [row.id, row]))
+          const rows = result.order.map((id) => byId.get(id)).filter(Boolean)
+          return { ...current, project: { ...current.project, documentRows: rows } }
+        })
+      }
+    } catch (error) {
+      report(error)
+    } finally {
+      setBusy('')
+    }
+  }
+
+  /** 打开「移到其他项目」对话框。 */
+  const openMoveDocPicker = (documentId) => {
+    if (!documentId) return
+    setModal({ type: 'moveDoc', documentId })
+  }
+
+  /** 确认目标项目：文件落到新项目，当前项目列表与详情同步刷新。 */
+  const pickMoveTarget = async (projectId) => {
+    const documentId = modal?.documentId
+    if (!documentId || !projectId) return
+    setBusy('project-save')
+    try {
+      const result = await rpc('assignDocumentProject', { documentId, projectId })
+      if (result?.document) applyDocumentSummary(result.document)
+      if (result?.projects) setProjectsState((current) => ({ ...(current ?? {}), list: result.projects }))
+      setModal(null)
+      const current = currentProjectId()
+      if (current) await loadProjectDetail(current, { stale: true })
+    } catch (error) {
+      report(error)
+    } finally {
+      setBusy('')
+    }
+  }
+
   const refreshProjectAnalysis = async () => {
     const projectId = currentProjectId()
     if (!projectId) return
@@ -1538,7 +1632,8 @@ export function useWorkbenchController({ i18n, translate }) {
     }
     if (nav.kind === 'view') setView(nav.view)
     else if (nav.kind === 'home') setView('home')
-    else if (nav.kind === 'new') setModal({ type: 'new', defaultMode: nav.mode, projectId: nav.projectId })
+    else if (nav.kind === 'new')
+      setModal({ type: nav.mode === 'file' ? 'import' : 'new', projectId: nav.projectId })
     else if (nav.kind === 'tab') setProjectTab(nav.tab)
     else if (nav.kind === 'project') await selectProject(nav.projectId)
     else if (nav.kind === 'doc') {
@@ -2747,6 +2842,7 @@ export function useWorkbenchController({ i18n, translate }) {
     openDocument,
     closeDocumentTab,
     createFromForm,
+    importProgress,
     loadDemo,
     applyTm,
     applyTerm,
@@ -2827,6 +2923,9 @@ export function useWorkbenchController({ i18n, translate }) {
     openHome,
     openProjectFromHome,
     newDocumentInProject,
+    reorderDocument,
+    openMoveDocPicker,
+    pickMoveTarget,
     resumeLast,
     projectTab,
     includePrefs,
