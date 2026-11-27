@@ -46,6 +46,7 @@
 | 25 | 独立弹窗、文档排序与移动、库详情对话框 | 新建/导入各自独立；文档可上下移、跨项目移；库条目在对话框里改 | `client/components/forms.js`、`client/components/projects.js`、`lib/projects.js` |
 | 26 | 统一导入器、导入进度与取消、整批归属 | 欢迎页与项目页的导入完全一致；多选导入可取消 | `client/components/forms.js`、`client/workbench/controller.js` |
 | 27 | 项目头部、报告与「回到上次界面」 | 头部五项操作一步直达；报告/导出就地选格式；重开插件回到离开时的界面 | `client/components/projects.js`、`client/rpc.js`、`client/workbench/controller.js`、`lib/xlsx.js` |
+| 28 | 项目列表收窄、名称换行与移动交互统一 | 左侧列表更窄、长名称不被截断，移动只有一个入口 | `client/components/projects.js`、`client/styles.js`、`client/workbench/controller.js` |
 
 ## 二、翻译内核
 
@@ -479,6 +480,21 @@
 - 项目报告增加“按文档分解的报价”视图。
 - 把手工补丁流程彻底脚本化（含构建、检查、打包、发布一条命令）。
 
+### 28 项目列表收窄、名称换行与移动交互统一
+
+**动机**：1.2.11 验收后剩下三处不一致：左列 236px 占宽、右侧详情被挤；项目名过长直接省略，看不出全名；「把已有文档加入本项目」只有 11.5px，比表头还小；项目详情行内「移动」弹独立对话框，而「所有文档」是就地菜单，同一件事两套操作。
+
+**做法**
+
+- 列宽：`.cait-proj-body` 由 `minmax(0,236px) 1fr` 改为 `minmax(180px,208px) 1fr`，`@media(max-width:1180px)` 固定在 180px；列表项内边距 7px → 6px 抵消收窄带来的拥挤。
+- 名称换行：`.cait-proj-item-name` 去掉 `white-space:nowrap` 与 `text-overflow:ellipsis`，改 `overflow-wrap:anywhere; line-height:1.35`；`.cait-proj-item-title` 由 `align-items:center` 改 `flex-start`，长名称换行时「未分类」标签仍贴顶。
+- 折叠标题：`.cait-proj-addmore summary` 11.5px → 13px、`font-weight:500`、颜色由 secondary 提为 primary，并在 `summary` 前加 `Icon plus`；位置保持在文档表下方——挪到文档卡头部会与「新建文档 / 导入文件」挤在一行，项目多、文档名长时反而更乱。
+- 移动统一：抽出模块级 `moveMenuItems(t, projects, doc, onMove)`，项目详情行与「所有文档」都用它生成「移动 ▾」菜单（列出其他项目 + 未分类，按 `project_inbox` ↔ `''` 归一排除当前项目）；删除 `MoveDocModal` 与 controller 的 `openMoveDocPicker` / `pickMoveTarget`，少一条无人走的路径。
+
+**验证**：`_dev/test-ui-projects.mjs` 增加「项目详情移动菜单列出其他项目 / 不列当前项目 / 点目标直接回传」，以及三条样式静态断言（列宽、名称换行、折叠标题字号），80 项全过；`run-tests` 五套全过；`audit-workflow` 138/138。
+
+**边界**：菜单里项目名过长会换行撑高菜单项，未做截断；列表列宽度是固定区间，不提供拖拽调整。
+
 ## 附录 A 版本对照（项目层之后）
 
 | 版本 | 主题 | 对应编号 |
@@ -495,6 +511,7 @@
 | 1.2.9 | 统一导入器、进度可取消、整批一次归属 | 26 |
 | 1.2.10 | 插件说明重写（README / 市场详情 / locale 描述） | 13、09 |
 | 1.2.11 | 报告与导出就地选格式、双语 XLSX、回到上次界面、表格版式 | 27 |
+| 1.2.12 | 项目列表收窄与名称换行、加入本项目放大、移动交互统一 | 28 |
 
 更早的版本（1.0.1–1.1.1）见 `CHANGELOG.md`。
 

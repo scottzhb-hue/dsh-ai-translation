@@ -78,6 +78,13 @@ manual reload.
 
 ## Features
 
+### Changed in 1.2.12
+
+- **Narrower project column**: 236px → 208px (180px on narrow windows), leaving more room for the project detail.
+- **Long project names wrap**: no more single-line ellipsis; the Unfiled tag stays top-aligned with the name.
+- **“Add existing documents” is easier to spot**: 13px / weight 500 plus a plus icon, matching the “Documents” header.
+- **One move interaction**: the project detail row uses the same in-place “Move ▾” menu as All documents; pick a target and the document moves immediately. The separate “Move to another project” dialog is gone.
+
 ### New in 1.2.11
 
 - **Five project actions, one click away**: Save, Export delivery package, Project report ▾, Refresh analysis and Delete project (red, two-step) sit side by side; the “More” menu is gone.

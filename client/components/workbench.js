@@ -23,7 +23,7 @@ import {
   AnalysisModal,
 } from './dialogs.js'
 import { DeliveryModal, BatchModal, QuoteModal, LocalMtModal } from './workflow.js'
-import { MoveDocModal, ProjectsPage, ProjectPicker, ProjectUnsaved } from './projects.js'
+import { ProjectsPage, ProjectPicker, ProjectUnsaved } from './projects.js'
 import { useWorkbenchController } from '../workbench/controller.js'
 import { UsageModal } from './usage.js'
 
@@ -212,8 +212,6 @@ function Workbench({ i18n, translate }) {
     closeProjectPicker,
     pickProject,
     reorderDocument,
-    openMoveDocPicker,
-    pickMoveTarget,
     libraryIoOptions,
     exportLibraryTo,
     importLibraryTo,
@@ -497,7 +495,6 @@ function Workbench({ i18n, translate }) {
           onExportDoc: exportDocumentAs,
           onMoveDoc: assignDocToProject,
           onReorderDoc: reorderDocument,
-          onMoveDocToProject: openMoveDocPicker,
           onRefreshAnalysis: refreshProjectAnalysis,
         })
       : null,
@@ -931,18 +928,6 @@ function Workbench({ i18n, translate }) {
     }),
     pendingNav
       ? h(ProjectUnsaved, { t, onChoose: resolvePendingNav })
-      : null,
-    modal?.type === 'moveDoc'
-      ? h(MoveDocModal, {
-          t,
-          busy,
-          docName: (data?.documents ?? []).find((item) => item.id === modal.documentId)?.name ?? '',
-          projects: data?.projects?.projects ?? [],
-          currentProjectId:
-            (data?.documents ?? []).find((item) => item.id === modal.documentId)?.projectId ?? '',
-          onPick: pickMoveTarget,
-          onClose: () => setModal(null),
-        })
       : null,
     toast ? h(Toast, { toast }) : null,
   )

@@ -78,6 +78,23 @@ function librarySelectIds(value) {
 }
 
 /** 文档/项目的更新时间：本地时区 `YYYY-MM-DD HH:mm`，空值显示破折号。 */
+/** 移动菜单项：列出「其他项目 + 未分类」，排除文档当前所在项目（空字符串与 project_inbox 视为同一项）。 */
+function moveMenuItems(t, projects, doc, onMove) {
+  const list = (projects ?? []).slice()
+  if (!list.some((project) => project.inbox)) {
+    list.unshift({ id: '', name: t('projects.inboxTag'), inbox: true })
+  }
+  const currentId = doc.projectId === 'project_inbox' ? '' : doc.projectId || ''
+  return list
+    .filter((project) => (project.inbox ? '' : project.id) !== currentId)
+    .map((project) => ({
+      key: project.id || 'inbox',
+      label: project.name,
+      icon: 'folder',
+      onClick: () => onMove(doc.id, project.id),
+    }))
+}
+
 function formatStamp(value) {
   if (!value) return '—'
   const date = new Date(value)
@@ -344,7 +361,8 @@ function ProjectDetail({
   onNewDoc,
   onImportDoc,
   onReorderDoc,
-  onMoveDocToProject,
+  projects,
+  onMoveDoc,
   onDocReport,
   onPickReport,
   onRefreshAnalysis,
@@ -653,18 +671,13 @@ function ProjectDetail({
                       },
                       h(Icon, { name: 'arrowDown', size: 13 }),
                     ),
-                    h(
-                      'button',
-                      {
-                        type: 'button',
-                        className: 'cait-btn is-mini',
-                        title: t('projects.moveToProject'),
-                        disabled: Boolean(busy),
-                        onClick: () => onMoveDocToProject(doc.id),
-                      },
-                      h(Icon, { name: 'folder', size: 12 }),
-                      h('span', null, t('projects.moveToProject')),
-                    ),
+                    h(Menu, {
+                      t,
+                      label: t('projects.moveToProject'),
+                      icon: 'folder',
+                      disabled: Boolean(busy),
+                      items: moveMenuItems(t, projects, doc, onMoveDoc),
+                    }),
                   ),
                 ),
                 h(
@@ -697,7 +710,12 @@ function ProjectDetail({
     ? h(
         'details',
         { className: 'cait-proj-addmore' },
-        h('summary', null, t('projects.addDocs')),
+        h(
+          'summary',
+          null,
+          h(Icon, { name: 'plus', size: 13 }),
+          t('projects.addDocs'),
+        ),
         h(
           'ul',
           { className: 'cait-check-list' },
@@ -1273,21 +1291,7 @@ function AllDocuments({
                         label: t('projects.moveToProject'),
                         icon: 'folder',
                         disabled: Boolean(busy),
-                        items: (() => {
-                          const list = (projects ?? []).slice()
-                          if (!list.some((project) => project.inbox)) {
-                            list.unshift({ id: '', name: t('projects.inboxTag'), inbox: true })
-                          }
-                          const currentId = doc.projectId === 'project_inbox' ? '' : doc.projectId || ''
-                          return list
-                            .filter((project) => (project.inbox ? '' : project.id) !== currentId)
-                            .map((project) => ({
-                              key: project.id || 'inbox',
-                              label: project.name,
-                              icon: 'folder',
-                              onClick: () => onMove(doc.id, project.id),
-                            }))
-                        })(),
+                        items: moveMenuItems(t, projects, doc, onMove),
                       }),
                     ),
                   ),
@@ -1378,7 +1382,6 @@ function ProjectsPage({
   onExportDoc,
   onMoveDoc,
   onReorderDoc,
-  onMoveDocToProject,
   onRefreshAnalysis,
 }) {
   const list = state?.list?.projects ?? projects ?? []
@@ -1476,7 +1479,8 @@ function ProjectsPage({
             onNewDoc,
             onImportDoc,
             onReorderDoc,
-            onMoveDocToProject,
+            projects: list,
+            onMoveDoc,
             onDocReport,
             onPickReport: pickReport,
             onRefreshAnalysis,
@@ -1657,44 +1661,4 @@ function ProjectUnsaved({ t, onChoose }) {
   )
 }
 
-/** 选择目标项目（排除当前项目，含未分类）。 */
-function MoveDocModal({ t, busy, docName, projects, currentProjectId, onPick, onClose }) {
-  const options = (projects ?? []).filter((project) => project.id !== currentProjectId)
-  return h(
-    Modal,
-    { title: t('projects.moveTitle'), onClose },
-    h('p', { className: 'cait-modal-hint' }, t('projects.moveHint', { name: docName || '' })),
-    options.length
-      ? h(
-          'div',
-          { className: 'cait-picklist' },
-          options.map((project) =>
-            h(
-              'button',
-              {
-                key: project.id,
-                type: 'button',
-                className: 'cait-pickitem',
-                disabled: Boolean(busy),
-                onClick: () => onPick(project.id),
-              },
-              h(Icon, { name: 'folder', size: 13 }),
-              h('span', { className: 'cait-pickname' }, project.name),
-              h(
-                'span',
-                { className: 'cait-pickmeta' },
-                t('projects.docCount', { count: project.documents ?? 0 }),
-              ),
-            ),
-          ),
-        )
-      : h('p', { className: 'cait-muted' }, t('projects.moveEmpty')),
-    h(
-      'div',
-      { className: 'cait-modal-actions' },
-      h('button', { type: 'button', className: 'cait-btn', onClick: onClose }, t('panel.cancel')),
-    ),
-  )
-}
-
-export { ProjectsPage, ProjectPicker, ProjectUnsaved, MoveDocModal }
+export { ProjectsPage, ProjectPicker, ProjectUnsaved }

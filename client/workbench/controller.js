@@ -1672,31 +1672,6 @@ export function useWorkbenchController({ i18n, translate }) {
     }
   }
 
-  /** 打开「移到其他项目」对话框。 */
-  const openMoveDocPicker = (documentId) => {
-    if (!documentId) return
-    setModal({ type: 'moveDoc', documentId })
-  }
-
-  /** 确认目标项目：文件落到新项目，当前项目列表与详情同步刷新。 */
-  const pickMoveTarget = async (projectId) => {
-    const documentId = modal?.documentId
-    if (!documentId || !projectId) return
-    setBusy('project-save')
-    try {
-      const result = await rpc('assignDocumentProject', { documentId, projectId })
-      if (result?.document) applyDocumentSummary(result.document)
-      if (result?.projects) setProjectsState((current) => ({ ...(current ?? {}), list: result.projects }))
-      setModal(null)
-      const current = currentProjectId()
-      if (current) await loadProjectDetail(current, { stale: true })
-    } catch (error) {
-      report(error)
-    } finally {
-      setBusy('')
-    }
-  }
-
   const refreshProjectAnalysis = async () => {
     const projectId = currentProjectId()
     if (!projectId) return
@@ -3065,8 +3040,6 @@ export function useWorkbenchController({ i18n, translate }) {
     openProjectFromHome,
     newDocumentInProject,
     reorderDocument,
-    openMoveDocPicker,
-    pickMoveTarget,
     resumeLast,
     projectTab,
     includePrefs,
