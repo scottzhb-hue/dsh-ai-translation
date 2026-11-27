@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "AI Translation (@scottzhb-hue/dsh-ai-translation)",
-    "description": "A complete CAT workbench inside DSH: source and target side by side, live TM and glossary hits, AI drafts, layout-preserving DOCX/PPTX/XLSX/EPUB/SDLXLIFF import and export. On top of CAIT it adds segment merge/split, term capture from a selection, auto-saved drafts, an AI assistant, wrapper-aware routing, usage tracking, delivery/batch/quote workflows, a job layer for multi-file briefs and glossaries, and legacy Office import. Thanks to Jovi Lecca, author of upstream CAIT (Apache-2.0).",
+    "description": "A complete CAT workbench inside DSH: source and target side by side, live TM and glossary hits, AI drafts, layout-preserving DOCX/PPTX/XLSX/EPUB/SDLXLIFF import and export. Beyond upstream CAIT: a project layer (one brief and one set of TM/glossaries shared by many files, project-level analysis, quotes, reports, delivery packages, time tracking, Unfiled and an all-documents view), pre-delivery checks and batch actions, match-band quotes and post-editing metrics, local MT, unlocked segment merge/split, select-to-create-term, draft recovery, an AI assistant that distils a conversation into the brief, wrapper-aware routing, token/cost tracking, legacy Office import with macros disabled, a home screen, a task-grouped top bar, cancellable batch import and a render error boundary. Thanks to Jovi Lecca, author of upstream CAIT (Apache-2.0).",
     "detail": "docs/DETAIL.md"
   }
 }

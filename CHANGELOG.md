@@ -1,3 +1,23 @@
+# Changelog
+
+All notable changes to this fork of CAIT are documented here. The project follows
+[Semantic Versioning](https://semver.org/) and the format is based on
+[Keep a Changelog](https://keepachangelog.com/).
+
+> 本分支 `dsh-ai-translation` 从 `1.0.1` 起独立编号；`1.1.8` 及更早的条目属于上游 CAIT
+> （作者 Jovi Lecca，Apache-2.0），保留原文以便溯源，已统一放到文件末尾的「Upstream history」。
+
+## [1.2.10] - 2026-11-27
+
+只更新说明文档，不改代码、不改数据格式。
+
+### Changed
+
+- 插件说明重写：三份 README 的「为什么选择」扩成 9 行，前 5 行逐条说明相对上游 CAIT 的重大更新（项目层、交付与商务、翻译内核、AI 与成本、按场景组织的界面）；「来源与致谢」里的分支说明也改为「26 项优化」口径。
+- 市场详情页（`docs/DETAIL.zh.md` / `docs/DETAIL.md` / `docs/DETAIL.ja.md`）重写为五章：主要能力、相对上游的五大更新、数据与隐私、致谢。
+- `locale/{zh,en,ja}.json` 的 `meta.description` 扩写，并把旧词「job layer / ジョブ管理」统一为「project / プロジェクト」。
+- `CHANGELOG.md` 的标题与上游条目说明移到文件开头，上游历史集中到末尾的「Upstream history」；`OPTIMIZATIONS.md` 的发布名、最后更新日期与第 26 行表格补齐。
+
 ## [1.2.9] - 2026-11-27
 
 欢迎页与项目详情共用同一个导入器，导入过程可看进度、可取消。
@@ -134,6 +154,7 @@ All notable changes to CAIT are documented here. The project follows
 
 - 回归测试 `_dev/test-workbench-mount.mjs`：用完整 `Workbench` 挂载真实数据，覆盖项目列表、项目详情、所有文档、返回后重进等路径，专抓「解构漏字段 / 引用未定义变量」导致整窗白屏的问题。
 - 静态检查 `scripts/check-undef.mjs`（eslint `no-undef`，浏览器 + Node 全局），已接入 `npm run check`；没装 devDependencies 时自动跳过。
+
 ## [1.2.0] - 2026-11-26
 
 项目（project）层：把「一个客户、一批文件、一份 brief、一套术语库」变成真正的数据结构，插件打开后先进项目，批量的分析、交付、报价与报告也终于能一次做完。
@@ -266,6 +287,12 @@ All notable changes to CAIT are documented here. The project follows
   先跑零依赖发布门禁 `scripts/check-publish.mjs`，再用 `GITHUB_TOKEN` 把包发布到
   GitHub Packages（`https://npm.pkg.github.com`，scope `@scottzhb-hue`）。因此不再依赖
   npmjs.com 的登录与 2FA。
+
+---
+
+## Upstream history (CAIT 1.1.8 and earlier)
+
+> 以下条目来自上游 CAIT（作者 Jovi Lecca，Apache-2.0），逐字保留原文，仅用于溯源。
 
 ## [1.1.8] - 2026-11-10
 

@@ -1,7 +1,7 @@
 # dsh-ai-translation 本地优化清单
 
 
-> 发布名：`@scottzhb-hue/dsh-ai-translation@1.0.5`（fork 自 CAIT `dsh-cait@1.1.8`，上游作者 Jovi Lecca，Apache-2.0）。
+> 发布名：`@scottzhb-hue/dsh-ai-translation@1.2.10`（fork 自 CAIT `dsh-cait@1.1.8`，上游作者 Jovi Lecca，Apache-2.0）。
 > 上游仓库：<https://github.com/JoviLecca/dsh-CAIT>；本分支仓库：<https://github.com/scottzhb-hue/dsh-ai-translation>。
 本文件登记我在本机对 **dsh-cait 1.1.8**（上游 npm 最新版）所做的全部本地优化，
 用于：① 本对话后续继续迭代时作为基线参考；② 将来把优化版发布到 GitHub 时作为变更来源。
@@ -9,7 +9,7 @@
 - 基线：`dsh-cait@1.1.8`，安装位置 `%USERPROFILE%\.dsh\profiles\desktop\node_modules\@scottzhb-hue\dsh-ai-translation\`（以 `file:` 本地 tgz 安装）
 - 运行环境：DSH Desktop `0.2.2-rc.5`，profile `desktop`，数据目录 `%USERPROFILE%\.dsh\cait\`
 - 启用方式：改服务端 `lib/` 需**重启 DSH**；改客户端 `client.js`（打包产物）需 **Ctrl+Shift+R 强刷**
-- 最后更新：2026-11-23
+- 最后更新：2026-11-27
 
 > ⚠️ 已装副本（profile 的 `node_modules`）是 **DSH 启动时按 lockfile 重装的产物**：直接改那里的文件，下次启动会被 `file:` tgz 里的内容覆盖还原。
 > 改代码请只走「仓库副本 → `npm pack` → `_packages\` 新 tgz → `remove_bundle` + `install_bundle`」，详见「维护与发布须知」第 8 条。
@@ -43,7 +43,7 @@
 | 23 | 项目详情重排：文档清单上提放大、行内操作收敛为「打开 + ⋯」、设置收进可折叠分区 | 已上线 | `client/components/projects.js`、`client/styles.js`、`client/locales-workflow.js` |
 | 24 | 项目详情崩溃修复：折叠状态 hook 移到提前 return 之前，并补「占位 → 详情」回归 | 已上线 | `client/components/projects.js` | `_dev/test-ui-projects.mjs` |
 | 25 | 新建/导入拆成两个独立对话框；项目内建文档直落当前项目；文档行支持上移/下移/移动，顺序按项目持久化；库条目详情改为独立对话框 | 已上线 | `client/components/forms.js`、`client/components/projects.js`、`client/components/pages.js`、`client/workbench/controller.js`、`lib/projects.js`、`lib/api.js`、`client/styles.js`、`client/locales-workflow.js` | `_dev/test-ui-projects.mjs`、`_dev/test-workbench-mount.mjs`、`_dev/test-report-contract.mjs` |
-| 26 | 统一导入器（欢迎页共用拖放区）、导入进度与取消、整批一次归属 |
+| 26 | 统一导入器（欢迎页共用拖放区）、导入进度与取消、整批一次归属 | 已上线 | `client/components/forms.js`、`client/components/home.js`、`client/components/projects.js`、`client/workbench/controller.js`、`client/locales.js`、`client/styles.js` | `_dev/test-ui-controller.mjs`、`_dev/test-ui-projects.mjs`、`_dev/test-workbench-mount.mjs` | 无（新组件） |
 
 ## 明细
 

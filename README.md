@@ -39,7 +39,7 @@ translated document.
 This repository is a **modified fork of CAIT**, not an original project:
 
 - **Upstream**: CAIT (`dsh-cait`) by **Jovi Lecca** — <https://github.com/JoviLecca/dsh-CAIT>, Apache-2.0.
-- **This fork**: `@scottzhb-hue/dsh-ai-translation`, based on upstream `1.1.8`, with local enhancements documented in [OPTIMIZATIONS.md](OPTIMIZATIONS.md) (segment merge/split across DOCX paragraphs, AI assistant and project-brief dialog, select-to-create-term, unconfirmed draft recovery, route robustness against vision wrapper providers, token/cost accounting).
+- **This fork**: `@scottzhb-hue/dsh-ai-translation`, based on upstream `1.1.8`, with 26 documented enhancements in [OPTIMIZATIONS.md](OPTIMIZATIONS.md) — most notably a **project layer** (multi-file briefs, shared TM/glossaries, project-level analysis / quote / report / delivery / time tracking), a delivery and business workflow (pre-delivery checks, batch actions, quotes, post-editing metrics, local MT), and a reworked, task-oriented UI.
 - **Naming**: this fork shows up in DSH as **AI Translation** (Chinese 「AI辅助翻译」, Japanese 「AI翻訳」) — sidebar entry, workbench header and in-app hints all use that name; `CAIT` / `dsh-cait` appear only as the upstream project name.
 - **License and attribution**: still Apache-2.0. [LICENSE](LICENSE) is kept verbatim; [NOTICE](NOTICE) keeps the upstream notice and adds this fork's information. Any redistribution must keep both files.
 - **Thanks**: the vast majority of this code base is upstream work — the CAT workbench, translation memory, glossary, multi-format import/export and the 21 agent tools are all Jovi Lecca's design and implementation.
@@ -47,13 +47,18 @@ This repository is a **modified fork of CAIT**, not an original project:
 
 ## Why AI Translation
 
+Upstream CAIT gives you a solid CAT core: translation memory, glossary, multi-format import/export and a segment editor. This fork keeps that core and adds the layer a working translator actually bills for — plus fixes for the things that made it hard to use day to day.
+
 | | |
 |---|---|
+| **A project layer (new)** | One client, one batch, one brief, one set of term bases = one project: shared brief and shared TM/glossary (documents can override), project-level analysis / quote / report / delivery package, a project stopwatch, document reordering, «Unfiled» and a cross-project «All documents» table. |
+| **Delivery and business (new)** | Pre-delivery checks + one-click ZIP (targets, bilingual copies, term list, QA, analysis, comments, delivery note), batch actions filtered by state and risk, quotes priced by match band, post-editing keep-ratios, and a local OpenAI-compatible MT endpoint. |
+| **Translation core fixes** | Same-paragraph merges unlocked (Shift forces cross-paragraph), DOCX splits that stay inside one paragraph, no more broken sentences at `Aug.` / `St.`, no stray spaces when joining CJK, select-to-create-term, and automatic draft recovery for unconfirmed targets. |
+| **AI and cost** | Brief guidance after creating a document, instruction confirmation before pre-translation, conversations distilled into the project brief, vision-wrapper routes skipped with the real error surfaced, and token usage/cost at official peak and off-peak prices. |
+| **A UI organised by task** | Opens on a home screen (paste / import / resume / continue working); New and Import appear on the project page only; the editor keeps Usage · Pre-translate · Find & replace · Deliver · More; a render error boundary and library loading with timeout and retry. |
 | **Native to DSH** | A real sidebar panel, a main workbench, DSH theme tokens, and the same store for humans and agents. No iframe, no separate app. |
 | **TM that explains itself** | Multiple TM libraries, mounted-only lookup, 101% context (ICE) matches, exact / near-exact / high / medium / low fuzzy grades, and automatic write-back on confirm. |
-| **Glossary-aware editing** | Multiple term bases, source-language filtering, inline highlighting, click-to-insert terms, and per-term case sensitivity. |
-| **A document workflow** | Tabs, close/reopen, recent-document cleanup, duplicate-import reuse, and progress per document. |
-| **Real format coverage** | TXT, Markdown, DOCX, EPUB, TMX, CSV, SRT/VTT, PO, XLIFF 1.2/2.0/SDLXLIFF, HTML, JSON, XLSX, PPTX, and RTF. Legacy `.doc` / `.xls` / `.ppt` are converted to OOXML first, using the Microsoft Office installed on the machine that runs DSH. |
+| **Real format coverage** | TXT, Markdown, DOCX, EPUB, TMX, CSV, SRT/VTT, PO, XLIFF 1.2/2.0/SDLXLIFF, HTML, JSON, XLSX, PPTX, and RTF. Legacy `.doc` / `.xls` / `.ppt` are converted to OOXML first, using the Microsoft Office installed on the machine that runs DSH — with macros forcibly disabled. |
 | **Agent-ready** | Twenty-one tools share the open document and store, so an agent can translate alongside you. |
 
 ## Quick start

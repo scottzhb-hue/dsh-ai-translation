@@ -1,7 +1,7 @@
 {
   "meta": {
     "title": "AI辅助翻译 (@scottzhb-hue/dsh-ai-translation)",
-    "description": "DSH 里的完整 CAT 工作台：左原文右译文，翻译记忆与术语库实时命中，AI 生成译文建议，DOCX/PPTX/XLSX/EPUB/SDLXLIFF 等格式原样导入导出。在 CAIT 之上补齐句段合并与拆分、选中即建术语、草稿自动暂存、AI 助手、路由避坑、用量统计、交付/批量/报价、项目管理（多文件共享 brief 与术语库、项目级报价与报告）与旧版 Office 导入。致敬上游 CAIT 作者 Jovi Lecca（Apache-2.0）。",
+    "description": "DSH 里的完整 CAT 工作台：左原文右译文，翻译记忆与术语库实时命中，AI 生成译文建议，DOCX/PPTX/XLSX/EPUB/SDLXLIFF 等格式原样导入导出。相对上游 CAIT 补齐了一整层译员真正用得上的能力：项目（多文件共享 brief 与术语库、项目级分析/报价/报告/交付包/工时、未分类与跨项目总表）、交付前检查与批量动作、报价单与译后编辑度量、本地 MT、句段合并与拆分、选中即建术语、草稿自动暂存、AI 助手与项目说明、路由避坑、Token 用量与费用统计、旧版 Office 导入（转换前关闭宏），以及欢迎页、按场景分组的顶栏、可取消的批量导入与错误边界。致敬上游 CAIT 作者 Jovi Lecca（Apache-2.0）。",
     "detail": "docs/DETAIL.zh.md"
   }
 }
