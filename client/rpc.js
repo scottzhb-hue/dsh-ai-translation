@@ -89,11 +89,18 @@ function downloadFile(filename, content, mime) {
   const link = document.createElement('a')
   link.href = url
   link.download = filename || 'cait-export'
+  // Some embedded webviews ignore `download` and would navigate the whole panel
+  // to the blob (the workbench then looks "crashed"). `_blank` keeps that
+  // failure contained in a new window instead.
+  link.target = '_blank'
   link.rel = 'noopener'
   document.body.appendChild(link)
-  link.click()
-  link.remove()
-  setTimeout(() => URL.revokeObjectURL(url), 2000)
+  try {
+    link.click()
+  } finally {
+    link.remove()
+    setTimeout(() => URL.revokeObjectURL(url), 4000)
+  }
 }
 
 function decodeBase64(value) {

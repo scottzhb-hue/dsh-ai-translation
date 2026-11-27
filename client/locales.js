@@ -207,6 +207,7 @@ const ZH = {
   'modal.export.targetMd': 'Markdown',
   'modal.export.docx': 'Word DOCX',
   'modal.export.bilingualDocx': '双语审校稿 DOCX',
+  'modal.export.bilingualXlsx': '双语对照 XLSX',
   'modal.export.docxGroup': '保留源格式',
   'modal.export.epub': 'EPUB 电子书',
   'modal.export.epubGroup': '保留源排版',
@@ -242,6 +243,8 @@ const ZH = {
   'modal.settings.uiLanguage': '界面语言',
   'modal.settings.uiAuto': '跟随 DSH 语言',
   'modal.settings.uiHint': '只影响 AI辅助翻译界面，不会改变文档的源语言和目标语言。',
+  'modal.settings.startAtHome': '总是从欢迎页开始',
+  'modal.settings.startAtHomeHint': '默认关闭：工作台会回到你上次停留的项目、文档或库。打开后每次都从欢迎页开始。',
   'modal.settings.languages': '语言',
   'modal.settings.preprocess': '预处理',
   'modal.settings.preprocessHint': '在导入切句之前清理源文，占位符与标点不会被改写。',
@@ -660,6 +663,7 @@ const EN = {
   'modal.export.targetMd': 'Markdown',
   'modal.export.docx': 'Word DOCX',
   'modal.export.bilingualDocx': 'Bilingual review DOCX',
+  'modal.export.bilingualXlsx': 'Bilingual XLSX',
   'modal.export.docxGroup': 'Preserve source formatting',
   'modal.export.epub': 'EPUB ebook',
   'modal.export.epubGroup': 'Preserve source layout',
@@ -697,6 +701,9 @@ const EN = {
   'modal.settings.uiAuto': 'Follow DSH language',
   'modal.settings.uiHint':
     'Changes only the AI Translation interface; document source and target languages are unaffected.',
+  'modal.settings.startAtHome': 'Always start from the welcome page',
+  'modal.settings.startAtHomeHint':
+    'Off by default: the workbench reopens the project, document or library you left. Turn this on to always land on the welcome page.',
   'modal.settings.languages': 'Languages',
   'modal.settings.preprocess': 'Preprocessing',
   'modal.settings.preprocessHint':
@@ -1127,6 +1134,7 @@ const JA = {
   'modal.export.targetMd': 'Markdown',
   'modal.export.docx': 'Word DOCX',
   'modal.export.bilingualDocx': 'バイリンガル校閲 DOCX',
+  'modal.export.bilingualXlsx': 'バイリンガル XLSX',
   'modal.export.docxGroup': '元の書式を保持',
   'modal.export.epub': 'EPUB 電子書',
   'modal.export.epubGroup': '元のレイアウトを保持',
@@ -1164,6 +1172,8 @@ const JA = {
   'modal.settings.uiAuto': 'DSH の言語に合わせる',
   'modal.settings.uiHint':
     'AI翻訳の表示だけを切り替えます。文書の原文言語・訳文言語には影響しません。',
+  'modal.settings.startAtHome': '常にウェルカムページから開始',
+  'modal.settings.startAtHomeHint': '既定はオフ：前回終了したプロジェクト・文書・ライブラリを開きます。オンにすると毎回ウェルカムページから始まります。',
   'modal.settings.languages': '言語',
   'modal.settings.preprocess': '前処理',
   'modal.settings.preprocessHint':

@@ -18,6 +18,10 @@ import { UI_LANG_CODES } from '../locales.js'
 // into batches and merged server-side.
 const REVIEW_BATCH_SIZE = 20
 
+// 1.2.11: where the translator left off. Kept in the browser (per panel) so a
+// plugin switch does not dump them back on the welcome page.
+const SESSION_KEY = 'cait.session.view'
+
 // Workbench 的状态与动作。渲染层只从这里取数据，不直接调用 rpc。
 export function useWorkbenchController({ i18n, translate }) {
   const [data, setData] = useState(null)
@@ -1322,6 +1326,9 @@ export function useWorkbenchController({ i18n, translate }) {
   const importCancelRef = useRef(false)
   const [projectEpoch, setProjectEpoch] = useState(0)
   const [pendingNav, setPendingNav] = useState(null)
+  // 恢复上次界面只做一次；restoringRef 防止「自动打开项目」的 effect 抢先加载。
+  const restoredRef = useRef(false)
+  const restoringRef = useRef(false)
   const [includePrefs, setIncludePrefs] = useState(() => {
     try {
       const raw = window.localStorage.getItem('cait.project.include')
@@ -1485,10 +1492,72 @@ export function useWorkbenchController({ i18n, translate }) {
    */
   useEffect(() => {
     if (!data || view !== 'projects') return
+    if (restoringRef.current) return
     if (projectsState?.project || projectsState?.list) return
     void openProjects()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [data?.revision, view])
+
+  /**
+   * 1.2.11: 回到离开前的界面。位置存浏览器（每个面板一份），设置里可用
+   * 「总是从欢迎页开始」关掉。文档/项目已不存在时退回项目或欢迎页。
+   */
+  useEffect(() => {
+    if (!data || restoredRef.current) return
+    restoredRef.current = true
+    if (settings.startAtHome) return
+    let saved = null
+    try {
+      saved = JSON.parse(window.localStorage.getItem(SESSION_KEY) || 'null')
+    } catch {
+      saved = null
+    }
+    if (!saved || !saved.view) return
+    restoringRef.current = true
+    const restore = async () => {
+      try {
+        if (saved.view === 'libraries' || saved.view === 'align') {
+          setView(saved.view)
+          return
+        }
+        if (saved.view === 'documents' && saved.documentId) {
+          const opened = await openDocument(saved.documentId, { force: true })
+          if (opened) {
+            setView('documents')
+            return
+          }
+        }
+        if (saved.view === 'projects' || saved.view === 'documents') {
+          setView('projects')
+          await openProjects(saved.projectId || undefined)
+          if (saved.tab === 'docs') setProjectTab('docs')
+        }
+      } finally {
+        restoringRef.current = false
+      }
+    }
+    void restore()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [data?.revision])
+
+  // 记住当前位置；写失败（隐私模式/没有 localStorage）不影响使用。
+  useEffect(() => {
+    if (!data || settings.startAtHome) return
+    try {
+      window.localStorage.setItem(
+        SESSION_KEY,
+        JSON.stringify({
+          view,
+          projectId: projectsState?.project?.id ?? '',
+          tab: projectTab,
+          documentId: doc?.id ?? '',
+        }),
+      )
+    } catch {
+      // 存不下就算了，下次照常从欢迎页开始。
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [view, projectTab, projectsState?.project?.id, doc?.id, data?.revision])
 
   /** 欢迎页的「继续上次」：优先回到最近打开的文档，否则回最近的项目。 */
   const resumeLast = () => {
@@ -1824,6 +1893,26 @@ export function useWorkbenchController({ i18n, translate }) {
       const result = await rpc('documentReport', { documentId, format })
       downloadFile(result.filename, result.content, result.mime)
       notify(t('projects.reportReady'))
+    } catch (error) {
+      report(error)
+    } finally {
+      setBusy('')
+    }
+  }
+
+  /**
+   * 1.2.11「所有文档」里的导出：选好格式就直接下载，不再经过导出对话框
+   * （那个对话框还负责「导入评审意见」等文档内操作）。
+   */
+  const exportDocumentAs = async (documentId, format) => {
+    if (!documentId || !format) return
+    setBusy('export')
+    try {
+      const result = await rpc('exportDocument', { documentId, format })
+      const content =
+        result.encoding === 'base64' ? decodeBase64(result.content) : result.content
+      downloadFile(result.filename, content, result.mime)
+      notify(t('toast.exported'))
     } catch (error) {
       report(error)
     } finally {
@@ -2996,6 +3085,7 @@ export function useWorkbenchController({ i18n, translate }) {
     deleteProjectAction,
     downloadProjectReport,
     downloadDocumentReport,
+    exportDocumentAs,
     openProjectPicker,
     closeProjectPicker,
     pickProject,

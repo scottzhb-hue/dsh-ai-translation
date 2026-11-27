@@ -13,6 +13,7 @@ function ExportModal({ t, busy, onClose, onExport, onImportReview, qa }) {
     ['target-md', t('modal.export.targetMd'), t('modal.export.target'), 'download'],
     ['docx', t('modal.export.docx'), t('modal.export.docxGroup'), 'file'],
     ['bilingual-docx', t('modal.export.bilingualDocx'), t('modal.export.bilingual'), 'file'],
+    ['bilingual-xlsx', t('modal.export.bilingualXlsx'), t('modal.export.bilingual'), 'file'],
     ['epub', t('modal.export.epub'), t('modal.export.epubGroup'), 'file'],
     ['srt', t('modal.export.srt'), t('modal.export.subtitleGroup'), 'file'],
     ['vtt', t('modal.export.vtt'), t('modal.export.subtitleGroup'), 'file'],
@@ -128,6 +129,7 @@ function SettingsModal({ t, settings, mtRoutes, busy, onClose, onSave }) {
       model: settings.review?.model || '',
       temperature: settings.review?.temperature ?? 0,
     },
+    startAtHome: settings.startAtHome === true,
   })
   const routes = Array.isArray(mtRoutes?.providers) ? mtRoutes.providers : []
   const route = routes.find((item) => item.id === form.mt.provider)
@@ -200,6 +202,7 @@ function SettingsModal({ t, settings, mtRoutes, busy, onClose, onSave }) {
         model: form.review.model,
         temperature: Number(form.review.temperature),
       },
+      startAtHome: Boolean(form.startAtHome),
     }
     onSave(patch)
   }
@@ -231,6 +234,17 @@ function SettingsModal({ t, settings, mtRoutes, busy, onClose, onSave }) {
           ),
         ),
         h('p', { className: 'cait-mt-hint', style: { marginTop: 0 } }, t('modal.settings.uiHint')),
+        h(
+          'label',
+          { className: 'cait-check' },
+          h('input', {
+            type: 'checkbox',
+            checked: Boolean(form.startAtHome),
+            onChange: (event) => setForm({ ...form, startAtHome: event.target.checked }),
+          }),
+          h('span', null, t('modal.settings.startAtHome')),
+        ),
+        h('p', { className: 'cait-mt-hint' }, t('modal.settings.startAtHomeHint')),
       ),
       h(
         'div',

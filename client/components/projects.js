@@ -9,6 +9,33 @@
 import { h, useState, useEffect, useRef } from '../react.js'
 import { Spinner, Icon, Modal } from './base.js'
 
+// 「所有文档」草稿导出：客户/评审最常用的六种，完整格式仍在文档视图的导出对话框里。
+const DOC_EXPORT_FORMATS = [
+  ['docx', 'modal.export.docx'],
+  ['bilingual-docx', 'modal.export.bilingualDocx'],
+  ['bilingual-xlsx', 'modal.export.bilingualXlsx'],
+  ['tmx', 'modal.export.tmx'],
+  ['xliff', 'modal.export.xliff'],
+  ['bilingual-csv', 'modal.export.bilingualCsv'],
+]
+
+function reportItems(t, onPickReport, target) {
+  return [
+    {
+      key: 'html',
+      label: t('projects.reportHtml'),
+      icon: 'file',
+      onClick: () => onPickReport({ ...target, format: 'html' }),
+    },
+    {
+      key: 'csv',
+      label: t('projects.reportCsv'),
+      icon: 'download',
+      onClick: () => onPickReport({ ...target, format: 'csv' }),
+    },
+  ]
+}
+
 const BRIEF_FIELDS = [
   ['domain', 'projects.domain'],
   ['audience', 'projects.audience'],
@@ -64,7 +91,7 @@ function statusChip(t, doc) {  const code = doc.status?.code ?? doc.status ?? ''
   return h('span', { className: `cait-proj-status is-${code}` }, label)
 }
 
-function ProjectList({ t, busy, state, projects: projectsProp, onSelect, onCreate, onProjectReport }) {
+function ProjectList({ t, busy, state, projects: projectsProp, onSelect, onCreate, onPickReport }) {
   const projects = projectsProp ?? state?.list?.projects ?? []
   const active = state?.project?.id ?? ''
   const [name, setName] = useState('')
@@ -136,7 +163,7 @@ function ProjectList({ t, busy, state, projects: projectsProp, onSelect, onCreat
                   type: 'button',
                   className: 'cait-linkbtn cait-proj-report',
                   title: t('projects.report'),
-                  onClick: () => onProjectReport(project.id),
+                  onClick: () => onPickReport({ kind: 'project', projectId: project.id, name: project.name }),
                 },
                 h(Icon, { name: 'chart', size: 12 }),
               ),
@@ -319,7 +346,7 @@ function ProjectDetail({
   onReorderDoc,
   onMoveDocToProject,
   onDocReport,
-  onProjectReport,
+  onPickReport,
   onRefreshAnalysis,
 }) {
   const project = state?.project ?? null
@@ -477,58 +504,6 @@ function ProjectDetail({
     meta.push([t('projects.quote'), `${currency} ${Number(quoteTotal).toFixed(2)}`])
   }
 
-  const headerItems = [
-    {
-      key: 'refresh',
-      label: t('projects.refreshAnalysis'),
-      icon: 'chart',
-      disabled: Boolean(busy),
-      onClick: () => onRefreshAnalysis(),
-    },
-    {
-      key: 'html',
-      label: t('projects.reportHtml'),
-      icon: 'file',
-      disabled: Boolean(busy),
-      onClick: () => onProjectReport(projectId, 'html'),
-    },
-    {
-      key: 'csv',
-      label: t('projects.reportCsv'),
-      icon: 'download',
-      disabled: Boolean(busy),
-      onClick: () => onProjectReport(projectId, 'csv'),
-    },
-    {
-      key: 'export',
-      label: t('projects.export'),
-      icon: 'download',
-      disabled: Boolean(busy),
-      onClick: () => onExport(include),
-    },
-  ]
-  if (!inbox) {
-    headerItems.push(
-      confirmDelete
-        ? {
-            key: 'confirm-delete',
-            label: t('projects.deleteConfirm'),
-            danger: true,
-            disabled: Boolean(busy),
-            onClick: () => onDelete(),
-          }
-        : {
-            key: 'delete',
-            label: t('projects.delete'),
-            icon: 'trash',
-            danger: true,
-            disabled: Boolean(busy),
-            keep: true,
-            onClick: () => setConfirmDelete(true),
-          },
-    )
-  }
-
   const docActions = !inbox
     ? [
         h(
@@ -564,6 +539,18 @@ function ProjectDetail({
     h(
       'table',
       { className: 'cait-table cait-proj-table' },
+      h(
+        'colgroup',
+        null,
+        h('col', { style: { width: '22%' } }),
+        h('col', { style: { width: '10%' } }),
+        h('col', { style: { width: '14%' } }),
+        h('col', { style: { width: '7%' } }),
+        h('col', { style: { width: '8%' } }),
+        h('col', { style: { width: '13%' } }),
+        h('col', { style: { width: '18%' } }),
+        h('col', { style: { width: '8%' } }),
+      ),
       h(
         'thead',
         null,
@@ -688,22 +675,9 @@ function ProjectDetail({
                     { className: 'cait-proj-rowactions', onClick: (event) => event.stopPropagation() },
                     h(Menu, {
                       t,
-                      compact: true,
+                      label: t('projects.format'),
                       disabled: Boolean(busy),
-                      items: [
-                        {
-                          key: 'html',
-                          label: t('projects.reportHtml'),
-                          icon: 'file',
-                          onClick: () => onDocReport(doc.id, 'html'),
-                        },
-                        {
-                          key: 'csv',
-                          label: t('projects.reportCsv'),
-                          icon: 'download',
-                          onClick: () => onDocReport(doc.id, 'csv'),
-                        },
-                      ],
+                      items: reportItems(t, onPickReport, { kind: 'doc', documentId: doc.id, name: doc.name }),
                     }),
                   ),
                 ),
@@ -802,7 +776,79 @@ function ProjectDetail({
           saving ? h(Spinner, { size: 13 }) : h(Icon, { name: 'save', size: 13 }),
           h('span', null, t('projects.saveSettings')),
         ),
-        h(Menu, { t, label: t('projects.more'), items: headerItems, disabled: Boolean(busy) }),
+        h(
+          'button',
+          {
+            type: 'button',
+            className: 'cait-btn',
+            title: t('projects.export'),
+            disabled: Boolean(busy),
+            onClick: () => onExport(include),
+          },
+          h(Icon, { name: 'download', size: 13 }),
+          h('span', null, t('projects.export')),
+        ),
+        h(Menu, {
+          t,
+          label: t('projects.report'),
+          icon: 'file',
+          disabled: Boolean(busy),
+          items: reportItems(t, onPickReport, { kind: 'project', projectId, name: project.name }),
+        }),
+        h(
+          'button',
+          {
+            type: 'button',
+            className: 'cait-btn',
+            title: t('projects.refreshAnalysis'),
+            disabled: Boolean(busy),
+            onClick: () => onRefreshAnalysis(),
+          },
+          h(Icon, { name: 'chart', size: 13 }),
+          h('span', null, t('projects.refreshAnalysis')),
+        ),
+        inbox
+          ? null
+          : confirmDelete
+            ? h(
+                'span',
+                { className: 'cait-confirm' },
+                h(
+                  'button',
+                  {
+                    type: 'button',
+                    className: 'cait-btn is-danger',
+                    title: t('projects.deleteConfirm'),
+                    disabled: Boolean(busy),
+                    onClick: () => onDelete(),
+                  },
+                  h(Icon, { name: 'trash', size: 13 }),
+                  h('span', null, t('projects.deleteConfirm')),
+                ),
+                h(
+                  'button',
+                  {
+                    type: 'button',
+                    className: 'cait-btn',
+                    title: t('panel.cancel'),
+                    disabled: Boolean(busy),
+                    onClick: () => setConfirmDelete(false),
+                  },
+                  h('span', null, t('panel.cancel')),
+                ),
+              )
+            : h(
+                'button',
+                {
+                  type: 'button',
+                  className: 'cait-btn is-danger',
+                  title: t('projects.delete'),
+                  disabled: Boolean(busy),
+                  onClick: () => setConfirmDelete(true),
+                },
+                h(Icon, { name: 'trash', size: 13 }),
+                h('span', null, t('projects.delete')),
+              ),
       ),
     ),
     h(
@@ -1060,7 +1106,7 @@ function ProjectDetail({
                 ),
                 h(
                   'button',
-                  { type: 'button', className: 'cait-linkbtn', onClick: () => onDeleteTime(entry.id) },
+                  { type: 'button', className: 'cait-linkbtn', title: t('projects.deleteTime'), onClick: () => onDeleteTime(entry.id) },
                   h(Icon, { name: 'trash', size: 12 }),
                 ),
               ),
@@ -1079,7 +1125,8 @@ function AllDocuments({
   projects,
   docId,
   onOpenDoc,
-  onDocReport,
+  onPickReport,
+  onExportDoc,
   onMove,
   onOpenProject,
 }) {
@@ -1127,7 +1174,21 @@ function AllDocuments({
       { className: 'cait-proj-tablewrap' },
       h(
         'table',
-        { className: 'cait-table' },
+        { className: 'cait-table cait-proj-table' },
+        h(
+          'colgroup',
+          null,
+          h('col', { style: { width: '18%' } }),
+          h('col', { style: { width: '10%' } }),
+          h('col', { style: { width: '9%' } }),
+          h('col', { style: { width: '10%' } }),
+          h('col', { style: { width: '6%' } }),
+          h('col', { style: { width: '6%' } }),
+          h('col', { style: { width: '11%' } }),
+          h('col', { style: { width: '13%' } }),
+          h('col', { style: { width: '8%' } }),
+          h('col', { style: { width: '9%' } }),
+        ),
         h(
           'thead',
           null,
@@ -1142,6 +1203,8 @@ function AllDocuments({
             h('th', null, t('projects.colWords')),
             h('th', null, t('projects.colUpdated')),
             h('th', null, t('projects.colActions')),
+            h('th', null, t('projects.colExport')),
+            h('th', null, t('projects.colReports')),
           ),
         ),
         h(
@@ -1165,6 +1228,7 @@ function AllDocuments({
                       {
                         type: 'button',
                         className: 'cait-linkbtn',
+                        title: doc.name,
                         onClick: (event) => {
                           event.stopPropagation()
                           onOpenDoc(doc.id)
@@ -1181,6 +1245,7 @@ function AllDocuments({
                       {
                         type: 'button',
                         className: 'cait-linkbtn',
+                        title: doc.name,
                         onClick: (event) => {
                           event.stopPropagation()
                           onOpenProject(doc.projectId)
@@ -1203,34 +1268,66 @@ function AllDocuments({
                         className: 'cait-proj-rowactions',
                         onClick: (event) => event.stopPropagation(),
                       },
-                      h(
-                        'button',
-                        {
-                          type: 'button',
-                          className: 'cait-minibtn',
-                          title: t('projects.reportHtml'),
-                          onClick: () => onDocReport(doc.id, 'html'),
-                        },
-                        h(Icon, { name: 'chart', size: 12 }),
-                      ),
-                      h(
-                        'button',
-                        {
-                          type: 'button',
-                          className: 'cait-minibtn',
-                          title: t('projects.reportCsv'),
-                          onClick: () => onDocReport(doc.id, 'csv'),
-                        },
-                        h(Icon, { name: 'download', size: 12 }),
-                      ),
-                      h('select', {
-                        className: 'cait-proj-movesel',
-                        value: doc.projectId ?? '',
-                        title: t('projects.moveHint'),
-                        onChange: (event) => onMove(doc.id, event.target.value),
-                      }, (projects ?? []).map((project) =>
-                        h('option', { key: project.id, value: project.id }, project.name),
-                      )),
+                      h(Menu, {
+                        t,
+                        label: t('projects.moveToProject'),
+                        icon: 'folder',
+                        disabled: Boolean(busy),
+                        items: (() => {
+                          const list = (projects ?? []).slice()
+                          if (!list.some((project) => project.inbox)) {
+                            list.unshift({ id: '', name: t('projects.inboxTag'), inbox: true })
+                          }
+                          const currentId = doc.projectId === 'project_inbox' ? '' : doc.projectId || ''
+                          return list
+                            .filter((project) => (project.inbox ? '' : project.id) !== currentId)
+                            .map((project) => ({
+                              key: project.id || 'inbox',
+                              label: project.name,
+                              icon: 'folder',
+                              onClick: () => onMove(doc.id, project.id),
+                            }))
+                        })(),
+                      }),
+                    ),
+                  ),
+                  h(
+                    'td',
+                    null,
+                    h(
+                      'span',
+                      {
+                        className: 'cait-proj-rowactions',
+                        onClick: (event) => event.stopPropagation(),
+                      },
+                      h(Menu, {
+                        t,
+                        label: t('projects.format'),
+                        disabled: Boolean(busy),
+                        items: DOC_EXPORT_FORMATS.map(([format, key]) => ({
+                          key: format,
+                          label: t(key),
+                          icon: 'download',
+                          onClick: () => onExportDoc(doc.id, format),
+                        })),
+                      }),
+                    ),
+                  ),
+                  h(
+                    'td',
+                    null,
+                    h(
+                      'span',
+                      {
+                        className: 'cait-proj-rowactions',
+                        onClick: (event) => event.stopPropagation(),
+                      },
+                      h(Menu, {
+                        t,
+                        label: t('projects.format'),
+                        disabled: Boolean(busy),
+                        items: reportItems(t, onPickReport, { kind: 'doc', documentId: doc.id, name: doc.name }),
+                      }),
                     ),
                   ),
                 ),
@@ -1238,7 +1335,7 @@ function AllDocuments({
             : h(
                 'tr',
                 null,
-                h('td', { colSpan: 8 }, h('span', { className: 'cait-hint' }, t('projects.noMatch'))),
+                h('td', { colSpan: 10 }, h('span', { className: 'cait-hint' }, t('projects.noMatch'))),
               ),
         ),
       ),
@@ -1278,6 +1375,7 @@ function ProjectsPage({
   onImportDoc,
   onReport,
   onDocReport,
+  onExportDoc,
   onMoveDoc,
   onReorderDoc,
   onMoveDocToProject,
@@ -1285,6 +1383,16 @@ function ProjectsPage({
 }) {
   const list = state?.list?.projects ?? projects ?? []
   const documentsCount = (documents ?? []).length
+  // 报告格式统一在一个小弹窗里选（HTML 便于阅读/打印，CSV 便于核对数字）。
+  const [reportPick, setReportPick] = useState(null)
+  const chooseReport = (pick, format) => {
+    setReportPick(null)
+    const chosen = format || pick.format || 'html'
+    if (pick.kind === 'project') onReport(pick.projectId, chosen)
+    else onDocReport(pick.documentId, chosen)
+  }
+  // 「所有文档」的报告列直接给格式，项目页的入口先弹选择框。
+  const pickReport = (pick) => (pick.format ? chooseReport(pick) : setReportPick(pick))
   return h(
     'div',
     { className: 'cait-projpage' },
@@ -1325,7 +1433,8 @@ function ProjectsPage({
           projects: list,
           docId,
           onOpenDoc,
-          onDocReport,
+          onPickReport: pickReport,
+          onExportDoc,
           onOpenProject: onSelect,
           onMove: onMoveDoc,
         })
@@ -1339,7 +1448,7 @@ function ProjectsPage({
             projects: list,
             onSelect,
             onCreate,
-            onProjectReport: onReport,
+            onPickReport: pickReport,
           }),
           h(ProjectDetail, {
             t,
@@ -1369,10 +1478,56 @@ function ProjectsPage({
             onReorderDoc,
             onMoveDocToProject,
             onDocReport,
-            onProjectReport: onReport,
+            onPickReport: pickReport,
             onRefreshAnalysis,
           }),
         ),
+    reportPick
+      ? h(ReportPick, { t, busy, pick: reportPick, onPick: chooseReport, onClose: () => setReportPick(null) })
+      : null,
+  )
+}
+
+/** 报告格式选择：HTML 便于阅读/打印，CSV 便于核对数字。 */
+function ReportPick({ t, busy, pick, onPick, onClose }) {
+  if (!pick) return null
+  const name = pick.name ?? ''
+  return h(
+    Modal,
+    { title: t('projects.reportTitle'), onClose },
+    h(
+      'p',
+      { className: 'cait-hint' },
+      pick.kind === 'project'
+        ? t('projects.reportHintProject', { name })
+        : t('projects.reportHintDoc', { name }),
+    ),
+    h(
+      'div',
+      { className: 'cait-report-pick' },
+      h(
+        'button',
+        {
+          type: 'button',
+          className: 'cait-btn',
+          disabled: Boolean(busy),
+          onClick: () => onPick(pick, 'html'),
+        },
+        h(Icon, { name: 'file', size: 13 }),
+        h('span', null, t('projects.reportHtml')),
+      ),
+      h(
+        'button',
+        {
+          type: 'button',
+          className: 'cait-btn',
+          disabled: Boolean(busy),
+          onClick: () => onPick(pick, 'csv'),
+        },
+        h(Icon, { name: 'download', size: 13 }),
+        h('span', null, t('projects.reportCsv')),
+      ),
+    ),
   )
 }
 

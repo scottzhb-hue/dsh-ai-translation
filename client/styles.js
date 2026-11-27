@@ -582,10 +582,18 @@ const CSS = `
 .cait-menu-dots{font-size:14px;line-height:1}
 .cait-btn.is-mini{height:22px;padding:0 7px;font-size:11px;gap:4px}
 .cait-table.cait-proj-table td{padding:7px 10px;font-size:12px}
-.cait-table.cait-proj-table th{font-size:11px;letter-spacing:0;text-transform:none}
+.cait-table.cait-proj-table{width:100%;table-layout:fixed;border-collapse:collapse}
+.cait-table.cait-proj-table th{font-size:12px;font-weight:600;letter-spacing:.01em;text-transform:none;text-align:left;padding:8px 10px;color:var(--dsw-alias-label-secondary);background:var(--dsw-alias-bg-layer-2);border-bottom:1px solid var(--dsw-alias-border-l2,var(--dsw-alias-border-l1))}
+.cait-table.cait-proj-table td{overflow:hidden;text-overflow:ellipsis;text-align:left;border-bottom:1px solid var(--dsw-alias-border-l2,var(--dsw-alias-border-l1))}
+.cait-table.cait-proj-table th+th,.cait-table.cait-proj-table td+td{border-left:1px solid var(--dsw-alias-border-l1)}
+.cait-table.cait-proj-table th:last-child,.cait-table.cait-proj-table td:last-child{border-right:none}
+.cait-confirm{display:inline-flex;gap:6px;align-items:center}
+.cait-btn.is-danger{color:var(--dsw-alias-label-danger,#d9534f);border-color:var(--dsw-alias-label-danger,#d9534f)}
+.cait-btn.is-danger:hover{background:color-mix(in srgb,var(--dsw-alias-label-danger,#d9534f) 14%,transparent);border-color:var(--dsw-alias-label-danger,#d9534f)}
 .cait-proj-title{font-size:17px;font-weight:650;line-height:1.3}
 .cait-proj-docname{font-size:13px;font-weight:600}
-.cait-proj-progress{display:flex;align-items:center;gap:8px}
+.cait-proj-progress{display:flex;align-items:center;gap:8px;justify-content:center}
+.cait-proj-progress .cait-proj-bar{width:90px}
 .cait-proj-percent{min-width:32px;font-size:11px;color:var(--dsw-alias-label-secondary)}
 .cait-proj-row{cursor:pointer}
 .cait-proj-row:hover td{background:var(--dsw-alias-bg-layer-2)}
@@ -597,6 +605,8 @@ const CSS = `
 .cait-proj-tablewrap{overflow:auto;border:1px solid var(--dsw-alias-border-l1);border-radius:8px}
 .cait-proj-tablewrap .cait-table{margin:0}
 .cait-proj-table td{vertical-align:middle}
+.cait-format-btn{gap:4px;min-width:52px;justify-content:center}
+.cait-format-btn .cait-menu-caret{font-size:9px}
 .cait-proj-bar{display:block;height:4px;width:110px;border-radius:3px;overflow:hidden;background:var(--dsw-alias-bg-layer-3);margin-bottom:2px}
 .cait-proj-bar span{display:block;height:100%;background:var(--dsw-alias-brand-primary);transition:width .2s ease}
 .cait-proj-rowactions{display:inline-flex;align-items:center;gap:4px}
@@ -615,6 +625,7 @@ const CSS = `
 .cait-proj-toolbar{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
 .cait-proj-toolbar .cait-input{max-width:260px;height:26px}
 .cait-proj-movesel{height:24px;font-size:10.5px;max-width:130px}
+.cait-report-pick{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
 .cait-proj-addmore{margin:4px 0 0}
 .cait-proj-addmore summary{cursor:pointer;font-size:11.5px;color:var(--dsw-alias-label-secondary)}
 .cait-proj-picklist{display:flex;flex-direction:column;gap:4px;max-height:220px;overflow:auto;margin:8px 0}

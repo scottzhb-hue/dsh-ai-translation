@@ -78,6 +78,20 @@ manual reload.
 
 ## Features
 
+### New in 1.2.11
+
+- **Five project actions, one click away**: Save, Export delivery package, Project report ▾, Refresh analysis and Delete project (red, two-step) sit side by side; the “More” menu is gone.
+- **Reports and exports pick their format in place**: both document tables show a “Format ▾” button in the report column (HTML / CSV download), and All documents gains its own Export column (DOCX / bilingual DOCX / bilingual XLSX / TMX / XLIFF / bilingual CSV).
+- **Bilingual XLSX export**: Source / Target / Status columns, handy for row-by-row review and for comparing a client’s revision.
+- **Table layout cleaned up**: headers and cells are left-aligned, 12px headers, percentage column widths (document column 22% / 18%), vertical rules and clearer row lines; long names are ellipsized with a tooltip.
+- **Undoable delete, honest move menu**: confirming a delete now offers Cancel, and the move menu only lists projects the document is not in (Unfiled is compared by normalised id).
+- **Resume where you left off**: the workbench reopens the project, document, library or align view you were on. A new “Always start from the welcome page” switch turns this off.
+- **Downloads open in a new window**: when the desktop shell ignores the download attribute, the plugin panel no longer navigates away (fixes the blank screen after clicking a report in All documents).
+### Changed in 1.2.11
+
+- Project header now shows Save settings, Export delivery, Delete project and More side by side; “Project report” asks for HTML or CSV first.
+- Downloads open in a new window, so a shell that ignores the download attribute no longer replaces the whole panel (this was the cause of the blank workbench after clicking a report icon).
+
 ### New in 1.2.9
 
 - **One importer everywhere.** The welcome screen now uses the same drop zone as the project page: multi-select/multi-drop, the batch limits spelled out, and skipped files explained.
