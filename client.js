@@ -3754,7 +3754,6 @@ var CSS = `
 .cait-field textarea.cait-input{height:auto;min-height:44px;resize:vertical}
 .cait-proj-analysis{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:11px;color:var(--dsw-alias-label-secondary)}
 .cait-proj-dirty{font-size:10.5px;color:var(--dsw-alias-state-warn-primary)}
-.cait-proj-report{display:inline-flex;align-items:center;gap:4px}
 /* —— 欢迎页 —— */
 button.cait-brand{background:none;border:0;padding:0;cursor:pointer;text-align:left;color:inherit;font:inherit}
 button.cait-brand:hover .cait-brand-text strong{color:var(--dsw-alias-state-info-primary)}
@@ -10471,7 +10470,7 @@ function statusChip(t, doc) {
   const label = doc.status?.label ?? doc.statusLabel ?? t(STATUS_LABEL[code] ?? "projects.statusUntranslated");
   return h("span", { className: `cait-proj-status is-${code}` }, label);
 }
-function ProjectList({ t, busy, state, projects: projectsProp, onSelect, onCreate, onPickReport }) {
+function ProjectList({ t, busy, state, projects: projectsProp, onSelect, onCreate }) {
   const projects = projectsProp ?? state?.list?.projects ?? [];
   const active = state?.project?.id ?? "";
   const [name, setName] = useState("");
@@ -10525,23 +10524,13 @@ function ProjectList({ t, busy, state, projects: projectsProp, onSelect, onCreat
               "span",
               { className: "cait-proj-item-title" },
               h("span", { className: "cait-proj-item-name" }, project.name),
-              project.inbox ? h("span", { className: "cait-proj-tag" }, t("projects.inboxTag")) : null
+              project.inbox && project.name !== t("projects.inboxTag") ? h("span", { className: "cait-proj-tag" }, t("projects.inboxTag")) : null
             ),
             h(
               "span",
               { className: "cait-proj-item-meta" },
               `${project.documents} ${t("projects.docsUnit")} · ${project.percent ?? 0}%` + (project.running ? ` · ${t("projects.running")}` : "") + (project.overdue ? ` · ${t("projects.overdueShort")}` : "")
             )
-          ),
-          h(
-            "button",
-            {
-              type: "button",
-              className: "cait-linkbtn cait-proj-report",
-              title: t("projects.report"),
-              onClick: () => onPickReport({ kind: "project", projectId: project.id, name: project.name })
-            },
-            h(Icon, { name: "chart", size: 12 })
           )
         )
       )
@@ -11730,8 +11719,7 @@ function ProjectsPage({
         state,
         projects: list,
         onSelect,
-        onCreate,
-        onPickReport: pickReport
+        onCreate
       }),
       h(ProjectDetail, {
         t,

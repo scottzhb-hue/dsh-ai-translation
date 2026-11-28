@@ -108,7 +108,7 @@ function statusChip(t, doc) {  const code = doc.status?.code ?? doc.status ?? ''
   return h('span', { className: `cait-proj-status is-${code}` }, label)
 }
 
-function ProjectList({ t, busy, state, projects: projectsProp, onSelect, onCreate, onPickReport }) {
+function ProjectList({ t, busy, state, projects: projectsProp, onSelect, onCreate }) {
   const projects = projectsProp ?? state?.list?.projects ?? []
   const active = state?.project?.id ?? ''
   const [name, setName] = useState('')
@@ -164,7 +164,9 @@ function ProjectList({ t, busy, state, projects: projectsProp, onSelect, onCreat
                   'span',
                   { className: 'cait-proj-item-title' },
                   h('span', { className: 'cait-proj-item-name' }, project.name),
-                  project.inbox ? h('span', { className: 'cait-proj-tag' }, t('projects.inboxTag')) : null,
+                  project.inbox && project.name !== t('projects.inboxTag')
+                    ? h('span', { className: 'cait-proj-tag' }, t('projects.inboxTag'))
+                    : null,
                 ),
                 h(
                   'span',
@@ -173,16 +175,6 @@ function ProjectList({ t, busy, state, projects: projectsProp, onSelect, onCreat
                     (project.running ? ` · ${t('projects.running')}` : '') +
                     (project.overdue ? ` · ${t('projects.overdueShort')}` : ''),
                 ),
-              ),
-              h(
-                'button',
-                {
-                  type: 'button',
-                  className: 'cait-linkbtn cait-proj-report',
-                  title: t('projects.report'),
-                  onClick: () => onPickReport({ kind: 'project', projectId: project.id, name: project.name }),
-                },
-                h(Icon, { name: 'chart', size: 12 }),
               ),
             ),
           ),
@@ -1451,7 +1443,6 @@ function ProjectsPage({
             projects: list,
             onSelect,
             onCreate,
-            onPickReport: pickReport,
           }),
           h(ProjectDetail, {
             t,

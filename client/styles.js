@@ -637,7 +637,6 @@ const CSS = `
 .cait-field textarea.cait-input{height:auto;min-height:44px;resize:vertical}
 .cait-proj-analysis{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:11px;color:var(--dsw-alias-label-secondary)}
 .cait-proj-dirty{font-size:10.5px;color:var(--dsw-alias-state-warn-primary)}
-.cait-proj-report{display:inline-flex;align-items:center;gap:4px}
 /* —— 欢迎页 —— */
 button.cait-brand{background:none;border:0;padding:0;cursor:pointer;text-align:left;color:inherit;font:inherit}
 button.cait-brand:hover .cait-brand-text strong{color:var(--dsw-alias-state-info-primary)}

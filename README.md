@@ -84,6 +84,7 @@ manual reload.
 - **Long project names wrap**: no more single-line ellipsis; the Unfiled tag stays top-aligned with the name.
 - **“Add existing documents” is easier to spot**: 13px / weight 500 plus a plus icon, matching the “Documents” header.
 - **One move interaction**: the project detail row uses the same in-place “Move ▾” menu as All documents; pick a target and the document moves immediately. The separate “Move to another project” dialog is gone.
+- **No duplicate report button in the project list** (the detail header already has one); each row is just name + meta, and the Unfiled project no longer shows its label twice.
 
 ### New in 1.2.11
 
