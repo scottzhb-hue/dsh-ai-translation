@@ -75,6 +75,10 @@ function Workbench({ i18n, translate }) {
     mt,
     mtError,
     mtBusy,
+    segmentReview,
+    runSegmentReview,
+    applySegmentReview,
+    closeSegmentReview,
     mtRoutes,
     stale,
     toast,
@@ -669,6 +673,10 @@ function Workbench({ i18n, translate }) {
                   mtError,
                   mtBusy,
                   onGenerateMt: generateMt,
+                  segmentReview,
+                  onReviewSegment: runSegmentReview,
+                  onApplySegmentReview: applySegmentReview,
+                  onCloseSegmentReview: closeSegmentReview,
                   onApplyMt: () => {
                     if (mt?.text) {
                       setDraft(mt.text)

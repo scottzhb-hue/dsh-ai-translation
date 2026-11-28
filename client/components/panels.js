@@ -1,4 +1,4 @@
-import { h, useRef, useState } from '../react.js'
+import { h, useEffect, useRef, useState } from '../react.js'
 import { Spinner, Icon } from './base.js'
 import { TmMatchCard } from './editor.js'
 
@@ -28,6 +28,10 @@ function CatPanel({
   mtError,
   mtBusy,
   onGenerateMt,
+  segmentReview,
+  onReviewSegment,
+  onApplySegmentReview,
+  onCloseSegmentReview,
   onOpenLocalMt,
   mtLocal,
   onApplyMt,
@@ -61,6 +65,14 @@ function CatPanel({
   const tmxInput = useRef(null)
   const glossaryInput = useRef(null)
   const [exportFormat, setExportFormat] = useState('tbx')
+  // The segment reviewer's editable copy of the suggestion, and an optional
+  // pasted translation to review instead of the editor draft.
+  const [reviewText, setReviewText] = useState('')
+  const [pasteText, setPasteText] = useState('')
+  const segmentVerdict = segmentReview?.verdict || null
+  useEffect(() => {
+    setReviewText(segmentVerdict?.suggestion || '')
+  }, [segmentVerdict])
   const routes = Array.isArray(mtRoutes?.providers) ? mtRoutes.providers : []
   const currentRoute = routes.find((route) => route.id === settings.mt.provider)
   const localMtReady = Boolean(mtLocal?.enabled && mtLocal?.baseUrl && mtLocal?.model)
@@ -364,65 +376,176 @@ function CatPanel({
               ),
             ),
             h(
-              'div',
-              { className: 'cait-card' },
+              'section',
+              { className: 'cait-ai-block' },
+              h('div', { className: 'cait-ai-title' }, t('panel.mtTranslate')),
               h(
                 'div',
-                { className: 'cait-labelrow' },
-                h('span', { className: 'cait-label' }, t('panel.mtRoute')),
-                h('span', { className: 'cait-meta' }, settings.mt.provider || '—'),
+                { className: 'cait-card' },
+                h(
+                  'div',
+                  { className: 'cait-labelrow' },
+                  h('span', { className: 'cait-label' }, t('panel.mtRoute')),
+                  h('span', { className: 'cait-meta' }, settings.mt.provider || '—'),
+                ),
+                h(
+                  'button',
+                  {
+                    className: 'cait-linkbtn',
+                    type: 'button',
+                    onClick: onOpenLocalMt,
+                    disabled: Boolean(busy),
+                  },
+                  t('mtlocal.open'),
+                ),
+                h(
+                  'button',
+                  {
+                    className: 'cait-btn cait-btn-primary',
+                    onClick: onGenerateMt,
+                    disabled: Boolean(busy) || mtBusy,
+                    style: { width: '100%' },
+                  },
+                  mtBusy ? h(Spinner) : h(Icon, { name: 'sparkles', size: 14 }),
+                  mtBusy ? t('panel.mtGenerating') : t('panel.mtGenerate'),
+                ),
               ),
-              h(
-                'button',
-                {
-                  className: 'cait-linkbtn',
-                  type: 'button',
-                  onClick: onOpenLocalMt,
-                  disabled: Boolean(busy),
-                },
-                t('mtlocal.open'),
-              ),
-              h(
-                'button',
-                {
-                  className: 'cait-btn cait-btn-primary',
-                  onClick: onGenerateMt,
-                  disabled: Boolean(busy) || mtBusy,
-                  style: { width: '100%' },
-                },
-                mtBusy ? h(Spinner) : h(Icon, { name: 'sparkles', size: 14 }),
-                mtBusy ? t('panel.mtGenerating') : t('panel.mtGenerate'),
-              ),
+              mtError ? h('div', { className: 'cait-mt-error' }, mtError) : null,
+              mt
+                ? h(
+                    'article',
+                    { className: 'cait-card cait-mt-card' },
+                    h(
+                      'div',
+                      { className: 'cait-card-head' },
+                      h('span', { className: 'cait-score exact' }, t('panel.mtSuggestion')),
+                      h('span', { className: 'cait-score-label' }, `${mt.latencyMs} ms`),
+                    ),
+                    h('p', { className: 'cait-mt-text' }, mt.text),
+                    mt.note ? h('p', { className: 'cait-mt-hint' }, mt.note) : null,
+                    h(
+                      'div',
+                      { className: 'cait-mt-actions' },
+                      h(
+                        'button',
+                        { className: 'cait-minibtn', onClick: () => onCopy(mt.text) },
+                        t('panel.copy'),
+                      ),
+                      h(
+                        'button',
+                        { className: 'cait-minibtn', onClick: onApplyMt },
+                        t('panel.mtInsert'),
+                      ),
+                    ),
+                  )
+                : h('p', { className: 'cait-empty-note' }, t('panel.mtEmpty')),
             ),
-            mtError ? h('div', { className: 'cait-mt-error' }, mtError) : null,
-            mt
-              ? h(
-                  'article',
-                  { className: 'cait-card cait-mt-card' },
-                  h(
-                    'div',
-                    { className: 'cait-card-head' },
-                    h('span', { className: 'cait-score exact' }, t('panel.mtSuggestion')),
-                    h('span', { className: 'cait-score-label' }, `${mt.latencyMs} ms`),
-                  ),
-                  h('p', { className: 'cait-mt-text' }, mt.text),
-                  mt.note ? h('p', { className: 'cait-mt-hint' }, mt.note) : null,
-                  h(
-                    'div',
-                    { className: 'cait-mt-actions' },
-                    h(
+            h(
+              'section',
+              { className: 'cait-ai-block' },
+              h(
+                'div',
+                { className: 'cait-ai-title' },
+                t('panel.reviewTitle'),
+                h(
+                  'span',
+                  { className: 'cait-muted cait-tiny' },
+                  `#${(segmentReview?.index ?? doc?.cursor ?? 0) + 1}`,
+                ),
+                segmentVerdict
+                  ? h(
                       'button',
-                      { className: 'cait-minibtn', onClick: () => onCopy(mt.text) },
-                      t('panel.copy'),
-                    ),
-                    h(
-                      'button',
-                      { className: 'cait-minibtn', onClick: onApplyMt },
-                      t('panel.mtInsert'),
-                    ),
-                  ),
-                )
-              : h('p', { className: 'cait-empty-note' }, t('panel.mtEmpty')),
+                      { className: 'cait-linkbtn cait-tiny', type: 'button', onClick: onCloseSegmentReview },
+                      t('panel.reviewClear'),
+                    )
+                  : null,
+              ),
+              h(
+                'div',
+                { className: 'cait-card' },
+                h('p', { className: 'cait-mt-hint' }, t('panel.reviewPasteHint')),
+                h('textarea', {
+                  className: 'cait-input cait-review-paste',
+                  value: pasteText,
+                  placeholder: t('panel.reviewPaste'),
+                  onChange: (event) => setPasteText(event.target.value),
+                  rows: 2,
+                }),
+                h(
+                  'button',
+                  {
+                    className: 'cait-btn cait-btn-primary',
+                    onClick: () => onReviewSegment(pasteText),
+                    disabled: Boolean(busy) || Boolean(segmentReview?.busy),
+                    style: { width: '100%' },
+                  },
+                  segmentReview?.busy ? h(Spinner) : h(Icon, { name: 'check', size: 14 }),
+                  segmentReview?.busy ? t('panel.reviewRunning') : t('panel.reviewRun'),
+                ),
+              ),
+              segmentReview?.error
+                ? h('div', { className: 'cait-mt-error' }, segmentReview.error)
+                : null,
+              segmentVerdict
+                ? (() => {
+                    const clean =
+                      segmentVerdict.severity === 'none' ||
+                      (!segmentVerdict.message && !segmentVerdict.suggestion)
+                    return h(
+                      'article',
+                      { className: 'cait-card cait-mt-card' },
+                      h(
+                        'div',
+                        { className: 'cait-card-head' },
+                        h(
+                          'span',
+                          { className: `cait-score${clean ? ' exact' : ' risk'}` },
+                          clean ? t('panel.reviewClean') : segmentVerdict.code,
+                        ),
+                        h(
+                          'span',
+                          { className: 'cait-score-label' },
+                          segmentVerdict.latencyMs ? `${segmentVerdict.latencyMs} ms` : '',
+                        ),
+                      ),
+                      segmentVerdict.message
+                        ? h('p', { className: 'cait-mt-text' }, segmentVerdict.message)
+                        : null,
+                      clean
+                        ? null
+                        : h('textarea', {
+                            className: 'cait-input cait-review-edit',
+                            value: reviewText,
+                            onChange: (event) => setReviewText(event.target.value),
+                            rows: 3,
+                          }),
+                      h(
+                        'div',
+                        { className: 'cait-mt-actions' },
+                        h(
+                          'button',
+                          {
+                            className: 'cait-minibtn',
+                            onClick: () => onCopy(reviewText || segmentVerdict.suggestion || ''),
+                          },
+                          t('panel.copy'),
+                        ),
+                        clean
+                          ? null
+                          : h(
+                              'button',
+                              {
+                                className: 'cait-minibtn',
+                                onClick: () => onApplySegmentReview(reviewText),
+                              },
+                              t('panel.reviewApply'),
+                            ),
+                      ),
+                      clean ? null : h('p', { className: 'cait-mt-hint' }, t('panel.reviewNote')),
+                    )
+                  })()
+                : h('p', { className: 'cait-empty-note' }, t('panel.reviewEmpty')),
+            ),
             h(
               'p',
               { className: 'cait-mt-hint' },

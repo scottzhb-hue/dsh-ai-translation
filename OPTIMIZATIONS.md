@@ -490,6 +490,7 @@
 - 名称换行：`.cait-proj-item-name` 去掉 `white-space:nowrap` 与 `text-overflow:ellipsis`，改 `overflow-wrap:anywhere; line-height:1.35`；`.cait-proj-item-title` 由 `align-items:center` 改 `flex-start`，长名称换行时「未分类」标签仍贴顶。
 - 折叠标题：`.cait-proj-addmore summary` 11.5px → 13px、`font-weight:500`、颜色由 secondary 提为 primary，并在 `summary` 前加 `Icon plus`；位置保持在文档表下方——挪到文档卡头部会与「新建文档 / 导入文件」挤在一行，项目多、文档名长时反而更乱。
 - 打开项目一律落到「项目」页签：从「所有文档」点项目名时，`requestProject` 先 `setProjectTab('projects')`，未保存拦截后 `resolvePendingNav` 的 `kind === 'project'` 分支也同样切页签——此前详情只在后台载入，界面仍停在表格上，看起来像点击无效。
+- AI 审校（单句段）：`reviewSegment({documentId,index,target?,before=3})` 只审当前句段，`target` 可传草稿或粘贴文本；上下文取前 3 条有译文句段的「原文 => 译文」、项目/文档 brief 与术语库命中；结果不写入整页 QA 报告，回填沿用「只改草稿并标脏」。
 - 列表行去重：项目列表每行原本还挂一颗报告按钮，与详情页顶部的「项目报告 ▾」重复，且作为整行按钮的兄弟节点只能换行落到下一行左侧（看起来像多出来的小图标）。直接删除该按钮与 `.cait-proj-report` 样式，`ProjectList` 不再需要 `onPickReport`。
 - 未分类去重：默认项目的名称就是「未分类」，再渲染一枚「未分类」标签会重复；改为 `project.inbox && project.name !== t('projects.inboxTag')` 才显示标签，改名后仍能识别它的特殊身份。
 - 本地 MT 移入设置：`LocalMtFields` 抽成共用组件（设置弹窗与右栏 `LocalMtModal` 都渲染它），设置里新增「翻译方式」二选一与「清除已保存的 API Key」；保存时 `saveSettings` 把 `mtLocal` 摘出来交给 `setMtLocal`，右栏 MT 头部改为显示实际生效的 `本地端点 · 模型` / `DSH 路由 · 模型`。

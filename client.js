@@ -1073,6 +1073,18 @@ var ZH = {
   "panel.mtModeRoute": "DSH 路由 · {model}",
   "panel.mtModel": "模型",
   "panel.mtSuggestion": "MT 建议",
+  "panel.mtTranslate": "AI 翻译",
+  "panel.reviewTitle": "AI 审校",
+  "panel.reviewRun": "审校当前句段",
+  "panel.reviewRunning": "审校中…",
+  "panel.reviewPaste": "粘贴一条译文来审（可留空）",
+  "panel.reviewPasteHint": "留空时审校译文栏里的当前内容。",
+  "panel.reviewEmpty": "点上面的按钮，针对当前句段给出审校意见。",
+  "panel.reviewClean": "没有发现问题",
+  "panel.reviewApply": "回填译文",
+  "panel.reviewClear": "清除",
+  "panel.reviewNote": "回填只改草稿，保存后才会写入记忆。",
+  "panel.reviewApplied": "已回填到译文栏，记得保存。",
   "panel.mtSettings": "配置路由",
   "panel.mtHint": "通过 DSH 模型路由调用，凭据由 DSH 管理。",
   "panel.mtMockHint": "术语替换（离线）不联网，只使用术语库；在设置中选择 DSH 路由可启用真实翻译。",
@@ -1515,6 +1527,18 @@ var EN = {
   "panel.mtModeRoute": "DSH route · {model}",
   "panel.mtModel": "Model",
   "panel.mtSuggestion": "MT suggestion",
+  "panel.mtTranslate": "AI translation",
+  "panel.reviewTitle": "AI review",
+  "panel.reviewRun": "Review this segment",
+  "panel.reviewRunning": "Reviewing…",
+  "panel.reviewPaste": "Paste a translation to review (optional)",
+  "panel.reviewPasteHint": "Leave it empty to review what is in the target box.",
+  "panel.reviewEmpty": "Use the button above to review the active segment.",
+  "panel.reviewClean": "No issues found",
+  "panel.reviewApply": "Apply to target",
+  "panel.reviewClear": "Clear",
+  "panel.reviewNote": "Applying only changes the draft; save to store it.",
+  "panel.reviewApplied": "Applied to the target box; remember to save.",
   "panel.mtSettings": "Configure route",
   "panel.mtHint": "Calls through a DSH model route; credentials stay inside DSH.",
   "panel.mtMockHint": "Glossary substitution is offline and uses only glossary terms. Pick a DSH route in Settings for real MT.",
@@ -1957,6 +1981,18 @@ var JA = {
   "panel.mtModeRoute": "DSH ルート · {model}",
   "panel.mtModel": "モデル",
   "panel.mtSuggestion": "MT 候補",
+  "panel.mtTranslate": "AI 翻訳",
+  "panel.reviewTitle": "AI 校閲",
+  "panel.reviewRun": "このセグメントを校閲",
+  "panel.reviewRunning": "校閲中…",
+  "panel.reviewPaste": "訳文を貼り付けて校閲（任意）",
+  "panel.reviewPasteHint": "空欄なら訳文欄の現在の内容を校閲します。",
+  "panel.reviewEmpty": "上のボタンで、現在のセグメントを校閲します。",
+  "panel.reviewClean": "問題は見つかりませんでした",
+  "panel.reviewApply": "訳文に反映",
+  "panel.reviewClear": "クリア",
+  "panel.reviewNote": "反映は下書きのみ。保存で確定します。",
+  "panel.reviewApplied": "訳文欄に反映しました。保存してください。",
   "panel.mtSettings": "ルートを設定",
   "panel.mtHint": "DSH のモデルルート経由で呼び出します。認証情報は DSH が管理します。",
   "panel.mtMockHint": "用語置換（オフライン）はネットワークを使わず、用語集の用語だけを置換します。設定で DSH ルートを選ぶと実際の翻訳が有効になります。",
@@ -3481,6 +3517,14 @@ var CSS = `
 .cait-mt-actions{display:flex;gap:5px;justify-content:flex-end}
 .cait-mt-error{padding:8px;margin-bottom:8px;border:1px solid color-mix(in srgb,var(--dsw-alias-state-error-primary) 30%,var(--dsw-alias-border-l1));border-radius:7px;background:color-mix(in srgb,var(--dsw-alias-state-error-primary) 7%,transparent);color:var(--dsw-alias-state-error-primary);font-size:10.5px;line-height:1.5}
 .cait-mt-hint{margin-top:9px;font-size:10px;line-height:1.55;color:var(--dsw-alias-label-secondary)}
+.cait-ai-block{margin-bottom:14px}
+.cait-ai-block:last-of-type{margin-bottom:10px}
+.cait-ai-title{display:flex;align-items:center;gap:6px;margin-bottom:7px;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--dsw-alias-label-secondary)}
+.cait-ai-title .cait-linkbtn{margin-left:auto;text-transform:none;letter-spacing:0}
+.cait-score.risk{background:color-mix(in srgb,var(--dsw-alias-state-error-primary) 13%,transparent);color:var(--dsw-alias-state-error-primary)}
+.cait-review-paste,.cait-review-edit{width:100%;margin:2px 0 8px;font-size:12px;line-height:1.55;resize:vertical}
+.cait-review-paste{min-height:38px}
+.cait-review-edit{min-height:74px}
 .cait-paneljump{display:flex;align-items:center;justify-content:flex-end;margin-top:1px}
 .cait-empty{display:grid;place-items:center;min-height:0;overflow-y:auto;padding:34px 28px}
 .cait-empty-inner{width:min(680px,100%);padding:6px 0 20px}
@@ -6102,6 +6146,10 @@ function CatPanel({
   mtError,
   mtBusy,
   onGenerateMt,
+  segmentReview,
+  onReviewSegment,
+  onApplySegmentReview,
+  onCloseSegmentReview,
   onOpenLocalMt,
   mtLocal,
   onApplyMt,
@@ -6135,6 +6183,12 @@ function CatPanel({
   const tmxInput = useRef(null);
   const glossaryInput = useRef(null);
   const [exportFormat, setExportFormat] = useState("tbx");
+  const [reviewText, setReviewText] = useState("");
+  const [pasteText, setPasteText] = useState("");
+  const segmentVerdict = segmentReview?.verdict || null;
+  useEffect(() => {
+    setReviewText(segmentVerdict?.suggestion || "");
+  }, [segmentVerdict]);
   const routes = Array.isArray(mtRoutes?.providers) ? mtRoutes.providers : [];
   const currentRoute = routes.find((route) => route.id === settings.mt.provider);
   const localMtReady = Boolean(mtLocal?.enabled && mtLocal?.baseUrl && mtLocal?.model);
@@ -6418,63 +6472,160 @@ function CatPanel({
           )
         ),
         h(
-          "div",
-          { className: "cait-card" },
+          "section",
+          { className: "cait-ai-block" },
+          h("div", { className: "cait-ai-title" }, t("panel.mtTranslate")),
           h(
             "div",
-            { className: "cait-labelrow" },
-            h("span", { className: "cait-label" }, t("panel.mtRoute")),
-            h("span", { className: "cait-meta" }, settings.mt.provider || "—")
-          ),
-          h(
-            "button",
-            {
-              className: "cait-linkbtn",
-              type: "button",
-              onClick: onOpenLocalMt,
-              disabled: Boolean(busy)
-            },
-            t("mtlocal.open")
-          ),
-          h(
-            "button",
-            {
-              className: "cait-btn cait-btn-primary",
-              onClick: onGenerateMt,
-              disabled: Boolean(busy) || mtBusy,
-              style: { width: "100%" }
-            },
-            mtBusy ? h(Spinner) : h(Icon, { name: "sparkles", size: 14 }),
-            mtBusy ? t("panel.mtGenerating") : t("panel.mtGenerate")
-          )
-        ),
-        mtError ? h("div", { className: "cait-mt-error" }, mtError) : null,
-        mt ? h(
-          "article",
-          { className: "cait-card cait-mt-card" },
-          h(
-            "div",
-            { className: "cait-card-head" },
-            h("span", { className: "cait-score exact" }, t("panel.mtSuggestion")),
-            h("span", { className: "cait-score-label" }, `${mt.latencyMs} ms`)
-          ),
-          h("p", { className: "cait-mt-text" }, mt.text),
-          mt.note ? h("p", { className: "cait-mt-hint" }, mt.note) : null,
-          h(
-            "div",
-            { className: "cait-mt-actions" },
+            { className: "cait-card" },
             h(
-              "button",
-              { className: "cait-minibtn", onClick: () => onCopy(mt.text) },
-              t("panel.copy")
+              "div",
+              { className: "cait-labelrow" },
+              h("span", { className: "cait-label" }, t("panel.mtRoute")),
+              h("span", { className: "cait-meta" }, settings.mt.provider || "—")
             ),
             h(
               "button",
-              { className: "cait-minibtn", onClick: onApplyMt },
-              t("panel.mtInsert")
+              {
+                className: "cait-linkbtn",
+                type: "button",
+                onClick: onOpenLocalMt,
+                disabled: Boolean(busy)
+              },
+              t("mtlocal.open")
+            ),
+            h(
+              "button",
+              {
+                className: "cait-btn cait-btn-primary",
+                onClick: onGenerateMt,
+                disabled: Boolean(busy) || mtBusy,
+                style: { width: "100%" }
+              },
+              mtBusy ? h(Spinner) : h(Icon, { name: "sparkles", size: 14 }),
+              mtBusy ? t("panel.mtGenerating") : t("panel.mtGenerate")
             )
-          )
-        ) : h("p", { className: "cait-empty-note" }, t("panel.mtEmpty")),
+          ),
+          mtError ? h("div", { className: "cait-mt-error" }, mtError) : null,
+          mt ? h(
+            "article",
+            { className: "cait-card cait-mt-card" },
+            h(
+              "div",
+              { className: "cait-card-head" },
+              h("span", { className: "cait-score exact" }, t("panel.mtSuggestion")),
+              h("span", { className: "cait-score-label" }, `${mt.latencyMs} ms`)
+            ),
+            h("p", { className: "cait-mt-text" }, mt.text),
+            mt.note ? h("p", { className: "cait-mt-hint" }, mt.note) : null,
+            h(
+              "div",
+              { className: "cait-mt-actions" },
+              h(
+                "button",
+                { className: "cait-minibtn", onClick: () => onCopy(mt.text) },
+                t("panel.copy")
+              ),
+              h(
+                "button",
+                { className: "cait-minibtn", onClick: onApplyMt },
+                t("panel.mtInsert")
+              )
+            )
+          ) : h("p", { className: "cait-empty-note" }, t("panel.mtEmpty"))
+        ),
+        h(
+          "section",
+          { className: "cait-ai-block" },
+          h(
+            "div",
+            { className: "cait-ai-title" },
+            t("panel.reviewTitle"),
+            h(
+              "span",
+              { className: "cait-muted cait-tiny" },
+              `#${(segmentReview?.index ?? doc?.cursor ?? 0) + 1}`
+            ),
+            segmentVerdict ? h(
+              "button",
+              { className: "cait-linkbtn cait-tiny", type: "button", onClick: onCloseSegmentReview },
+              t("panel.reviewClear")
+            ) : null
+          ),
+          h(
+            "div",
+            { className: "cait-card" },
+            h("p", { className: "cait-mt-hint" }, t("panel.reviewPasteHint")),
+            h("textarea", {
+              className: "cait-input cait-review-paste",
+              value: pasteText,
+              placeholder: t("panel.reviewPaste"),
+              onChange: (event) => setPasteText(event.target.value),
+              rows: 2
+            }),
+            h(
+              "button",
+              {
+                className: "cait-btn cait-btn-primary",
+                onClick: () => onReviewSegment(pasteText),
+                disabled: Boolean(busy) || Boolean(segmentReview?.busy),
+                style: { width: "100%" }
+              },
+              segmentReview?.busy ? h(Spinner) : h(Icon, { name: "check", size: 14 }),
+              segmentReview?.busy ? t("panel.reviewRunning") : t("panel.reviewRun")
+            )
+          ),
+          segmentReview?.error ? h("div", { className: "cait-mt-error" }, segmentReview.error) : null,
+          segmentVerdict ? (() => {
+            const clean = segmentVerdict.severity === "none" || !segmentVerdict.message && !segmentVerdict.suggestion;
+            return h(
+              "article",
+              { className: "cait-card cait-mt-card" },
+              h(
+                "div",
+                { className: "cait-card-head" },
+                h(
+                  "span",
+                  { className: `cait-score${clean ? " exact" : " risk"}` },
+                  clean ? t("panel.reviewClean") : segmentVerdict.code
+                ),
+                h(
+                  "span",
+                  { className: "cait-score-label" },
+                  segmentVerdict.latencyMs ? `${segmentVerdict.latencyMs} ms` : ""
+                )
+              ),
+              segmentVerdict.message ? h("p", { className: "cait-mt-text" }, segmentVerdict.message) : null,
+              clean ? null : h("textarea", {
+                className: "cait-input cait-review-edit",
+                value: reviewText,
+                onChange: (event) => setReviewText(event.target.value),
+                rows: 3
+              }),
+              h(
+                "div",
+                { className: "cait-mt-actions" },
+                h(
+                  "button",
+                  {
+                    className: "cait-minibtn",
+                    onClick: () => onCopy(reviewText || segmentVerdict.suggestion || "")
+                  },
+                  t("panel.copy")
+                ),
+                clean ? null : h(
+                  "button",
+                  {
+                    className: "cait-minibtn",
+                    onClick: () => onApplySegmentReview(reviewText)
+                  },
+                  t("panel.reviewApply")
+                )
+              ),
+              clean ? null : h("p", { className: "cait-mt-hint" }, t("panel.reviewNote"))
+            );
+          })() : h("p", { className: "cait-empty-note" }, t("panel.reviewEmpty"))
+        ),
         h(
           "p",
           { className: "cait-mt-hint" },
@@ -12123,6 +12274,7 @@ function useWorkbenchController({ i18n, translate }) {
   const [mt, setMt] = useState(null);
   const [mtError, setMtError] = useState("");
   const [mtBusy, setMtBusy] = useState(false);
+  const [segmentReview, setSegmentReview] = useState(null);
   const [mtRoutes, setMtRoutes] = useState({ providers: [], fallback: true, message: "" });
   const [stale, setStale] = useState(false);
   const [toast, setToast] = useState(null);
@@ -14377,6 +14529,33 @@ function useWorkbenchController({ i18n, translate }) {
       setMtBusy(false);
     }
   };
+  const runSegmentReview = async (pasted = "") => {
+    if (!doc || !segment || segmentReview?.busy) return;
+    const text = String(pasted ?? "").trim() || String(draft ?? "").trim();
+    const target = text || String(segment.target ?? "");
+    setSegmentReview({ index: selected, busy: true, error: "", verdict: null });
+    try {
+      const verdict = await rpc("reviewSegment", {
+        documentId: doc.id,
+        index: selected,
+        target: target || void 0
+      });
+      setSegmentReview({ index: selected, busy: false, error: "", verdict });
+    } catch (error) {
+      setSegmentReview({ index: selected, busy: false, error: describeError(error, t), verdict: null });
+    }
+  };
+  const applySegmentReview = (text) => {
+    const verdict = segmentReview?.verdict;
+    if (!doc || !verdict) return;
+    const next = String(text ?? verdict.suggestion ?? "").trim();
+    if (!next) return;
+    if (verdict.index !== selected) void chooseSegment(verdict.index);
+    setDraft(next);
+    setDirty(true);
+    notify(t("panel.reviewApplied"));
+  };
+  const closeSegmentReview = () => setSegmentReview(null);
   const openSettings = async () => {
     setModal({ type: "settings" });
     try {
@@ -14682,6 +14861,10 @@ function useWorkbenchController({ i18n, translate }) {
     mt,
     mtError,
     mtBusy,
+    segmentReview,
+    runSegmentReview,
+    applySegmentReview,
+    closeSegmentReview,
     mtRoutes,
     stale,
     toast,
@@ -14895,6 +15078,10 @@ function Workbench({ i18n, translate }) {
     mt,
     mtError,
     mtBusy,
+    segmentReview,
+    runSegmentReview,
+    applySegmentReview,
+    closeSegmentReview,
     mtRoutes,
     stale,
     toast,
@@ -15459,6 +15646,10 @@ function Workbench({ i18n, translate }) {
           mtError,
           mtBusy,
           onGenerateMt: generateMt,
+          segmentReview,
+          onReviewSegment: runSegmentReview,
+          onApplySegmentReview: applySegmentReview,
+          onCloseSegmentReview: closeSegmentReview,
           onApplyMt: () => {
             if (mt?.text) {
               setDraft(mt.text);

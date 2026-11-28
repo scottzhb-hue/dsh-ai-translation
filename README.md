@@ -80,6 +80,7 @@ manual reload.
 
 ### Changed in 1.2.12
 
+- **AI review for the active segment**: the CAT panel now shows "AI Translate" and "AI Review" as two stacked cards. AI Review checks only the segment you are on — using the live target field (unsaved edits included) or a translation you paste in — with the project brief, glossary hits and the previous 3 translated segments as context. You can edit the suggestion and write it back into the target field with one click.
 - **Local MT is configurable from Settings now**: Settings → Machine translation has a route/local switch, the same form as the editor panel (Base URL, model, API key, timeout, test connection), plus clearing a stored key. The editor panel header shows which path is in effect.
 
 - **Narrower project column**: 236px → 208px (180px on narrow windows), leaving more room for the project detail.

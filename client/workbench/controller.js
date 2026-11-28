@@ -72,6 +72,8 @@ export function useWorkbenchController({ i18n, translate }) {
   const [mt, setMt] = useState(null)
   const [mtError, setMtError] = useState('')
   const [mtBusy, setMtBusy] = useState(false)
+  // One-segment AI review: transient, never merged into doc.review.
+  const [segmentReview, setSegmentReview] = useState(null)
   const [mtRoutes, setMtRoutes] = useState({ providers: [], fallback: true, message: '' })
   const [stale, setStale] = useState(false)
   const [toast, setToast] = useState(null)
@@ -2609,6 +2611,36 @@ export function useWorkbenchController({ i18n, translate }) {
     }
   }
 
+  const runSegmentReview = async (pasted = '') => {
+    if (!doc || !segment || segmentReview?.busy) return
+    const text = String(pasted ?? '').trim() || String(draft ?? '').trim()
+    const target = text || String(segment.target ?? '')
+    setSegmentReview({ index: selected, busy: true, error: '', verdict: null })
+    try {
+      const verdict = await rpc('reviewSegment', {
+        documentId: doc.id,
+        index: selected,
+        target: target || undefined,
+      })
+      setSegmentReview({ index: selected, busy: false, error: '', verdict })
+    } catch (error) {
+      setSegmentReview({ index: selected, busy: false, error: describeError(error, t), verdict: null })
+    }
+  }
+
+  const applySegmentReview = (text) => {
+    const verdict = segmentReview?.verdict
+    if (!doc || !verdict) return
+    const next = String(text ?? verdict.suggestion ?? '').trim()
+    if (!next) return
+    if (verdict.index !== selected) void chooseSegment(verdict.index)
+    setDraft(next)
+    setDirty(true)
+    notify(t('panel.reviewApplied'))
+  }
+
+  const closeSegmentReview = () => setSegmentReview(null)
+
   const openSettings = async () => {
     setModal({ type: 'settings' })
     try {
@@ -2947,6 +2979,10 @@ export function useWorkbenchController({ i18n, translate }) {
     mt,
     mtError,
     mtBusy,
+    segmentReview,
+    runSegmentReview,
+    applySegmentReview,
+    closeSegmentReview,
     mtRoutes,
     stale,
     toast,

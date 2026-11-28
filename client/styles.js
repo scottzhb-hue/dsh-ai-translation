@@ -343,6 +343,14 @@ const CSS = `
 .cait-mt-actions{display:flex;gap:5px;justify-content:flex-end}
 .cait-mt-error{padding:8px;margin-bottom:8px;border:1px solid color-mix(in srgb,var(--dsw-alias-state-error-primary) 30%,var(--dsw-alias-border-l1));border-radius:7px;background:color-mix(in srgb,var(--dsw-alias-state-error-primary) 7%,transparent);color:var(--dsw-alias-state-error-primary);font-size:10.5px;line-height:1.5}
 .cait-mt-hint{margin-top:9px;font-size:10px;line-height:1.55;color:var(--dsw-alias-label-secondary)}
+.cait-ai-block{margin-bottom:14px}
+.cait-ai-block:last-of-type{margin-bottom:10px}
+.cait-ai-title{display:flex;align-items:center;gap:6px;margin-bottom:7px;font-size:11px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--dsw-alias-label-secondary)}
+.cait-ai-title .cait-linkbtn{margin-left:auto;text-transform:none;letter-spacing:0}
+.cait-score.risk{background:color-mix(in srgb,var(--dsw-alias-state-error-primary) 13%,transparent);color:var(--dsw-alias-state-error-primary)}
+.cait-review-paste,.cait-review-edit{width:100%;margin:2px 0 8px;font-size:12px;line-height:1.55;resize:vertical}
+.cait-review-paste{min-height:38px}
+.cait-review-edit{min-height:74px}
 .cait-paneljump{display:flex;align-items:center;justify-content:flex-end;margin-top:1px}
 .cait-empty{display:grid;place-items:center;min-height:0;overflow-y:auto;padding:34px 28px}
 .cait-empty-inner{width:min(680px,100%);padding:6px 0 20px}
