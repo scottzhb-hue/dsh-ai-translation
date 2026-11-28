@@ -489,6 +489,7 @@
 - 列宽：`.cait-proj-body` 由 `minmax(0,236px) 1fr` 改为 `minmax(180px,208px) 1fr`，`@media(max-width:1180px)` 固定在 180px；列表项内边距 7px → 6px 抵消收窄带来的拥挤。
 - 名称换行：`.cait-proj-item-name` 去掉 `white-space:nowrap` 与 `text-overflow:ellipsis`，改 `overflow-wrap:anywhere; line-height:1.35`；`.cait-proj-item-title` 由 `align-items:center` 改 `flex-start`，长名称换行时「未分类」标签仍贴顶。
 - 折叠标题：`.cait-proj-addmore summary` 11.5px → 13px、`font-weight:500`、颜色由 secondary 提为 primary，并在 `summary` 前加 `Icon plus`；位置保持在文档表下方——挪到文档卡头部会与「新建文档 / 导入文件」挤在一行，项目多、文档名长时反而更乱。
+- 打开项目一律落到「项目」页签：从「所有文档」点项目名时，`requestProject` 先 `setProjectTab('projects')`，未保存拦截后 `resolvePendingNav` 的 `kind === 'project'` 分支也同样切页签——此前详情只在后台载入，界面仍停在表格上，看起来像点击无效。
 - 列表行去重：项目列表每行原本还挂一颗报告按钮，与详情页顶部的「项目报告 ▾」重复，且作为整行按钮的兄弟节点只能换行落到下一行左侧（看起来像多出来的小图标）。直接删除该按钮与 `.cait-proj-report` 样式，`ProjectList` 不再需要 `onPickReport`。
 - 未分类去重：默认项目的名称就是「未分类」，再渲染一枚「未分类」标签会重复；改为 `project.inbox && project.name !== t('projects.inboxTag')` 才显示标签，改名后仍能识别它的特殊身份。
 - 移动统一：抽出模块级 `moveMenuItems(t, projects, doc, onMove)`，项目详情行与「所有文档」都用它生成「移动 ▾」菜单（列出其他项目 + 未分类，按 `project_inbox` ↔ `''` 归一排除当前项目）；删除 `MoveDocModal` 与 controller 的 `openMoveDocPicker` / `pickMoveTarget`，少一条无人走的路径。

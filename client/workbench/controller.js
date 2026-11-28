@@ -1588,6 +1588,9 @@ export function useWorkbenchController({ i18n, translate }) {
 
   const requestProject = (projectId) => {
     if (!projectId) return
+    // Opening a project always lands on the project tab. From "All documents"
+    // the detail used to load behind the table, so the click looked dead.
+    setProjectTab('projects')
     // Clicking the project that is already open reloads it: the detail may be
     // stale (documents moved, words edited) and an early return feels dead.
     if (projectId === currentProjectId()) {
@@ -1705,7 +1708,10 @@ export function useWorkbenchController({ i18n, translate }) {
     else if (nav.kind === 'new')
       setModal({ type: nav.mode === 'file' ? 'import' : 'new', projectId: nav.projectId })
     else if (nav.kind === 'tab') setProjectTab(nav.tab)
-    else if (nav.kind === 'project') await selectProject(nav.projectId)
+    else if (nav.kind === 'project') {
+      setProjectTab('projects')
+      await selectProject(nav.projectId)
+    }
     else if (nav.kind === 'doc') {
       await openDocument(nav.documentId)
       setView('documents')

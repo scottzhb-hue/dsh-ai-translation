@@ -11538,7 +11538,7 @@ function AllDocuments({
                   {
                     type: "button",
                     className: "cait-linkbtn",
-                    title: doc.name,
+                    title: doc.projectName || t("projects.inboxTag"),
                     onClick: (event) => {
                       event.stopPropagation();
                       onOpenProject(doc.projectId);
@@ -13333,6 +13333,7 @@ function useWorkbenchController({ i18n, translate }) {
   };
   const requestProject = (projectId) => {
     if (!projectId) return;
+    setProjectTab("projects");
     if (projectId === currentProjectId()) {
       void selectProject(projectId);
       return;
@@ -13435,8 +13436,10 @@ function useWorkbenchController({ i18n, translate }) {
     else if (nav.kind === "new")
       setModal({ type: nav.mode === "file" ? "import" : "new", projectId: nav.projectId });
     else if (nav.kind === "tab") setProjectTab(nav.tab);
-    else if (nav.kind === "project") await selectProject(nav.projectId);
-    else if (nav.kind === "doc") {
+    else if (nav.kind === "project") {
+      setProjectTab("projects");
+      await selectProject(nav.projectId);
+    } else if (nav.kind === "doc") {
       await openDocument(nav.documentId);
       setView("documents");
     }

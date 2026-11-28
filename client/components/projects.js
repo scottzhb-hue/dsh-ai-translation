@@ -1255,7 +1255,7 @@ function AllDocuments({
                       {
                         type: 'button',
                         className: 'cait-linkbtn',
-                        title: doc.name,
+                        title: doc.projectName || t('projects.inboxTag'),
                         onClick: (event) => {
                           event.stopPropagation()
                           onOpenProject(doc.projectId)
