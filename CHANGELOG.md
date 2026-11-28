@@ -8,6 +8,14 @@ All notable changes to this fork of CAIT are documented here. The project follow
 > （作者 Jovi Lecca，Apache-2.0），保留原文以便溯源，已统一放到文件末尾的「Upstream history」。
 
 ## [1.2.12] - 2026-11-28
+### Added
+
+- **设置 → 机器翻译新增「翻译方式」开关**：DSH 模型路由 / 本地端点（OpenAI 兼容）。本地端点表单（Base URL、Model、API Key、超时、测试连接）与编辑器右栏用的是同一个组件，两处不会再走样。
+- 同一表单里可以清除已保存的 API Key；密钥仍然只落在数据目录的 mt-local.json。
+
+### Changed
+
+- 编辑器右栏 MT 头部改为显示**当前实际生效的方式**：本地端点 · 模型 或 DSH 路由 · 模型。
 
 ### Changed
 

@@ -2609,11 +2609,25 @@ export function useWorkbenchController({ i18n, translate }) {
     }
   }
 
+  const openSettings = async () => {
+    setModal({ type: 'settings' })
+    try {
+      setMtLocalConfig(await rpc('mtLocalState'))
+    } catch (error) {
+      report(error)
+    }
+  }
+
   const saveSettings = async (patch) => {
     setBusy('settings')
     try {
-      const result = await rpc('saveSettings', patch)
+      const { mtLocal, ...settingsPatch } = patch ?? {}
+      const result = await rpc('saveSettings', settingsPatch)
       replaceRemoteState(result.state)
+      if (mtLocal) {
+        const next = await rpc('setMtLocal', mtLocal)
+        setMtLocalConfig(next)
+      }
       setModal(null)
       notify(t('toast.settingsSaved'))
       return true
@@ -3071,6 +3085,7 @@ export function useWorkbenchController({ i18n, translate }) {
     exportLibraryTo,
     importLibraryTo,
     generateMt,
+    openSettings,
     saveSettings,
     setMounts,
     createLibrary,

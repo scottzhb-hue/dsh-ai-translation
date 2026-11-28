@@ -267,6 +267,7 @@ var ZH_WORKFLOW = {
   "mtlocal.timeout": "超时（毫秒）",
   "mtlocal.save": "保存",
   "mtlocal.saved": "本地 MT 设置已保存。",
+  "mtlocal.clearKey": "清除已保存的 API Key",
   "mtlocal.test": "测试连接",
   "mtlocal.testOk": "连接正常：{ms} ms · {model}",
   "mtlocal.testFailed": "连接失败：{message}"
@@ -341,6 +342,7 @@ var EN_WORKFLOW = {
   "mtlocal.timeout": "Timeout (ms)",
   "mtlocal.save": "Save",
   "mtlocal.saved": "Local MT settings saved.",
+  "mtlocal.clearKey": "Clear saved API key",
   "mtlocal.test": "Test connection",
   "mtlocal.testOk": "Connected: {ms} ms · {model}",
   "mtlocal.testFailed": "Connection failed: {message}"
@@ -415,6 +417,7 @@ var JA_WORKFLOW = {
   "mtlocal.timeout": "タイムアウト（ms）",
   "mtlocal.save": "保存",
   "mtlocal.saved": "ローカル MT 設定を保存しました。",
+  "mtlocal.clearKey": "保存済み API キーを消去",
   "mtlocal.test": "接続テスト",
   "mtlocal.testOk": "接続 OK：{ms} ms · {model}",
   "mtlocal.testFailed": "接続失敗：{message}"
@@ -1066,6 +1069,8 @@ var ZH = {
   "panel.mtGenerating": "正在生成…",
   "panel.mtInsert": "插入译文",
   "panel.mtEmpty": "点击生成，获取当前句段的机器翻译建议。",
+  "panel.mtModeLocal": "本地端点 · {model}",
+  "panel.mtModeRoute": "DSH 路由 · {model}",
   "panel.mtModel": "模型",
   "panel.mtSuggestion": "MT 建议",
   "panel.mtSettings": "配置路由",
@@ -1134,6 +1139,10 @@ var ZH = {
   "modal.settings.fuzzyHint": "低于 70% 的匹配通常只共享虚词，改起来比重译更慢；70% 是主流 CAT 工具的默认值。",
   "modal.settings.resetDefault": "恢复默认",
   "modal.settings.limit": "返回匹配数",
+  "modal.settings.mtModeRoute": "DSH 模型路由",
+  "modal.settings.mtModeLocal": "本地端点（OpenAI 兼容）",
+  "modal.settings.mtModeHint": "本地端点优先接管机器建议与预翻译；下方 DSH 路由仍用于 AI 对话与审校。",
+  "modal.settings.mtLocalScope": "只接管机器建议与预翻译，API Key 仅存本机数据目录。",
   "modal.settings.mt": "机器翻译",
   "modal.settings.review": "AI 审校模型",
   "modal.settings.reviewInherit": "跟随翻译模型（默认）",
@@ -1502,6 +1511,8 @@ var EN = {
   "panel.mtGenerating": "Generating…",
   "panel.mtInsert": "Insert translation",
   "panel.mtEmpty": "Generate a machine-translation suggestion for the current segment.",
+  "panel.mtModeLocal": "Local endpoint · {model}",
+  "panel.mtModeRoute": "DSH route · {model}",
   "panel.mtModel": "Model",
   "panel.mtSuggestion": "MT suggestion",
   "panel.mtSettings": "Configure route",
@@ -1570,6 +1581,10 @@ var EN = {
   "modal.settings.fuzzyHint": "Below 70% a match usually shares only function words, so editing it takes longer than retranslating. 70% is what mainstream CAT tools default to.",
   "modal.settings.resetDefault": "Reset",
   "modal.settings.limit": "Matches returned",
+  "modal.settings.mtModeRoute": "DSH model route",
+  "modal.settings.mtModeLocal": "Local endpoint (OpenAI-compatible)",
+  "modal.settings.mtModeHint": "The local endpoint takes over machine suggestions and pre-translation; the DSH route below still serves AI chat and review.",
+  "modal.settings.mtLocalScope": "Only machine suggestions and pre-translation; the API key stays in the local data directory.",
   "modal.settings.mt": "Machine translation",
   "modal.settings.review": "AI review model",
   "modal.settings.reviewInherit": "Follow the translation model (default)",
@@ -1938,6 +1953,8 @@ var JA = {
   "panel.mtGenerating": "生成中…",
   "panel.mtInsert": "訳文を挿入",
   "panel.mtEmpty": "現在のセグメントの機械翻訳候補を生成します。",
+  "panel.mtModeLocal": "ローカル端点 · {model}",
+  "panel.mtModeRoute": "DSH ルート · {model}",
   "panel.mtModel": "モデル",
   "panel.mtSuggestion": "MT 候補",
   "panel.mtSettings": "ルートを設定",
@@ -2006,6 +2023,10 @@ var JA = {
   "modal.settings.fuzzyHint": "70% を下回る一致は機能語だけが重なることが多く、訳し直すより遅くなります。主流の CAT ツールも 70% を既定にしています。",
   "modal.settings.resetDefault": "既定に戻す",
   "modal.settings.limit": "返す一致件数",
+  "modal.settings.mtModeRoute": "DSH モデルルート",
+  "modal.settings.mtModeLocal": "ローカルエンドポイント（OpenAI 互換）",
+  "modal.settings.mtModeHint": "ローカルエンドポイントは機械候補と事前翻訳を優先して処理します。下の DSH ルートは AI 対話とレビューに使われます。",
+  "modal.settings.mtLocalScope": "機械候補と事前翻訳のみ。API キーはローカルのデータフォルダーにのみ保存します。",
   "modal.settings.mt": "機械翻訳",
   "modal.settings.review": "AI レビューモデル",
   "modal.settings.reviewInherit": "翻訳モデルに従う（デフォルト）",
@@ -6082,6 +6103,7 @@ function CatPanel({
   mtBusy,
   onGenerateMt,
   onOpenLocalMt,
+  mtLocal,
   onApplyMt,
   onCopy,
   onOpenSettings,
@@ -6115,7 +6137,9 @@ function CatPanel({
   const [exportFormat, setExportFormat] = useState("tbx");
   const routes = Array.isArray(mtRoutes?.providers) ? mtRoutes.providers : [];
   const currentRoute = routes.find((route) => route.id === settings.mt.provider);
+  const localMtReady = Boolean(mtLocal?.enabled && mtLocal?.baseUrl && mtLocal?.model);
   const mtProviderLabel = settings.mt.provider === "mock" ? t("mt.mock") : currentRoute?.wrapper ? `${currentRoute.name || settings.mt.provider} · ${t("modal.settings.wrapperRoute")}` : currentRoute?.name || settings.mt.provider || t("mt.mock");
+  const mtModeLabel = localMtReady ? t("panel.mtModeLocal", { model: mtLocal.model }) : t("panel.mtModeRoute", { model: settings.mt.model || mtProviderLabel });
   const current = doc.current;
   const tmMatches = tmResults?.matches ?? current?.tmMatches ?? [];
   const hits = current?.glossaryHits ?? [];
@@ -6386,7 +6410,7 @@ function CatPanel({
         h(
           "div",
           { className: "cait-mt-head" },
-          h("span", { className: "cait-mt-mode" }, mtProviderLabel),
+          h("span", { className: "cait-mt-mode" }, mtModeLabel),
           h(
             "span",
             { className: "cait-muted cait-tiny" },
@@ -8453,6 +8477,449 @@ function LibraryPage({
   );
 }
 
+// client/components/workflow.js
+function DeliveryModal({ t, busy, checks, onRun, onClose, onJump, labels, onLabels, projectName }) {
+  const [include, setInclude] = useState({
+    target: true,
+    bilingual: true,
+    glossary: true,
+    qa: true,
+    analysis: true,
+    notes: false,
+    readme: true
+  });
+  const [client, setClient] = useState(labels?.client ?? "");
+  const [batch, setBatch] = useState(labels?.batch ?? "");
+  const counts = checks?.counts ?? { high: 0, medium: 0, low: 0 };
+  const items = checks?.items ?? [];
+  const toggle = (key) => setInclude((current) => ({ ...current, [key]: !current[key] }));
+  return h(
+    Modal,
+    { title: t("deliver.title"), onClose, wide: true },
+    h("p", { className: "cait-hint" }, t("deliver.hint")),
+    projectName ? h("p", { className: "cait-hint" }, t("deliver.projectHint", { name: projectName })) : null,
+    h(
+      "div",
+      { className: "cait-formrow" },
+      h("label", { className: "cait-field" }, h("span", null, t("deliver.client")), h("input", {
+        className: "cait-input",
+        value: client,
+        onChange: (event) => setClient(event.target.value)
+      })),
+      h("label", { className: "cait-field" }, h("span", null, t("deliver.batch")), h("input", {
+        className: "cait-input",
+        value: batch,
+        onChange: (event) => setBatch(event.target.value)
+      }))
+    ),
+    h(
+      "div",
+      { className: "cait-chips" },
+      h("span", { className: "cait-chip is-danger" }, `${t("deliver.blocking")} ${counts.high}`),
+      h("span", { className: "cait-chip is-warn" }, `${t("deliver.review")} ${counts.medium}`),
+      h("span", { className: "cait-chip" }, `${t("deliver.notice")} ${counts.low}`),
+      h("span", { className: "cait-chip" }, `${t("deliver.unconfirmed")} ${checks?.unconfirmed ?? 0}`)
+    ),
+    items.length ? h(
+      "ul",
+      { className: "cait-issues" },
+      items.slice(0, 12).map(
+        (item) => h(
+          "li",
+          { key: `${item.index}-${item.code}`, className: `cait-issue is-${item.severity}` },
+          h("button", { type: "button", className: "cait-linkbtn", onClick: () => onJump(item.index) }, `#${item.index + 1}`),
+          h("span", { className: "cait-issue-code" }, item.code),
+          h("span", { className: "cait-issue-msg" }, item.message)
+        )
+      )
+    ) : h("p", { className: "cait-hint" }, t("deliver.clean")),
+    h(
+      "div",
+      { className: "cait-checks" },
+      [
+        ["target", "deliver.includeTarget"],
+        ["bilingual", "deliver.includeBilingual"],
+        ["glossary", "deliver.includeGlossary"],
+        ["qa", "deliver.includeQa"],
+        ["analysis", "deliver.includeAnalysis"],
+        ["notes", "deliver.includeNotes"],
+        ["readme", "deliver.includeReadme"]
+      ].map(
+        ([key, label]) => h(
+          "label",
+          { key, className: "cait-check" },
+          h("input", { type: "checkbox", checked: include[key], onChange: () => toggle(key) }),
+          h("span", null, t(label))
+        )
+      )
+    ),
+    h(
+      "div",
+      { className: "cait-modal-actions" },
+      h("button", { type: "button", className: "cait-btn", onClick: onClose }, t("panel.cancel")),
+      h(
+        "button",
+        {
+          type: "button",
+          className: "cait-btn cait-btn-primary",
+          disabled: Boolean(busy),
+          onClick: () => onRun({ include, client, batch })
+        },
+        busy ? h(Spinner, { size: 13 }) : h(Icon, { name: "download", size: 13 }),
+        h("span", null, t("deliver.download"))
+      )
+    )
+  );
+}
+function BatchModal({ t, busy, documentId, selection, advice, onSelect, onRun, onClose }) {
+  const filters = ["pending", "unconfirmed", "risk", "duplicate", "new", "fuzzy", "locked", "notes"];
+  return h(
+    Modal,
+    { title: t("batch.title"), onClose, wide: true },
+    h("p", { className: "cait-hint" }, t("batch.hint")),
+    advice?.message ? h("p", { className: "cait-hint" }, advice.message) : null,
+    h(
+      "div",
+      { className: "cait-chips" },
+      filters.map(
+        (filter) => h(
+          "button",
+          {
+            key: filter,
+            type: "button",
+            className: `cait-chip${selection?.filter === filter ? " is-active" : ""}`,
+            onClick: () => onSelect(filter)
+          },
+          t(`batch.filter.${filter}`)
+        )
+      )
+    ),
+    h(
+      "p",
+      { className: "cait-hint" },
+      t("batch.selected", { count: selection?.indexes?.length ?? 0 })
+    ),
+    h(
+      "div",
+      { className: "cait-modal-actions" },
+      h("button", { type: "button", className: "cait-btn", onClick: onClose }, t("panel.cancel")),
+      h(
+        "button",
+        {
+          type: "button",
+          className: "cait-btn",
+          disabled: Boolean(busy) || !selection?.indexes?.length,
+          onClick: () => onRun({ action: "confirm", documentId, indexes: selection.indexes })
+        },
+        t("batch.confirm")
+      ),
+      h(
+        "button",
+        {
+          type: "button",
+          className: "cait-btn",
+          disabled: Boolean(busy) || !selection?.indexes?.length,
+          onClick: () => onRun({ action: "lock", documentId, indexes: selection.indexes })
+        },
+        t("batch.lock")
+      ),
+      h(
+        "button",
+        {
+          type: "button",
+          className: "cait-btn",
+          disabled: Boolean(busy) || !selection?.indexes?.length,
+          onClick: () => onRun({ action: "unlock", documentId, indexes: selection.indexes })
+        },
+        t("batch.unlock")
+      ),
+      h(
+        "button",
+        {
+          type: "button",
+          className: "cait-btn",
+          disabled: Boolean(busy) || !selection?.indexes?.length,
+          onClick: () => onRun({ action: "clear", documentId, indexes: selection.indexes })
+        },
+        t("batch.clear")
+      )
+    )
+  );
+}
+function QuoteModal({ t, busy, state, quote, postEdit, onSave, onRefresh, onExport, onLabels, onClose }) {
+  const [currency, setCurrency] = useState(state?.currency ?? "CNY");
+  const [rate, setRate] = useState(String(state?.rate ?? 120));
+  const [minimum, setMinimum] = useState(String(state?.minimum ?? 0));
+  const [discounts, setDiscounts] = useState(state?.discounts ?? {});
+  const [client, setClient] = useState(quote?.client ?? "");
+  const [batch, setBatch] = useState(quote?.batch ?? "");
+  useEffect(() => {
+    if (!state) return;
+    setCurrency(state.currency);
+    setRate(String(state.rate));
+    setMinimum(String(state.minimum));
+    setDiscounts(state.discounts ?? {});
+  }, [state]);
+  const lines = quote?.lines ?? [];
+  const setDiscount = (key, value) => setDiscounts((current) => ({ ...current, [key]: Number(value) }));
+  return h(
+    Modal,
+    { title: t("quote.title"), onClose, wide: true },
+    h("p", { className: "cait-hint" }, t("quote.hint")),
+    h(
+      "div",
+      { className: "cait-formrow" },
+      h("label", { className: "cait-field" }, h("span", null, t("quote.currency")), h("input", {
+        className: "cait-input",
+        value: currency,
+        onChange: (event) => setCurrency(event.target.value)
+      })),
+      h("label", { className: "cait-field" }, h("span", null, `${t("quote.rate")} (${state?.unitLabel ?? ""})`), h("input", {
+        className: "cait-input",
+        value: rate,
+        onChange: (event) => setRate(event.target.value)
+      })),
+      h("label", { className: "cait-field" }, h("span", null, t("quote.minimum")), h("input", {
+        className: "cait-input",
+        value: minimum,
+        onChange: (event) => setMinimum(event.target.value)
+      }))
+    ),
+    h(
+      "table",
+      { className: "cait-table" },
+      h(
+        "thead",
+        null,
+        h(
+          "tr",
+          null,
+          h("th", null, t("quote.bucket")),
+          h("th", null, t("quote.segments")),
+          h("th", null, t("quote.words")),
+          h("th", null, t("quote.discount")),
+          h("th", null, t("quote.amount"))
+        )
+      ),
+      h(
+        "tbody",
+        null,
+        lines.map(
+          (line) => h(
+            "tr",
+            { key: line.bucket },
+            h("td", null, line.label),
+            h("td", null, line.segments),
+            h("td", null, line.words),
+            h(
+              "td",
+              null,
+              h("input", {
+                className: "cait-input",
+                style: { width: "64px" },
+                value: discounts[line.bucket] ?? line.discount,
+                onChange: (event) => setDiscount(line.bucket, event.target.value)
+              })
+            ),
+            h("td", null, `${line.amount} ${quote?.currency ?? ""}`)
+          )
+        )
+      )
+    ),
+    h(
+      "p",
+      { className: "cait-hint" },
+      `${t("quote.subtotal")}：${quote?.subtotal ?? 0} ${quote?.currency ?? ""} · ${t("quote.total")}：${quote?.total ?? 0} ${quote?.currency ?? ""}`
+    ),
+    postEdit ? h(
+      "p",
+      { className: "cait-hint" },
+      `${t("quote.postEdit")}：${t("quote.postEditValue", {
+        entries: postEdit.entries,
+        keep: Math.round((postEdit.averageKeep ?? 0) * 100)
+      })}`
+    ) : null,
+    h(
+      "div",
+      { className: "cait-formrow" },
+      h("label", { className: "cait-field" }, h("span", null, t("deliver.client")), h("input", {
+        className: "cait-input",
+        value: client,
+        onChange: (event) => setClient(event.target.value)
+      })),
+      h("label", { className: "cait-field" }, h("span", null, t("deliver.batch")), h("input", {
+        className: "cait-input",
+        value: batch,
+        onChange: (event) => setBatch(event.target.value)
+      }))
+    ),
+    h(
+      "div",
+      { className: "cait-modal-actions" },
+      h("button", { type: "button", className: "cait-btn", onClick: onClose }, t("panel.cancel")),
+      h(
+        "button",
+        {
+          type: "button",
+          className: "cait-btn",
+          disabled: Boolean(busy),
+          onClick: () => onLabels({ client, batch })
+        },
+        t("quote.saveLabels")
+      ),
+      h(
+        "button",
+        {
+          type: "button",
+          className: "cait-btn",
+          disabled: Boolean(busy),
+          onClick: () => onSave({ currency, rate, minimum, discounts })
+        },
+        t("quote.save")
+      ),
+      h(
+        "button",
+        { type: "button", className: "cait-btn", disabled: Boolean(busy), onClick: () => onRefresh() },
+        t("quote.refresh")
+      ),
+      h(
+        "button",
+        {
+          type: "button",
+          className: "cait-btn cait-btn-primary",
+          disabled: Boolean(busy),
+          onClick: () => onExport("txt")
+        },
+        h(Icon, { name: "download", size: 13 }),
+        h("span", null, t("quote.export"))
+      )
+    )
+  );
+}
+function LocalMtFields({ t, busy, value, onChange, onTest, result, hasKey }) {
+  const field = (label, key, extra) => h(
+    "label",
+    { className: "cait-field" },
+    h("span", null, label),
+    h("input", {
+      className: "cait-input",
+      value: value[key] ?? "",
+      onChange: (event) => onChange({ [key]: event.target.value }),
+      ...extra || {}
+    })
+  );
+  return h(
+    "div",
+    null,
+    h(
+      "div",
+      { className: "cait-formrow" },
+      field("Base URL", "baseUrl", { placeholder: "http://127.0.0.1:1234/v1" }),
+      field("Model", "model", { placeholder: "qwen2.5-14b-instruct" })
+    ),
+    h(
+      "div",
+      { className: "cait-formrow" },
+      field(t("mtlocal.apiKey"), "apiKey", {
+        type: "password",
+        placeholder: hasKey ? "••••••" : ""
+      }),
+      field(t("mtlocal.timeout"), "timeoutMs")
+    ),
+    hasKey ? h(
+      "button",
+      {
+        type: "button",
+        className: "cait-linkbtn is-danger",
+        onClick: () => onChange({ apiKey: "", clearKey: true })
+      },
+      t("mtlocal.clearKey")
+    ) : null,
+    h(
+      "div",
+      { className: "cait-row", style: { gap: "9px", alignItems: "center", marginTop: "4px" } },
+      h(
+        "button",
+        { type: "button", className: "cait-btn", disabled: Boolean(busy), onClick: () => onTest() },
+        t("mtlocal.test")
+      ),
+      result ? h(
+        "span",
+        { className: "cait-hint" },
+        result.ok ? t("mtlocal.testOk", { ms: result.latencyMs, model: result.model ?? "" }) : t("mtlocal.testFailed", { message: result.message ?? "" })
+      ) : null
+    )
+  );
+}
+function LocalMtModal({ t, busy, state, onSave, onTest, onClose }) {
+  const [enabled, setEnabled] = useState(Boolean(state?.enabled));
+  const [baseUrl, setBaseUrl] = useState(state?.baseUrl ?? "");
+  const [model, setModel] = useState(state?.model ?? "");
+  const [apiKey, setApiKey] = useState("");
+  const [timeoutMs, setTimeoutMs] = useState(String(state?.timeoutMs ?? 6e4));
+  const [clearedKey, setClearedKey] = useState(false);
+  const [result, setResult] = useState(null);
+  useEffect(() => {
+    if (!state) return;
+    setEnabled(Boolean(state.enabled));
+    setBaseUrl(state.baseUrl ?? "");
+    setModel(state.model ?? "");
+    setTimeoutMs(String(state.timeoutMs ?? 6e4));
+    setClearedKey(false);
+  }, [state]);
+  return h(
+    Modal,
+    { title: t("mtlocal.title"), onClose, wide: true },
+    h("p", { className: "cait-hint" }, t("mtlocal.hint")),
+    h(
+      "label",
+      { className: "cait-check" },
+      h("input", { type: "checkbox", checked: enabled, onChange: (event) => setEnabled(event.target.checked) }),
+      h("span", null, t("mtlocal.enable"))
+    ),
+    h(LocalMtFields, {
+      t,
+      busy,
+      value: { baseUrl, model, apiKey, timeoutMs },
+      onChange: (patch) => {
+        if (patch.baseUrl !== void 0) setBaseUrl(patch.baseUrl);
+        if (patch.model !== void 0) setModel(patch.model);
+        if (patch.apiKey !== void 0) setApiKey(patch.apiKey);
+        if (patch.clearKey) setClearedKey(true);
+        if (patch.timeoutMs !== void 0) setTimeoutMs(patch.timeoutMs);
+      },
+      onTest: async () => setResult(await onTest({ enabled, baseUrl, model, apiKey, timeoutMs })),
+      result,
+      hasKey: Boolean(state?.hasKey) && !clearedKey
+    }),
+    h(
+      "div",
+      { className: "cait-modal-actions" },
+      h("button", { type: "button", className: "cait-btn", onClick: onClose }, t("panel.cancel")),
+      h(
+        "button",
+        {
+          type: "button",
+          className: "cait-btn",
+          disabled: Boolean(busy),
+          onClick: async () => {
+            const next = await onSave({
+              enabled,
+              baseUrl,
+              model,
+              apiKey,
+              timeoutMs,
+              ...clearedKey ? { apiKey: "" } : {}
+            });
+            if (next) setResult({ ok: true, latencyMs: 0, model: next.model, message: "" });
+          }
+        },
+        t("mtlocal.save")
+      )
+    )
+  );
+}
+
 // client/components/dialogs.js
 function ExportModal({ t, busy, onClose, onExport, onImportReview, qa }) {
   const issues = qa?.issueCount || 0;
@@ -8553,7 +9020,7 @@ function ExportModal({ t, busy, onClose, onExport, onImportReview, qa }) {
     ) : null
   );
 }
-function SettingsModal({ t, settings, mtRoutes, busy, onClose, onSave }) {
+function SettingsModal({ t, settings, mtRoutes, mtLocal, busy, onClose, onSave, onTestMtLocal }) {
   const [form, setForm] = useState({
     sourceLang: settings.sourceLang,
     targetLang: settings.targetLang,
@@ -8575,8 +9042,17 @@ function SettingsModal({ t, settings, mtRoutes, busy, onClose, onSave }) {
       model: settings.review?.model || "",
       temperature: settings.review?.temperature ?? 0
     },
-    startAtHome: settings.startAtHome === true
+    startAtHome: settings.startAtHome === true,
+    mtMode: mtLocal?.enabled ? "local" : "route",
+    mtLocal: {
+      baseUrl: mtLocal?.baseUrl ?? "",
+      model: mtLocal?.model ?? "",
+      apiKey: "",
+      timeoutMs: String(mtLocal?.timeoutMs ?? 6e4),
+      clearKey: false
+    }
   });
+  const [mtResult, setMtResult] = useState(null);
   const routes = Array.isArray(mtRoutes?.providers) ? mtRoutes.providers : [];
   const route = routes.find((item) => item.id === form.mt.provider);
   const models = Array.isArray(route?.models) ? route.models : [];
@@ -8639,7 +9115,14 @@ function SettingsModal({ t, settings, mtRoutes, busy, onClose, onSave }) {
         model: form.review.model,
         temperature: Number(form.review.temperature)
       },
-      startAtHome: Boolean(form.startAtHome)
+      startAtHome: Boolean(form.startAtHome),
+      mtLocal: form.mtMode === "local" ? {
+        enabled: true,
+        baseUrl: String(form.mtLocal.baseUrl ?? "").trim(),
+        model: String(form.mtLocal.model ?? "").trim(),
+        timeoutMs: Number(form.mtLocal.timeoutMs) || 6e4,
+        ...form.mtLocal.clearKey ? { apiKey: "" } : String(form.mtLocal.apiKey ?? "").trim() ? { apiKey: String(form.mtLocal.apiKey).trim() } : {}
+      } : { enabled: false }
     };
     onSave(patch);
   };
@@ -8797,6 +9280,55 @@ function SettingsModal({ t, settings, mtRoutes, busy, onClose, onSave }) {
         "div",
         { className: "cait-settings-section" },
         h("h4", { className: "cait-settings-title" }, t("modal.settings.mt")),
+        h(
+          "div",
+          { className: "cait-segmented", style: { marginBottom: "7px" } },
+          h(
+            "button",
+            {
+              type: "button",
+              className: form.mtMode === "route" ? "active" : "",
+              onClick: () => setForm((current) => ({ ...current, mtMode: "route" }))
+            },
+            t("modal.settings.mtModeRoute")
+          ),
+          h(
+            "button",
+            {
+              type: "button",
+              className: form.mtMode === "local" ? "active" : "",
+              onClick: () => setForm((current) => ({ ...current, mtMode: "local" }))
+            },
+            t("modal.settings.mtModeLocal")
+          )
+        ),
+        h("p", { className: "cait-mt-hint", style: { marginTop: 0 } }, t("modal.settings.mtModeHint")),
+        form.mtMode === "local" ? h(
+          "div",
+          null,
+          h(LocalMtFields, {
+            t,
+            busy: Boolean(busy),
+            value: form.mtLocal,
+            onChange: (patch) => setForm((current) => ({ ...current, mtLocal: { ...current.mtLocal, ...patch } })),
+            onTest: async () => {
+              if (!onTestMtLocal) return null;
+              const payload = {
+                enabled: true,
+                baseUrl: String(form.mtLocal.baseUrl ?? "").trim(),
+                model: String(form.mtLocal.model ?? "").trim(),
+                timeoutMs: Number(form.mtLocal.timeoutMs) || 6e4,
+                ...form.mtLocal.clearKey ? { apiKey: "" } : String(form.mtLocal.apiKey ?? "").trim() ? { apiKey: String(form.mtLocal.apiKey).trim() } : {}
+              };
+              const next = await onTestMtLocal(payload);
+              setMtResult(next);
+              return next;
+            },
+            result: mtResult,
+            hasKey: Boolean(mtLocal?.hasKey) && !form.mtLocal.clearKey
+          }),
+          h("p", { className: "cait-mt-hint" }, t("modal.settings.mtLocalScope"))
+        ) : null,
         h(
           "label",
           { className: "cait-field" },
@@ -9970,417 +10502,6 @@ function AnalysisModal({ t, analysis, busy, onClose }) {
           disabled: Boolean(busy) || !analysis
         },
         t("analysis.exportJson")
-      )
-    )
-  );
-}
-
-// client/components/workflow.js
-function DeliveryModal({ t, busy, checks, onRun, onClose, onJump, labels, onLabels, projectName }) {
-  const [include, setInclude] = useState({
-    target: true,
-    bilingual: true,
-    glossary: true,
-    qa: true,
-    analysis: true,
-    notes: false,
-    readme: true
-  });
-  const [client, setClient] = useState(labels?.client ?? "");
-  const [batch, setBatch] = useState(labels?.batch ?? "");
-  const counts = checks?.counts ?? { high: 0, medium: 0, low: 0 };
-  const items = checks?.items ?? [];
-  const toggle = (key) => setInclude((current) => ({ ...current, [key]: !current[key] }));
-  return h(
-    Modal,
-    { title: t("deliver.title"), onClose, wide: true },
-    h("p", { className: "cait-hint" }, t("deliver.hint")),
-    projectName ? h("p", { className: "cait-hint" }, t("deliver.projectHint", { name: projectName })) : null,
-    h(
-      "div",
-      { className: "cait-formrow" },
-      h("label", { className: "cait-field" }, h("span", null, t("deliver.client")), h("input", {
-        className: "cait-input",
-        value: client,
-        onChange: (event) => setClient(event.target.value)
-      })),
-      h("label", { className: "cait-field" }, h("span", null, t("deliver.batch")), h("input", {
-        className: "cait-input",
-        value: batch,
-        onChange: (event) => setBatch(event.target.value)
-      }))
-    ),
-    h(
-      "div",
-      { className: "cait-chips" },
-      h("span", { className: "cait-chip is-danger" }, `${t("deliver.blocking")} ${counts.high}`),
-      h("span", { className: "cait-chip is-warn" }, `${t("deliver.review")} ${counts.medium}`),
-      h("span", { className: "cait-chip" }, `${t("deliver.notice")} ${counts.low}`),
-      h("span", { className: "cait-chip" }, `${t("deliver.unconfirmed")} ${checks?.unconfirmed ?? 0}`)
-    ),
-    items.length ? h(
-      "ul",
-      { className: "cait-issues" },
-      items.slice(0, 12).map(
-        (item) => h(
-          "li",
-          { key: `${item.index}-${item.code}`, className: `cait-issue is-${item.severity}` },
-          h("button", { type: "button", className: "cait-linkbtn", onClick: () => onJump(item.index) }, `#${item.index + 1}`),
-          h("span", { className: "cait-issue-code" }, item.code),
-          h("span", { className: "cait-issue-msg" }, item.message)
-        )
-      )
-    ) : h("p", { className: "cait-hint" }, t("deliver.clean")),
-    h(
-      "div",
-      { className: "cait-checks" },
-      [
-        ["target", "deliver.includeTarget"],
-        ["bilingual", "deliver.includeBilingual"],
-        ["glossary", "deliver.includeGlossary"],
-        ["qa", "deliver.includeQa"],
-        ["analysis", "deliver.includeAnalysis"],
-        ["notes", "deliver.includeNotes"],
-        ["readme", "deliver.includeReadme"]
-      ].map(
-        ([key, label]) => h(
-          "label",
-          { key, className: "cait-check" },
-          h("input", { type: "checkbox", checked: include[key], onChange: () => toggle(key) }),
-          h("span", null, t(label))
-        )
-      )
-    ),
-    h(
-      "div",
-      { className: "cait-modal-actions" },
-      h("button", { type: "button", className: "cait-btn", onClick: onClose }, t("panel.cancel")),
-      h(
-        "button",
-        {
-          type: "button",
-          className: "cait-btn cait-btn-primary",
-          disabled: Boolean(busy),
-          onClick: () => onRun({ include, client, batch })
-        },
-        busy ? h(Spinner, { size: 13 }) : h(Icon, { name: "download", size: 13 }),
-        h("span", null, t("deliver.download"))
-      )
-    )
-  );
-}
-function BatchModal({ t, busy, documentId, selection, advice, onSelect, onRun, onClose }) {
-  const filters = ["pending", "unconfirmed", "risk", "duplicate", "new", "fuzzy", "locked", "notes"];
-  return h(
-    Modal,
-    { title: t("batch.title"), onClose, wide: true },
-    h("p", { className: "cait-hint" }, t("batch.hint")),
-    advice?.message ? h("p", { className: "cait-hint" }, advice.message) : null,
-    h(
-      "div",
-      { className: "cait-chips" },
-      filters.map(
-        (filter) => h(
-          "button",
-          {
-            key: filter,
-            type: "button",
-            className: `cait-chip${selection?.filter === filter ? " is-active" : ""}`,
-            onClick: () => onSelect(filter)
-          },
-          t(`batch.filter.${filter}`)
-        )
-      )
-    ),
-    h(
-      "p",
-      { className: "cait-hint" },
-      t("batch.selected", { count: selection?.indexes?.length ?? 0 })
-    ),
-    h(
-      "div",
-      { className: "cait-modal-actions" },
-      h("button", { type: "button", className: "cait-btn", onClick: onClose }, t("panel.cancel")),
-      h(
-        "button",
-        {
-          type: "button",
-          className: "cait-btn",
-          disabled: Boolean(busy) || !selection?.indexes?.length,
-          onClick: () => onRun({ action: "confirm", documentId, indexes: selection.indexes })
-        },
-        t("batch.confirm")
-      ),
-      h(
-        "button",
-        {
-          type: "button",
-          className: "cait-btn",
-          disabled: Boolean(busy) || !selection?.indexes?.length,
-          onClick: () => onRun({ action: "lock", documentId, indexes: selection.indexes })
-        },
-        t("batch.lock")
-      ),
-      h(
-        "button",
-        {
-          type: "button",
-          className: "cait-btn",
-          disabled: Boolean(busy) || !selection?.indexes?.length,
-          onClick: () => onRun({ action: "unlock", documentId, indexes: selection.indexes })
-        },
-        t("batch.unlock")
-      ),
-      h(
-        "button",
-        {
-          type: "button",
-          className: "cait-btn",
-          disabled: Boolean(busy) || !selection?.indexes?.length,
-          onClick: () => onRun({ action: "clear", documentId, indexes: selection.indexes })
-        },
-        t("batch.clear")
-      )
-    )
-  );
-}
-function QuoteModal({ t, busy, state, quote, postEdit, onSave, onRefresh, onExport, onLabels, onClose }) {
-  const [currency, setCurrency] = useState(state?.currency ?? "CNY");
-  const [rate, setRate] = useState(String(state?.rate ?? 120));
-  const [minimum, setMinimum] = useState(String(state?.minimum ?? 0));
-  const [discounts, setDiscounts] = useState(state?.discounts ?? {});
-  const [client, setClient] = useState(quote?.client ?? "");
-  const [batch, setBatch] = useState(quote?.batch ?? "");
-  useEffect(() => {
-    if (!state) return;
-    setCurrency(state.currency);
-    setRate(String(state.rate));
-    setMinimum(String(state.minimum));
-    setDiscounts(state.discounts ?? {});
-  }, [state]);
-  const lines = quote?.lines ?? [];
-  const setDiscount = (key, value) => setDiscounts((current) => ({ ...current, [key]: Number(value) }));
-  return h(
-    Modal,
-    { title: t("quote.title"), onClose, wide: true },
-    h("p", { className: "cait-hint" }, t("quote.hint")),
-    h(
-      "div",
-      { className: "cait-formrow" },
-      h("label", { className: "cait-field" }, h("span", null, t("quote.currency")), h("input", {
-        className: "cait-input",
-        value: currency,
-        onChange: (event) => setCurrency(event.target.value)
-      })),
-      h("label", { className: "cait-field" }, h("span", null, `${t("quote.rate")} (${state?.unitLabel ?? ""})`), h("input", {
-        className: "cait-input",
-        value: rate,
-        onChange: (event) => setRate(event.target.value)
-      })),
-      h("label", { className: "cait-field" }, h("span", null, t("quote.minimum")), h("input", {
-        className: "cait-input",
-        value: minimum,
-        onChange: (event) => setMinimum(event.target.value)
-      }))
-    ),
-    h(
-      "table",
-      { className: "cait-table" },
-      h(
-        "thead",
-        null,
-        h(
-          "tr",
-          null,
-          h("th", null, t("quote.bucket")),
-          h("th", null, t("quote.segments")),
-          h("th", null, t("quote.words")),
-          h("th", null, t("quote.discount")),
-          h("th", null, t("quote.amount"))
-        )
-      ),
-      h(
-        "tbody",
-        null,
-        lines.map(
-          (line) => h(
-            "tr",
-            { key: line.bucket },
-            h("td", null, line.label),
-            h("td", null, line.segments),
-            h("td", null, line.words),
-            h(
-              "td",
-              null,
-              h("input", {
-                className: "cait-input",
-                style: { width: "64px" },
-                value: discounts[line.bucket] ?? line.discount,
-                onChange: (event) => setDiscount(line.bucket, event.target.value)
-              })
-            ),
-            h("td", null, `${line.amount} ${quote?.currency ?? ""}`)
-          )
-        )
-      )
-    ),
-    h(
-      "p",
-      { className: "cait-hint" },
-      `${t("quote.subtotal")}：${quote?.subtotal ?? 0} ${quote?.currency ?? ""} · ${t("quote.total")}：${quote?.total ?? 0} ${quote?.currency ?? ""}`
-    ),
-    postEdit ? h(
-      "p",
-      { className: "cait-hint" },
-      `${t("quote.postEdit")}：${t("quote.postEditValue", {
-        entries: postEdit.entries,
-        keep: Math.round((postEdit.averageKeep ?? 0) * 100)
-      })}`
-    ) : null,
-    h(
-      "div",
-      { className: "cait-formrow" },
-      h("label", { className: "cait-field" }, h("span", null, t("deliver.client")), h("input", {
-        className: "cait-input",
-        value: client,
-        onChange: (event) => setClient(event.target.value)
-      })),
-      h("label", { className: "cait-field" }, h("span", null, t("deliver.batch")), h("input", {
-        className: "cait-input",
-        value: batch,
-        onChange: (event) => setBatch(event.target.value)
-      }))
-    ),
-    h(
-      "div",
-      { className: "cait-modal-actions" },
-      h("button", { type: "button", className: "cait-btn", onClick: onClose }, t("panel.cancel")),
-      h(
-        "button",
-        {
-          type: "button",
-          className: "cait-btn",
-          disabled: Boolean(busy),
-          onClick: () => onLabels({ client, batch })
-        },
-        t("quote.saveLabels")
-      ),
-      h(
-        "button",
-        {
-          type: "button",
-          className: "cait-btn",
-          disabled: Boolean(busy),
-          onClick: () => onSave({ currency, rate, minimum, discounts })
-        },
-        t("quote.save")
-      ),
-      h(
-        "button",
-        { type: "button", className: "cait-btn", disabled: Boolean(busy), onClick: () => onRefresh() },
-        t("quote.refresh")
-      ),
-      h(
-        "button",
-        {
-          type: "button",
-          className: "cait-btn cait-btn-primary",
-          disabled: Boolean(busy),
-          onClick: () => onExport("txt")
-        },
-        h(Icon, { name: "download", size: 13 }),
-        h("span", null, t("quote.export"))
-      )
-    )
-  );
-}
-function LocalMtModal({ t, busy, state, onSave, onTest, onClose }) {
-  const [enabled, setEnabled] = useState(Boolean(state?.enabled));
-  const [baseUrl, setBaseUrl] = useState(state?.baseUrl ?? "");
-  const [model, setModel] = useState(state?.model ?? "");
-  const [apiKey, setApiKey] = useState("");
-  const [timeoutMs, setTimeoutMs] = useState(String(state?.timeoutMs ?? 6e4));
-  const [result, setResult] = useState(null);
-  useEffect(() => {
-    if (!state) return;
-    setEnabled(Boolean(state.enabled));
-    setBaseUrl(state.baseUrl ?? "");
-    setModel(state.model ?? "");
-    setTimeoutMs(String(state.timeoutMs ?? 6e4));
-  }, [state]);
-  return h(
-    Modal,
-    { title: t("mtlocal.title"), onClose, wide: true },
-    h("p", { className: "cait-hint" }, t("mtlocal.hint")),
-    h(
-      "label",
-      { className: "cait-check" },
-      h("input", { type: "checkbox", checked: enabled, onChange: (event) => setEnabled(event.target.checked) }),
-      h("span", null, t("mtlocal.enable"))
-    ),
-    h(
-      "div",
-      { className: "cait-formrow" },
-      h("label", { className: "cait-field" }, h("span", null, "Base URL"), h("input", {
-        className: "cait-input",
-        placeholder: "http://127.0.0.1:1234/v1",
-        value: baseUrl,
-        onChange: (event) => setBaseUrl(event.target.value)
-      })),
-      h("label", { className: "cait-field" }, h("span", null, "Model"), h("input", {
-        className: "cait-input",
-        placeholder: "qwen2.5-14b-instruct",
-        value: model,
-        onChange: (event) => setModel(event.target.value)
-      }))
-    ),
-    h(
-      "div",
-      { className: "cait-formrow" },
-      h("label", { className: "cait-field" }, h("span", null, t("mtlocal.apiKey")), h("input", {
-        className: "cait-input",
-        type: "password",
-        placeholder: state?.hasKey ? "••••••" : "",
-        value: apiKey,
-        onChange: (event) => setApiKey(event.target.value)
-      })),
-      h("label", { className: "cait-field" }, h("span", null, t("mtlocal.timeout")), h("input", {
-        className: "cait-input",
-        value: timeoutMs,
-        onChange: (event) => setTimeoutMs(event.target.value)
-      }))
-    ),
-    result ? h(
-      "p",
-      { className: "cait-hint" },
-      result.ok ? t("mtlocal.testOk", { ms: result.latencyMs, model: result.model ?? "" }) : t("mtlocal.testFailed", { message: result.message ?? "" })
-    ) : null,
-    h(
-      "div",
-      { className: "cait-modal-actions" },
-      h("button", { type: "button", className: "cait-btn", onClick: onClose }, t("panel.cancel")),
-      h(
-        "button",
-        {
-          type: "button",
-          className: "cait-btn",
-          disabled: Boolean(busy),
-          onClick: async () => {
-            const next = await onSave({ enabled, baseUrl, model, apiKey, timeoutMs });
-            if (next) setResult({ ok: true, latencyMs: 0, model: next.model, message: "" });
-          }
-        },
-        t("mtlocal.save")
-      ),
-      h(
-        "button",
-        {
-          type: "button",
-          className: "cait-btn cait-btn-primary",
-          disabled: Boolean(busy),
-          onClick: async () => setResult(await onTest({ enabled, baseUrl, model, apiKey, timeoutMs }))
-        },
-        t("mtlocal.test")
       )
     )
   );
@@ -14256,11 +14377,24 @@ function useWorkbenchController({ i18n, translate }) {
       setMtBusy(false);
     }
   };
+  const openSettings = async () => {
+    setModal({ type: "settings" });
+    try {
+      setMtLocalConfig(await rpc("mtLocalState"));
+    } catch (error) {
+      report(error);
+    }
+  };
   const saveSettings = async (patch) => {
     setBusy("settings");
     try {
-      const result = await rpc("saveSettings", patch);
+      const { mtLocal, ...settingsPatch } = patch ?? {};
+      const result = await rpc("saveSettings", settingsPatch);
       replaceRemoteState(result.state);
+      if (mtLocal) {
+        const next = await rpc("setMtLocal", mtLocal);
+        setMtLocalConfig(next);
+      }
       setModal(null);
       notify(t("toast.settingsSaved"));
       return true;
@@ -14686,6 +14820,7 @@ function useWorkbenchController({ i18n, translate }) {
     exportLibraryTo,
     importLibraryTo,
     generateMt,
+    openSettings,
     saveSettings,
     setMounts,
     createLibrary,
@@ -14856,6 +14991,7 @@ function Workbench({ i18n, translate }) {
     openLocalMt,
     saveLocalMt,
     testLocalMt,
+    openSettings,
     projectsState,
     projectPick,
     openProjects,
@@ -15102,7 +15238,7 @@ function Workbench({ i18n, translate }) {
       onNew: () => setModal({ type: "new" }),
       onImport: () => setModal({ type: "import" }),
       onExport: () => setModal({ type: "export" }),
-      onSettings: () => setModal({ type: "settings" }),
+      onSettings: openSettings,
       onOpenDoc: requestOpenDocument,
       onCloseDoc: closeDocumentTab,
       pre,
@@ -15317,6 +15453,7 @@ function Workbench({ i18n, translate }) {
           onImportGlossary: importGlossaryFile,
           onOpenIo: (mode) => setLibraryIo({ mode, kind: "glossary" }),
           onOpenLocalMt: openLocalMt,
+          mtLocal: mtLocalConfig,
           onClearGlossary: clearGlossary,
           mt,
           mtError,
@@ -15330,7 +15467,7 @@ function Workbench({ i18n, translate }) {
             }
           },
           onCopy: copy,
-          onOpenSettings: () => setModal({ type: "settings" }),
+          onOpenSettings: openSettings,
           onSearchLibrary: openLibrary,
           qa,
           onRefreshQa: refreshQa,
@@ -15513,9 +15650,11 @@ function Workbench({ i18n, translate }) {
       t,
       settings,
       mtRoutes,
+      mtLocal: mtLocalConfig,
       busy,
       onClose: () => setModal(null),
-      onSave: saveSettings
+      onSave: saveSettings,
+      onTestMtLocal: testLocalMt
     }) : null,
     modal?.type === "recent" ? h(RecentDocsModal, {
       t,

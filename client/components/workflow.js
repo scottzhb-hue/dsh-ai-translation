@@ -340,12 +340,78 @@ function QuoteModal({ t, busy, state, quote, postEdit, onSave, onRefresh, onExpo
   )
 }
 
+// One field set shared by the editor panel dialog and the Settings modal, so the
+// local endpoint never grows two divergent copies again.
+function LocalMtFields({ t, busy, value, onChange, onTest, result, hasKey }) {
+  const field = (label, key, extra) =>
+    h(
+      'label',
+      { className: 'cait-field' },
+      h('span', null, label),
+      h('input', {
+        className: 'cait-input',
+        value: value[key] ?? '',
+        onChange: (event) => onChange({ [key]: event.target.value }),
+        ...(extra || {}),
+      }),
+    )
+  return h(
+    'div',
+    null,
+    h(
+      'div',
+      { className: 'cait-formrow' },
+      field('Base URL', 'baseUrl', { placeholder: 'http://127.0.0.1:1234/v1' }),
+      field('Model', 'model', { placeholder: 'qwen2.5-14b-instruct' }),
+    ),
+    h(
+      'div',
+      { className: 'cait-formrow' },
+      field(t('mtlocal.apiKey'), 'apiKey', {
+        type: 'password',
+        placeholder: hasKey ? '••••••' : '',
+      }),
+      field(t('mtlocal.timeout'), 'timeoutMs'),
+    ),
+    hasKey
+      ? h(
+          'button',
+          {
+            type: 'button',
+            className: 'cait-linkbtn is-danger',
+            onClick: () => onChange({ apiKey: '', clearKey: true }),
+          },
+          t('mtlocal.clearKey'),
+        )
+      : null,
+    h(
+      'div',
+      { className: 'cait-row', style: { gap: '9px', alignItems: 'center', marginTop: '4px' } },
+      h(
+        'button',
+        { type: 'button', className: 'cait-btn', disabled: Boolean(busy), onClick: () => onTest() },
+        t('mtlocal.test'),
+      ),
+      result
+        ? h(
+            'span',
+            { className: 'cait-hint' },
+            result.ok
+              ? t('mtlocal.testOk', { ms: result.latencyMs, model: result.model ?? '' })
+              : t('mtlocal.testFailed', { message: result.message ?? '' }),
+          )
+        : null,
+    ),
+  )
+}
+
 function LocalMtModal({ t, busy, state, onSave, onTest, onClose }) {
   const [enabled, setEnabled] = useState(Boolean(state?.enabled))
   const [baseUrl, setBaseUrl] = useState(state?.baseUrl ?? '')
   const [model, setModel] = useState(state?.model ?? '')
   const [apiKey, setApiKey] = useState('')
   const [timeoutMs, setTimeoutMs] = useState(String(state?.timeoutMs ?? 60000))
+  const [clearedKey, setClearedKey] = useState(false)
   const [result, setResult] = useState(null)
   useEffect(() => {
     if (!state) return
@@ -353,6 +419,7 @@ function LocalMtModal({ t, busy, state, onSave, onTest, onClose }) {
     setBaseUrl(state.baseUrl ?? '')
     setModel(state.model ?? '')
     setTimeoutMs(String(state.timeoutMs ?? 60000))
+    setClearedKey(false)
   }, [state])
   return h(
     Modal,
@@ -364,47 +431,21 @@ function LocalMtModal({ t, busy, state, onSave, onTest, onClose }) {
       h('input', { type: 'checkbox', checked: enabled, onChange: (event) => setEnabled(event.target.checked) }),
       h('span', null, t('mtlocal.enable')),
     ),
-    h(
-      'div',
-      { className: 'cait-formrow' },
-      h('label', { className: 'cait-field' }, h('span', null, 'Base URL'), h('input', {
-        className: 'cait-input',
-        placeholder: 'http://127.0.0.1:1234/v1',
-        value: baseUrl,
-        onChange: (event) => setBaseUrl(event.target.value),
-      })),
-      h('label', { className: 'cait-field' }, h('span', null, 'Model'), h('input', {
-        className: 'cait-input',
-        placeholder: 'qwen2.5-14b-instruct',
-        value: model,
-        onChange: (event) => setModel(event.target.value),
-      })),
-    ),
-    h(
-      'div',
-      { className: 'cait-formrow' },
-      h('label', { className: 'cait-field' }, h('span', null, t('mtlocal.apiKey')), h('input', {
-        className: 'cait-input',
-        type: 'password',
-        placeholder: state?.hasKey ? '••••••' : '',
-        value: apiKey,
-        onChange: (event) => setApiKey(event.target.value),
-      })),
-      h('label', { className: 'cait-field' }, h('span', null, t('mtlocal.timeout')), h('input', {
-        className: 'cait-input',
-        value: timeoutMs,
-        onChange: (event) => setTimeoutMs(event.target.value),
-      })),
-    ),
-    result
-      ? h(
-          'p',
-          { className: 'cait-hint' },
-          result.ok
-            ? t('mtlocal.testOk', { ms: result.latencyMs, model: result.model ?? '' })
-            : t('mtlocal.testFailed', { message: result.message ?? '' }),
-        )
-      : null,
+    h(LocalMtFields, {
+      t,
+      busy,
+      value: { baseUrl, model, apiKey, timeoutMs },
+      onChange: (patch) => {
+        if (patch.baseUrl !== undefined) setBaseUrl(patch.baseUrl)
+        if (patch.model !== undefined) setModel(patch.model)
+        if (patch.apiKey !== undefined) setApiKey(patch.apiKey)
+        if (patch.clearKey) setClearedKey(true)
+        if (patch.timeoutMs !== undefined) setTimeoutMs(patch.timeoutMs)
+      },
+      onTest: async () => setResult(await onTest({ enabled, baseUrl, model, apiKey, timeoutMs })),
+      result,
+      hasKey: Boolean(state?.hasKey) && !clearedKey,
+    }),
     h(
       'div',
       { className: 'cait-modal-actions' },
@@ -416,24 +457,21 @@ function LocalMtModal({ t, busy, state, onSave, onTest, onClose }) {
           className: 'cait-btn',
           disabled: Boolean(busy),
           onClick: async () => {
-            const next = await onSave({ enabled, baseUrl, model, apiKey, timeoutMs })
+            const next = await onSave({
+              enabled,
+              baseUrl,
+              model,
+              apiKey,
+              timeoutMs,
+              ...(clearedKey ? { apiKey: '' } : {}),
+            })
             if (next) setResult({ ok: true, latencyMs: 0, model: next.model, message: '' })
           },
         },
         t('mtlocal.save'),
       ),
-      h(
-        'button',
-        {
-          type: 'button',
-          className: 'cait-btn cait-btn-primary',
-          disabled: Boolean(busy),
-          onClick: async () => setResult(await onTest({ enabled, baseUrl, model, apiKey, timeoutMs })),
-        },
-        t('mtlocal.test'),
-      ),
     ),
   )
 }
 
-export { DeliveryModal, BatchModal, QuoteModal, LocalMtModal, SEVERITY_LABEL }
+export { DeliveryModal, BatchModal, QuoteModal, LocalMtModal, LocalMtFields, SEVERITY_LABEL }

@@ -80,6 +80,8 @@ manual reload.
 
 ### Changed in 1.2.12
 
+- **Local MT is configurable from Settings now**: Settings → Machine translation has a route/local switch, the same form as the editor panel (Base URL, model, API key, timeout, test connection), plus clearing a stored key. The editor panel header shows which path is in effect.
+
 - **Narrower project column**: 236px → 208px (180px on narrow windows), leaving more room for the project detail.
 - **Long project names wrap**: no more single-line ellipsis; the Unfiled tag stays top-aligned with the name.
 - **“Add existing documents” is easier to spot**: 13px / weight 500 plus a plus icon, matching the “Documents” header.

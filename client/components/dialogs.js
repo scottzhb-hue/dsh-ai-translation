@@ -2,6 +2,7 @@ import { h, useState, useEffect, useRef } from '../react.js'
 import { LANGUAGES, DEFAULT_FUZZY_THRESHOLD, fuzzyPercent } from '../helpers.js'
 import { UI_LANGS } from '../locales.js'
 import { Spinner, Icon, Modal } from './base.js'
+import { LocalMtFields } from './workflow.js'
 
 function ExportModal({ t, busy, onClose, onExport, onImportReview, qa }) {
   const issues = qa?.issueCount || 0
@@ -107,7 +108,7 @@ function ExportModal({ t, busy, onClose, onExport, onImportReview, qa }) {
   )
 }
 
-function SettingsModal({ t, settings, mtRoutes, busy, onClose, onSave }) {
+function SettingsModal({ t, settings, mtRoutes, mtLocal, busy, onClose, onSave, onTestMtLocal }) {
   const [form, setForm] = useState({
     sourceLang: settings.sourceLang,
     targetLang: settings.targetLang,
@@ -130,7 +131,16 @@ function SettingsModal({ t, settings, mtRoutes, busy, onClose, onSave }) {
       temperature: settings.review?.temperature ?? 0,
     },
     startAtHome: settings.startAtHome === true,
+    mtMode: mtLocal?.enabled ? 'local' : 'route',
+    mtLocal: {
+      baseUrl: mtLocal?.baseUrl ?? '',
+      model: mtLocal?.model ?? '',
+      apiKey: '',
+      timeoutMs: String(mtLocal?.timeoutMs ?? 60000),
+      clearKey: false,
+    },
   })
+  const [mtResult, setMtResult] = useState(null)
   const routes = Array.isArray(mtRoutes?.providers) ? mtRoutes.providers : []
   const route = routes.find((item) => item.id === form.mt.provider)
   const models = Array.isArray(route?.models) ? route.models : []
@@ -203,6 +213,20 @@ function SettingsModal({ t, settings, mtRoutes, busy, onClose, onSave }) {
         temperature: Number(form.review.temperature),
       },
       startAtHome: Boolean(form.startAtHome),
+      mtLocal:
+        form.mtMode === 'local'
+          ? {
+              enabled: true,
+              baseUrl: String(form.mtLocal.baseUrl ?? '').trim(),
+              model: String(form.mtLocal.model ?? '').trim(),
+              timeoutMs: Number(form.mtLocal.timeoutMs) || 60000,
+              ...(form.mtLocal.clearKey
+                ? { apiKey: '' }
+                : String(form.mtLocal.apiKey ?? '').trim()
+                  ? { apiKey: String(form.mtLocal.apiKey).trim() }
+                  : {}),
+            }
+          : { enabled: false },
     }
     onSave(patch)
   }
@@ -363,6 +387,62 @@ function SettingsModal({ t, settings, mtRoutes, busy, onClose, onSave }) {
         'div',
         { className: 'cait-settings-section' },
         h('h4', { className: 'cait-settings-title' }, t('modal.settings.mt')),
+        h(
+          'div',
+          { className: 'cait-segmented', style: { marginBottom: '7px' } },
+          h(
+            'button',
+            {
+              type: 'button',
+              className: form.mtMode === 'route' ? 'active' : '',
+              onClick: () => setForm((current) => ({ ...current, mtMode: 'route' })),
+            },
+            t('modal.settings.mtModeRoute'),
+          ),
+          h(
+            'button',
+            {
+              type: 'button',
+              className: form.mtMode === 'local' ? 'active' : '',
+              onClick: () => setForm((current) => ({ ...current, mtMode: 'local' })),
+            },
+            t('modal.settings.mtModeLocal'),
+          ),
+        ),
+        h('p', { className: 'cait-mt-hint', style: { marginTop: 0 } }, t('modal.settings.mtModeHint')),
+        form.mtMode === 'local'
+          ? h(
+              'div',
+              null,
+              h(LocalMtFields, {
+                t,
+                busy: Boolean(busy),
+                value: form.mtLocal,
+                onChange: (patch) =>
+                  setForm((current) => ({ ...current, mtLocal: { ...current.mtLocal, ...patch } })),
+                onTest: async () => {
+                  if (!onTestMtLocal) return null
+                  const payload = {
+                    enabled: true,
+                    baseUrl: String(form.mtLocal.baseUrl ?? '').trim(),
+                    model: String(form.mtLocal.model ?? '').trim(),
+                    timeoutMs: Number(form.mtLocal.timeoutMs) || 60000,
+                    ...(form.mtLocal.clearKey
+                      ? { apiKey: '' }
+                      : String(form.mtLocal.apiKey ?? '').trim()
+                        ? { apiKey: String(form.mtLocal.apiKey).trim() }
+                        : {}),
+                  }
+                  const next = await onTestMtLocal(payload)
+                  setMtResult(next)
+                  return next
+                },
+                result: mtResult,
+                hasKey: Boolean(mtLocal?.hasKey) && !form.mtLocal.clearKey,
+              }),
+              h('p', { className: 'cait-mt-hint' }, t('modal.settings.mtLocalScope')),
+            )
+          : null,
         h(
           'label',
           { className: 'cait-field' },

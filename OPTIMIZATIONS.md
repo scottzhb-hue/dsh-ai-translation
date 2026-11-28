@@ -492,6 +492,7 @@
 - 打开项目一律落到「项目」页签：从「所有文档」点项目名时，`requestProject` 先 `setProjectTab('projects')`，未保存拦截后 `resolvePendingNav` 的 `kind === 'project'` 分支也同样切页签——此前详情只在后台载入，界面仍停在表格上，看起来像点击无效。
 - 列表行去重：项目列表每行原本还挂一颗报告按钮，与详情页顶部的「项目报告 ▾」重复，且作为整行按钮的兄弟节点只能换行落到下一行左侧（看起来像多出来的小图标）。直接删除该按钮与 `.cait-proj-report` 样式，`ProjectList` 不再需要 `onPickReport`。
 - 未分类去重：默认项目的名称就是「未分类」，再渲染一枚「未分类」标签会重复；改为 `project.inbox && project.name !== t('projects.inboxTag')` 才显示标签，改名后仍能识别它的特殊身份。
+- 本地 MT 移入设置：`LocalMtFields` 抽成共用组件（设置弹窗与右栏 `LocalMtModal` 都渲染它），设置里新增「翻译方式」二选一与「清除已保存的 API Key」；保存时 `saveSettings` 把 `mtLocal` 摘出来交给 `setMtLocal`，右栏 MT 头部改为显示实际生效的 `本地端点 · 模型` / `DSH 路由 · 模型`。
 - 移动统一：抽出模块级 `moveMenuItems(t, projects, doc, onMove)`，项目详情行与「所有文档」都用它生成「移动 ▾」菜单（列出其他项目 + 未分类，按 `project_inbox` ↔ `''` 归一排除当前项目）；删除 `MoveDocModal` 与 controller 的 `openMoveDocPicker` / `pickMoveTarget`，少一条无人走的路径。
 
 **验证**：`_dev/test-ui-projects.mjs` 增加「项目详情移动菜单列出其他项目 / 不列当前项目 / 点目标直接回传」，以及三条样式静态断言（列宽、名称换行、折叠标题字号），80 项全过；`run-tests` 五套全过；`audit-workflow` 138/138。

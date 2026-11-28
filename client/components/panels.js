@@ -29,6 +29,7 @@ function CatPanel({
   mtBusy,
   onGenerateMt,
   onOpenLocalMt,
+  mtLocal,
   onApplyMt,
   onCopy,
   onOpenSettings,
@@ -62,12 +63,16 @@ function CatPanel({
   const [exportFormat, setExportFormat] = useState('tbx')
   const routes = Array.isArray(mtRoutes?.providers) ? mtRoutes.providers : []
   const currentRoute = routes.find((route) => route.id === settings.mt.provider)
+  const localMtReady = Boolean(mtLocal?.enabled && mtLocal?.baseUrl && mtLocal?.model)
   const mtProviderLabel =
     settings.mt.provider === 'mock'
       ? t('mt.mock')
       : currentRoute?.wrapper
         ? `${currentRoute.name || settings.mt.provider} · ${t('modal.settings.wrapperRoute')}`
         : currentRoute?.name || settings.mt.provider || t('mt.mock')
+  const mtModeLabel = localMtReady
+    ? t('panel.mtModeLocal', { model: mtLocal.model })
+    : t('panel.mtModeRoute', { model: settings.mt.model || mtProviderLabel })
 
   const current = doc.current
   const tmMatches = tmResults?.matches ?? current?.tmMatches ?? []
@@ -351,7 +356,7 @@ function CatPanel({
             h(
               'div',
               { className: 'cait-mt-head' },
-              h('span', { className: 'cait-mt-mode' }, mtProviderLabel),
+              h('span', { className: 'cait-mt-mode' }, mtModeLabel),
               h(
                 'span',
                 { className: 'cait-muted cait-tiny' },
