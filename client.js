@@ -2329,10 +2329,20 @@ Object.assign(ZH, {
   "preset.projectTitle": "项目翻译预设",
   "preset.docHint": "这些信息会注入预翻译、AI 重译与审校的上下文；留空表示不限制。",
   "preset.projectHint": "项目翻译预设作为默认值继承给每篇文档，文档自己的预设覆盖同名字段。",
-  "preset.learn": "从参考文档归纳",
   "preset.learning": "正在归纳…",
-  "preset.learnHint": "支持 DOCX / XLSX / TXT / Markdown，最多 3 个；双语对照或成品译文都可以。",
   "preset.learnedFrom": "已从「{names}」归纳，下方字段可自行修改。",
+  "preset.saveDoc": "保存文档翻译预设",
+  "preset.saveProject": "保存项目翻译预设",
+  "preset.startLearn": "开始归纳",
+  "preset.mode.pair": "双文档（原文 + 译文）",
+  "preset.mode.bilingual": "单文档 · 双语对照",
+  "preset.mode.target": "单文档 · 仅译文",
+  "preset.pickFile": "选择文件",
+  "preset.pickSource": "选择原文",
+  "preset.pickTarget": "选择译文",
+  "preset.hint.pair": "分别选原文与译文各一份，可取不同目录；模型对照两者学语气与译法。",
+  "preset.hint.bilingual": "一份文件里同时含原文与译文（XLSX 两列，或 DOCX 逐段对照）。",
+  "preset.hint.target": "只有译文、没有原文：只能从译文反推文风与用词，结果会标注这一点。",
   "preset.conflictHint": "这些字段与现有内容冲突，选择保留、替换或合并：",
   "preset.conflict.keep": "保留",
   "preset.conflict.replace": "替换",
@@ -2496,10 +2506,20 @@ Object.assign(EN, {
   "preset.projectTitle": "Project translation preset",
   "preset.docHint": "These notes feed pre-translation, AI re-translation and review; empty means unconstrained.",
   "preset.projectHint": "The project preset is the default for every document; a document preset overrides the same fields.",
-  "preset.learn": "Learn from references",
   "preset.learning": "Learning…",
-  "preset.learnHint": "DOCX / XLSX / TXT / Markdown, up to 3 files; bilingual pairs or finished translations both work.",
   "preset.learnedFrom": "Learned from {names}. Edit any field below.",
+  "preset.saveDoc": "Save document preset",
+  "preset.saveProject": "Save project preset",
+  "preset.startLearn": "Learn now",
+  "preset.mode.pair": "Two files (source + target)",
+  "preset.mode.bilingual": "One file · bilingual pairs",
+  "preset.mode.target": "One file · target only",
+  "preset.pickFile": "Choose file",
+  "preset.pickSource": "Choose source",
+  "preset.pickTarget": "Choose target",
+  "preset.hint.pair": "Pick the source and the target file separately (any folders); the model learns tone and choices from both.",
+  "preset.hint.bilingual": "One file that contains both sides (two XLSX columns, or alternating DOCX paragraphs).",
+  "preset.hint.target": "Target text only: the model infers style and wording without a source, and the result is marked as such.",
   "preset.conflictHint": "These fields differ from the current preset — keep, replace or merge:",
   "preset.conflict.keep": "Keep",
   "preset.conflict.replace": "Replace",
@@ -2663,10 +2683,20 @@ Object.assign(JA, {
   "preset.projectTitle": "プロジェクト翻訳プリセット",
   "preset.docHint": "これらの情報は事前翻訳・AI 再翻訳・校閲の文脈に渡されます。空欄は制約なし。",
   "preset.projectHint": "プロジェクトプリセットは各文書の既定値です。文書プリセットは同じ項目を上書きします。",
-  "preset.learn": "参考文書から学習",
   "preset.learning": "学習中…",
-  "preset.learnHint": "DOCX / XLSX / TXT / Markdown、最大 3 件。対訳でも完成訳でも可。",
   "preset.learnedFrom": "「{names}」から学習しました。以下は自由に修正できます。",
+  "preset.saveDoc": "文書プリセットを保存",
+  "preset.saveProject": "プロジェクトプリセットを保存",
+  "preset.startLearn": "学習を開始",
+  "preset.mode.pair": "2 ファイル（原文＋訳文）",
+  "preset.mode.bilingual": "1 ファイル・対訳",
+  "preset.mode.target": "1 ファイル・訳文のみ",
+  "preset.pickFile": "ファイルを選択",
+  "preset.pickSource": "原文を選択",
+  "preset.pickTarget": "訳文を選択",
+  "preset.hint.pair": "原文と訳文を別々に選びます（フォルダは別でも可）。両方から語調と訳し方を学びます。",
+  "preset.hint.bilingual": "原文と訳文が 1 ファイルに入っているもの（XLSX 2 列、DOCX の段落対訳など）。",
+  "preset.hint.target": "訳文のみのため、原文なしで文体と語彙を推定します（その旨を結果に明記します）。",
   "preset.conflictHint": "既存の内容と異なる項目です。保持・置換・統合を選んでください：",
   "preset.conflict.keep": "保持",
   "preset.conflict.replace": "置換",
@@ -10306,6 +10336,8 @@ function PresetModal({ t, busy, brief, scope = "doc", onClose, onSave, learn, on
     styleSample: initial.styleSample || ""
   });
   const [choices, setChoices] = useState({});
+  const [learnMode, setLearnMode] = useState("bilingual");
+  const [picked, setPicked] = useState({ source: null, target: null, single: null });
   const learned = learn?.fields || null;
   const learnedFields = learned ? Object.keys(learned) : [];
   useEffect(() => {
@@ -10337,6 +10369,30 @@ ${value}` : value;
     setForm((prev) => ({ ...prev, [key]: mode === "keep" ? before : merged }));
   };
   const conflictRows = learnedFields.filter((key) => String(initial[key] || "").trim());
+  const canLearn = learnMode === "pair" ? Boolean(picked.source && picked.target) : Boolean(picked.single);
+  const pickerInput = (slot, labelKey) => h(
+    "label",
+    { className: "cait-btn cait-btn-ghost cait-learn-btn" },
+    h(Icon, { name: "upload", size: 13 }),
+    picked[slot]?.name || t(labelKey),
+    h("input", {
+      type: "file",
+      accept: ".docx,.xlsx,.txt,.md,.csv",
+      style: { display: "none" },
+      disabled: Boolean(busy) || Boolean(learn?.busy),
+      onChange: (event) => {
+        const file = event.target.files?.[0] || null;
+        event.target.value = "";
+        if (file) setPicked((prev) => ({ ...prev, [slot]: file }));
+      }
+    })
+  );
+  const startLearn = () => {
+    if (!canLearn) return;
+    const files = learnMode === "pair" ? [picked.source, picked.target] : [picked.single];
+    setPicked({ source: null, target: null, single: null });
+    onLearn(files, learnMode);
+  };
   const field = (key, label, placeholder, rows) => h(
     "label",
     { className: "cait-field" },
@@ -10366,24 +10422,48 @@ ${value}` : value;
       "div",
       { className: "cait-preset-learn" },
       h(
-        "label",
-        { className: "cait-btn cait-btn-ghost cait-learn-btn" },
-        h(Icon, { name: "upload", size: 13 }),
-        learn?.busy ? t("preset.learning") : t("preset.learn"),
-        h("input", {
-          type: "file",
-          multiple: true,
-          accept: ".docx,.xlsx,.txt,.md,.csv",
-          style: { display: "none" },
-          disabled: Boolean(busy) || Boolean(learn?.busy),
-          onChange: (event) => {
-            const files = [...event.target.files || []];
-            event.target.value = "";
-            if (files.length) onLearn(files);
-          }
-        })
+        "div",
+        { className: "cait-learn-modes" },
+        [
+          ["pair", "preset.mode.pair"],
+          ["bilingual", "preset.mode.bilingual"],
+          ["target", "preset.mode.target"]
+        ].map(
+          ([id, key]) => h(
+            "button",
+            {
+              key: id,
+              className: `cait-chipbtn${learnMode === id ? " is-active" : ""}`,
+              onClick: () => setLearnMode(id),
+              disabled: Boolean(busy) || Boolean(learn?.busy)
+            },
+            t(key)
+          )
+        )
       ),
-      h("span", { className: "cait-mt-hint cait-learn-hint" }, t("preset.learnHint")),
+      h(
+        "div",
+        { className: "cait-learn-actions" },
+        learnMode === "pair" ? pickerInput("source", "preset.pickSource") : pickerInput("single", "preset.pickFile"),
+        learnMode === "pair" ? pickerInput("target", "preset.pickTarget") : null,
+        h(
+          "button",
+          {
+            className: "cait-btn cait-btn-primary cait-learn-go",
+            onClick: startLearn,
+            disabled: Boolean(busy) || Boolean(learn?.busy) || !canLearn
+          },
+          learn?.busy ? h(Spinner) : null,
+          learn?.busy ? t("preset.learning") : t("preset.startLearn")
+        )
+      ),
+      h(
+        "span",
+        { className: "cait-mt-hint cait-learn-hint" },
+        t(
+          learnMode === "pair" ? "preset.hint.pair" : learnMode === "target" ? "preset.hint.target" : "preset.hint.bilingual"
+        )
+      ),
       learn?.error ? h("span", { className: "cait-mt-error" }, learn.error) : null,
       learn?.sources?.length ? h("span", { className: "cait-mt-hint" }, t("preset.learnedFrom", { names: learn.sources.join("、") })) : null
     ),
@@ -10440,7 +10520,7 @@ ${value}` : value;
           disabled: Boolean(busy)
         },
         busy ? h(Spinner) : null,
-        t("brief.save")
+        t(scope === "project" ? "preset.saveProject" : "preset.saveDoc")
       )
     )
   );
@@ -13795,7 +13875,7 @@ function useWorkbenchController({ i18n, translate }) {
       setBusy("");
     }
   };
-  const learnPreset = async (files) => {
+  const learnPreset = async (files, mode = "bilingual") => {
     if (!presetModal) return;
     setPresetModal((prev) => prev ? { ...prev, learn: { ...prev.learn || {}, busy: true, error: "" } } : prev);
     try {
@@ -13805,6 +13885,7 @@ function useWorkbenchController({ i18n, translate }) {
       }
       const result = await rpc("learnPreset", {
         files: payload,
+        mode,
         target: presetModal.scope === "project" ? "project" : "doc",
         documentId: doc?.id,
         projectId: presetModal.projectId || doc?.projectId || "project_inbox"
@@ -14038,12 +14119,9 @@ function useWorkbenchController({ i18n, translate }) {
   };
   const requestProject = (projectId) => {
     if (!projectId) return;
-    setProjectTab("projects");
-    if (projectId === currentProjectId()) {
-      void selectProject(projectId);
-      return;
-    }
     if (guardProjectNav({ kind: "project", projectId })) return;
+    setProjectTab("projects");
+    if (view !== "projects") setView("projects");
     void selectProject(projectId);
   };
   const requestProjectTab = (next) => {
@@ -14143,6 +14221,7 @@ function useWorkbenchController({ i18n, translate }) {
     else if (nav.kind === "tab") setProjectTab(nav.tab);
     else if (nav.kind === "project") {
       setProjectTab("projects");
+      setView("projects");
       await selectProject(nav.projectId);
     } else if (nav.kind === "doc") {
       await openDocument(nav.documentId);

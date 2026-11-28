@@ -78,6 +78,12 @@ manual reload.
 
 ## Features
 
+### Changed in 1.2.13
+
+- **Learn a preset in three ways**: two files (source and target picked separately, any folders), one bilingual file (two XLSX columns or alternating DOCX paragraphs), or one target-only file — the last one is explicitly marked as inferred from the target side only.
+- The preset dialog's primary button now matches its scope (Save project preset / Save document preset), and learning is a two-step "pick files, then learn".
+- The document header's "project" entry now really opens the project view: it used to switch the tab only, so the project detail loaded behind the editor and the click looked dead.
+
 ### Changed in 1.2.12
 
 - **Learn a preset from reference files**: pick 1–3 DOCX / XLSX / TXT / Markdown files (bilingual pairs or a finished translation) and the AI infers domain, audience, tone, notes, do-not-translate terms and style samples; conflicting fields offer Keep / Replace / Merge, and nothing is written until you save.

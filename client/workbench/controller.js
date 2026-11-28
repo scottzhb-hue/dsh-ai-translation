@@ -1357,7 +1357,7 @@ export function useWorkbenchController({ i18n, translate }) {
       setBusy('')
     }
   }
-  const learnPreset = async (files) => {
+  const learnPreset = async (files, mode = 'bilingual') => {
     if (!presetModal) return
     setPresetModal((prev) => (prev ? { ...prev, learn: { ...(prev.learn || {}), busy: true, error: '' } } : prev))
     try {
@@ -1367,6 +1367,7 @@ export function useWorkbenchController({ i18n, translate }) {
       }
       const result = await rpc('learnPreset', {
         files: payload,
+        mode,
         target: presetModal.scope === 'project' ? 'project' : 'doc',
         documentId: doc?.id,
         projectId: presetModal.projectId || doc?.projectId || 'project_inbox',
@@ -1653,16 +1654,12 @@ export function useWorkbenchController({ i18n, translate }) {
 
   const requestProject = (projectId) => {
     if (!projectId) return
-    // Opening a project always lands on the project tab. From "All documents"
-    // the detail used to load behind the table, so the click looked dead.
-    setProjectTab('projects')
-    // Clicking the project that is already open reloads it: the detail may be
-    // stale (documents moved, words edited) and an early return feels dead.
-    if (projectId === currentProjectId()) {
-      void selectProject(projectId)
-      return
-    }
+    // Opening a project always lands on the project tab and the project view:
+    // from the editor the detail used to load behind the document, so the
+    // "项目详情" entry in the document header looked dead.
     if (guardProjectNav({ kind: 'project', projectId })) return
+    setProjectTab('projects')
+    if (view !== 'projects') setView('projects')
     void selectProject(projectId)
   }
 
@@ -1775,6 +1772,7 @@ export function useWorkbenchController({ i18n, translate }) {
     else if (nav.kind === 'tab') setProjectTab(nav.tab)
     else if (nav.kind === 'project') {
       setProjectTab('projects')
+      setView('projects')
       await selectProject(nav.projectId)
     }
     else if (nav.kind === 'doc') {

@@ -1025,6 +1025,8 @@ function PresetModal({ t, busy, brief, scope = 'doc', onClose, onSave, learn, on
     styleSample: initial.styleSample || '',
   })
   const [choices, setChoices] = useState({})
+  const [learnMode, setLearnMode] = useState('bilingual')
+  const [picked, setPicked] = useState({ source: null, target: null, single: null })
   const learned = learn?.fields || null
   const learnedFields = learned ? Object.keys(learned) : []
 
@@ -1057,6 +1059,35 @@ function PresetModal({ t, busy, brief, scope = 'doc', onClose, onSave, learn, on
   }
 
   const conflictRows = learnedFields.filter((key) => String(initial[key] || '').trim())
+
+  const canLearn =
+    learnMode === 'pair' ? Boolean(picked.source && picked.target) : Boolean(picked.single)
+
+  const pickerInput = (slot, labelKey) =>
+    h(
+      'label',
+      { className: 'cait-btn cait-btn-ghost cait-learn-btn' },
+      h(Icon, { name: 'upload', size: 13 }),
+      picked[slot]?.name || t(labelKey),
+      h('input', {
+        type: 'file',
+        accept: '.docx,.xlsx,.txt,.md,.csv',
+        style: { display: 'none' },
+        disabled: Boolean(busy) || Boolean(learn?.busy),
+        onChange: (event) => {
+          const file = event.target.files?.[0] || null
+          event.target.value = ''
+          if (file) setPicked((prev) => ({ ...prev, [slot]: file }))
+        },
+      }),
+    )
+
+  const startLearn = () => {
+    if (!canLearn) return
+    const files = learnMode === 'pair' ? [picked.source, picked.target] : [picked.single]
+    setPicked({ source: null, target: null, single: null })
+    onLearn(files, learnMode)
+  }
 
   const field = (key, label, placeholder, rows) =>
     h(
@@ -1091,24 +1122,52 @@ function PresetModal({ t, busy, brief, scope = 'doc', onClose, onSave, learn, on
       'div',
       { className: 'cait-preset-learn' },
       h(
-        'label',
-        { className: 'cait-btn cait-btn-ghost cait-learn-btn' },
-        h(Icon, { name: 'upload', size: 13 }),
-        learn?.busy ? t('preset.learning') : t('preset.learn'),
-        h('input', {
-          type: 'file',
-          multiple: true,
-          accept: '.docx,.xlsx,.txt,.md,.csv',
-          style: { display: 'none' },
-          disabled: Boolean(busy) || Boolean(learn?.busy),
-          onChange: (event) => {
-            const files = [...(event.target.files || [])]
-            event.target.value = ''
-            if (files.length) onLearn(files)
-          },
-        }),
+        'div',
+        { className: 'cait-learn-modes' },
+        [
+          ['pair', 'preset.mode.pair'],
+          ['bilingual', 'preset.mode.bilingual'],
+          ['target', 'preset.mode.target'],
+        ].map(([id, key]) =>
+          h(
+            'button',
+            {
+              key: id,
+              className: `cait-chipbtn${learnMode === id ? ' is-active' : ''}`,
+              onClick: () => setLearnMode(id),
+              disabled: Boolean(busy) || Boolean(learn?.busy),
+            },
+            t(key),
+          ),
+        ),
       ),
-      h('span', { className: 'cait-mt-hint cait-learn-hint' }, t('preset.learnHint')),
+      h(
+        'div',
+        { className: 'cait-learn-actions' },
+        learnMode === 'pair' ? pickerInput('source', 'preset.pickSource') : pickerInput('single', 'preset.pickFile'),
+        learnMode === 'pair' ? pickerInput('target', 'preset.pickTarget') : null,
+        h(
+          'button',
+          {
+            className: 'cait-btn cait-btn-primary cait-learn-go',
+            onClick: startLearn,
+            disabled: Boolean(busy) || Boolean(learn?.busy) || !canLearn,
+          },
+          learn?.busy ? h(Spinner) : null,
+          learn?.busy ? t('preset.learning') : t('preset.startLearn'),
+        ),
+      ),
+      h(
+        'span',
+        { className: 'cait-mt-hint cait-learn-hint' },
+        t(
+          learnMode === 'pair'
+            ? 'preset.hint.pair'
+            : learnMode === 'target'
+              ? 'preset.hint.target'
+              : 'preset.hint.bilingual',
+        ),
+      ),
       learn?.error ? h('span', { className: 'cait-mt-error' }, learn.error) : null,
       learn?.sources?.length
         ? h('span', { className: 'cait-mt-hint' }, t('preset.learnedFrom', { names: learn.sources.join('、') }))
@@ -1169,7 +1228,7 @@ function PresetModal({ t, busy, brief, scope = 'doc', onClose, onSave, learn, on
           disabled: Boolean(busy),
         },
         busy ? h(Spinner) : null,
-        t('brief.save'),
+        t(scope === 'project' ? 'preset.saveProject' : 'preset.saveDoc'),
       ),
     ),
   )
