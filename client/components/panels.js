@@ -1,5 +1,5 @@
 import { h, useEffect, useRef, useState } from '../react.js'
-import { Spinner, Icon } from './base.js'
+import { Icon } from './base.js'
 import { TmMatchCard } from './editor.js'
 
 function CatPanel({
@@ -24,19 +24,20 @@ function CatPanel({
   onExportGlossary,
   onOpenIo,
   onClearGlossary,
-  mt,
-  mtError,
-  mtBusy,
-  onGenerateMt,
   segmentReview,
   onReviewSegment,
   onApplySegmentReview,
   onCloseSegmentReview,
-  onOpenLocalMt,
   mtLocal,
-  onApplyMt,
   onCopy,
   onOpenSettings,
+  features,
+  reviewContext,
+  onPreviewAiSettings,
+  onSaveAiSettings,
+  onCancelAiSettings,
+  onResetAiSettings,
+  onMtMode,
   onSearchLibrary,
   qa,
   onRefreshQa,
@@ -65,14 +66,38 @@ function CatPanel({
   const tmxInput = useRef(null)
   const glossaryInput = useRef(null)
   const [exportFormat, setExportFormat] = useState('tbx')
-  // The segment reviewer's editable copy of the suggestion, and an optional
-  // pasted translation to review instead of the editor draft.
-  const [reviewText, setReviewText] = useState('')
-  const [pasteText, setPasteText] = useState('')
-  const segmentVerdict = segmentReview?.verdict || null
+  const [aiDraft, setAiDraft] = useState({
+    features: {
+      suggestion: features?.suggestion !== false,
+      revise: features?.revise !== false,
+      review: features?.review !== false,
+    },
+    reviewContext: reviewContext ?? 3,
+  })
   useEffect(() => {
-    setReviewText(segmentVerdict?.suggestion || '')
-  }, [segmentVerdict])
+    setAiDraft({
+      features: {
+        suggestion: features?.suggestion !== false,
+        revise: features?.revise !== false,
+        review: features?.review !== false,
+      },
+      reviewContext: reviewContext ?? 3,
+    })
+  }, [features?.suggestion, features?.revise, features?.review, reviewContext])
+  const aiDirty =
+    aiDraft.reviewContext !== (reviewContext ?? 3) ||
+    aiDraft.features.suggestion !== (features?.suggestion !== false) ||
+    aiDraft.features.revise !== (features?.revise !== false) ||
+    aiDraft.features.review !== (features?.review !== false)
+  const patchAi = (next) => {
+    const merged = {
+      ...aiDraft,
+      ...next,
+      features: { ...aiDraft.features, ...(next?.features ?? {}) },
+    }
+    setAiDraft(merged)
+    onPreviewAiSettings(merged)
+  }
   const routes = Array.isArray(mtRoutes?.providers) ? mtRoutes.providers : []
   const currentRoute = routes.find((route) => route.id === settings.mt.provider)
   const localMtReady = Boolean(mtLocal?.enabled && mtLocal?.baseUrl && mtLocal?.model)
@@ -364,203 +389,122 @@ function CatPanel({
       tab === 'mt'
         ? h(
             'div',
-            null,
-            h(
-              'div',
-              { className: 'cait-mt-head' },
-              h('span', { className: 'cait-mt-mode' }, mtModeLabel),
-              h(
-                'span',
-                { className: 'cait-muted cait-tiny' },
-                `${t('panel.mtModel')}: ${settings.mt.model || '—'}`,
-              ),
-            ),
+            { className: 'cait-ai-settings' },
+            h('p', { className: 'cait-mt-hint' }, t('panel.aiSettingsHint')),
             h(
               'section',
               { className: 'cait-ai-block' },
-              h('div', { className: 'cait-ai-title' }, t('panel.mtTranslate')),
+              h('div', { className: 'cait-ai-title' }, t('panel.aiRouteTitle')),
               h(
                 'div',
-                { className: 'cait-card' },
-                h(
-                  'div',
-                  { className: 'cait-labelrow' },
-                  h('span', { className: 'cait-label' }, t('panel.mtRoute')),
-                  h('span', { className: 'cait-meta' }, settings.mt.provider || '—'),
-                ),
+                { className: 'cait-segmented' },
                 h(
                   'button',
                   {
-                    className: 'cait-linkbtn',
+                    className: `cait-seg${localMtReady ? '' : ' active'}`,
                     type: 'button',
-                    onClick: onOpenLocalMt,
+                    onClick: () => onMtMode('route'),
                     disabled: Boolean(busy),
                   },
-                  t('mtlocal.open'),
+                  t('panel.aiRouteDsh'),
                 ),
                 h(
                   'button',
                   {
-                    className: 'cait-btn cait-btn-primary',
-                    onClick: onGenerateMt,
-                    disabled: Boolean(busy) || mtBusy,
-                    style: { width: '100%' },
+                    className: `cait-seg${localMtReady ? ' active' : ''}`,
+                    type: 'button',
+                    onClick: () => onMtMode('local'),
+                    disabled: Boolean(busy) || !mtLocal?.baseUrl,
+                    title: mtLocal?.baseUrl ? undefined : t('panel.aiRouteLocalHint'),
                   },
-                  mtBusy ? h(Spinner) : h(Icon, { name: 'sparkles', size: 14 }),
-                  mtBusy ? t('panel.mtGenerating') : t('panel.mtGenerate'),
+                  t('panel.aiRouteLocal'),
                 ),
               ),
-              mtError ? h('div', { className: 'cait-mt-error' }, mtError) : null,
-              mt
-                ? h(
-                    'article',
-                    { className: 'cait-card cait-mt-card' },
-                    h(
-                      'div',
-                      { className: 'cait-card-head' },
-                      h('span', { className: 'cait-score exact' }, t('panel.mtSuggestion')),
-                      h('span', { className: 'cait-score-label' }, `${mt.latencyMs} ms`),
-                    ),
-                    h('p', { className: 'cait-mt-text' }, mt.text),
-                    mt.note ? h('p', { className: 'cait-mt-hint' }, mt.note) : null,
-                    h(
-                      'div',
-                      { className: 'cait-mt-actions' },
-                      h(
-                        'button',
-                        { className: 'cait-minibtn', onClick: () => onCopy(mt.text) },
-                        t('panel.copy'),
-                      ),
-                      h(
-                        'button',
-                        { className: 'cait-minibtn', onClick: onApplyMt },
-                        t('panel.mtInsert'),
-                      ),
-                    ),
-                  )
-                : h('p', { className: 'cait-empty-note' }, t('panel.mtEmpty')),
+              h('p', { className: 'cait-mt-hint' }, mtModeLabel),
+              h(
+                'button',
+                { className: 'cait-linkbtn', type: 'button', onClick: onOpenSettings },
+                t('panel.aiRouteConfig'),
+              ),
             ),
             h(
               'section',
               { className: 'cait-ai-block' },
+              h('div', { className: 'cait-ai-title' }, t('panel.aiCardsTitle')),
+              h('p', { className: 'cait-mt-hint' }, t('panel.aiCardsHint')),
               h(
-                'div',
-                { className: 'cait-ai-title' },
-                t('panel.reviewTitle'),
-                h(
-                  'span',
-                  { className: 'cait-muted cait-tiny' },
-                  `#${(segmentReview?.index ?? doc?.cursor ?? 0) + 1}`,
-                ),
-                segmentVerdict
-                  ? h(
-                      'button',
-                      { className: 'cait-linkbtn cait-tiny', type: 'button', onClick: onCloseSegmentReview },
-                      t('panel.reviewClear'),
-                    )
-                  : null,
-              ),
-              h(
-                'div',
-                { className: 'cait-card' },
-                h('p', { className: 'cait-mt-hint' }, t('panel.reviewPasteHint')),
-                h('textarea', {
-                  className: 'cait-input cait-review-paste',
-                  value: pasteText,
-                  placeholder: t('panel.reviewPaste'),
-                  onChange: (event) => setPasteText(event.target.value),
-                  rows: 2,
+                'label',
+                { className: 'cait-check cait-ai-toggle' },
+                h('input', {
+                  type: 'checkbox',
+                  checked: aiDraft.features.suggestion !== false,
+                  onChange: (event) => patchAi({ features: { suggestion: event.target.checked } }),
                 }),
-                h(
-                  'button',
-                  {
-                    className: 'cait-btn cait-btn-primary',
-                    onClick: () => onReviewSegment(pasteText),
-                    disabled: Boolean(busy) || Boolean(segmentReview?.busy),
-                    style: { width: '100%' },
-                  },
-                  segmentReview?.busy ? h(Spinner) : h(Icon, { name: 'check', size: 14 }),
-                  segmentReview?.busy ? t('panel.reviewRunning') : t('panel.reviewRun'),
-                ),
+                h('span', null, t('panel.aiCardSuggestion')),
               ),
-              segmentReview?.error
-                ? h('div', { className: 'cait-mt-error' }, segmentReview.error)
-                : null,
-              segmentVerdict
-                ? (() => {
-                    const clean =
-                      segmentVerdict.severity === 'none' ||
-                      (!segmentVerdict.message && !segmentVerdict.suggestion)
-                    return h(
-                      'article',
-                      { className: 'cait-card cait-mt-card' },
-                      h(
-                        'div',
-                        { className: 'cait-card-head' },
-                        h(
-                          'span',
-                          { className: `cait-score${clean ? ' exact' : ' risk'}` },
-                          clean ? t('panel.reviewClean') : segmentVerdict.code,
-                        ),
-                        h(
-                          'span',
-                          { className: 'cait-score-label' },
-                          segmentVerdict.latencyMs ? `${segmentVerdict.latencyMs} ms` : '',
-                        ),
-                      ),
-                      segmentVerdict.message
-                        ? h('p', { className: 'cait-mt-text' }, segmentVerdict.message)
-                        : null,
-                      clean
-                        ? null
-                        : h('textarea', {
-                            className: 'cait-input cait-review-edit',
-                            value: reviewText,
-                            onChange: (event) => setReviewText(event.target.value),
-                            rows: 3,
-                          }),
-                      h(
-                        'div',
-                        { className: 'cait-mt-actions' },
-                        h(
-                          'button',
-                          {
-                            className: 'cait-minibtn',
-                            onClick: () => onCopy(reviewText || segmentVerdict.suggestion || ''),
-                          },
-                          t('panel.copy'),
-                        ),
-                        clean
-                          ? null
-                          : h(
-                              'button',
-                              {
-                                className: 'cait-minibtn',
-                                onClick: () => onApplySegmentReview(reviewText),
-                              },
-                              t('panel.reviewApply'),
-                            ),
-                      ),
-                      clean ? null : h('p', { className: 'cait-mt-hint' }, t('panel.reviewNote')),
-                    )
-                  })()
-                : h('p', { className: 'cait-empty-note' }, t('panel.reviewEmpty')),
+              h(
+                'label',
+                { className: 'cait-check cait-ai-toggle' },
+                h('input', {
+                  type: 'checkbox',
+                  checked: aiDraft.features.revise !== false,
+                  onChange: (event) => patchAi({ features: { revise: event.target.checked } }),
+                }),
+                h('span', null, t('panel.aiCardRevise')),
+              ),
+              h(
+                'label',
+                { className: 'cait-check cait-ai-toggle' },
+                h('input', {
+                  type: 'checkbox',
+                  checked: aiDraft.features.review !== false,
+                  onChange: (event) => patchAi({ features: { review: event.target.checked } }),
+                }),
+                h('span', null, t('panel.aiCardReview')),
+              ),
             ),
             h(
-              'p',
-              { className: 'cait-mt-hint' },
-              settings.mt.provider === 'mock' ? t('panel.mtMockHint') : t('panel.mtHint'),
+              'section',
+              { className: 'cait-ai-block' },
+              h('div', { className: 'cait-ai-title' }, t('panel.aiContextTitle')),
+              h('p', { className: 'cait-mt-hint' }, t('panel.aiContextHint')),
+              h('input', {
+                className: 'cait-input cait-ai-context',
+                type: 'number',
+                min: 0,
+                max: 5,
+                value: aiDraft.reviewContext,
+                onChange: (event) =>
+                  patchAi({
+                    reviewContext: Math.max(0, Math.min(5, Number(event.target.value) || 0)),
+                  }),
+              }),
             ),
             h(
               'div',
-              { className: 'cait-panel-foot' },
+              { className: 'cait-panel-foot cait-ai-foot' },
               h(
                 'button',
-                { className: 'cait-btn', onClick: onOpenSettings },
-                h(Icon, { name: 'settings', size: 12 }),
-                t('panel.mtSettings'),
+                {
+                  className: 'cait-btn cait-btn-primary',
+                  type: 'button',
+                  onClick: () => onSaveAiSettings(aiDraft),
+                  disabled: Boolean(busy) || !aiDirty,
+                },
+                t('panel.aiSave'),
+              ),
+              h(
+                'button',
+                { className: 'cait-btn', type: 'button', onClick: onCancelAiSettings, disabled: Boolean(busy) },
+                t('panel.cancel'),
+              ),
+              h(
+                'button',
+                { className: 'cait-linkbtn', type: 'button', onClick: onResetAiSettings, disabled: Boolean(busy) },
+                t('panel.aiReset'),
               ),
             ),
+            h('p', { className: 'cait-mt-hint' }, t('panel.aiFooterHint')),
           )
         : null,
       tab === 'qa'

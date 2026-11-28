@@ -327,6 +327,14 @@ function Panel({ title, count, actions, open = true, onToggle, hint, children })
   )
 }
 
+function briefText(t, brief) {
+  if (!brief) return ''
+  return ['domain', 'audience', 'tone', 'notes', 'doNotTranslate', 'styleSample']
+    .filter((field) => String(brief[field] || '').trim())
+    .map((field) => `${t(`brief.${field}`)}：${String(brief[field]).trim().slice(0, 60)}`)
+    .join(' · ')
+}
+
 function ProjectDetail({
   t,
   busy,
@@ -358,6 +366,7 @@ function ProjectDetail({
   onDocReport,
   onPickReport,
   onRefreshAnalysis,
+  onEditPreset,
 }) {
   const project = state?.project ?? null
   const analysis = state?.analysis ?? null
@@ -936,25 +945,17 @@ function ProjectDetail({
       },
       h(
         'div',
-        { className: 'cait-formrow' },
-        BRIEF_FIELDS.map(([field, label]) =>
-          h(
-            'label',
-            { key: field, className: 'cait-field' },
-            h('span', null, t(label)),
-            field === 'notes' || field === 'doNotTranslate' || field === 'styleSample'
-              ? h('textarea', {
-                  className: 'cait-input',
-                  rows: 2,
-                  value: brief[field] ?? '',
-                  onChange: (event) => setBriefField(field, event.target.value),
-                })
-              : h('input', {
-                  className: 'cait-input',
-                  value: brief[field] ?? '',
-                  onChange: (event) => setBriefField(field, event.target.value),
-                }),
-          ),
+        { className: 'cait-preset-summary' },
+        h(
+          'p',
+          { className: 'cait-preset-line' },
+          briefText(t, brief) || t('preset.empty'),
+        ),
+        h(
+          'button',
+          { className: 'cait-btn cait-btn-ghost', onClick: () => onEditPreset(project.id) },
+          h(Icon, { name: 'pencil', size: 13 }),
+          t('preset.edit'),
         ),
       ),
     ),
@@ -1375,6 +1376,7 @@ function ProjectsPage({
   onMoveDoc,
   onReorderDoc,
   onRefreshAnalysis,
+  onEditPreset,
 }) {
   const list = state?.list?.projects ?? projects ?? []
   const documentsCount = (documents ?? []).length
@@ -1475,6 +1477,7 @@ function ProjectsPage({
             onDocReport,
             onPickReport: pickReport,
             onRefreshAnalysis,
+        onEditPreset,
           }),
         ),
     reportPick

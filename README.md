@@ -80,8 +80,16 @@ manual reload.
 
 ### Changed in 1.2.12
 
-- **AI review for the active segment**: the CAT panel now shows "AI Translate" and "AI Review" as two stacked cards. AI Review checks only the segment you are on — using the live target field (unsaved edits included) or a translation you paste in — with the project brief, glossary hits and the previous 3 translated segments as context. You can edit the suggestion and write it back into the target field with one click.
-- **Local MT is configurable from Settings now**: Settings → Machine translation has a route/local switch, the same form as the editor panel (Base URL, model, API key, timeout, test connection), plus clearing a stored key. The editor panel header shows which path is in effect.
+- **Learn a preset from reference files**: pick 1–3 DOCX / XLSX / TXT / Markdown files (bilingual pairs or a finished translation) and the AI infers domain, audience, tone, notes, do-not-translate terms and style samples; conflicting fields offer Keep / Replace / Merge, and nothing is written until you save.
+- **Five entries in the document header**: document preset ｜ project preset ｜ resources ｜ analysis ｜ project. Both presets open in a dialog with the same learn button.
+- **Project analysis is ~10× faster** (21s → ~2s on a 488-segment document with 2,000 TM entries): prepared TM keys are cached, exact hits short-circuit the fuzzy scan, and results are cached per document revision.
+
+- **The editor middle column is now an "AI workspace"**: the old machine/TM suggestion is renamed "Pre-translation" and only shows the baseline; a new "AI re-translate" card regenerates the active segment; below it sits "AI review". All three are collapsible cards, with pre-translation and re-translate open by default and review collapsed.
+- **AI re-translate carries brief, glossary and context**: the project/document brief, glossary hits for the segment, and the previous N translated segments (default 3, up to 5, adjustable in the panel). Its result is stored separately, so the pre-translation baseline and confirmed targets are never overwritten.
+- **The "AI review" tab is now a settings page**: route (DSH route / local endpoint), three feature toggles (pre-translation / AI re-translate / AI review — turning one off hides the matching card immediately), and review context size (0-5). Changes apply only after "Save settings"; Cancel and Reset to defaults are next to it.
+- **Local MT is configurable from Settings now**: pick the local endpoint and set Base URL, model, API key, timeout and test connection here — the same form as the editor panel, plus clearing a stored key.
+- **Two preset buttons in the AI chat**: Save document preset (primary) and Save project preset — the same summary can be written to the current document or to its project, and the project one updates the project settings page immediately. Terminology is now unified as Project / Document translation preset.
+- **Compact, sticky document header**: title, language pair, progress percent and the three entries (preset / resources / analysis) on one line; the old big progress block is gone, and the source panel stays pinned while you scroll a long segment.
 
 - **Narrower project column**: 236px → 208px (180px on narrow windows), leaving more room for the project detail.
 - **Long project names wrap**: no more single-line ellipsis; the Unfiled tag stays top-aligned with the name.

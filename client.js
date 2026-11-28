@@ -426,7 +426,7 @@ var WORKFLOW_DICTS = { zh: ZH_WORKFLOW, en: EN_WORKFLOW, ja: JA_WORKFLOW };
 var ZH_PROJECTS = {
   "projects.title": "项目",
   "projects.backToProject": "← 项目",
-  "projects.hint": "同一批交付的文档放进一个项目：共享 brief 与术语库/TM，按项目汇总、交付、出报告并记录工时。文档自己的设置优先于项目。",
+  "projects.hint": "同一批交付的文档放进一个项目：共享翻译预设与术语库/TM，按项目汇总、交付、出报告并记录工时。文档自己的设置优先于项目。",
   "projects.tabProjects": "项目",
   "projects.tabDocs": "所有文档",
   "projects.newPlaceholder": "新项目名称…",
@@ -462,7 +462,7 @@ var ZH_PROJECTS = {
   "projects.settingsSaved": "设置已保存。",
   "projects.unsavedHint": "有未保存的设置改动",
   "projects.unsavedTitle": "有未保存的设置",
-  "projects.unsavedBody": "名称、brief、共享资源或交付勾选还没保存。要保存后再离开吗？",
+  "projects.unsavedBody": "名称、翻译预设、共享资源或交付勾选还没保存。要保存后再离开吗？",
   "projects.unsavedSave": "保存并离开",
   "projects.unsavedDiscard": "放弃修改",
   "projects.export": "导出项目交付包",
@@ -498,8 +498,8 @@ var ZH_PROJECTS = {
   "projects.moveHint": "改归属",
   "projects.addDocs": "把已有文档加入本项目",
   "projects.current": "当前",
-  "projects.brief": "项目 brief",
-  "projects.briefHint": "项目 brief 会作为默认值继承给每篇文档，文档自己的 brief 覆盖同名字段。",
+  "projects.brief": "项目翻译预设",
+  "projects.briefHint": "项目翻译预设会作为默认值继承给每篇文档，文档自己的翻译预设覆盖同名字段。",
   "projects.domain": "领域",
   "projects.audience": "读者",
   "projects.tone": "语气",
@@ -580,7 +580,7 @@ var ZH_PROJECTS = {
 var EN_PROJECTS = {
   "projects.title": "Projects",
   "projects.backToProject": "← Projects",
-  "projects.hint": "Group documents delivered together into one project: shared brief and TM/glossary, aggregated analysis, one delivery package, reports and tracked time. Document settings win over project settings.",
+  "projects.hint": "Group documents delivered together into one project: shared translation preset and TM/glossary, aggregated analysis, one delivery package, reports and tracked time. Document settings win over project settings.",
   "projects.tabProjects": "Projects",
   "projects.tabDocs": "All documents",
   "projects.newPlaceholder": "New project name…",
@@ -616,7 +616,7 @@ var EN_PROJECTS = {
   "projects.settingsSaved": "Settings saved.",
   "projects.unsavedHint": "Unsaved settings changes",
   "projects.unsavedTitle": "Unsaved settings",
-  "projects.unsavedBody": "Name, brief, shared resources or delivery options are not saved yet. Save before leaving?",
+  "projects.unsavedBody": "Name, translation preset, shared resources or delivery options are not saved yet. Save before leaving?",
   "projects.unsavedSave": "Save and leave",
   "projects.unsavedDiscard": "Discard changes",
   "projects.export": "Export project delivery",
@@ -649,8 +649,8 @@ var EN_PROJECTS = {
   "projects.moveHint": "Move to",
   "projects.addDocs": "Add existing documents to this project",
   "projects.current": "current",
-  "projects.brief": "Project brief",
-  "projects.briefHint": "The project brief is inherited by every document; a document brief overrides the same fields.",
+  "projects.brief": "Project translation preset",
+  "projects.briefHint": "The project translation preset is inherited by every document; a document preset overrides the same fields.",
   "projects.domain": "Domain",
   "projects.audience": "Audience",
   "projects.tone": "Tone",
@@ -731,7 +731,7 @@ var EN_PROJECTS = {
 var JA_PROJECTS = {
   "projects.title": "プロジェクト",
   "projects.backToProject": "← プロジェクト",
-  "projects.hint": "同じ納品分の文書を 1 つのプロジェクトにまとめます。ブリーフと TM/用語集を共有し、分析・納品・レポート・工数をプロジェクト単位で集計します。文書側の設定が優先されます。",
+  "projects.hint": "一緒に納品する文書を 1 つのプロジェクトにまとめます。翻訳プリセット・用語集/TM を共有し、分析・納品・レポート・作業時間をプロジェクト単位で管理します。文書側の設定が優先されます。",
   "projects.tabProjects": "プロジェクト",
   "projects.tabDocs": "すべての文書",
   "projects.newPlaceholder": "新しいプロジェクト名…",
@@ -767,7 +767,7 @@ var JA_PROJECTS = {
   "projects.settingsSaved": "設定を保存しました。",
   "projects.unsavedHint": "未保存の設定変更があります",
   "projects.unsavedTitle": "未保存の設定",
-  "projects.unsavedBody": "名前・ブリーフ・共有リソース・納品オプションが未保存です。保存してから移動しますか？",
+  "projects.unsavedBody": "名前・翻訳プリセット・共有リソース・納品項目が未保存です。保存してから離れますか？",
   "projects.unsavedSave": "保存して移動",
   "projects.unsavedDiscard": "変更を破棄",
   "projects.export": "プロジェクト納品を書き出す",
@@ -800,8 +800,8 @@ var JA_PROJECTS = {
   "projects.moveHint": "移動先",
   "projects.addDocs": "既存の文書をこのプロジェクトに追加",
   "projects.current": "現在",
-  "projects.brief": "プロジェクトブリーフ",
-  "projects.briefHint": "プロジェクトブリーフは各文書に継承されます。文書側の同名項目が優先されます。",
+  "projects.brief": "プロジェクト翻訳プリセット",
+  "projects.briefHint": "プロジェクト翻訳プリセットは各文書に継承されます。文書側の同名項目が優先されます。",
   "projects.domain": "分野",
   "projects.audience": "読者",
   "projects.tone": "トーン",
@@ -902,11 +902,9 @@ var ZH = {
   "doc.delete": "删除文档",
   "doc.deleteTitle": "删除文档",
   "doc.deleteMessage": "确定永久删除“{name}”吗？该文档的句段也会被删除。",
-  "doc.segments": "句段",
   "tabs.title": "打开的文档",
   "tabs.close": "关闭文档",
   "tabs.new": "新开页面",
-  "progress.confirmed": "已确认",
   "status.pending": "待翻译",
   "status.confirmed": "已确认",
   "common.loading": "正在加载工作台…",
@@ -933,7 +931,18 @@ var ZH = {
   "editor.emptyTarget": "请先输入译文",
   "editor.done": "全部句段已确认",
   "editor.confirmedAt": "确认于",
-  "editor.suggestion": "机器建议",
+  "editor.suggestion": "预翻译结果",
+  "editor.revise": "AI 重译",
+  "editor.reviseHint": "结合项目与文档翻译预设、术语库，以及前面几条已译句段重新翻译。",
+  "editor.reviseRun": "重新生成译文建议",
+  "editor.revising": "正在重译…",
+  "editor.reviseAt": "{time} 生成 · {model}",
+  "editor.reviewTitle": "AI 审校",
+  "editor.reviewHint": "留空时审校译文栏里的当前内容，也可以粘贴一段译文来审。",
+  "editor.reviewIssue": "问题 · {code}",
+  "editor.reviewMs": "{ms} ms",
+  "editor.reviewNote": "回填只改草稿，保存后才写入文档。",
+  "editor.reviewEmpty": "点上面的按钮，针对当前句段给出审校意见。",
   "editor.adopt": "采纳",
   "editor.adoptHint": "把建议填入译文，保留它的来源",
   "editor.remaining": "句待确认",
@@ -1037,7 +1046,7 @@ var ZH = {
   "libraries.mountSaved": "挂载设置已保存",
   "panel.tm": "记忆库",
   "panel.glossary": "术语库",
-  "panel.mt": "AI 翻译",
+  "panel.mt": "AI 译审",
   "panel.currentMatches": "当前句段匹配",
   "panel.searchResults": "搜索结果",
   "panel.searchPlaceholder": "搜索记忆库…",
@@ -1064,31 +1073,34 @@ var ZH = {
   "panel.saveEntry": "保存修改",
   "panel.importCsv": "导入 CSV/TSV",
   "panel.clearGlossary": "清空术语库",
-  "panel.mtRoute": "路由",
-  "panel.mtGenerate": "生成译文建议",
-  "panel.mtGenerating": "正在生成…",
-  "panel.mtInsert": "插入译文",
-  "panel.mtEmpty": "点击生成，获取当前句段的机器翻译建议。",
   "panel.mtModeLocal": "本地端点 · {model}",
   "panel.mtModeRoute": "DSH 路由 · {model}",
-  "panel.mtModel": "模型",
-  "panel.mtSuggestion": "MT 建议",
-  "panel.mtTranslate": "AI 翻译",
-  "panel.reviewTitle": "AI 审校",
   "panel.reviewRun": "审校当前句段",
   "panel.reviewRunning": "审校中…",
   "panel.reviewPaste": "粘贴一条译文来审（可留空）",
-  "panel.reviewPasteHint": "留空时审校译文栏里的当前内容。",
-  "panel.reviewEmpty": "点上面的按钮，针对当前句段给出审校意见。",
   "panel.reviewClean": "没有发现问题",
   "panel.reviewApply": "回填译文",
   "panel.reviewClear": "清除",
-  "panel.reviewNote": "回填只改草稿，保存后才会写入记忆。",
   "panel.reviewApplied": "已回填到译文栏，记得保存。",
-  "panel.mtSettings": "配置路由",
-  "panel.mtHint": "通过 DSH 模型路由调用，凭据由 DSH 管理。",
-  "panel.mtMockHint": "术语替换（离线）不联网，只使用术语库；在设置中选择 DSH 路由可启用真实翻译。",
   "panel.copy": "复制",
+  "panel.aiSettingsHint": "这一页只设置编辑区的 AI 卡片，改完点「保存设置」生效。",
+  "panel.aiRouteTitle": "翻译方式",
+  "panel.aiRouteDsh": "DSH 模型路由",
+  "panel.aiRouteLocal": "本地端点",
+  "panel.aiRouteLocalHint": "先到「配置模型与密钥」里填好本地端点地址与模型。",
+  "panel.aiRouteConfig": "配置模型与密钥…",
+  "panel.aiCardsTitle": "显示哪些 AI 卡片",
+  "panel.aiCardsHint": "关掉的卡片在编辑区隐藏，重新打开即恢复。",
+  "panel.aiCardSuggestion": "预翻译结果",
+  "panel.aiCardRevise": "AI 重译",
+  "panel.aiCardReview": "AI 审校",
+  "panel.aiContextTitle": "前文上下文条数",
+  "panel.aiContextHint": "重译与审校会带上前面 0–5 条已译句段（原文 + 译文）。",
+  "panel.aiSave": "保存设置",
+  "panel.aiReset": "恢复默认",
+  "panel.aiFooterHint": "保存后重启也不会丢；取消只还原这次预览。",
+  "panel.reviseReady": "已生成重译建议",
+  "panel.reviseApplied": "已把重译填进译文栏（未保存）",
   "mt.mock": "术语替换（离线）",
   "modal.export.title": "导出",
   "modal.export.desc": "导出当前文档。双语格式保留原文与译文对照，仅译文格式适合直接交付。",
@@ -1153,8 +1165,9 @@ var ZH = {
   "modal.settings.limit": "返回匹配数",
   "modal.settings.mtModeRoute": "DSH 模型路由",
   "modal.settings.mtModeLocal": "本地端点（OpenAI 兼容）",
-  "modal.settings.mtModeHint": "本地端点优先接管机器建议与预翻译；下方 DSH 路由仍用于 AI 对话与审校。",
-  "modal.settings.mtLocalScope": "只接管机器建议与预翻译，API Key 仅存本机数据目录。",
+  "modal.settings.mtModeHint": "本地端点只接管预翻译和 AI 翻译建议；AI 对话与校审仍走下方 DSH 路由。",
+  "modal.settings.routeForAi": "AI 对话与校审使用的 DSH 路由",
+  "modal.settings.routeForAiHint": "下面这条路由不参与预翻译，只给 AI 对话、重译与审校使用。",
   "modal.settings.mt": "机器翻译",
   "modal.settings.review": "AI 审校模型",
   "modal.settings.reviewInherit": "跟随翻译模型（默认）",
@@ -1356,11 +1369,9 @@ var EN = {
   "doc.delete": "Delete document",
   "doc.deleteTitle": "Delete document",
   "doc.deleteMessage": "Permanently delete “{name}”? Its segments will also be deleted.",
-  "doc.segments": "segments",
   "tabs.title": "Open documents",
   "tabs.close": "Close document",
   "tabs.new": "New page",
-  "progress.confirmed": "confirmed",
   "status.pending": "Pending",
   "status.confirmed": "Confirmed",
   "common.loading": "Loading workbench…",
@@ -1387,7 +1398,18 @@ var EN = {
   "editor.emptyTarget": "Enter a translation first",
   "editor.done": "All segments confirmed",
   "editor.confirmedAt": "Confirmed",
-  "editor.suggestion": "Machine suggestion",
+  "editor.suggestion": "Pre-translation",
+  "editor.revise": "AI re-translation",
+  "editor.reviseHint": "Re-translate with the project/document translation presets, glossary hits and the preceding translated segments.",
+  "editor.reviseRun": "Regenerate suggestion",
+  "editor.revising": "Re-translating…",
+  "editor.reviseAt": "Generated {time} · {model}",
+  "editor.reviewTitle": "AI review",
+  "editor.reviewHint": "Leave empty to review the target field, or paste a translation to review instead.",
+  "editor.reviewIssue": "Issue · {code}",
+  "editor.reviewMs": "{ms} ms",
+  "editor.reviewNote": "Filling back edits the draft only; save to persist.",
+  "editor.reviewEmpty": "Run a review to get an opinion on this segment.",
   "editor.adopt": "Adopt",
   "editor.adoptHint": "Fill the target with this suggestion and keep its origin",
   "editor.remaining": "to review",
@@ -1491,7 +1513,7 @@ var EN = {
   "libraries.mountSaved": "Mount settings saved",
   "panel.tm": "TM",
   "panel.glossary": "Glossary",
-  "panel.mt": "AI translate",
+  "panel.mt": "AI review",
   "panel.currentMatches": "Current segment matches",
   "panel.searchResults": "Search results",
   "panel.searchPlaceholder": "Search translation memory…",
@@ -1518,31 +1540,34 @@ var EN = {
   "panel.saveEntry": "Save changes",
   "panel.importCsv": "Import CSV/TSV",
   "panel.clearGlossary": "Clear glossary",
-  "panel.mtRoute": "Route",
-  "panel.mtGenerate": "Generate suggestion",
-  "panel.mtGenerating": "Generating…",
-  "panel.mtInsert": "Insert translation",
-  "panel.mtEmpty": "Generate a machine-translation suggestion for the current segment.",
   "panel.mtModeLocal": "Local endpoint · {model}",
   "panel.mtModeRoute": "DSH route · {model}",
-  "panel.mtModel": "Model",
-  "panel.mtSuggestion": "MT suggestion",
-  "panel.mtTranslate": "AI translation",
-  "panel.reviewTitle": "AI review",
   "panel.reviewRun": "Review this segment",
   "panel.reviewRunning": "Reviewing…",
   "panel.reviewPaste": "Paste a translation to review (optional)",
-  "panel.reviewPasteHint": "Leave it empty to review what is in the target box.",
-  "panel.reviewEmpty": "Use the button above to review the active segment.",
   "panel.reviewClean": "No issues found",
   "panel.reviewApply": "Apply to target",
   "panel.reviewClear": "Clear",
-  "panel.reviewNote": "Applying only changes the draft; save to store it.",
   "panel.reviewApplied": "Applied to the target box; remember to save.",
-  "panel.mtSettings": "Configure route",
-  "panel.mtHint": "Calls through a DSH model route; credentials stay inside DSH.",
-  "panel.mtMockHint": "Glossary substitution is offline and uses only glossary terms. Pick a DSH route in Settings for real MT.",
   "panel.copy": "Copy",
+  "panel.aiSettingsHint": "This page only configures the AI cards in the editor. Press Save settings to apply.",
+  "panel.aiRouteTitle": "Translation route",
+  "panel.aiRouteDsh": "DSH route",
+  "panel.aiRouteLocal": "Local endpoint",
+  "panel.aiRouteLocalHint": "Fill in the endpoint and model under Configure model & key first.",
+  "panel.aiRouteConfig": "Configure model & key…",
+  "panel.aiCardsTitle": "AI cards shown",
+  "panel.aiCardsHint": "Hidden cards come back when you switch them on again.",
+  "panel.aiCardSuggestion": "Pre-translation",
+  "panel.aiCardRevise": "AI re-translation",
+  "panel.aiCardReview": "AI review",
+  "panel.aiContextTitle": "Previous segments used",
+  "panel.aiContextHint": "Re-translation and review include this many previously translated segments (0–5).",
+  "panel.aiSave": "Save settings",
+  "panel.aiReset": "Reset to defaults",
+  "panel.aiFooterHint": "Saving keeps these across restarts; Cancel only reverts this preview.",
+  "panel.reviseReady": "Re-translation ready",
+  "panel.reviseApplied": "Re-translation copied into the target field (unsaved)",
   "mt.mock": "Glossary substitution (offline)",
   "modal.export.title": "Export",
   "modal.export.desc": "Export the current document. Bilingual formats keep source and target side by side; target-only formats are ready for delivery.",
@@ -1607,8 +1632,9 @@ var EN = {
   "modal.settings.limit": "Matches returned",
   "modal.settings.mtModeRoute": "DSH model route",
   "modal.settings.mtModeLocal": "Local endpoint (OpenAI-compatible)",
-  "modal.settings.mtModeHint": "The local endpoint takes over machine suggestions and pre-translation; the DSH route below still serves AI chat and review.",
-  "modal.settings.mtLocalScope": "Only machine suggestions and pre-translation; the API key stays in the local data directory.",
+  "modal.settings.mtModeHint": "The local endpoint only covers pre-translation and translation suggestions; AI chat and review still use the DSH route below.",
+  "modal.settings.routeForAi": "DSH route used by AI chat and review",
+  "modal.settings.routeForAiHint": "The route below does not drive pre-translation; it powers AI chat, re-translation and review.",
   "modal.settings.mt": "Machine translation",
   "modal.settings.review": "AI review model",
   "modal.settings.reviewInherit": "Follow the translation model (default)",
@@ -1810,11 +1836,9 @@ var JA = {
   "doc.delete": "文書を削除",
   "doc.deleteTitle": "文書を削除",
   "doc.deleteMessage": "「{name}」を完全に削除しますか？この文書のセグメントも削除されます。",
-  "doc.segments": "セグメント",
   "tabs.title": "開いている文書",
   "tabs.close": "文書を閉じる",
   "tabs.new": "新しいタブ",
-  "progress.confirmed": "確認済み",
   "status.pending": "未翻訳",
   "status.confirmed": "確認済み",
   "common.loading": "ワークベンチを読み込み中…",
@@ -1841,7 +1865,18 @@ var JA = {
   "editor.emptyTarget": "先に訳文を入力してください",
   "editor.done": "すべてのセグメントを確認済み",
   "editor.confirmedAt": "確認日時",
-  "editor.suggestion": "機械翻訳の提案",
+  "editor.suggestion": "事前翻訳",
+  "editor.revise": "AI 再翻訳",
+  "editor.reviseHint": "プロジェクト/文書の翻訳プリセット、用語集、直前の訳文を踏まえて再翻訳します。",
+  "editor.reviseRun": "訳文の提案を再生成",
+  "editor.revising": "再翻訳中…",
+  "editor.reviseAt": "{time} 生成 · {model}",
+  "editor.reviewTitle": "AI 校閲",
+  "editor.reviewHint": "空欄のままなら訳文欄の内容を校閲します。貼り付けた訳文を校閲することもできます。",
+  "editor.reviewIssue": "問題 · {code}",
+  "editor.reviewMs": "{ms} ms",
+  "editor.reviewNote": "反映は下書きのみで、保存すると文書に書き込まれます。",
+  "editor.reviewEmpty": "上のボタンで、このセグメントの校閲意見を取得します。",
   "editor.adopt": "採用",
   "editor.adoptHint": "提案を訳文に反映し、出所を保ちます",
   "editor.remaining": "件が未確認",
@@ -1945,7 +1980,7 @@ var JA = {
   "libraries.mountSaved": "マウント設定を保存しました",
   "panel.tm": "TM",
   "panel.glossary": "用語集",
-  "panel.mt": "AI 翻訳",
+  "panel.mt": "AI 校閲",
   "panel.currentMatches": "現在のセグメントの一致",
   "panel.searchResults": "検索結果",
   "panel.searchPlaceholder": "翻訳メモリを検索…",
@@ -1972,31 +2007,34 @@ var JA = {
   "panel.saveEntry": "変更を保存",
   "panel.importCsv": "CSV/TSV をインポート",
   "panel.clearGlossary": "用語集をクリア",
-  "panel.mtRoute": "ルート",
-  "panel.mtGenerate": "訳文候補を生成",
-  "panel.mtGenerating": "生成中…",
-  "panel.mtInsert": "訳文を挿入",
-  "panel.mtEmpty": "現在のセグメントの機械翻訳候補を生成します。",
   "panel.mtModeLocal": "ローカル端点 · {model}",
   "panel.mtModeRoute": "DSH ルート · {model}",
-  "panel.mtModel": "モデル",
-  "panel.mtSuggestion": "MT 候補",
-  "panel.mtTranslate": "AI 翻訳",
-  "panel.reviewTitle": "AI 校閲",
   "panel.reviewRun": "このセグメントを校閲",
   "panel.reviewRunning": "校閲中…",
   "panel.reviewPaste": "訳文を貼り付けて校閲（任意）",
-  "panel.reviewPasteHint": "空欄なら訳文欄の現在の内容を校閲します。",
-  "panel.reviewEmpty": "上のボタンで、現在のセグメントを校閲します。",
   "panel.reviewClean": "問題は見つかりませんでした",
   "panel.reviewApply": "訳文に反映",
   "panel.reviewClear": "クリア",
-  "panel.reviewNote": "反映は下書きのみ。保存で確定します。",
   "panel.reviewApplied": "訳文欄に反映しました。保存してください。",
-  "panel.mtSettings": "ルートを設定",
-  "panel.mtHint": "DSH のモデルルート経由で呼び出します。認証情報は DSH が管理します。",
-  "panel.mtMockHint": "用語置換（オフライン）はネットワークを使わず、用語集の用語だけを置換します。設定で DSH ルートを選ぶと実際の翻訳が有効になります。",
   "panel.copy": "コピー",
+  "panel.aiSettingsHint": "このページは編集画面の AI カードを設定します。変更後「設定を保存」で反映されます。",
+  "panel.aiRouteTitle": "翻訳経路",
+  "panel.aiRouteDsh": "DSH ルート",
+  "panel.aiRouteLocal": "ローカル端点",
+  "panel.aiRouteLocalHint": "先に「モデルとキーを設定」で端点とモデルを入力してください。",
+  "panel.aiRouteConfig": "モデルとキーを設定…",
+  "panel.aiCardsTitle": "表示する AI カード",
+  "panel.aiCardsHint": "オフにしたカードは編集画面で非表示になり、オンに戻すと復帰します。",
+  "panel.aiCardSuggestion": "事前翻訳",
+  "panel.aiCardRevise": "AI 再翻訳",
+  "panel.aiCardReview": "AI 校閲",
+  "panel.aiContextTitle": "前文の参照数",
+  "panel.aiContextHint": "再翻訳と校閲では、直前の 0〜5 件の訳文（原文 + 訳文）を文脈に含めます。",
+  "panel.aiSave": "設定を保存",
+  "panel.aiReset": "既定に戻す",
+  "panel.aiFooterHint": "保存すれば再起動後も維持され、キャンセルは今回のプレビューだけを戻します。",
+  "panel.reviseReady": "再翻訳の提案を生成しました",
+  "panel.reviseApplied": "再翻訳を訳文欄に反映しました（未保存）",
   "mt.mock": "用語置換（オフライン）",
   "modal.export.title": "エクスポート",
   "modal.export.desc": "現在の文書をエクスポートします。対訳形式は原文と訳文を並べて保持し、訳文のみの形式はそのまま納品できます。",
@@ -2061,8 +2099,9 @@ var JA = {
   "modal.settings.limit": "返す一致件数",
   "modal.settings.mtModeRoute": "DSH モデルルート",
   "modal.settings.mtModeLocal": "ローカルエンドポイント（OpenAI 互換）",
-  "modal.settings.mtModeHint": "ローカルエンドポイントは機械候補と事前翻訳を優先して処理します。下の DSH ルートは AI 対話とレビューに使われます。",
-  "modal.settings.mtLocalScope": "機械候補と事前翻訳のみ。API キーはローカルのデータフォルダーにのみ保存します。",
+  "modal.settings.mtModeHint": "ローカルエンドポイントは事前翻訳と翻訳候補のみを担当します。AI 対話と校閲は下の DSH ルートを使います。",
+  "modal.settings.routeForAi": "AI 対話と校閲に使う DSH ルート",
+  "modal.settings.routeForAiHint": "下のルートは事前翻訳には使われません。AI 対話・再翻訳・校閲に使います。",
   "modal.settings.mt": "機械翻訳",
   "modal.settings.review": "AI レビューモデル",
   "modal.settings.reviewInherit": "翻訳モデルに従う（デフォルト）",
@@ -2258,16 +2297,16 @@ Object.assign(ZH, {
   "panel.briefHint": "给译者和 agent 的领域、读者、语气与术语约束。",
   "panel.termForbidden": "禁用",
   "panel.termPreferred": "必用",
-  "brief.title": "文档 brief",
-  "brief.hint": "这些信息会注入预翻译和 agent 上下文；留空表示不限制。",
+  "brief.title": "文档翻译预设",
+  "brief.hint": "这些信息会注入预翻译与 AI 助手的上下文；留空表示不限制。",
   "brief.domain": "领域",
   "brief.audience": "读者",
   "brief.tone": "语气",
   "brief.notes": "补充说明",
   "brief.doNotTranslate": "不要翻译",
   "brief.styleSample": "风格示例",
-  "brief.save": "保存 brief",
-  "brief.empty": "尚未填写 brief",
+  "brief.save": "保存文档翻译预设",
+  "brief.empty": "尚未填写文档翻译预设",
   "brief.placeholder.domain": "例如：法律、医疗、游戏",
   "brief.placeholder.audience": "例如：终端用户、开发者",
   "brief.placeholder.tone": "例如：正式、简洁、口语",
@@ -2283,7 +2322,27 @@ Object.assign(ZH, {
   "editor.locked": "已锁定",
   "toast.locked": "已锁定句段",
   "toast.unlocked": "已解锁句段",
-  "editor.brief": "Brief",
+  "editor.brief": "文档翻译预设",
+  "editor.projectBrief": "项目翻译预设",
+  "editor.projectDetail": "项目详情",
+  "preset.docTitle": "文档翻译预设",
+  "preset.projectTitle": "项目翻译预设",
+  "preset.docHint": "这些信息会注入预翻译、AI 重译与审校的上下文；留空表示不限制。",
+  "preset.projectHint": "项目翻译预设作为默认值继承给每篇文档，文档自己的预设覆盖同名字段。",
+  "preset.learn": "从参考文档归纳",
+  "preset.learning": "正在归纳…",
+  "preset.learnHint": "支持 DOCX / XLSX / TXT / Markdown，最多 3 个；双语对照或成品译文都可以。",
+  "preset.learnedFrom": "已从「{names}」归纳，下方字段可自行修改。",
+  "preset.conflictHint": "这些字段与现有内容冲突，选择保留、替换或合并：",
+  "preset.conflict.keep": "保留",
+  "preset.conflict.replace": "替换",
+  "preset.conflict.merge": "合并",
+  "preset.savedDoc": "已保存文档翻译预设",
+  "preset.savedProject": "已保存项目翻译预设",
+  "preset.edit": "编辑翻译预设",
+  "preset.empty": "还没有设置翻译预设。",
+  "panel.projectPresetHint": "编辑所属项目的翻译预设。",
+  "panel.projectDetailHint": "进入本文件所属的项目详情。",
   "qa.title": "检查",
   "qa.refresh": "重新检查",
   "qa.empty": "没有发现问题。",
@@ -2305,7 +2364,7 @@ Object.assign(ZH, {
   "qa.fixTerm": "插入术语",
   "toast.qaFixed": "已修复该句，可继续检查",
   "toast.unconfirmed": "已撤销确认，可继续编辑",
-  "toast.briefSaved": "brief 已保存",
+  "toast.briefSaved": "文档翻译预设已保存",
   "toast.termForbidden": "这是禁用术语，不能插入",
   "editor.resources": "资源",
   "resources.title": "文档资源",
@@ -2372,7 +2431,7 @@ Object.assign(ZH, {
   "cmd.export": "导出",
   "cmd.pretranslate": "预翻译",
   "cmd.replace": "查找替换",
-  "cmd.brief": "文档 brief",
+  "cmd.brief": "文档翻译预设",
   "cmd.resources": "文档资源",
   "cmd.analysis": "文档分析",
   "cmd.clearPretranslated": "清理预翻译",
@@ -2405,16 +2464,16 @@ Object.assign(EN, {
   "panel.briefHint": "Domain, audience, tone and terminology guidance for translators and agents.",
   "panel.termForbidden": "Forbidden",
   "panel.termPreferred": "Required",
-  "brief.title": "Document brief",
-  "brief.hint": "Injected into pre-translation and agent context. Empty fields mean no constraint.",
+  "brief.title": "Document translation preset",
+  "brief.hint": "Injected into pre-translation and AI assistant context. Empty fields mean no constraint.",
   "brief.domain": "Domain",
   "brief.audience": "Audience",
   "brief.tone": "Tone",
   "brief.notes": "Notes",
   "brief.doNotTranslate": "Do not translate",
   "brief.styleSample": "Style sample",
-  "brief.save": "Save brief",
-  "brief.empty": "No brief yet",
+  "brief.save": "Save document preset",
+  "brief.empty": "No document preset yet",
   "brief.placeholder.domain": "e.g. legal, medical, games",
   "brief.placeholder.audience": "e.g. end users, developers",
   "brief.placeholder.tone": "e.g. formal, concise, conversational",
@@ -2430,7 +2489,27 @@ Object.assign(EN, {
   "editor.locked": "Locked",
   "toast.locked": "Segment locked",
   "toast.unlocked": "Segment unlocked",
-  "editor.brief": "Brief",
+  "editor.brief": "Document preset",
+  "editor.projectBrief": "Project preset",
+  "editor.projectDetail": "Project",
+  "preset.docTitle": "Document translation preset",
+  "preset.projectTitle": "Project translation preset",
+  "preset.docHint": "These notes feed pre-translation, AI re-translation and review; empty means unconstrained.",
+  "preset.projectHint": "The project preset is the default for every document; a document preset overrides the same fields.",
+  "preset.learn": "Learn from references",
+  "preset.learning": "Learning…",
+  "preset.learnHint": "DOCX / XLSX / TXT / Markdown, up to 3 files; bilingual pairs or finished translations both work.",
+  "preset.learnedFrom": "Learned from {names}. Edit any field below.",
+  "preset.conflictHint": "These fields differ from the current preset — keep, replace or merge:",
+  "preset.conflict.keep": "Keep",
+  "preset.conflict.replace": "Replace",
+  "preset.conflict.merge": "Merge",
+  "preset.savedDoc": "Document preset saved",
+  "preset.savedProject": "Project preset saved",
+  "preset.edit": "Edit preset",
+  "preset.empty": "No translation preset yet.",
+  "panel.projectPresetHint": "Edit the translation preset of the owning project.",
+  "panel.projectDetailHint": "Open the project that owns this document.",
   "qa.title": "Checks",
   "qa.refresh": "Re-run checks",
   "qa.empty": "No issues found.",
@@ -2452,7 +2531,7 @@ Object.assign(EN, {
   "qa.fixTerm": "Insert term",
   "toast.qaFixed": "Segment fixed; checks refreshed",
   "toast.unconfirmed": "Confirmation revoked; editing is enabled again",
-  "toast.briefSaved": "Brief saved",
+  "toast.briefSaved": "Document preset saved",
   "toast.termForbidden": "This is a forbidden term and cannot be inserted",
   "editor.resources": "Resources",
   "resources.title": "Document resources",
@@ -2519,7 +2598,7 @@ Object.assign(EN, {
   "cmd.export": "Export",
   "cmd.pretranslate": "Pre-translate",
   "cmd.replace": "Find & replace",
-  "cmd.brief": "Document brief",
+  "cmd.brief": "Document translation preset",
   "cmd.resources": "Document resources",
   "cmd.analysis": "Document analysis",
   "cmd.clearPretranslated": "Clear pre-translated targets",
@@ -2552,16 +2631,16 @@ Object.assign(JA, {
   "panel.briefHint": "译者と agent のための分野・読者・トーン・用語指示。",
   "panel.termForbidden": "禁止",
   "panel.termPreferred": "必須",
-  "brief.title": "文書ブリーフ",
-  "brief.hint": "この情報は事前翻訳と agent のコンテキストに渡されます。空欄は制約なし。",
+  "brief.title": "文書翻訳プリセット",
+  "brief.hint": "この情報は事前翻訳と AI アシスタントのコンテキストに渡されます。空欄は制約なし。",
   "brief.domain": "分野",
   "brief.audience": "読者",
   "brief.tone": "トーン",
   "brief.notes": "補足",
   "brief.doNotTranslate": "翻訳しない語句",
   "brief.styleSample": "スタイル例",
-  "brief.save": "ブリーフを保存",
-  "brief.empty": "ブリーフは未入力です",
+  "brief.save": "文書プリセットを保存",
+  "brief.empty": "文書プリセットは未入力です",
   "brief.placeholder.domain": "例：法律、医療、ゲーム",
   "brief.placeholder.audience": "例：エンドユーザー、開発者",
   "brief.placeholder.tone": "例：正式、簡潔、会話的",
@@ -2577,7 +2656,27 @@ Object.assign(JA, {
   "editor.locked": "ロック中",
   "toast.locked": "セグメントをロックしました",
   "toast.unlocked": "セグメントのロックを解除しました",
-  "editor.brief": "ブリーフ",
+  "editor.brief": "文書プリセット",
+  "editor.projectBrief": "プロジェクトプリセット",
+  "editor.projectDetail": "プロジェクト",
+  "preset.docTitle": "文書翻訳プリセット",
+  "preset.projectTitle": "プロジェクト翻訳プリセット",
+  "preset.docHint": "これらの情報は事前翻訳・AI 再翻訳・校閲の文脈に渡されます。空欄は制約なし。",
+  "preset.projectHint": "プロジェクトプリセットは各文書の既定値です。文書プリセットは同じ項目を上書きします。",
+  "preset.learn": "参考文書から学習",
+  "preset.learning": "学習中…",
+  "preset.learnHint": "DOCX / XLSX / TXT / Markdown、最大 3 件。対訳でも完成訳でも可。",
+  "preset.learnedFrom": "「{names}」から学習しました。以下は自由に修正できます。",
+  "preset.conflictHint": "既存の内容と異なる項目です。保持・置換・統合を選んでください：",
+  "preset.conflict.keep": "保持",
+  "preset.conflict.replace": "置換",
+  "preset.conflict.merge": "統合",
+  "preset.savedDoc": "文書プリセットを保存しました",
+  "preset.savedProject": "プロジェクトプリセットを保存しました",
+  "preset.edit": "プリセットを編集",
+  "preset.empty": "プリセットは未設定です。",
+  "panel.projectPresetHint": "この文書が属するプロジェクトのプリセットを編集します。",
+  "panel.projectDetailHint": "この文書が属するプロジェクトを開きます。",
   "qa.title": "チェック",
   "qa.refresh": "再チェック",
   "qa.empty": "問題はありません。",
@@ -2599,7 +2698,7 @@ Object.assign(JA, {
   "qa.fixTerm": "用語を挿入",
   "toast.qaFixed": "修正しました。チェックを更新しました",
   "toast.unconfirmed": "確認を取り消しました。編集を続けられます",
-  "toast.briefSaved": "ブリーフを保存しました",
+  "toast.briefSaved": "文書プリセットを保存しました",
   "toast.termForbidden": "禁止用語のため挿入できません",
   "editor.resources": "リソース",
   "resources.title": "文書リソース",
@@ -2666,7 +2765,7 @@ Object.assign(JA, {
   "cmd.export": "エクスポート",
   "cmd.pretranslate": "事前翻訳",
   "cmd.replace": "検索と置換",
-  "cmd.brief": "文書ブリーフ",
+  "cmd.brief": "文書翻訳プリセット",
   "cmd.resources": "文書リソース",
   "cmd.analysis": "文書分析",
   "cmd.clearPretranslated": "事前翻訳をクリア",
@@ -2714,15 +2813,16 @@ Object.assign(ZH, {
   "ai.you": "你",
   "ai.hint": "先跟 AI 说明这份文档的背景、读者与风格要求，它会记住并用于翻译。",
   "ai.pretranslateHint": "预翻译前可以先把要求告诉 AI（可选），确认后直接开始。",
-  "ai.empty": "还没有对话。可以在下面输入项目说明、术语偏好或任何翻译要求。",
+  "ai.empty": "还没有对话。可以在下面写下背景、读者、风格等要求。",
   "ai.thinking": "AI 正在思考…",
-  "ai.briefPreview": "AI 整理出的项目说明",
-  "ai.apply": "写入项目说明",
-  "ai.applied": "已写入项目说明",
+  "ai.briefPreview": "AI 整理出的文档翻译预设",
+  "ai.saveDocPreset": "存为文档预设",
+  "ai.saveProjectPreset": "存为项目预设",
+  "ai.savedDoc": "已写入文档翻译预设",
+  "ai.savedProject": "已写入项目翻译预设（{name}）",
   "ai.placeholder": "例如：读者是中文科普读者；人名保留英文；语气学术但通顺",
   "ai.send": "发送",
   "ai.clear": "清空对话",
-  "ai.summarize": "整理为项目说明",
   "ai.close": "关闭",
   "ai.startPreTranslate": "直接开始预翻译",
   "ai.noDocument": "请先打开或新建一个文档。",
@@ -2774,15 +2874,16 @@ Object.assign(EN, {
   "ai.you": "You",
   "ai.hint": "Tell the AI about this document — audience, tone, rules. It remembers and uses them for translation.",
   "ai.pretranslateHint": "You can brief the AI before pre-translation (optional), then start right away.",
-  "ai.empty": "No messages yet. Describe the project, term preferences, or any translation rule below.",
+  "ai.empty": "No conversation yet. Write background, audience or style requirements below.",
   "ai.thinking": "AI is thinking…",
-  "ai.briefPreview": "Project brief drafted by AI",
-  "ai.apply": "Apply to brief",
-  "ai.applied": "Brief updated",
+  "ai.briefPreview": "Document preset drafted by AI",
+  "ai.saveDocPreset": "Save document preset",
+  "ai.saveProjectPreset": "Save project preset",
+  "ai.savedDoc": "Saved to the document preset",
+  "ai.savedProject": "Saved to the project preset ({name})",
   "ai.placeholder": "e.g. readers are Chinese popular-science audience; keep names in English; academic but readable",
   "ai.send": "Send",
   "ai.clear": "Clear chat",
-  "ai.summarize": "Turn into project brief",
   "ai.close": "Close",
   "ai.startPreTranslate": "Start pre-translation",
   "ai.noDocument": "Open or create a document first.",
@@ -2834,15 +2935,16 @@ Object.assign(JA, {
   "ai.you": "あなた",
   "ai.hint": "この文書の背景・読者・文体を AI に伝えておくと、翻訳時に参照します。",
   "ai.pretranslateHint": "事前翻訳の前に要望を伝えられます（任意）。確認後そのまま開始できます。",
-  "ai.empty": "まだ会話がありません。プロジェクトの説明や用語の希望、翻訳ルールを入力してください。",
+  "ai.empty": "まだ会話がありません。背景・読者・スタイルなどの要件を下に書いてください。",
   "ai.thinking": "AI が考えています…",
-  "ai.briefPreview": "AI がまとめたプロジェクト説明",
-  "ai.apply": "プロジェクト説明に反映",
-  "ai.applied": "プロジェクト説明を更新しました",
+  "ai.briefPreview": "AI がまとめた文書翻訳プリセット",
+  "ai.saveDocPreset": "文書プリセットを保存",
+  "ai.saveProjectPreset": "プロジェクトプリセットを保存",
+  "ai.savedDoc": "文書翻訳プリセットに保存しました",
+  "ai.savedProject": "プロジェクト翻訳プリセット（{name}）に保存しました",
   "ai.placeholder": "例：読者は中国語の一般読者／人名は英語のまま／学術的だが読みやすく",
   "ai.send": "送信",
   "ai.clear": "会話を消去",
-  "ai.summarize": "プロジェクト説明にまとめる",
   "ai.close": "閉じる",
   "ai.startPreTranslate": "事前翻訳を開始",
   "ai.noDocument": "先に文書を開くか作成してください。",
@@ -3371,13 +3473,20 @@ var CSS = `
 .cait-editor-col{min-width:0;min-height:0;overflow-y:auto;padding:22px 26px 44px}
 .cait-review{display:grid;gap:10px;grid-template-columns:minmax(0,1fr);grid-template-areas:"src" "sugg" "target";align-items:start}
 .cait-revcol{min-width:0;padding:13px 14px;border:1px solid var(--dsw-alias-border-l1);border-radius:11px;background:var(--dsw-alias-bg-layer-1)}
-.cait-rev-src{grid-area:src}
+.cait-rev-src{grid-area:src;position:sticky;top:44px;z-index:5;max-height:32vh;overflow:auto;box-shadow:0 8px 18px rgba(0,0,0,.18)}
 .cait-rev-sugg{grid-area:sugg;display:flex;flex-direction:column;gap:6px;border-style:dashed;border-color:color-mix(in srgb,var(--dsw-alias-button-primary-fill) 38%,transparent)}
 .cait-rev-target{grid-area:target;display:flex;flex-direction:column;gap:6px}
 .cait-rev-target .cait-textarea{min-height:150px;padding:9px 10px;border-radius:8px;background:var(--dsw-alias-bg-base)}
-.cait-doc-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:16px}
-.cait-doc-title{max-width:680px;margin:0;font-size:17px;font-weight:650;line-height:1.35;letter-spacing:-.01em}
-.cait-doc-meta{display:flex;align-items:center;gap:6px;margin-top:4px;font-size:10.5px;color:var(--dsw-alias-label-secondary)}
+.cait-doc-head{position:sticky;top:0;z-index:6;display:flex;align-items:center;gap:12px;height:44px;margin:0 -6px 10px;padding:0 6px;background:var(--dsw-alias-bg-base,var(--dsw-alias-bg-layer-1));border-bottom:1px solid var(--dsw-alias-border-l1)}
+.cait-doc-title{flex:0 1 auto;max-width:34%;margin:0;font-size:15px;font-weight:650;line-height:1.3;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cait-doc-meta{flex:1 1 auto;display:flex;align-items:center;gap:10px;min-width:0;margin-top:0;font-size:11.5px;white-space:nowrap;overflow:hidden;color:var(--dsw-alias-label-secondary)}
+.cait-doc-meta > *{display:inline-flex;align-items:center;height:20px;line-height:1;flex:0 0 auto}
+.cait-doc-meta .cait-linkbtn{display:inline-flex;align-items:center;gap:4px;height:20px;padding:0 4px;border-radius:5px;font-size:11px;line-height:1;text-decoration:none}
+.cait-doc-meta .cait-linkbtn:hover{background:var(--dsw-alias-bg-layer-1);text-decoration:none}
+.cait-doc-meta .cait-linkbtn svg{display:block;flex:0 0 auto}
+.cait-doc-meta .cait-langchip,.cait-doc-meta .cait-doc-pct{height:20px}
+.cait-doc-meta .cait-linkbtn{color:var(--dsw-alias-label-secondary)}
+.cait-doc-pct{font-size:12px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--dsw-alias-label-primary)}
 .cait-langchip{display:inline-flex;align-items:center;height:17px;padding:0 6px;border:1px solid var(--dsw-alias-border-l1);border-radius:5px;background:var(--dsw-alias-bg-layer-1);font-size:9.5px;font-weight:600;color:var(--dsw-alias-label-secondary)}
 .cait-progress-box{display:flex;flex-direction:column;align-items:flex-end;gap:4px;min-width:112px;flex:0 0 auto}
 .cait-pct{font-size:17px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums;color:var(--dsw-alias-brand-primary)}
@@ -3871,6 +3980,21 @@ button.cait-brand.active .cait-brand-text strong{color:var(--dsw-alias-state-inf
 @media(max-width:1180px){.cait-main{grid-template-columns:minmax(0,1fr) 308px}.cait-body{grid-template-columns:218px minmax(0,1fr)}.cait-editor-col{padding:18px 20px 34px}.cait-actions .cait-btn-label{display:none}.cait-actions .cait-btn{padding:0 8px}.cait-libpage-body{grid-template-columns:196px minmax(0,1fr)}.cait-proj-body{grid-template-columns:180px minmax(0,1fr)}}
 @media(max-width:940px){.cait-topbar{flex-wrap:wrap}.cait-body{grid-template-columns:190px minmax(0,1fr)}.cait-main{grid-template-columns:minmax(0,1fr)}.cait-cat{border-left:0;border-top:1px solid var(--dsw-alias-border-l1);max-height:43%;min-height:210px}.cait-features{grid-template-columns:1fr}.cait-docbar{display:flex;order:3;flex:1 1 100%;padding:7px 0 0;border-left:0;border-top:1px solid var(--dsw-alias-border-l1)}}
 @media(max-width:700px){.cait-body{grid-template-columns:minmax(0,1fr)}.cait-rail{display:none}.cait-editor-col{padding:14px}.cait-topbar{padding:9px 10px}.cait-export-grid{grid-template-columns:1fr}.cait-home-workrow{grid-template-columns:52px minmax(0,1fr) 66px}.cait-home-bar,.cait-home-workmeta{display:none}}
+/* AI 工作区：预翻译 / 重译 / 审校三张卡片 */
+.cait-ai-col{display:flex;flex-direction:column;gap:10px;overflow-y:auto}
+.cait-ai-card{padding:10px 11px}
+.cait-ai-card:not(.is-open) > *:not(.cait-ai-title){display:none}
+.cait-card-toggle{display:inline-flex;align-items:center;gap:6px;background:none;border:0;padding:0;color:var(--dsw-alias-label-primary,#e8e8e8);font:inherit;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;cursor:pointer}
+.cait-caret{font-size:9px;color:var(--dsw-alias-label-secondary,#9a9a9a)}
+.cait-ai-grow{flex:1}
+.cait-ai-tools{display:inline-flex;gap:6px;align-items:center}
+.cait-ai-run{width:100%;justify-content:center;margin-top:8px}
+.cait-ai-settings{display:flex;flex-direction:column;gap:12px;padding:10px 12px;overflow-y:auto}
+.cait-ai-toggle{display:flex;align-items:center;gap:8px;font-size:12px;margin:5px 0}
+.cait-ai-context{width:88px}
+.cait-ai-foot{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.cait-review-result{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.cait-copy-btn{height:20px;min-width:20px;padding:0 4px}
 `;
 var CSS_SCALED = scaleCssLengths(CSS, CAIT_UNIT_VAR);
 
@@ -5530,17 +5654,57 @@ function EditorPane({
   onApplyTerm,
   onDefineTerm,
   onOpenBrief,
+  onOpenProjectPreset,
+  onOpenProjectDetail,
   onOpenResources,
   onOpenAnalysis,
   onOpenNotes,
   noteCount,
   qaRisk,
-  textareaRef
+  textareaRef,
+  features,
+  reviseBusy,
+  reviseError,
+  onRevise,
+  onAdoptRevise,
+  onCopy,
+  segmentReview,
+  onRunReviewSegment,
+  onApplyReviewSegment,
+  onCloseReviewSegment
 }) {
   const hits = detail?.index === index ? detail.glossaryHits : [];
   const charCount = Array.from(draft || "").length;
   const isSubtitle = doc.format === "srt" || doc.format === "vtt";
   const [shiftSeconds, setShiftSeconds] = useState("1");
+  const [openCards, setOpenCards] = useState({ suggestion: true, revise: true, review: false });
+  const [reviewText, setReviewText] = useState("");
+  const [pasteText, setPasteText] = useState("");
+  const segmentVerdict = segmentReview?.verdict || null;
+  const revise = segment.revise || null;
+  useEffect(() => {
+    setReviewText(segmentVerdict?.suggestion || "");
+  }, [segmentVerdict]);
+  const toggleCard = (key) => setOpenCards((current) => ({ ...current, [key]: !current[key] }));
+  const featureOn = (key) => features?.[key] !== false;
+  const stamp = (iso) => iso ? String(iso).slice(11, 16) : "";
+  const cardHead = (key, label, extra) => h(
+    "div",
+    { className: "cait-ai-title" },
+    h(
+      "button",
+      {
+        className: "cait-card-toggle",
+        type: "button",
+        onClick: () => toggleCard(key),
+        "aria-expanded": openCards[key] ? "true" : "false"
+      },
+      h("span", { className: "cait-caret" }, openCards[key] ? "▾" : "▸"),
+      label
+    ),
+    h("span", { className: "cait-ai-grow" }),
+    extra || null
+  );
   const cueStart = Number(segment.meta?.start);
   const cueEnd = Number(segment.meta?.end);
   const formatCue = (value) => {
@@ -5642,63 +5806,64 @@ function EditorPane({
     h(
       "div",
       { className: "cait-doc-head" },
+      h("h2", { className: "cait-doc-title", title: doc.name }, doc.name),
       h(
         "div",
-        null,
-        h("h2", { className: "cait-doc-title" }, doc.name),
+        { className: "cait-doc-meta" },
+        h("span", { className: "cait-langchip" }, doc.sourceLang),
+        h(Icon, { name: "arrowRight", size: 11 }),
+        h("span", { className: "cait-langchip" }, doc.targetLang),
+        h("span", { className: "cait-doc-pct" }, `${progress.percent}%`),
         h(
-          "div",
-          { className: "cait-doc-meta" },
-          h("span", { className: "cait-langchip" }, doc.sourceLang),
-          h(Icon, { name: "arrowRight", size: 11 }),
-          h("span", { className: "cait-langchip" }, doc.targetLang),
-          h("span", null, `· ${doc.segments.length} ${t("doc.segments")}`),
-          h(
-            "button",
-            {
-              className: "cait-linkbtn cait-brieflink",
-              onClick: onOpenBrief,
-              title: doc.brief ? t("panel.briefHint") : t("brief.empty")
-            },
-            h(Icon, { name: "file", size: 11 }),
-            t("editor.brief"),
-            doc.brief ? h("span", { className: "cait-briefdot" }) : null
-          ),
-          h(
-            "button",
-            {
-              className: "cait-linkbtn",
-              onClick: onOpenResources,
-              title: t("resources.hint")
-            },
-            h(Icon, { name: "database", size: 11 }),
-            t("editor.resources")
-          ),
-          h(
-            "button",
-            {
-              className: "cait-linkbtn",
-              onClick: onOpenAnalysis,
-              title: t("analysis.hint")
-            },
-            h(Icon, { name: "chart", size: 11 }),
-            t("editor.analysis")
-          )
-        )
-      ),
-      h(
-        "div",
-        { className: "cait-progress-box" },
-        h("span", { className: "cait-pct" }, `${progress.percent}%`),
-        h(
-          "div",
-          { className: "cait-progress" },
-          h("i", { style: { width: `${progress.percent}%` } })
+          "button",
+          {
+            className: "cait-linkbtn cait-brieflink",
+            onClick: onOpenBrief,
+            title: doc.brief ? t("panel.briefHint") : t("brief.empty")
+          },
+          h(Icon, { name: "file", size: 11 }),
+          t("editor.brief"),
+          doc.brief ? h("span", { className: "cait-briefdot" }) : null
         ),
         h(
-          "span",
-          { className: "cait-meta" },
-          `${progress.confirmed}/${progress.total} ${t("progress.confirmed")}`
+          "button",
+          {
+            className: "cait-linkbtn cait-projectlink",
+            onClick: onOpenProjectPreset,
+            title: t("panel.projectPresetHint")
+          },
+          h(Icon, { name: "folder", size: 11 }),
+          t("editor.projectBrief")
+        ),
+        h(
+          "button",
+          {
+            className: "cait-linkbtn",
+            onClick: onOpenResources,
+            title: t("resources.hint")
+          },
+          h(Icon, { name: "database", size: 11 }),
+          t("editor.resources")
+        ),
+        h(
+          "button",
+          {
+            className: "cait-linkbtn",
+            onClick: onOpenAnalysis,
+            title: t("analysis.hint")
+          },
+          h(Icon, { name: "chart", size: 11 }),
+          t("editor.analysis")
+        ),
+        h(
+          "button",
+          {
+            className: "cait-linkbtn",
+            onClick: onOpenProjectDetail,
+            title: t("panel.projectDetailHint")
+          },
+          h(Icon, { name: "file", size: 11 }),
+          t("editor.projectDetail")
         )
       )
     ),
@@ -5756,6 +5921,16 @@ function EditorPane({
           "div",
           { className: "cait-labelrow" },
           h("span", { className: "cait-label" }, t("editor.source")),
+          h(
+            "button",
+            {
+              className: "cait-minibtn cait-copy-btn",
+              type: "button",
+              title: t("panel.copy"),
+              onClick: () => onCopy(segment.source || "")
+            },
+            h(Icon, { name: "copy", size: 12 })
+          ),
           h("span", { className: "cait-langchip" }, doc.sourceLang)
         ),
         h(
@@ -5788,34 +5963,187 @@ function EditorPane({
       ),
       h(
         "section",
-        { className: "cait-revcol cait-rev-sugg" },
-        h(
-          "div",
-          { className: "cait-labelrow" },
-          h("span", { className: "cait-label" }, t("editor.suggestion")),
-          baselineText ? h(
-            "span",
-            { className: `cait-originchip ${baselineOrigin}` },
-            t(`origin.${baselineOrigin}`)
-          ) : null,
-          segment.suggestion ? h(
+        { className: "cait-revcol cait-rev-sugg cait-ai-col" },
+        featureOn("suggestion") ? h(
+          "section",
+          { className: `cait-card cait-ai-card${openCards["suggestion"] ? " is-open" : ""}` },
+          cardHead(
+            "suggestion",
+            t("editor.suggestion"),
+            h(
+              "span",
+              { className: "cait-ai-tools" },
+              baselineText ? h(
+                "button",
+                {
+                  className: "cait-minibtn",
+                  type: "button",
+                  onClick: () => onCopy(baselineText)
+                },
+                t("panel.copy")
+              ) : null,
+              segment.suggestion ? h(
+                "button",
+                {
+                  className: "cait-minibtn",
+                  type: "button",
+                  onClick: onAdopt,
+                  disabled: Boolean(busy) || draft.trim() === segment.suggestion,
+                  title: t("editor.adoptHint")
+                },
+                t("editor.adopt")
+              ) : null
+            )
+          ),
+          baselineText ? h("div", { className: "cait-suggest-text" }, baselineText) : h("div", { className: "cait-suggest-empty" }, t("editor.noSuggestion")),
+          h(
+            "div",
+            { className: "cait-rev-hint" },
+            segment.suggestion ? t("editor.adoptHint") : t("editor.baselineHint")
+          )
+        ) : null,
+        featureOn("revise") ? h(
+          "section",
+          { className: `cait-card cait-ai-card${openCards["revise"] ? " is-open" : ""}` },
+          cardHead(
+            "revise",
+            t("editor.revise"),
+            revise ? h(
+              "span",
+              { className: "cait-ai-tools" },
+              h(
+                "button",
+                {
+                  className: "cait-minibtn",
+                  type: "button",
+                  onClick: () => onCopy(revise.text)
+                },
+                t("panel.copy")
+              ),
+              h(
+                "button",
+                {
+                  className: "cait-minibtn",
+                  type: "button",
+                  onClick: onAdoptRevise,
+                  disabled: Boolean(busy) || draft.trim() === revise.text,
+                  title: t("editor.adoptHint")
+                },
+                t("editor.adopt")
+              )
+            ) : null
+          ),
+          h("p", { className: "cait-mt-hint" }, t("editor.reviseHint")),
+          h(
             "button",
             {
-              className: "cait-chip cait-chip-action",
-              onClick: onAdopt,
-              disabled: Boolean(busy) || draft.trim() === segment.suggestion,
-              title: t("editor.adoptHint")
+              className: "cait-btn cait-btn-primary cait-ai-run",
+              type: "button",
+              onClick: onRevise,
+              disabled: Boolean(busy) || Boolean(reviseBusy)
             },
-            h(Icon, { name: "download", size: 11 }),
-            t("editor.adopt")
+            reviseBusy ? h(Spinner) : h(Icon, { name: "sparkles", size: 14 }),
+            reviseBusy ? t("editor.revising") : t("editor.reviseRun")
+          ),
+          reviseError ? h("div", { className: "cait-mt-error" }, reviseError) : null,
+          revise ? h("div", { className: "cait-suggest-text" }, revise.text) : null,
+          revise ? h(
+            "div",
+            { className: "cait-rev-hint" },
+            t("editor.reviseAt", {
+              time: stamp(revise.at),
+              model: revise.model || ""
+            })
           ) : null
-        ),
-        baselineText ? h("div", { className: "cait-suggest-text" }, baselineText) : h("div", { className: "cait-suggest-empty" }, t("editor.noSuggestion")),
-        h(
-          "div",
-          { className: "cait-rev-hint" },
-          segment.suggestion ? t("editor.adoptHint") : t("editor.baselineHint")
-        )
+        ) : null,
+        featureOn("review") ? h(
+          "section",
+          { className: `cait-card cait-ai-card${openCards["review"] ? " is-open" : ""}` },
+          cardHead(
+            "review",
+            t("editor.reviewTitle"),
+            segmentVerdict ? h(
+              "button",
+              {
+                className: "cait-minibtn",
+                type: "button",
+                onClick: onCloseReviewSegment
+              },
+              t("panel.reviewClear")
+            ) : null
+          ),
+          h("p", { className: "cait-mt-hint" }, t("editor.reviewHint")),
+          h("textarea", {
+            className: "cait-input cait-review-paste",
+            value: pasteText,
+            placeholder: t("panel.reviewPaste"),
+            onChange: (event) => setPasteText(event.target.value),
+            rows: 2
+          }),
+          h(
+            "button",
+            {
+              className: "cait-btn cait-btn-primary cait-ai-run",
+              type: "button",
+              onClick: () => onRunReviewSegment(pasteText),
+              disabled: Boolean(busy) || Boolean(segmentReview?.busy)
+            },
+            segmentReview?.busy ? h(Spinner) : h(Icon, { name: "check", size: 14 }),
+            segmentReview?.busy ? t("panel.reviewRunning") : t("panel.reviewRun")
+          ),
+          segmentReview?.error ? h("div", { className: "cait-mt-error" }, segmentReview.error) : null,
+          segmentVerdict ? (() => {
+            const clean = segmentVerdict.severity === "none" || !segmentVerdict.message && !segmentVerdict.suggestion;
+            return h(
+              "div",
+              { className: "cait-review-result" },
+              h(
+                "div",
+                { className: "cait-labelrow" },
+                h(
+                  "span",
+                  { className: "cait-label" },
+                  clean ? t("panel.reviewClean") : t("editor.reviewIssue", { code: segmentVerdict.code })
+                ),
+                h(
+                  "span",
+                  { className: "cait-meta" },
+                  segmentVerdict.latencyMs ? t("editor.reviewMs", { ms: segmentVerdict.latencyMs }) : ""
+                )
+              ),
+              segmentVerdict.message ? h("p", { className: "cait-mt-text" }, segmentVerdict.message) : null,
+              clean ? null : h("textarea", {
+                className: "cait-input cait-review-edit",
+                value: reviewText,
+                onChange: (event) => setReviewText(event.target.value),
+                rows: 3
+              }),
+              h(
+                "div",
+                { className: "cait-ai-tools" },
+                h(
+                  "button",
+                  {
+                    className: "cait-minibtn",
+                    type: "button",
+                    onClick: () => onCopy(reviewText || segmentVerdict.suggestion || "")
+                  },
+                  t("panel.copy")
+                ),
+                clean ? null : h(
+                  "button",
+                  {
+                    className: "cait-minibtn",
+                    type: "button",
+                    onClick: () => onApplyReviewSegment(reviewText)
+                  },
+                  t("panel.reviewApply")
+                )
+              ),
+              clean ? null : h("p", { className: "cait-mt-hint" }, t("editor.reviewNote"))
+            );
+          })() : h("p", { className: "cait-empty-note" }, t("editor.reviewEmpty"))
+        ) : null
       ),
       h(
         "section",
@@ -5824,6 +6152,16 @@ function EditorPane({
           "div",
           { className: "cait-labelrow" },
           h("span", { className: "cait-label" }, t("editor.target")),
+          h(
+            "button",
+            {
+              className: "cait-minibtn cait-copy-btn",
+              type: "button",
+              title: t("panel.copy"),
+              onClick: () => onCopy(draft || "")
+            },
+            h(Icon, { name: "copy", size: 12 })
+          ),
           h(
             "span",
             { className: "cait-meta" },
@@ -6142,19 +6480,20 @@ function CatPanel({
   onExportGlossary,
   onOpenIo,
   onClearGlossary,
-  mt,
-  mtError,
-  mtBusy,
-  onGenerateMt,
   segmentReview,
   onReviewSegment,
   onApplySegmentReview,
   onCloseSegmentReview,
-  onOpenLocalMt,
   mtLocal,
-  onApplyMt,
   onCopy,
   onOpenSettings,
+  features,
+  reviewContext,
+  onPreviewAiSettings,
+  onSaveAiSettings,
+  onCancelAiSettings,
+  onResetAiSettings,
+  onMtMode,
   onSearchLibrary,
   qa,
   onRefreshQa,
@@ -6183,12 +6522,34 @@ function CatPanel({
   const tmxInput = useRef(null);
   const glossaryInput = useRef(null);
   const [exportFormat, setExportFormat] = useState("tbx");
-  const [reviewText, setReviewText] = useState("");
-  const [pasteText, setPasteText] = useState("");
-  const segmentVerdict = segmentReview?.verdict || null;
+  const [aiDraft, setAiDraft] = useState({
+    features: {
+      suggestion: features?.suggestion !== false,
+      revise: features?.revise !== false,
+      review: features?.review !== false
+    },
+    reviewContext: reviewContext ?? 3
+  });
   useEffect(() => {
-    setReviewText(segmentVerdict?.suggestion || "");
-  }, [segmentVerdict]);
+    setAiDraft({
+      features: {
+        suggestion: features?.suggestion !== false,
+        revise: features?.revise !== false,
+        review: features?.review !== false
+      },
+      reviewContext: reviewContext ?? 3
+    });
+  }, [features?.suggestion, features?.revise, features?.review, reviewContext]);
+  const aiDirty = aiDraft.reviewContext !== (reviewContext ?? 3) || aiDraft.features.suggestion !== (features?.suggestion !== false) || aiDraft.features.revise !== (features?.revise !== false) || aiDraft.features.review !== (features?.review !== false);
+  const patchAi = (next) => {
+    const merged = {
+      ...aiDraft,
+      ...next,
+      features: { ...aiDraft.features, ...next?.features ?? {} }
+    };
+    setAiDraft(merged);
+    onPreviewAiSettings(merged);
+  };
   const routes = Array.isArray(mtRoutes?.providers) ? mtRoutes.providers : [];
   const currentRoute = routes.find((route) => route.id === settings.mt.provider);
   const localMtReady = Boolean(mtLocal?.enabled && mtLocal?.baseUrl && mtLocal?.model);
@@ -6460,187 +6821,121 @@ function CatPanel({
       ) : null,
       tab === "mt" ? h(
         "div",
-        null,
-        h(
-          "div",
-          { className: "cait-mt-head" },
-          h("span", { className: "cait-mt-mode" }, mtModeLabel),
-          h(
-            "span",
-            { className: "cait-muted cait-tiny" },
-            `${t("panel.mtModel")}: ${settings.mt.model || "—"}`
-          )
-        ),
+        { className: "cait-ai-settings" },
+        h("p", { className: "cait-mt-hint" }, t("panel.aiSettingsHint")),
         h(
           "section",
           { className: "cait-ai-block" },
-          h("div", { className: "cait-ai-title" }, t("panel.mtTranslate")),
+          h("div", { className: "cait-ai-title" }, t("panel.aiRouteTitle")),
           h(
             "div",
-            { className: "cait-card" },
-            h(
-              "div",
-              { className: "cait-labelrow" },
-              h("span", { className: "cait-label" }, t("panel.mtRoute")),
-              h("span", { className: "cait-meta" }, settings.mt.provider || "—")
-            ),
+            { className: "cait-segmented" },
             h(
               "button",
               {
-                className: "cait-linkbtn",
+                className: `cait-seg${localMtReady ? "" : " active"}`,
                 type: "button",
-                onClick: onOpenLocalMt,
+                onClick: () => onMtMode("route"),
                 disabled: Boolean(busy)
               },
-              t("mtlocal.open")
+              t("panel.aiRouteDsh")
             ),
             h(
               "button",
               {
-                className: "cait-btn cait-btn-primary",
-                onClick: onGenerateMt,
-                disabled: Boolean(busy) || mtBusy,
-                style: { width: "100%" }
+                className: `cait-seg${localMtReady ? " active" : ""}`,
+                type: "button",
+                onClick: () => onMtMode("local"),
+                disabled: Boolean(busy) || !mtLocal?.baseUrl,
+                title: mtLocal?.baseUrl ? void 0 : t("panel.aiRouteLocalHint")
               },
-              mtBusy ? h(Spinner) : h(Icon, { name: "sparkles", size: 14 }),
-              mtBusy ? t("panel.mtGenerating") : t("panel.mtGenerate")
+              t("panel.aiRouteLocal")
             )
           ),
-          mtError ? h("div", { className: "cait-mt-error" }, mtError) : null,
-          mt ? h(
-            "article",
-            { className: "cait-card cait-mt-card" },
-            h(
-              "div",
-              { className: "cait-card-head" },
-              h("span", { className: "cait-score exact" }, t("panel.mtSuggestion")),
-              h("span", { className: "cait-score-label" }, `${mt.latencyMs} ms`)
-            ),
-            h("p", { className: "cait-mt-text" }, mt.text),
-            mt.note ? h("p", { className: "cait-mt-hint" }, mt.note) : null,
-            h(
-              "div",
-              { className: "cait-mt-actions" },
-              h(
-                "button",
-                { className: "cait-minibtn", onClick: () => onCopy(mt.text) },
-                t("panel.copy")
-              ),
-              h(
-                "button",
-                { className: "cait-minibtn", onClick: onApplyMt },
-                t("panel.mtInsert")
-              )
-            )
-          ) : h("p", { className: "cait-empty-note" }, t("panel.mtEmpty"))
+          h("p", { className: "cait-mt-hint" }, mtModeLabel),
+          h(
+            "button",
+            { className: "cait-linkbtn", type: "button", onClick: onOpenSettings },
+            t("panel.aiRouteConfig")
+          )
         ),
         h(
           "section",
           { className: "cait-ai-block" },
+          h("div", { className: "cait-ai-title" }, t("panel.aiCardsTitle")),
+          h("p", { className: "cait-mt-hint" }, t("panel.aiCardsHint")),
           h(
-            "div",
-            { className: "cait-ai-title" },
-            t("panel.reviewTitle"),
-            h(
-              "span",
-              { className: "cait-muted cait-tiny" },
-              `#${(segmentReview?.index ?? doc?.cursor ?? 0) + 1}`
-            ),
-            segmentVerdict ? h(
-              "button",
-              { className: "cait-linkbtn cait-tiny", type: "button", onClick: onCloseSegmentReview },
-              t("panel.reviewClear")
-            ) : null
-          ),
-          h(
-            "div",
-            { className: "cait-card" },
-            h("p", { className: "cait-mt-hint" }, t("panel.reviewPasteHint")),
-            h("textarea", {
-              className: "cait-input cait-review-paste",
-              value: pasteText,
-              placeholder: t("panel.reviewPaste"),
-              onChange: (event) => setPasteText(event.target.value),
-              rows: 2
+            "label",
+            { className: "cait-check cait-ai-toggle" },
+            h("input", {
+              type: "checkbox",
+              checked: aiDraft.features.suggestion !== false,
+              onChange: (event) => patchAi({ features: { suggestion: event.target.checked } })
             }),
-            h(
-              "button",
-              {
-                className: "cait-btn cait-btn-primary",
-                onClick: () => onReviewSegment(pasteText),
-                disabled: Boolean(busy) || Boolean(segmentReview?.busy),
-                style: { width: "100%" }
-              },
-              segmentReview?.busy ? h(Spinner) : h(Icon, { name: "check", size: 14 }),
-              segmentReview?.busy ? t("panel.reviewRunning") : t("panel.reviewRun")
-            )
+            h("span", null, t("panel.aiCardSuggestion"))
           ),
-          segmentReview?.error ? h("div", { className: "cait-mt-error" }, segmentReview.error) : null,
-          segmentVerdict ? (() => {
-            const clean = segmentVerdict.severity === "none" || !segmentVerdict.message && !segmentVerdict.suggestion;
-            return h(
-              "article",
-              { className: "cait-card cait-mt-card" },
-              h(
-                "div",
-                { className: "cait-card-head" },
-                h(
-                  "span",
-                  { className: `cait-score${clean ? " exact" : " risk"}` },
-                  clean ? t("panel.reviewClean") : segmentVerdict.code
-                ),
-                h(
-                  "span",
-                  { className: "cait-score-label" },
-                  segmentVerdict.latencyMs ? `${segmentVerdict.latencyMs} ms` : ""
-                )
-              ),
-              segmentVerdict.message ? h("p", { className: "cait-mt-text" }, segmentVerdict.message) : null,
-              clean ? null : h("textarea", {
-                className: "cait-input cait-review-edit",
-                value: reviewText,
-                onChange: (event) => setReviewText(event.target.value),
-                rows: 3
-              }),
-              h(
-                "div",
-                { className: "cait-mt-actions" },
-                h(
-                  "button",
-                  {
-                    className: "cait-minibtn",
-                    onClick: () => onCopy(reviewText || segmentVerdict.suggestion || "")
-                  },
-                  t("panel.copy")
-                ),
-                clean ? null : h(
-                  "button",
-                  {
-                    className: "cait-minibtn",
-                    onClick: () => onApplySegmentReview(reviewText)
-                  },
-                  t("panel.reviewApply")
-                )
-              ),
-              clean ? null : h("p", { className: "cait-mt-hint" }, t("panel.reviewNote"))
-            );
-          })() : h("p", { className: "cait-empty-note" }, t("panel.reviewEmpty"))
+          h(
+            "label",
+            { className: "cait-check cait-ai-toggle" },
+            h("input", {
+              type: "checkbox",
+              checked: aiDraft.features.revise !== false,
+              onChange: (event) => patchAi({ features: { revise: event.target.checked } })
+            }),
+            h("span", null, t("panel.aiCardRevise"))
+          ),
+          h(
+            "label",
+            { className: "cait-check cait-ai-toggle" },
+            h("input", {
+              type: "checkbox",
+              checked: aiDraft.features.review !== false,
+              onChange: (event) => patchAi({ features: { review: event.target.checked } })
+            }),
+            h("span", null, t("panel.aiCardReview"))
+          )
         ),
         h(
-          "p",
-          { className: "cait-mt-hint" },
-          settings.mt.provider === "mock" ? t("panel.mtMockHint") : t("panel.mtHint")
+          "section",
+          { className: "cait-ai-block" },
+          h("div", { className: "cait-ai-title" }, t("panel.aiContextTitle")),
+          h("p", { className: "cait-mt-hint" }, t("panel.aiContextHint")),
+          h("input", {
+            className: "cait-input cait-ai-context",
+            type: "number",
+            min: 0,
+            max: 5,
+            value: aiDraft.reviewContext,
+            onChange: (event) => patchAi({
+              reviewContext: Math.max(0, Math.min(5, Number(event.target.value) || 0))
+            })
+          })
         ),
         h(
           "div",
-          { className: "cait-panel-foot" },
+          { className: "cait-panel-foot cait-ai-foot" },
           h(
             "button",
-            { className: "cait-btn", onClick: onOpenSettings },
-            h(Icon, { name: "settings", size: 12 }),
-            t("panel.mtSettings")
+            {
+              className: "cait-btn cait-btn-primary",
+              type: "button",
+              onClick: () => onSaveAiSettings(aiDraft),
+              disabled: Boolean(busy) || !aiDirty
+            },
+            t("panel.aiSave")
+          ),
+          h(
+            "button",
+            { className: "cait-btn", type: "button", onClick: onCancelAiSettings, disabled: Boolean(busy) },
+            t("panel.cancel")
+          ),
+          h(
+            "button",
+            { className: "cait-linkbtn", type: "button", onClick: onResetAiSettings, disabled: Boolean(busy) },
+            t("panel.aiReset")
           )
-        )
+        ),
+        h("p", { className: "cait-mt-hint" }, t("panel.aiFooterHint"))
       ) : null,
       tab === "qa" ? h(
         "div",
@@ -9477,8 +9772,13 @@ function SettingsModal({ t, settings, mtRoutes, mtLocal, busy, onClose, onSave, 
             },
             result: mtResult,
             hasKey: Boolean(mtLocal?.hasKey) && !form.mtLocal.clearKey
-          }),
-          h("p", { className: "cait-mt-hint" }, t("modal.settings.mtLocalScope"))
+          })
+        ) : null,
+        form.mtMode === "local" ? h(
+          "div",
+          { className: "cait-settings-sub" },
+          h("strong", null, t("modal.settings.routeForAi")),
+          h("p", { className: "cait-mt-hint" }, t("modal.settings.routeForAiHint"))
         ) : null,
         h(
           "label",
@@ -9688,7 +9988,7 @@ function ConfirmModal({ t, state, busy, onClose, onConfirm }) {
     )
   );
 }
-function AiChatModal({ t, doc, ai, busy, mode, onClose, onSend, onApplyBrief, onClear, onSummarize, onStartPreTranslate }) {
+function AiChatModal({ t, doc, ai, busy, mode, onClose, onSend, onSaveDocPreset, onSaveProjectPreset, onClear, onStartPreTranslate }) {
   const [text, setText] = useState("");
   const listRef = useRef(null);
   useEffect(() => {
@@ -9752,11 +10052,6 @@ function AiChatModal({ t, doc, ai, busy, mode, onClose, onSend, onApplyBrief, on
         "div",
         { style: { whiteSpace: "pre-wrap", fontSize: 12, opacity: 0.85, marginBottom: 6 } },
         briefRows.join("\n")
-      ),
-      h(
-        "button",
-        { className: "cait-btn cait-btn-primary", onClick: onApplyBrief, disabled: Boolean(ai.busy) },
-        t("ai.apply")
       )
     ) : null,
     ai.error ? h("p", { className: "cait-mt-hint", style: { color: "var(--cait-danger, #d9534f)" } }, ai.error) : null,
@@ -9786,7 +10081,8 @@ function AiChatModal({ t, doc, ai, busy, mode, onClose, onSend, onApplyBrief, on
     h(
       "div",
       { className: "cait-modal-actions" },
-      ai.messages.length ? h("button", { className: "cait-btn cait-btn-ghost", onClick: onSummarize, disabled: Boolean(ai.busy) || !doc }, t("ai.summarize")) : null,
+      ai.messages.length ? h("button", { className: "cait-btn cait-btn-primary", onClick: onSaveDocPreset, disabled: Boolean(ai.busy) || !doc }, t("ai.saveDocPreset")) : null,
+      ai.messages.length ? h("button", { className: "cait-btn cait-btn-ghost", onClick: onSaveProjectPreset, disabled: Boolean(ai.busy) || !doc }, t("ai.saveProjectPreset")) : null,
       ai.messages.length ? h("button", { className: "cait-btn cait-btn-ghost", onClick: onClear, disabled: Boolean(ai.busy) }, t("ai.clear")) : null,
       h("button", { className: "cait-btn cait-btn-ghost", onClick: onClose }, t("ai.close")),
       mode === "pretranslate" ? h(
@@ -9999,8 +10295,8 @@ function LibraryIoModal({
     )
   );
 }
-function BriefModal({ t, doc, busy, onClose, onSave }) {
-  const initial = doc.brief || {};
+function PresetModal({ t, busy, brief, scope = "doc", onClose, onSave, learn, onLearn }) {
+  const initial = brief || {};
   const [form, setForm] = useState({
     domain: initial.domain || "",
     audience: initial.audience || "",
@@ -10009,6 +10305,38 @@ function BriefModal({ t, doc, busy, onClose, onSave }) {
     doNotTranslate: initial.doNotTranslate || "",
     styleSample: initial.styleSample || ""
   });
+  const [choices, setChoices] = useState({});
+  const learned = learn?.fields || null;
+  const learnedFields = learned ? Object.keys(learned) : [];
+  useEffect(() => {
+    if (!learned) return;
+    setChoices((prev) => {
+      const next = { ...prev };
+      for (const key of learnedFields) {
+        const before = String(initial[key] || "").trim();
+        next[key] = next[key] || (before ? "keep" : "replace");
+      }
+      return next;
+    });
+    setForm((prev) => {
+      const next = { ...prev };
+      for (const key of learnedFields) {
+        if (!String(initial[key] || "").trim()) next[key] = learned[key];
+      }
+      return next;
+    });
+  }, [learned]);
+  const applyChoice = (key, mode) => {
+    const value = learned?.[key];
+    if (!value) return;
+    const before = String(initial[key] || "").trim();
+    const merged = mode === "merge" && before ? `${before}
+
+${value}` : value;
+    setChoices((prev) => ({ ...prev, [key]: mode }));
+    setForm((prev) => ({ ...prev, [key]: mode === "keep" ? before : merged }));
+  };
+  const conflictRows = learnedFields.filter((key) => String(initial[key] || "").trim());
   const field = (key, label, placeholder, rows) => h(
     "label",
     { className: "cait-field" },
@@ -10028,8 +10356,60 @@ function BriefModal({ t, doc, busy, onClose, onSave }) {
   );
   return h(
     Modal,
-    { title: t("brief.title"), onClose, wide: true },
-    h("p", { className: "cait-mt-hint", style: { marginTop: 0 } }, t("brief.hint")),
+    {
+      title: scope === "project" ? t("preset.projectTitle") : t("preset.docTitle"),
+      onClose,
+      wide: true
+    },
+    h("p", { className: "cait-mt-hint", style: { marginTop: 0 } }, t(scope === "project" ? "preset.projectHint" : "preset.docHint")),
+    h(
+      "div",
+      { className: "cait-preset-learn" },
+      h(
+        "label",
+        { className: "cait-btn cait-btn-ghost cait-learn-btn" },
+        h(Icon, { name: "upload", size: 13 }),
+        learn?.busy ? t("preset.learning") : t("preset.learn"),
+        h("input", {
+          type: "file",
+          multiple: true,
+          accept: ".docx,.xlsx,.txt,.md,.csv",
+          style: { display: "none" },
+          disabled: Boolean(busy) || Boolean(learn?.busy),
+          onChange: (event) => {
+            const files = [...event.target.files || []];
+            event.target.value = "";
+            if (files.length) onLearn(files);
+          }
+        })
+      ),
+      h("span", { className: "cait-mt-hint cait-learn-hint" }, t("preset.learnHint")),
+      learn?.error ? h("span", { className: "cait-mt-error" }, learn.error) : null,
+      learn?.sources?.length ? h("span", { className: "cait-mt-hint" }, t("preset.learnedFrom", { names: learn.sources.join("、") })) : null
+    ),
+    conflictRows.length ? h(
+      "div",
+      { className: "cait-preset-conflicts" },
+      h("p", { className: "cait-mt-hint" }, t("preset.conflictHint")),
+      conflictRows.map(
+        (key) => h(
+          "div",
+          { className: "cait-conflict-row", key },
+          h("span", { className: "cait-conflict-label" }, t(`brief.${key}`)),
+          ["keep", "replace", "merge"].map(
+            (mode) => h(
+              "button",
+              {
+                className: `cait-chipbtn${(choices[key] || "keep") === mode ? " is-active" : ""}`,
+                key: mode,
+                onClick: () => applyChoice(key, mode)
+              },
+              t(`preset.conflict.${mode}`)
+            )
+          )
+        )
+      )
+    ) : null,
     h(
       "div",
       { className: "cait-briefform" },
@@ -10064,6 +10444,9 @@ function BriefModal({ t, doc, busy, onClose, onSave }) {
       )
     )
   );
+}
+function BriefModal(props) {
+  return h(PresetModal, { ...props, scope: "doc" });
 }
 function NoteModal({ t, index, segment, notes, busy, onAdd, onUpdate, onDelete, onClose }) {
   const [text, setText] = useState("");
@@ -10683,14 +11066,6 @@ function reportItems(t, onPickReport, target) {
     }
   ];
 }
-var BRIEF_FIELDS = [
-  ["domain", "projects.domain"],
-  ["audience", "projects.audience"],
-  ["tone", "projects.tone"],
-  ["notes", "projects.notes"],
-  ["doNotTranslate", "projects.doNotTranslate"],
-  ["styleSample", "projects.styleSample"]
-];
 var INCLUDE_KEYS = [
   ["target", "deliver.includeTarget"],
   ["bilingual", "deliver.includeBilingual"],
@@ -10931,6 +11306,10 @@ function Panel({ title, count, actions, open = true, onToggle, hint, children })
     ) : null
   );
 }
+function briefText(t, brief) {
+  if (!brief) return "";
+  return ["domain", "audience", "tone", "notes", "doNotTranslate", "styleSample"].filter((field) => String(brief[field] || "").trim()).map((field) => `${t(`brief.${field}`)}：${String(brief[field]).trim().slice(0, 60)}`).join(" · ");
+}
 function ProjectDetail({
   t,
   busy,
@@ -10961,7 +11340,8 @@ function ProjectDetail({
   onMoveDoc,
   onDocReport,
   onPickReport,
-  onRefreshAnalysis
+  onRefreshAnalysis,
+  onEditPreset
 }) {
   const project = state?.project ?? null;
   const analysis = state?.analysis ?? null;
@@ -11499,23 +11879,17 @@ function ProjectDetail({
       },
       h(
         "div",
-        { className: "cait-formrow" },
-        BRIEF_FIELDS.map(
-          ([field, label]) => h(
-            "label",
-            { key: field, className: "cait-field" },
-            h("span", null, t(label)),
-            field === "notes" || field === "doNotTranslate" || field === "styleSample" ? h("textarea", {
-              className: "cait-input",
-              rows: 2,
-              value: brief[field] ?? "",
-              onChange: (event) => setBriefField(field, event.target.value)
-            }) : h("input", {
-              className: "cait-input",
-              value: brief[field] ?? "",
-              onChange: (event) => setBriefField(field, event.target.value)
-            })
-          )
+        { className: "cait-preset-summary" },
+        h(
+          "p",
+          { className: "cait-preset-line" },
+          briefText(t, brief) || t("preset.empty")
+        ),
+        h(
+          "button",
+          { className: "cait-btn cait-btn-ghost", onClick: () => onEditPreset(project.id) },
+          h(Icon, { name: "pencil", size: 13 }),
+          t("preset.edit")
         )
       )
     ),
@@ -11927,7 +12301,8 @@ function ProjectsPage({
   onExportDoc,
   onMoveDoc,
   onReorderDoc,
-  onRefreshAnalysis
+  onRefreshAnalysis,
+  onEditPreset
 }) {
   const list = state?.list?.projects ?? projects ?? [];
   const documentsCount = (documents ?? []).length;
@@ -12023,7 +12398,8 @@ function ProjectsPage({
         onMoveDoc,
         onDocReport,
         onPickReport: pickReport,
-        onRefreshAnalysis
+        onRefreshAnalysis,
+        onEditPreset
       })
     ),
     reportPick ? h(ReportPick, { t, busy, pick: reportPick, onPick: chooseReport, onClose: () => setReportPick(null) }) : null
@@ -12275,6 +12651,9 @@ function useWorkbenchController({ i18n, translate }) {
   const [mtError, setMtError] = useState("");
   const [mtBusy, setMtBusy] = useState(false);
   const [segmentReview, setSegmentReview] = useState(null);
+  const [reviseBusy, setReviseBusy] = useState(false);
+  const [reviseError, setReviseError] = useState("");
+  const [aiPreview, setAiPreview] = useState(null);
   const [mtRoutes, setMtRoutes] = useState({ providers: [], fallback: true, message: "" });
   const [stale, setStale] = useState(false);
   const [toast, setToast] = useState(null);
@@ -13118,18 +13497,34 @@ function useWorkbenchController({ i18n, translate }) {
       }));
     }
   };
-  const applyAiBrief = async () => {
-    if (!doc || !ai.brief || ai.busy) return;
-    setBusy("ai-brief");
+  const saveAiPreset = async (target = "doc") => {
+    if (!doc || ai.busy) return;
+    setAi((current) => ({ ...current, busy: true, error: "" }));
     try {
-      const result = await rpc("setBrief", { documentId: doc.id, brief: ai.brief });
-      adoptState(result.state);
-      setAi((current) => ({ ...current, brief: null }));
-      notify(t("ai.applied"));
+      const result = await rpc("aiChat", { documentId: doc.id, mode: "brief" });
+      const brief = result.brief || null;
+      const messages = result.messages || ai.messages;
+      if (!brief) {
+        setAi((current) => ({ ...current, busy: false, messages }));
+        return;
+      }
+      if (target === "project") {
+        const projectId = doc.projectId || "project_inbox";
+        const saved = await rpc("setProjectBrief", { projectId, brief });
+        if (saved.state) adoptState(saved.state);
+        notify(t("ai.savedProject", { name: doc.projectName || t("projects.inboxTag") }));
+      } else {
+        const saved = await rpc("setBrief", { documentId: doc.id, brief });
+        if (saved.state) adoptState(saved.state);
+        notify(t("ai.savedDoc"));
+      }
+      setAi((current) => ({ ...current, busy: false, messages, brief }));
     } catch (error) {
-      report(error);
-    } finally {
-      setBusy("");
+      setAi((current) => ({
+        ...current,
+        busy: false,
+        error: describeError(error, t, t("ai.failed"))
+      }));
     }
   };
   const clearAi = async () => {
@@ -13139,26 +13534,6 @@ function useWorkbenchController({ i18n, translate }) {
       const result = await rpc("clearAiChat", { documentId: doc.id });
       if (result.state) adoptState(result.state);
       setAi((current) => ({ ...current, busy: false, messages: [], brief: null }));
-    } catch (error) {
-      setAi((current) => ({
-        ...current,
-        busy: false,
-        error: describeError(error, t, t("ai.failed"))
-      }));
-    }
-  };
-  const summarizeBrief = async () => {
-    if (!doc || ai.busy) return;
-    setAi((current) => ({ ...current, busy: true, error: "" }));
-    try {
-      const result = await rpc("aiChat", { documentId: doc.id, mode: "brief" });
-      setAi((current) => ({
-        ...current,
-        busy: false,
-        messages: result.messages || current.messages,
-        brief: result.brief || null
-      }));
-      if (result.state) adoptState(result.state);
     } catch (error) {
       setAi((current) => ({
         ...current,
@@ -13383,6 +13758,63 @@ function useWorkbenchController({ i18n, translate }) {
       return { ok: false, message: error?.message || String(error) };
     } finally {
       setBusy("");
+    }
+  };
+  const [presetModal, setPresetModal] = useState(null);
+  const fileToBase64 = (file) => new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(String(reader.result || "").split(",").pop() || "");
+    reader.onerror = () => reject(reader.error || new Error("read failed"));
+    reader.readAsDataURL(file);
+  });
+  const openDocPreset = () => setPresetModal({ scope: "doc", brief: doc?.brief || null, learn: null });
+  const openProjectPresetFor = async (projectIdInput) => {
+    const projectId = projectIdInput || doc?.projectId || "project_inbox";
+    setPresetModal({ scope: "project", projectId, brief: null, learn: null, loading: true });
+    try {
+      const result = await rpc("getProjectBrief", { projectId });
+      setPresetModal({ scope: "project", projectId, brief: result.brief || null, learn: null });
+    } catch (error) {
+      setPresetModal(null);
+      report(error);
+    }
+  };
+  const openProjectPreset = () => openProjectPresetFor(doc?.projectId);
+  const closePreset = () => setPresetModal(null);
+  const savePreset = async (scope, brief) => {
+    if (!presetModal) return;
+    setBusy("preset");
+    try {
+      const result = scope === "project" ? await rpc("setProjectBrief", { projectId: presetModal.projectId, brief }) : await rpc("setBrief", { documentId: doc?.id, brief });
+      if (result.state) adoptState(result.state);
+      setPresetModal(null);
+      notify(t(scope === "project" ? "preset.savedProject" : "preset.savedDoc"));
+    } catch (error) {
+      report(error);
+    } finally {
+      setBusy("");
+    }
+  };
+  const learnPreset = async (files) => {
+    if (!presetModal) return;
+    setPresetModal((prev) => prev ? { ...prev, learn: { ...prev.learn || {}, busy: true, error: "" } } : prev);
+    try {
+      const payload = [];
+      for (const file of files.slice(0, 3)) {
+        payload.push({ name: file.name, base64: await fileToBase64(file) });
+      }
+      const result = await rpc("learnPreset", {
+        files: payload,
+        target: presetModal.scope === "project" ? "project" : "doc",
+        documentId: doc?.id,
+        projectId: presetModal.projectId || doc?.projectId || "project_inbox"
+      });
+      setPresetModal(
+        (prev) => prev ? { ...prev, learn: { busy: false, error: "", fields: result.fields, sources: result.sources } } : prev
+      );
+    } catch (error) {
+      const message = describeError(error, t);
+      setPresetModal((prev) => prev ? { ...prev, learn: { busy: false, error: message } } : prev);
     }
   };
   const [projectsState, setProjectsState] = useState(null);
@@ -14556,6 +14988,91 @@ function useWorkbenchController({ i18n, translate }) {
     notify(t("panel.reviewApplied"));
   };
   const closeSegmentReview = () => setSegmentReview(null);
+  const features = aiPreview?.features ?? settings.features ?? {
+    suggestion: true,
+    revise: true,
+    review: true
+  };
+  const reviewContext = aiPreview?.reviewContext ?? settings.reviewContext ?? 3;
+  const previewAiSettings = (next) => {
+    setAiPreview({
+      features: { ...features, ...next?.features ?? {} },
+      reviewContext: Number.isFinite(next?.reviewContext) ? next.reviewContext : reviewContext
+    });
+  };
+  const cancelAiSettings = () => setAiPreview(null);
+  const resetAiSettings = () => {
+    setAiPreview({
+      features: { suggestion: true, revise: true, review: true },
+      reviewContext: 3
+    });
+  };
+  const saveAiSettings = async (next) => {
+    setBusy("ai-settings");
+    try {
+      const patch = {
+        features: next?.features ?? features,
+        reviewContext: next?.reviewContext ?? reviewContext
+      };
+      const result = await rpc("saveSettings", patch);
+      replaceRemoteState(result.state);
+      setAiPreview(null);
+      notify(t("toast.settingsSaved"));
+      return true;
+    } catch (error) {
+      report(error);
+      return false;
+    } finally {
+      setBusy("");
+    }
+  };
+  const setMtMode = async (mode) => {
+    setBusy("mt-mode");
+    try {
+      const next = await rpc("setMtLocal", { enabled: mode === "local" });
+      setMtLocalConfig(next);
+      notify(t("toast.settingsSaved"));
+    } catch (error) {
+      report(error);
+    } finally {
+      setBusy("");
+    }
+  };
+  const runRevise = async () => {
+    if (!doc || !segment || reviseBusy) return;
+    setReviseBusy(true);
+    setReviseError("");
+    try {
+      const result = await rpc("reviseSegment", {
+        documentId: doc.id,
+        index,
+        before: reviewContext
+      });
+      if (result?.state) replaceRemoteState(result.state);
+      notify(t("panel.reviseReady"), "info");
+    } catch (error) {
+      setReviseError(describeError(error, t));
+    } finally {
+      setReviseBusy(false);
+    }
+  };
+  const clearRevise = async () => {
+    if (!doc || !segment) return;
+    try {
+      const result = await rpc("clearRevise", { documentId: doc.id, index });
+      if (result?.state) replaceRemoteState(result.state);
+    } catch (error) {
+      report(error);
+    }
+  };
+  const adoptRevise = () => {
+    const text = segment?.revise?.text;
+    if (!text) return;
+    setDraft(text);
+    setDirty(true);
+    notify(t("panel.reviseApplied"));
+    setTimeout(() => textareaRef.current?.focus(), 0);
+  };
   const openSettings = async () => {
     setModal({ type: "settings" });
     try {
@@ -14865,6 +15382,19 @@ function useWorkbenchController({ i18n, translate }) {
     runSegmentReview,
     applySegmentReview,
     closeSegmentReview,
+    reviseBusy,
+    reviseError,
+    aiPreview,
+    features,
+    reviewContext,
+    previewAiSettings,
+    saveAiSettings,
+    cancelAiSettings,
+    resetAiSettings,
+    setMtMode,
+    runRevise,
+    clearRevise,
+    adoptRevise,
     mtRoutes,
     stale,
     toast,
@@ -14911,9 +15441,8 @@ function useWorkbenchController({ i18n, translate }) {
     ai,
     openAiChat,
     sendAi,
-    applyAiBrief,
+    saveAiPreset,
     clearAi,
-    summarizeBrief,
     saveResources,
     openAnalysis,
     openReplace,
@@ -14961,6 +15490,13 @@ function useWorkbenchController({ i18n, translate }) {
     openLocalMt,
     saveLocalMt,
     testLocalMt,
+    presetModal,
+    openDocPreset,
+    openProjectPreset,
+    openProjectPresetFor,
+    closePreset,
+    savePreset,
+    learnPreset,
     projectsState,
     projectPick,
     projectDrafts,
@@ -15082,6 +15618,18 @@ function Workbench({ i18n, translate }) {
     runSegmentReview,
     applySegmentReview,
     closeSegmentReview,
+    reviseBusy,
+    reviseError,
+    features,
+    reviewContext,
+    previewAiSettings,
+    saveAiSettings,
+    cancelAiSettings,
+    resetAiSettings,
+    setMtMode,
+    runRevise,
+    clearRevise,
+    adoptRevise,
     mtRoutes,
     stale,
     toast,
@@ -15126,9 +15674,8 @@ function Workbench({ i18n, translate }) {
     ai,
     openAiChat,
     sendAi,
-    applyAiBrief,
+    saveAiPreset,
     clearAi,
-    summarizeBrief,
     saveResources,
     openAnalysis,
     openReplace,
@@ -15178,6 +15725,13 @@ function Workbench({ i18n, translate }) {
     openLocalMt,
     saveLocalMt,
     testLocalMt,
+    presetModal,
+    openDocPreset,
+    openProjectPreset,
+    openProjectPresetFor,
+    closePreset,
+    savePreset,
+    learnPreset,
     openSettings,
     projectsState,
     projectPick,
@@ -15487,7 +16041,8 @@ function Workbench({ i18n, translate }) {
       onExportDoc: exportDocumentAs,
       onMoveDoc: assignDocToProject,
       onReorderDoc: reorderDocument,
-      onRefreshAnalysis: refreshProjectAnalysis
+      onRefreshAnalysis: refreshProjectAnalysis,
+      onEditPreset: openProjectPresetFor
     }) : null,
     view === "libraries" ? h(LibraryPage, {
       t,
@@ -15600,13 +16155,28 @@ function Workbench({ i18n, translate }) {
           onAdopt: adoptSuggestion,
           onApplyTerm: applyTerm,
           onDefineTerm: openTermDialog,
-          onOpenBrief: () => setModal({ type: "brief" }),
+          onOpenBrief: openDocPreset,
+          onOpenProjectPreset: openProjectPreset,
+          onOpenProjectDetail: () => {
+            if (!doc?.projectId) return;
+            requestProject(doc.projectId);
+          },
           onOpenResources: () => setModal({ type: "resources" }),
           onOpenAnalysis: openAnalysis,
           onOpenNotes: openNotes,
           noteCount: segment?.notes?.length || 0,
           qaRisk,
-          textareaRef
+          textareaRef,
+          features,
+          reviseBusy,
+          reviseError,
+          onRevise: runRevise,
+          onAdoptRevise: adoptRevise,
+          onCopy: copy,
+          segmentReview,
+          onRunReviewSegment: runSegmentReview,
+          onApplyReviewSegment: applySegmentReview,
+          onCloseReviewSegment: closeSegmentReview
         }) : h(EmptyState, {
           t,
           settings,
@@ -15650,6 +16220,13 @@ function Workbench({ i18n, translate }) {
           onReviewSegment: runSegmentReview,
           onApplySegmentReview: applySegmentReview,
           onCloseSegmentReview: closeSegmentReview,
+          features,
+          reviewContext,
+          onPreviewAiSettings: previewAiSettings,
+          onSaveAiSettings: saveAiSettings,
+          onCancelAiSettings: cancelAiSettings,
+          onResetAiSettings: resetAiSettings,
+          onMtMode: setMtMode,
           onApplyMt: () => {
             if (mt?.text) {
               setDraft(mt.text);
@@ -15720,8 +16297,8 @@ function Workbench({ i18n, translate }) {
       mode: modal.mode || "chat",
       onClose: () => setModal(null),
       onSend: sendAi,
-      onApplyBrief: applyAiBrief,
-      onSummarize: summarizeBrief,
+      onSaveDocPreset: () => saveAiPreset("doc"),
+      onSaveProjectPreset: () => saveAiPreset("project"),
       onClear: clearAi,
       onStartPreTranslate: () => {
         setModal(null);
@@ -15869,6 +16446,16 @@ function Workbench({ i18n, translate }) {
       onPick: pickProject,
       onClose: closeProjectPicker
     }),
+    presetModal ? h(PresetModal, {
+      t,
+      busy: busy === "preset",
+      scope: presetModal.scope,
+      brief: presetModal.brief,
+      learn: presetModal.learn,
+      onLearn: learnPreset,
+      onClose: closePreset,
+      onSave: (brief) => savePreset(presetModal.scope, brief)
+    }) : null,
     pendingNav ? h(ProjectUnsaved, { t, onChoose: resolvePendingNav }) : null,
     toast ? h(Toast, { toast }) : null
   );

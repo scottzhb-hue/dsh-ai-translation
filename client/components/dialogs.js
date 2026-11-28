@@ -440,7 +440,14 @@ function SettingsModal({ t, settings, mtRoutes, mtLocal, busy, onClose, onSave, 
                 result: mtResult,
                 hasKey: Boolean(mtLocal?.hasKey) && !form.mtLocal.clearKey,
               }),
-              h('p', { className: 'cait-mt-hint' }, t('modal.settings.mtLocalScope')),
+                    )
+          : null,
+        form.mtMode === 'local'
+          ? h(
+              'div',
+              { className: 'cait-settings-sub' },
+              h('strong', null, t('modal.settings.routeForAi')),
+              h('p', { className: 'cait-mt-hint' }, t('modal.settings.routeForAiHint')),
             )
           : null,
         h(
@@ -670,7 +677,7 @@ function ConfirmModal({ t, state, busy, onClose, onConfirm }) {
   )
 }
 
-function AiChatModal({ t, doc, ai, busy, mode, onClose, onSend, onApplyBrief, onClear, onSummarize, onStartPreTranslate }) {
+function AiChatModal({ t, doc, ai, busy, mode, onClose, onSend, onSaveDocPreset, onSaveProjectPreset, onClear, onStartPreTranslate }) {
   const [text, setText] = useState("")
   const listRef = useRef(null)
   useEffect(() => {
@@ -743,11 +750,6 @@ function AiChatModal({ t, doc, ai, busy, mode, onClose, onSend, onApplyBrief, on
             { style: { whiteSpace: "pre-wrap", fontSize: 12, opacity: 0.85, marginBottom: 6 } },
             briefRows.join("\n"),
           ),
-          h(
-            "button",
-            { className: "cait-btn cait-btn-primary", onClick: onApplyBrief, disabled: Boolean(ai.busy) },
-            t("ai.apply"),
-          ),
         )
       : null,
     ai.error
@@ -780,7 +782,10 @@ function AiChatModal({ t, doc, ai, busy, mode, onClose, onSend, onApplyBrief, on
       "div",
       { className: "cait-modal-actions" },
       ai.messages.length
-        ? h("button", { className: "cait-btn cait-btn-ghost", onClick: onSummarize, disabled: Boolean(ai.busy) || !doc }, t("ai.summarize"))
+        ? h("button", { className: "cait-btn cait-btn-primary", onClick: onSaveDocPreset, disabled: Boolean(ai.busy) || !doc }, t("ai.saveDocPreset"))
+        : null,
+      ai.messages.length
+        ? h("button", { className: "cait-btn cait-btn-ghost", onClick: onSaveProjectPreset, disabled: Boolean(ai.busy) || !doc }, t("ai.saveProjectPreset"))
         : null,
       ai.messages.length
         ? h("button", { className: "cait-btn cait-btn-ghost", onClick: onClear, disabled: Boolean(ai.busy) }, t("ai.clear"))
@@ -1009,8 +1014,8 @@ function LibraryIoModal({
   )
 }
 
-function BriefModal({ t, doc, busy, onClose, onSave }) {
-  const initial = doc.brief || {}
+function PresetModal({ t, busy, brief, scope = 'doc', onClose, onSave, learn, onLearn }) {
+  const initial = brief || {}
   const [form, setForm] = useState({
     domain: initial.domain || '',
     audience: initial.audience || '',
@@ -1019,6 +1024,40 @@ function BriefModal({ t, doc, busy, onClose, onSave }) {
     doNotTranslate: initial.doNotTranslate || '',
     styleSample: initial.styleSample || '',
   })
+  const [choices, setChoices] = useState({})
+  const learned = learn?.fields || null
+  const learnedFields = learned ? Object.keys(learned) : []
+
+  useEffect(() => {
+    if (!learned) return
+    setChoices((prev) => {
+      const next = { ...prev }
+      for (const key of learnedFields) {
+        const before = String(initial[key] || '').trim()
+        next[key] = next[key] || (before ? 'keep' : 'replace')
+      }
+      return next
+    })
+    setForm((prev) => {
+      const next = { ...prev }
+      for (const key of learnedFields) {
+        if (!String(initial[key] || '').trim()) next[key] = learned[key]
+      }
+      return next
+    })
+  }, [learned])
+
+  const applyChoice = (key, mode) => {
+    const value = learned?.[key]
+    if (!value) return
+    const before = String(initial[key] || '').trim()
+    const merged = mode === 'merge' && before ? `${before}\n\n${value}` : value
+    setChoices((prev) => ({ ...prev, [key]: mode }))
+    setForm((prev) => ({ ...prev, [key]: mode === 'keep' ? before : merged }))
+  }
+
+  const conflictRows = learnedFields.filter((key) => String(initial[key] || '').trim())
+
   const field = (key, label, placeholder, rows) =>
     h(
       'label',
@@ -1039,10 +1078,67 @@ function BriefModal({ t, doc, busy, onClose, onSave }) {
             onChange: (event) => setForm({ ...form, [key]: event.target.value }),
           }),
     )
+
   return h(
     Modal,
-    { title: t('brief.title'), onClose, wide: true },
-    h('p', { className: 'cait-mt-hint', style: { marginTop: 0 } }, t('brief.hint')),
+    {
+      title: scope === 'project' ? t('preset.projectTitle') : t('preset.docTitle'),
+      onClose,
+      wide: true,
+    },
+    h('p', { className: 'cait-mt-hint', style: { marginTop: 0 } }, t(scope === 'project' ? 'preset.projectHint' : 'preset.docHint')),
+    h(
+      'div',
+      { className: 'cait-preset-learn' },
+      h(
+        'label',
+        { className: 'cait-btn cait-btn-ghost cait-learn-btn' },
+        h(Icon, { name: 'upload', size: 13 }),
+        learn?.busy ? t('preset.learning') : t('preset.learn'),
+        h('input', {
+          type: 'file',
+          multiple: true,
+          accept: '.docx,.xlsx,.txt,.md,.csv',
+          style: { display: 'none' },
+          disabled: Boolean(busy) || Boolean(learn?.busy),
+          onChange: (event) => {
+            const files = [...(event.target.files || [])]
+            event.target.value = ''
+            if (files.length) onLearn(files)
+          },
+        }),
+      ),
+      h('span', { className: 'cait-mt-hint cait-learn-hint' }, t('preset.learnHint')),
+      learn?.error ? h('span', { className: 'cait-mt-error' }, learn.error) : null,
+      learn?.sources?.length
+        ? h('span', { className: 'cait-mt-hint' }, t('preset.learnedFrom', { names: learn.sources.join('、') }))
+        : null,
+    ),
+    conflictRows.length
+      ? h(
+          'div',
+          { className: 'cait-preset-conflicts' },
+          h('p', { className: 'cait-mt-hint' }, t('preset.conflictHint')),
+          conflictRows.map((key) =>
+            h(
+              'div',
+              { className: 'cait-conflict-row', key },
+              h('span', { className: 'cait-conflict-label' }, t(`brief.${key}`)),
+              ['keep', 'replace', 'merge'].map((mode) =>
+                h(
+                  'button',
+                  {
+                    className: `cait-chipbtn${(choices[key] || 'keep') === mode ? ' is-active' : ''}`,
+                    key: mode,
+                    onClick: () => applyChoice(key, mode),
+                  },
+                  t(`preset.conflict.${mode}`),
+                ),
+              ),
+            ),
+          ),
+        )
+      : null,
     h(
       'div',
       { className: 'cait-briefform' },
@@ -1077,6 +1173,10 @@ function BriefModal({ t, doc, busy, onClose, onSave }) {
       ),
     ),
   )
+}
+
+function BriefModal(props) {
+  return h(PresetModal, { ...props, scope: 'doc' })
 }
 
 function NoteModal({ t, index, segment, notes, busy, onAdd, onUpdate, onDelete, onClose }) {
@@ -1725,6 +1825,7 @@ export {
   SettingsModal,
   ConfirmModal,
   BriefModal,
+  PresetModal,
   LibraryIoModal,
   AiChatModal,
   TermModal,

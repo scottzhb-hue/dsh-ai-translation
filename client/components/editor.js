@@ -30,17 +30,61 @@ function EditorPane({
   onApplyTerm,
   onDefineTerm,
   onOpenBrief,
+  onOpenProjectPreset,
+  onOpenProjectDetail,
   onOpenResources,
   onOpenAnalysis,
   onOpenNotes,
   noteCount,
   qaRisk,
   textareaRef,
+  features,
+  reviseBusy,
+  reviseError,
+  onRevise,
+  onAdoptRevise,
+  onCopy,
+  segmentReview,
+  onRunReviewSegment,
+  onApplyReviewSegment,
+  onCloseReviewSegment,
 }) {
   const hits = detail?.index === index ? detail.glossaryHits : []
   const charCount = Array.from(draft || '').length
   const isSubtitle = doc.format === 'srt' || doc.format === 'vtt'
   const [shiftSeconds, setShiftSeconds] = useState('1')
+  // Which AI cards are expanded: the pre-translation baseline and the AI
+  // re-translation are the two a translator reads on every segment, so they
+  // start open; the reviewer stays collapsed until asked for.
+  const [openCards, setOpenCards] = useState({ suggestion: true, revise: true, review: false })
+  const [reviewText, setReviewText] = useState('')
+  const [pasteText, setPasteText] = useState('')
+  const segmentVerdict = segmentReview?.verdict || null
+  const revise = segment.revise || null
+  useEffect(() => {
+    setReviewText(segmentVerdict?.suggestion || '')
+  }, [segmentVerdict])
+  const toggleCard = (key) => setOpenCards((current) => ({ ...current, [key]: !current[key] }))
+  const featureOn = (key) => features?.[key] !== false
+  const stamp = (iso) => (iso ? String(iso).slice(11, 16) : '')
+  const cardHead = (key, label, extra) =>
+    h(
+      'div',
+      { className: 'cait-ai-title' },
+      h(
+        'button',
+        {
+          className: 'cait-card-toggle',
+          type: 'button',
+          onClick: () => toggleCard(key),
+          'aria-expanded': openCards[key] ? 'true' : 'false',
+        },
+        h('span', { className: 'cait-caret' }, openCards[key] ? '\u25be' : '\u25b8'),
+        label,
+      ),
+      h('span', { className: 'cait-ai-grow' }),
+      extra || null,
+    )
   const cueStart = Number(segment.meta?.start)
   const cueEnd = Number(segment.meta?.end)
   const formatCue = (value) => {
@@ -163,63 +207,64 @@ function EditorPane({
     h(
       'div',
       { className: 'cait-doc-head' },
+      h('h2', { className: 'cait-doc-title', title: doc.name }, doc.name),
       h(
         'div',
-        null,
-        h('h2', { className: 'cait-doc-title' }, doc.name),
+        { className: 'cait-doc-meta' },
+        h('span', { className: 'cait-langchip' }, doc.sourceLang),
+        h(Icon, { name: 'arrowRight', size: 11 }),
+        h('span', { className: 'cait-langchip' }, doc.targetLang),
+        h('span', { className: 'cait-doc-pct' }, `${progress.percent}%`),
         h(
-          'div',
-          { className: 'cait-doc-meta' },
-          h('span', { className: 'cait-langchip' }, doc.sourceLang),
-          h(Icon, { name: 'arrowRight', size: 11 }),
-          h('span', { className: 'cait-langchip' }, doc.targetLang),
-          h('span', null, `· ${doc.segments.length} ${t('doc.segments')}`),
-          h(
-            'button',
-            {
-              className: 'cait-linkbtn cait-brieflink',
-              onClick: onOpenBrief,
-              title: doc.brief ? t('panel.briefHint') : t('brief.empty'),
-            },
-            h(Icon, { name: 'file', size: 11 }),
-            t('editor.brief'),
-            doc.brief ? h('span', { className: 'cait-briefdot' }) : null,
-          ),
-          h(
-            'button',
-            {
-              className: 'cait-linkbtn',
-              onClick: onOpenResources,
-              title: t('resources.hint'),
-            },
-            h(Icon, { name: 'database', size: 11 }),
-            t('editor.resources'),
-          ),
-          h(
-            'button',
-            {
-              className: 'cait-linkbtn',
-              onClick: onOpenAnalysis,
-              title: t('analysis.hint'),
-            },
-            h(Icon, { name: 'chart', size: 11 }),
-            t('editor.analysis'),
-          ),
-        ),
-      ),
-      h(
-        'div',
-        { className: 'cait-progress-box' },
-        h('span', { className: 'cait-pct' }, `${progress.percent}%`),
-        h(
-          'div',
-          { className: 'cait-progress' },
-          h('i', { style: { width: `${progress.percent}%` } }),
+          'button',
+          {
+            className: 'cait-linkbtn cait-brieflink',
+            onClick: onOpenBrief,
+            title: doc.brief ? t('panel.briefHint') : t('brief.empty'),
+          },
+          h(Icon, { name: 'file', size: 11 }),
+          t('editor.brief'),
+          doc.brief ? h('span', { className: 'cait-briefdot' }) : null,
         ),
         h(
-          'span',
-          { className: 'cait-meta' },
-          `${progress.confirmed}/${progress.total} ${t('progress.confirmed')}`,
+          'button',
+          {
+            className: 'cait-linkbtn cait-projectlink',
+            onClick: onOpenProjectPreset,
+            title: t('panel.projectPresetHint'),
+          },
+          h(Icon, { name: 'folder', size: 11 }),
+          t('editor.projectBrief'),
+        ),
+        h(
+          'button',
+          {
+            className: 'cait-linkbtn',
+            onClick: onOpenResources,
+            title: t('resources.hint'),
+          },
+          h(Icon, { name: 'database', size: 11 }),
+          t('editor.resources'),
+        ),
+        h(
+          'button',
+          {
+            className: 'cait-linkbtn',
+            onClick: onOpenAnalysis,
+            title: t('analysis.hint'),
+          },
+          h(Icon, { name: 'chart', size: 11 }),
+          t('editor.analysis'),
+        ),
+        h(
+          'button',
+          {
+            className: 'cait-linkbtn',
+            onClick: onOpenProjectDetail,
+            title: t('panel.projectDetailHint'),
+          },
+          h(Icon, { name: 'file', size: 11 }),
+          t('editor.projectDetail'),
         ),
       ),
     ),
@@ -279,6 +324,16 @@ function EditorPane({
           'div',
           { className: 'cait-labelrow' },
           h('span', { className: 'cait-label' }, t('editor.source')),
+          h(
+            'button',
+            {
+              className: 'cait-minibtn cait-copy-btn',
+              type: 'button',
+              title: t('panel.copy'),
+              onClick: () => onCopy(segment.source || ''),
+            },
+            h(Icon, { name: 'copy', size: 12 }),
+          ),
           h('span', { className: 'cait-langchip' }, doc.sourceLang),
         ),
         h(
@@ -313,40 +368,219 @@ function EditorPane({
       ),
       h(
         'section',
-        { className: 'cait-revcol cait-rev-sugg' },
-        h(
-          'div',
-          { className: 'cait-labelrow' },
-          h('span', { className: 'cait-label' }, t('editor.suggestion')),
-          baselineText
-            ? h(
-                'span',
-                { className: `cait-originchip ${baselineOrigin}` },
-                t(`origin.${baselineOrigin}`),
-              )
-            : null,
-          segment.suggestion
-            ? h(
+        { className: 'cait-revcol cait-rev-sugg cait-ai-col' },
+        featureOn('suggestion')
+          ? h(
+              'section',
+              { className: `cait-card cait-ai-card${openCards['suggestion'] ? ' is-open' : ''}` },
+              cardHead(
+                'suggestion',
+                t('editor.suggestion'),
+                h(
+                  'span',
+                  { className: 'cait-ai-tools' },
+                  baselineText
+                    ? h(
+                        'button',
+                        {
+                          className: 'cait-minibtn',
+                          type: 'button',
+                          onClick: () => onCopy(baselineText),
+                        },
+                        t('panel.copy'),
+                      )
+                    : null,
+                  segment.suggestion
+                    ? h(
+                        'button',
+                        {
+                          className: 'cait-minibtn',
+                          type: 'button',
+                          onClick: onAdopt,
+                          disabled: Boolean(busy) || draft.trim() === segment.suggestion,
+                          title: t('editor.adoptHint'),
+                        },
+                        t('editor.adopt'),
+                      )
+                    : null,
+                ),
+              ),
+              baselineText
+                ? h('div', { className: 'cait-suggest-text' }, baselineText)
+                : h('div', { className: 'cait-suggest-empty' }, t('editor.noSuggestion')),
+              h(
+                'div',
+                { className: 'cait-rev-hint' },
+                segment.suggestion ? t('editor.adoptHint') : t('editor.baselineHint'),
+              ),
+            )
+          : null,
+        featureOn('revise')
+          ? h(
+              'section',
+              { className: `cait-card cait-ai-card${openCards['revise'] ? ' is-open' : ''}` },
+              cardHead(
+                'revise',
+                t('editor.revise'),
+                revise
+                  ? h(
+                      'span',
+                      { className: 'cait-ai-tools' },
+                      h(
+                        'button',
+                        {
+                          className: 'cait-minibtn',
+                          type: 'button',
+                          onClick: () => onCopy(revise.text),
+                        },
+                        t('panel.copy'),
+                      ),
+                      h(
+                        'button',
+                        {
+                          className: 'cait-minibtn',
+                          type: 'button',
+                          onClick: onAdoptRevise,
+                          disabled: Boolean(busy) || draft.trim() === revise.text,
+                          title: t('editor.adoptHint'),
+                        },
+                        t('editor.adopt'),
+                      ),
+                    )
+                  : null,
+              ),
+              h('p', { className: 'cait-mt-hint' }, t('editor.reviseHint')),
+              h(
                 'button',
                 {
-                  className: 'cait-chip cait-chip-action',
-                  onClick: onAdopt,
-                  disabled: Boolean(busy) || draft.trim() === segment.suggestion,
-                  title: t('editor.adoptHint'),
+                  className: 'cait-btn cait-btn-primary cait-ai-run',
+                  type: 'button',
+                  onClick: onRevise,
+                  disabled: Boolean(busy) || Boolean(reviseBusy),
                 },
-                h(Icon, { name: 'download', size: 11 }),
-                t('editor.adopt'),
-              )
-            : null,
-        ),
-        baselineText
-          ? h('div', { className: 'cait-suggest-text' }, baselineText)
-          : h('div', { className: 'cait-suggest-empty' }, t('editor.noSuggestion')),
-        h(
-          'div',
-          { className: 'cait-rev-hint' },
-          segment.suggestion ? t('editor.adoptHint') : t('editor.baselineHint'),
-        ),
+                reviseBusy ? h(Spinner) : h(Icon, { name: 'sparkles', size: 14 }),
+                reviseBusy ? t('editor.revising') : t('editor.reviseRun'),
+              ),
+              reviseError ? h('div', { className: 'cait-mt-error' }, reviseError) : null,
+              revise ? h('div', { className: 'cait-suggest-text' }, revise.text) : null,
+              revise
+                ? h(
+                    'div',
+                    { className: 'cait-rev-hint' },
+                    t('editor.reviseAt', {
+                      time: stamp(revise.at),
+                      model: revise.model || '',
+                    }),
+                  )
+                : null,
+            )
+          : null,
+        featureOn('review')
+          ? h(
+              'section',
+              { className: `cait-card cait-ai-card${openCards['review'] ? ' is-open' : ''}` },
+              cardHead(
+                'review',
+                t('editor.reviewTitle'),
+                segmentVerdict
+                  ? h(
+                      'button',
+                      {
+                        className: 'cait-minibtn',
+                        type: 'button',
+                        onClick: onCloseReviewSegment,
+                      },
+                      t('panel.reviewClear'),
+                    )
+                  : null,
+              ),
+              h('p', { className: 'cait-mt-hint' }, t('editor.reviewHint')),
+              h('textarea', {
+                className: 'cait-input cait-review-paste',
+                value: pasteText,
+                placeholder: t('panel.reviewPaste'),
+                onChange: (event) => setPasteText(event.target.value),
+                rows: 2,
+              }),
+              h(
+                'button',
+                {
+                  className: 'cait-btn cait-btn-primary cait-ai-run',
+                  type: 'button',
+                  onClick: () => onRunReviewSegment(pasteText),
+                  disabled: Boolean(busy) || Boolean(segmentReview?.busy),
+                },
+                segmentReview?.busy ? h(Spinner) : h(Icon, { name: 'check', size: 14 }),
+                segmentReview?.busy ? t('panel.reviewRunning') : t('panel.reviewRun'),
+              ),
+              segmentReview?.error
+                ? h('div', { className: 'cait-mt-error' }, segmentReview.error)
+                : null,
+              segmentVerdict
+                ? (() => {
+                    const clean =
+                      segmentVerdict.severity === 'none' ||
+                      (!segmentVerdict.message && !segmentVerdict.suggestion)
+                    return h(
+                      'div',
+                      { className: 'cait-review-result' },
+                      h(
+                        'div',
+                        { className: 'cait-labelrow' },
+                        h(
+                          'span',
+                          { className: 'cait-label' },
+                          clean
+                            ? t('panel.reviewClean')
+                            : t('editor.reviewIssue', { code: segmentVerdict.code }),
+                        ),
+                        h(
+                          'span',
+                          { className: 'cait-meta' },
+                          segmentVerdict.latencyMs ? t('editor.reviewMs', { ms: segmentVerdict.latencyMs }) : '',
+                        ),
+                      ),
+                      segmentVerdict.message
+                        ? h('p', { className: 'cait-mt-text' }, segmentVerdict.message)
+                        : null,
+                      clean
+                        ? null
+                        : h('textarea', {
+                            className: 'cait-input cait-review-edit',
+                            value: reviewText,
+                            onChange: (event) => setReviewText(event.target.value),
+                            rows: 3,
+                          }),
+                      h(
+                        'div',
+                        { className: 'cait-ai-tools' },
+                        h(
+                          'button',
+                          {
+                            className: 'cait-minibtn',
+                            type: 'button',
+                            onClick: () => onCopy(reviewText || segmentVerdict.suggestion || ''),
+                          },
+                          t('panel.copy'),
+                        ),
+                        clean
+                          ? null
+                          : h(
+                              'button',
+                              {
+                                className: 'cait-minibtn',
+                                type: 'button',
+                                onClick: () => onApplyReviewSegment(reviewText),
+                              },
+                              t('panel.reviewApply'),
+                            ),
+                      ),
+                      clean ? null : h('p', { className: 'cait-mt-hint' }, t('editor.reviewNote')),
+                    )
+                  })()
+                : h('p', { className: 'cait-empty-note' }, t('editor.reviewEmpty')),
+            )
+          : null,
       ),
       h(
         'section',
@@ -355,6 +589,16 @@ function EditorPane({
           'div',
           { className: 'cait-labelrow' },
           h('span', { className: 'cait-label' }, t('editor.target')),
+          h(
+            'button',
+            {
+              className: 'cait-minibtn cait-copy-btn',
+              type: 'button',
+              title: t('panel.copy'),
+              onClick: () => onCopy(draft || ''),
+            },
+            h(Icon, { name: 'copy', size: 12 }),
+          ),
           h(
             'span',
             { className: 'cait-meta' },

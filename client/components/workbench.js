@@ -13,6 +13,7 @@ import {
   SettingsModal,
   ConfirmModal,
   BriefModal,
+  PresetModal,
   LibraryIoModal,
   AiChatModal,
   TermModal,
@@ -79,6 +80,18 @@ function Workbench({ i18n, translate }) {
     runSegmentReview,
     applySegmentReview,
     closeSegmentReview,
+    reviseBusy,
+    reviseError,
+    features,
+    reviewContext,
+    previewAiSettings,
+    saveAiSettings,
+    cancelAiSettings,
+    resetAiSettings,
+    setMtMode,
+    runRevise,
+    clearRevise,
+    adoptRevise,
     mtRoutes,
     stale,
     toast,
@@ -123,9 +136,8 @@ function Workbench({ i18n, translate }) {
     ai,
     openAiChat,
     sendAi,
-    applyAiBrief,
+  saveAiPreset,
     clearAi,
-    summarizeBrief,
     saveResources,
     openAnalysis,
     openReplace,
@@ -175,6 +187,13 @@ function Workbench({ i18n, translate }) {
     openLocalMt,
     saveLocalMt,
     testLocalMt,
+    presetModal,
+    openDocPreset,
+    openProjectPreset,
+    openProjectPresetFor,
+    closePreset,
+    savePreset,
+    learnPreset,
     openSettings,
     projectsState,
     projectPick,
@@ -501,6 +520,7 @@ function Workbench({ i18n, translate }) {
           onMoveDoc: assignDocToProject,
           onReorderDoc: reorderDocument,
           onRefreshAnalysis: refreshProjectAnalysis,
+        onEditPreset: openProjectPresetFor,
         })
       : null,
     view === 'libraries'
@@ -625,13 +645,28 @@ function Workbench({ i18n, translate }) {
                   onAdopt: adoptSuggestion,
                   onApplyTerm: applyTerm,
                   onDefineTerm: openTermDialog,
-                  onOpenBrief: () => setModal({ type: 'brief' }),
+                  onOpenBrief: openDocPreset,
+      onOpenProjectPreset: openProjectPreset,
+      onOpenProjectDetail: () => {
+        if (!doc?.projectId) return
+        requestProject(doc.projectId)
+      },
                   onOpenResources: () => setModal({ type: 'resources' }),
                   onOpenAnalysis: openAnalysis,
                   onOpenNotes: openNotes,
                   noteCount: segment?.notes?.length || 0,
                   qaRisk,
                   textareaRef,
+                  features,
+                  reviseBusy,
+                  reviseError,
+                  onRevise: runRevise,
+                  onAdoptRevise: adoptRevise,
+                  onCopy: copy,
+                  segmentReview,
+                  onRunReviewSegment: runSegmentReview,
+                  onApplyReviewSegment: applySegmentReview,
+                  onCloseReviewSegment: closeSegmentReview,
                 })
               : h(EmptyState, {
                   t,
@@ -677,6 +712,13 @@ function Workbench({ i18n, translate }) {
                   onReviewSegment: runSegmentReview,
                   onApplySegmentReview: applySegmentReview,
                   onCloseSegmentReview: closeSegmentReview,
+                  features,
+                  reviewContext,
+                  onPreviewAiSettings: previewAiSettings,
+                  onSaveAiSettings: saveAiSettings,
+                  onCancelAiSettings: cancelAiSettings,
+                  onResetAiSettings: resetAiSettings,
+                  onMtMode: setMtMode,
                   onApplyMt: () => {
                     if (mt?.text) {
                       setDraft(mt.text)
@@ -758,8 +800,8 @@ function Workbench({ i18n, translate }) {
           mode: modal.mode || 'chat',
           onClose: () => setModal(null),
           onSend: sendAi,
-          onApplyBrief: applyAiBrief,
-          onSummarize: summarizeBrief,
+        onSaveDocPreset: () => saveAiPreset("doc"),
+        onSaveProjectPreset: () => saveAiPreset("project"),
           onClear: clearAi,
           onStartPreTranslate: () => {
             setModal(null)
@@ -938,6 +980,18 @@ function Workbench({ i18n, translate }) {
       onPick: pickProject,
       onClose: closeProjectPicker,
     }),
+    presetModal
+      ? h(PresetModal, {
+          t,
+          busy: busy === 'preset',
+          scope: presetModal.scope,
+          brief: presetModal.brief,
+          learn: presetModal.learn,
+          onLearn: learnPreset,
+          onClose: closePreset,
+          onSave: (brief) => savePreset(presetModal.scope, brief),
+        })
+      : null,
     pendingNav
       ? h(ProjectUnsaved, { t, onChoose: resolvePendingNav })
       : null,

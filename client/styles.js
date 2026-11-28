@@ -197,13 +197,20 @@ const CSS = `
 .cait-editor-col{min-width:0;min-height:0;overflow-y:auto;padding:22px 26px 44px}
 .cait-review{display:grid;gap:10px;grid-template-columns:minmax(0,1fr);grid-template-areas:"src" "sugg" "target";align-items:start}
 .cait-revcol{min-width:0;padding:13px 14px;border:1px solid var(--dsw-alias-border-l1);border-radius:11px;background:var(--dsw-alias-bg-layer-1)}
-.cait-rev-src{grid-area:src}
+.cait-rev-src{grid-area:src;position:sticky;top:44px;z-index:5;max-height:32vh;overflow:auto;box-shadow:0 8px 18px rgba(0,0,0,.18)}
 .cait-rev-sugg{grid-area:sugg;display:flex;flex-direction:column;gap:6px;border-style:dashed;border-color:color-mix(in srgb,var(--dsw-alias-button-primary-fill) 38%,transparent)}
 .cait-rev-target{grid-area:target;display:flex;flex-direction:column;gap:6px}
 .cait-rev-target .cait-textarea{min-height:150px;padding:9px 10px;border-radius:8px;background:var(--dsw-alias-bg-base)}
-.cait-doc-head{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:16px}
-.cait-doc-title{max-width:680px;margin:0;font-size:17px;font-weight:650;line-height:1.35;letter-spacing:-.01em}
-.cait-doc-meta{display:flex;align-items:center;gap:6px;margin-top:4px;font-size:10.5px;color:var(--dsw-alias-label-secondary)}
+.cait-doc-head{position:sticky;top:0;z-index:6;display:flex;align-items:center;gap:12px;height:44px;margin:0 -6px 10px;padding:0 6px;background:var(--dsw-alias-bg-base,var(--dsw-alias-bg-layer-1));border-bottom:1px solid var(--dsw-alias-border-l1)}
+.cait-doc-title{flex:0 1 auto;max-width:34%;margin:0;font-size:15px;font-weight:650;line-height:1.3;letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.cait-doc-meta{flex:1 1 auto;display:flex;align-items:center;gap:10px;min-width:0;margin-top:0;font-size:11.5px;white-space:nowrap;overflow:hidden;color:var(--dsw-alias-label-secondary)}
+.cait-doc-meta > *{display:inline-flex;align-items:center;height:20px;line-height:1;flex:0 0 auto}
+.cait-doc-meta .cait-linkbtn{display:inline-flex;align-items:center;gap:4px;height:20px;padding:0 4px;border-radius:5px;font-size:11px;line-height:1;text-decoration:none}
+.cait-doc-meta .cait-linkbtn:hover{background:var(--dsw-alias-bg-layer-1);text-decoration:none}
+.cait-doc-meta .cait-linkbtn svg{display:block;flex:0 0 auto}
+.cait-doc-meta .cait-langchip,.cait-doc-meta .cait-doc-pct{height:20px}
+.cait-doc-meta .cait-linkbtn{color:var(--dsw-alias-label-secondary)}
+.cait-doc-pct{font-size:12px;font-weight:600;font-variant-numeric:tabular-nums;color:var(--dsw-alias-label-primary)}
 .cait-langchip{display:inline-flex;align-items:center;height:17px;padding:0 6px;border:1px solid var(--dsw-alias-border-l1);border-radius:5px;background:var(--dsw-alias-bg-layer-1);font-size:9.5px;font-weight:600;color:var(--dsw-alias-label-secondary)}
 .cait-progress-box{display:flex;flex-direction:column;align-items:flex-end;gap:4px;min-width:112px;flex:0 0 auto}
 .cait-pct{font-size:17px;font-weight:700;line-height:1;font-variant-numeric:tabular-nums;color:var(--dsw-alias-brand-primary)}
@@ -697,6 +704,21 @@ button.cait-brand.active .cait-brand-text strong{color:var(--dsw-alias-state-inf
 @media(max-width:1180px){.cait-main{grid-template-columns:minmax(0,1fr) 308px}.cait-body{grid-template-columns:218px minmax(0,1fr)}.cait-editor-col{padding:18px 20px 34px}.cait-actions .cait-btn-label{display:none}.cait-actions .cait-btn{padding:0 8px}.cait-libpage-body{grid-template-columns:196px minmax(0,1fr)}.cait-proj-body{grid-template-columns:180px minmax(0,1fr)}}
 @media(max-width:940px){.cait-topbar{flex-wrap:wrap}.cait-body{grid-template-columns:190px minmax(0,1fr)}.cait-main{grid-template-columns:minmax(0,1fr)}.cait-cat{border-left:0;border-top:1px solid var(--dsw-alias-border-l1);max-height:43%;min-height:210px}.cait-features{grid-template-columns:1fr}.cait-docbar{display:flex;order:3;flex:1 1 100%;padding:7px 0 0;border-left:0;border-top:1px solid var(--dsw-alias-border-l1)}}
 @media(max-width:700px){.cait-body{grid-template-columns:minmax(0,1fr)}.cait-rail{display:none}.cait-editor-col{padding:14px}.cait-topbar{padding:9px 10px}.cait-export-grid{grid-template-columns:1fr}.cait-home-workrow{grid-template-columns:52px minmax(0,1fr) 66px}.cait-home-bar,.cait-home-workmeta{display:none}}
+/* AI 工作区：预翻译 / 重译 / 审校三张卡片 */
+.cait-ai-col{display:flex;flex-direction:column;gap:10px;overflow-y:auto}
+.cait-ai-card{padding:10px 11px}
+.cait-ai-card:not(.is-open) > *:not(.cait-ai-title){display:none}
+.cait-card-toggle{display:inline-flex;align-items:center;gap:6px;background:none;border:0;padding:0;color:var(--dsw-alias-label-primary,#e8e8e8);font:inherit;font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;cursor:pointer}
+.cait-caret{font-size:9px;color:var(--dsw-alias-label-secondary,#9a9a9a)}
+.cait-ai-grow{flex:1}
+.cait-ai-tools{display:inline-flex;gap:6px;align-items:center}
+.cait-ai-run{width:100%;justify-content:center;margin-top:8px}
+.cait-ai-settings{display:flex;flex-direction:column;gap:12px;padding:10px 12px;overflow-y:auto}
+.cait-ai-toggle{display:flex;align-items:center;gap:8px;font-size:12px;margin:5px 0}
+.cait-ai-context{width:88px}
+.cait-ai-foot{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.cait-review-result{display:flex;flex-direction:column;gap:6px;margin-top:8px}
+.cait-copy-btn{height:20px;min-width:20px;padding:0 4px}
 `
 
 // Every fixed pixel length scales through --cait-u; see helpers.js.

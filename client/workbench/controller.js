@@ -74,6 +74,11 @@ export function useWorkbenchController({ i18n, translate }) {
   const [mtBusy, setMtBusy] = useState(false)
   // One-segment AI review: transient, never merged into doc.review.
   const [segmentReview, setSegmentReview] = useState(null)
+  const [reviseBusy, setReviseBusy] = useState(false)
+  const [reviseError, setReviseError] = useState('')
+  // Client-only preview of the AI 译审 panel toggles: the editor cards follow
+  // it immediately, and only 保存设置 writes it to the store.
+  const [aiPreview, setAiPreview] = useState(null)
   const [mtRoutes, setMtRoutes] = useState({ providers: [], fallback: true, message: '' })
   const [stale, setStale] = useState(false)
   const [toast, setToast] = useState(null)
@@ -1029,18 +1034,34 @@ export function useWorkbenchController({ i18n, translate }) {
     }
   }
 
-  const applyAiBrief = async () => {
-    if (!doc || !ai.brief || ai.busy) return
-    setBusy("ai-brief")
+  const saveAiPreset = async (target = "doc") => {
+    if (!doc || ai.busy) return
+    setAi((current) => ({ ...current, busy: true, error: "" }))
     try {
-      const result = await rpc("setBrief", { documentId: doc.id, brief: ai.brief })
-      adoptState(result.state)
-      setAi((current) => ({ ...current, brief: null }))
-      notify(t("ai.applied"))
+      const result = await rpc("aiChat", { documentId: doc.id, mode: "brief" })
+      const brief = result.brief || null
+      const messages = result.messages || ai.messages
+      if (!brief) {
+        setAi((current) => ({ ...current, busy: false, messages }))
+        return
+      }
+      if (target === "project") {
+        const projectId = doc.projectId || "project_inbox"
+        const saved = await rpc("setProjectBrief", { projectId, brief })
+        if (saved.state) adoptState(saved.state)
+        notify(t("ai.savedProject", { name: doc.projectName || t("projects.inboxTag") }))
+      } else {
+        const saved = await rpc("setBrief", { documentId: doc.id, brief })
+        if (saved.state) adoptState(saved.state)
+        notify(t("ai.savedDoc"))
+      }
+      setAi((current) => ({ ...current, busy: false, messages, brief }))
     } catch (error) {
-      report(error)
-    } finally {
-      setBusy("")
+      setAi((current) => ({
+        ...current,
+        busy: false,
+        error: describeError(error, t, t("ai.failed")),
+      }))
     }
   }
 
@@ -1051,27 +1072,6 @@ export function useWorkbenchController({ i18n, translate }) {
       const result = await rpc("clearAiChat", { documentId: doc.id })
       if (result.state) adoptState(result.state)
       setAi((current) => ({ ...current, busy: false, messages: [], brief: null }))
-    } catch (error) {
-      setAi((current) => ({
-        ...current,
-        busy: false,
-        error: describeError(error, t, t("ai.failed")),
-      }))
-    }
-  }
-
-  const summarizeBrief = async () => {
-    if (!doc || ai.busy) return
-    setAi((current) => ({ ...current, busy: true, error: "" }))
-    try {
-      const result = await rpc("aiChat", { documentId: doc.id, mode: "brief" })
-      setAi((current) => ({
-        ...current,
-        busy: false,
-        messages: result.messages || current.messages,
-        brief: result.brief || null,
-      }))
-      if (result.state) adoptState(result.state)
     } catch (error) {
       setAi((current) => ({
         ...current,
@@ -1314,6 +1314,69 @@ export function useWorkbenchController({ i18n, translate }) {
       return { ok: false, message: error?.message || String(error) }
     } finally {
       setBusy('')
+    }
+  }
+
+  // —— 翻译预设（doc / project）与「从参考文档归纳」 ——
+  const [presetModal, setPresetModal] = useState(null)
+  const fileToBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader()
+      reader.onload = () => resolve(String(reader.result || '').split(',').pop() || '')
+      reader.onerror = () => reject(reader.error || new Error('read failed'))
+      reader.readAsDataURL(file)
+    })
+  const openDocPreset = () => setPresetModal({ scope: 'doc', brief: doc?.brief || null, learn: null })
+  const openProjectPresetFor = async (projectIdInput) => {
+    const projectId = projectIdInput || doc?.projectId || 'project_inbox'
+    setPresetModal({ scope: 'project', projectId, brief: null, learn: null, loading: true })
+    try {
+      const result = await rpc('getProjectBrief', { projectId })
+      setPresetModal({ scope: 'project', projectId, brief: result.brief || null, learn: null })
+    } catch (error) {
+      setPresetModal(null)
+      report(error)
+    }
+  }
+  const openProjectPreset = () => openProjectPresetFor(doc?.projectId)
+  const closePreset = () => setPresetModal(null)
+  const savePreset = async (scope, brief) => {
+    if (!presetModal) return
+    setBusy('preset')
+    try {
+      const result =
+        scope === 'project'
+          ? await rpc('setProjectBrief', { projectId: presetModal.projectId, brief })
+          : await rpc('setBrief', { documentId: doc?.id, brief })
+      if (result.state) adoptState(result.state)
+      setPresetModal(null)
+      notify(t(scope === 'project' ? 'preset.savedProject' : 'preset.savedDoc'))
+    } catch (error) {
+      report(error)
+    } finally {
+      setBusy('')
+    }
+  }
+  const learnPreset = async (files) => {
+    if (!presetModal) return
+    setPresetModal((prev) => (prev ? { ...prev, learn: { ...(prev.learn || {}), busy: true, error: '' } } : prev))
+    try {
+      const payload = []
+      for (const file of files.slice(0, 3)) {
+        payload.push({ name: file.name, base64: await fileToBase64(file) })
+      }
+      const result = await rpc('learnPreset', {
+        files: payload,
+        target: presetModal.scope === 'project' ? 'project' : 'doc',
+        documentId: doc?.id,
+        projectId: presetModal.projectId || doc?.projectId || 'project_inbox',
+      })
+      setPresetModal((prev) =>
+        prev ? { ...prev, learn: { busy: false, error: '', fields: result.fields, sources: result.sources } } : prev,
+      )
+    } catch (error) {
+      const message = describeError(error, t)
+      setPresetModal((prev) => (prev ? { ...prev, learn: { busy: false, error: message } } : prev))
     }
   }
 
@@ -2641,6 +2704,100 @@ export function useWorkbenchController({ i18n, translate }) {
 
   const closeSegmentReview = () => setSegmentReview(null)
 
+  const features = aiPreview?.features ?? settings.features ?? {
+    suggestion: true,
+    revise: true,
+    review: true,
+  }
+  const reviewContext = aiPreview?.reviewContext ?? settings.reviewContext ?? 3
+
+  const previewAiSettings = (next) => {
+    setAiPreview({
+      features: { ...features, ...(next?.features ?? {}) },
+      reviewContext: Number.isFinite(next?.reviewContext) ? next.reviewContext : reviewContext,
+    })
+  }
+
+  const cancelAiSettings = () => setAiPreview(null)
+
+  const resetAiSettings = () => {
+    setAiPreview({
+      features: { suggestion: true, revise: true, review: true },
+      reviewContext: 3,
+    })
+  }
+
+  const saveAiSettings = async (next) => {
+    setBusy('ai-settings')
+    try {
+      const patch = {
+        features: next?.features ?? features,
+        reviewContext: next?.reviewContext ?? reviewContext,
+      }
+      const result = await rpc('saveSettings', patch)
+      replaceRemoteState(result.state)
+      setAiPreview(null)
+      notify(t('toast.settingsSaved'))
+      return true
+    } catch (error) {
+      report(error)
+      return false
+    } finally {
+      setBusy('')
+    }
+  }
+
+  const setMtMode = async (mode) => {
+    setBusy('mt-mode')
+    try {
+      const next = await rpc('setMtLocal', { enabled: mode === 'local' })
+      setMtLocalConfig(next)
+      notify(t('toast.settingsSaved'))
+    } catch (error) {
+      report(error)
+    } finally {
+      setBusy('')
+    }
+  }
+
+  const runRevise = async () => {
+    if (!doc || !segment || reviseBusy) return
+    setReviseBusy(true)
+    setReviseError('')
+    try {
+      const result = await rpc('reviseSegment', {
+        documentId: doc.id,
+        index,
+        before: reviewContext,
+      })
+      if (result?.state) replaceRemoteState(result.state)
+      notify(t('panel.reviseReady'), 'info')
+    } catch (error) {
+      setReviseError(describeError(error, t))
+    } finally {
+      setReviseBusy(false)
+    }
+  }
+
+  const clearRevise = async () => {
+    if (!doc || !segment) return
+    try {
+      const result = await rpc('clearRevise', { documentId: doc.id, index })
+      if (result?.state) replaceRemoteState(result.state)
+    } catch (error) {
+      report(error)
+    }
+  }
+
+  const adoptRevise = () => {
+    const text = segment?.revise?.text
+    if (!text) return
+    setDraft(text)
+    setDirty(true)
+    notify(t('panel.reviseApplied'))
+    setTimeout(() => textareaRef.current?.focus(), 0)
+  }
+
   const openSettings = async () => {
     setModal({ type: 'settings' })
     try {
@@ -2983,6 +3140,19 @@ export function useWorkbenchController({ i18n, translate }) {
     runSegmentReview,
     applySegmentReview,
     closeSegmentReview,
+    reviseBusy,
+    reviseError,
+    aiPreview,
+    features,
+    reviewContext,
+    previewAiSettings,
+    saveAiSettings,
+    cancelAiSettings,
+    resetAiSettings,
+    setMtMode,
+    runRevise,
+    clearRevise,
+    adoptRevise,
     mtRoutes,
     stale,
     toast,
@@ -3029,9 +3199,8 @@ export function useWorkbenchController({ i18n, translate }) {
     ai,
     openAiChat,
     sendAi,
-    applyAiBrief,
+  saveAiPreset,
     clearAi,
-    summarizeBrief,
     saveResources,
     openAnalysis,
     openReplace,
@@ -3079,6 +3248,13 @@ export function useWorkbenchController({ i18n, translate }) {
     openLocalMt,
     saveLocalMt,
     testLocalMt,
+    presetModal,
+    openDocPreset,
+    openProjectPreset,
+    openProjectPresetFor,
+    closePreset,
+    savePreset,
+    learnPreset,
     projectsState,
     projectPick,
     projectDrafts,
